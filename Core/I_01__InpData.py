@@ -9,7 +9,7 @@ from importlib import import_module
 import Core.C_00__GenConstants as GC
 import Core.F_00__GenFunctions as GF
 
-###############################################################################
+# +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 class InputData:
     def __init__(self, inpDat, lVals = []):
         dInp = {}

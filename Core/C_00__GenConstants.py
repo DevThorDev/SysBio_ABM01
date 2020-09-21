@@ -10,6 +10,10 @@ NM_EXT_CSV = 'csv'
 NM_EXT_PY = 'py'
 NM_EXT_PDF = 'pdf'
 
+# --- constants related to interactions ---------------------------------------
+B_IS_PYL = 'P+'
+B_NOT_PYL = 'P-'
+
 # --- other constants ---------------------------------------------------------
 M_DETER = 'Deterministic'
 M_STOCH = 'Stochastic'
