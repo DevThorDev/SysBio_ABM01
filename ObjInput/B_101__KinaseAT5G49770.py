@@ -2,19 +2,24 @@
 ###############################################################################
 # --- B_101__Kinase001.py -----------------------------------------------------
 ###############################################################################
+import Core.C_00__GenConstants as GC
 
 # --- general -----------------------------------------------------------------
 strOType = 'Kinase'
 strNSpec = 'Kinase001'
 strCS = 'AT5G49770'
 strCL = 'AT5G49770'
-lInfSpS = [('S839-P', 'P+'),
-           ('S870-P', 'P+')]
+dInfSpS = {'S839': {'Stat': GC.B_NOT_PYL,
+                    'Pyl': ['Phosphatase1'],
+                    'DePyl': ['Phosphatase1']},
+           'S870': {'Stat': GC.B_NOT_PYL,
+                    'Pyl': ['Phosphatase2'],
+                    'DePyl': ['Phosphatase2']}}
 
 # --- create input dictionary --------------------------------------------------
 dIO = {'strOType': strOType,
        'strNSpec': strNSpec,
        'strCS': strCS,
        'strCL': strCL,
-       'lInfSpS': lInfSpS}
+       'dInfSpS': dInfSpS}
 ###############################################################################

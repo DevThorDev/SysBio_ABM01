@@ -8,12 +8,12 @@ strOType = 'Small molecule'
 strNSpec = 'Dihydrogenphosphate'
 strCS = 'H2PO4-'
 strCL = 'H2PO4_1m'
-lInfSpS = []
+dInfSpS = {}
 
 # --- create input dictionary --------------------------------------------------
 dIO = {'strOType': strOType,
        'strNSpec': strNSpec,
        'strCS': strCS,
        'strCL': strCL,
-       'lInfSpS': lInfSpS}
+       'dInfSpS': dInfSpS}
 ###############################################################################

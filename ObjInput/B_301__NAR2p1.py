@@ -8,12 +8,12 @@ strOType = 'Small protein'
 strNSpec = 'NAR2.1'
 strCS = 'NAR2.1'
 strCL = 'NAR2p1'
-lInfSpS = []
+dInfSpS = {}
 
 # --- create input dictionary --------------------------------------------------
 dIO = {'strOType': strOType,
        'strNSpec': strNSpec,
        'strCS': strCS,
        'strCL': strCL,
-       'lInfSpS': lInfSpS}
+       'dInfSpS': dInfSpS}
 ###############################################################################
