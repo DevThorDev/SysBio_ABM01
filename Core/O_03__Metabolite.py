@@ -12,20 +12,20 @@ class Metabolite(Molecule):
         super().__init__(inpDat, iTp)
         self.idO = 'Met'
         self.descO = 'Metabolite'
-        print('Initiated "Metabolite" base object.')
+        print('Initiated "Metabolite" object.')
 
 class LargeMolecule(Metabolite):
     def __init__(self, inpDat, iTp):
         super().__init__(inpDat, iTp)
         self.idO = 'LMo'
         self.descO = 'Large molecule'
-        print('Initiated "Large molecule" base object.')
+        print('Initiated "Large molecule" object.')
 
 class SmallMolecule(Metabolite):
     def __init__(self, inpDat, iTp):
         super().__init__(inpDat, iTp)
         self.idO = 'SMo'
         self.descO = 'Small molecule'
-        print('Initiated "Small molecule" base object.')
+        print('Initiated "Small molecule" object.')
 
 ###############################################################################

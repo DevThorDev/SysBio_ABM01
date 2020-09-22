@@ -29,7 +29,7 @@ class Molecule(Base):
         self.descO = 'Molecule'
         self.nSpS = len(self.dITp['dInfSpS'])   # number of "special sites"
         self.createDSpecSites(self.dITp['dInfSpS'])
-        print('Initiated "Molecule" base object.')
+        print('Initiated "Molecule" object.')
 
     def createDSpecSites(self, dInSpS):
         self.dSpS = {}
@@ -41,11 +41,13 @@ class Molecule(Base):
         for cSpS in self.dSpS.values():
             lTInf.append((cSpS.idSpS, cSpS.sSPTM))
         return lTInf
-            
     
-    def printDSpecSites(self):
-        print('-'*24 + ' Special sites: ' + '-'*24)
-        for cSpS in self.dSpS.values():
-            print(cSpS)
+    def printSpecSites(self):
+        if len(self.dSpS) == 0:
+            print(self.idO , '/', self.descO, 'has no special site.')
+        else:
+            print('-'*24 + ' Special sites: ' + '-'*24)
+            for cSpS in self.dSpS.values():
+                print(cSpS)
 
 ###############################################################################
