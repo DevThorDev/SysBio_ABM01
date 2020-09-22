@@ -60,7 +60,8 @@ class Phosphorylation(Interaction):
             dSpS['Stat'] = GC.B_IS_PYL
             self.lOI[0].dSpS[self.sSpS].stPTM = dSpS['Stat']
             pylDone = True
-        return pylDone
+        print([self.sSpS], ':', self.lOI[0].dSpS[self.sSpS].stPTM)
+        return self.lOI, pylDone
 
 # +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 class Dephosphorylation(Interaction):
@@ -82,6 +83,6 @@ class Dephosphorylation(Interaction):
             dSpS['Stat'] = GC.B_NOT_PYL
             self.lOI[0].dSpS[self.sSpS].stPTM = dSpS['Stat']
             dePylDone = True
-        return dePylDone
+        return self.lOI, dePylDone
 
 ###############################################################################

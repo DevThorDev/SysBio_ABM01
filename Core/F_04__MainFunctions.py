@@ -12,7 +12,7 @@ from Core.O_02__Protein import (Kinase_AT5G49770, Phosphatase1, Phosphatase2,
 from Core.O_03__Metabolite import Metabolite, LargeMolecule, SmallMolecule
 from Core.O_80__Interaction import (Interaction, Phosphorylation,
                                     Dephosphorylation)
-from Core.O_90__System import System
+from Core.O_90__System import System, State_Int_AT5G49770_NRT2p1
 
 # --- Functions (initialisation) ----------------------------------------------
 def iniSystem(inpDG):
@@ -43,6 +43,22 @@ def iniSystem(inpDG):
                PAs4, NRT2p1, NAR2p1, Pyl01, Pyl02, Pyl03, Pyl04,
                DePyl01, DePyl02, DePyl03, DePyl04]
     return System(inpDG, 90, lSysCmp)
-    
+
+def initialState(inpDG):
+    # KAs_AT5G49770 ---------------------------------------------------------
+    KAs_AT5G49770 = Kinase_AT5G49770(inpDG)
+    # Phosphatases 1 - 4 ------------------------------------------------------
+    PAs1 = Phosphatase1(inpDG)
+    PAs2 = Phosphatase2(inpDG)
+    PAs3 = Phosphatase3(inpDG)
+    PAs4 = Phosphatase4(inpDG)
+    # Large protein NRT2.1 ----------------------------------------------------
+    NRT2p1 = Protein_NRT2p1(inpDG)
+    cState = State_Int_AT5G49770_NRT2p1(inpDG, lOInt = [KAs_AT5G49770, NRT2p1],
+                                        lPAs = [PAs1, PAs2, PAs3, PAs4])
+    cSys = cState.createSystem(inpDG)
+    cSys.printSystem()
+    for cO in cSys.lKAs + cSys.lLPr + cSys.lSPr:
+        cO.printSpecSites()
 
 ###############################################################################

@@ -54,12 +54,12 @@ class System(Base):
                 TF.printSysComp(s, lCmp)
         print('+'*80)
         
-    def setToState(self, inpDat, lOIntSt, lPAsSt = []):
-        cSt = State(inpDat, lOInt = lOIntSt, lPAs = lPAsSt)
+    # def setToState(self, inpDat, lOIntSt, lPAsSt = []):
+    #     cSt = State(inpDat, lOInt = lOIntSt, lPAs = lPAsSt)
 
-    def setToState_Int_AT5G49770_NRT2p1(self, inpDat):
+    # def setToState_Int_AT5G49770_NRT2p1(self, inpDat):
         
-        cSt = State_Int_AT5G49770_NRT2p1(inpDat, lOInt = lOIntSt, lPAs = lPAsSt)
+    #     cSt = State_Int_AT5G49770_NRT2p1(inpDat, lOInt = lOIntSt, lPAs = lPAsSt)
 
 # +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 class State(Base):
@@ -85,22 +85,31 @@ class State_Int_AT5G49770_NRT2p1(State):
         
     def adaptPSites_AT5G49770(self, inpDat, cOKin):
         lOIP1, sSpS = [cOKin, self.lPs[0]], 'S839'
-        isSucc = Dephosphorylation(inpDat, lOInt = lOIP1,
-                                   sSpSite = sSpS).doDePyl()
+        lOIP1, isSucc = Dephosphorylation(inpDat, lOInt = lOIP1,
+                                          sSpSite = sSpS).doDePyl()
         print('Dephosphorylation at site', sSpS, 'happened:', isSucc)
-        lOIP2, sSpS = [cOKin, self.lPs[1]], 'S870'
-        isSucc = Phosphorylation(inpDat, lOInt = lOIP2,
-                                 sSpSite = sSpS).doPyl()
+        cOKin.printSpecSites()
+        lOIP2, sSpS = [lOIP1[0], self.lPs[1]], 'S870'
+        lOIP2, isSucc = Phosphorylation(inpDat, lOInt = lOIP2,
+                                        sSpSite = sSpS).doPyl()
         print('Phosphorylation at site', sSpS, 'happened:', isSucc)
+        self.lOI[0] = lOIP2[0]
+        self.lOI[0].printSpecSites()
         
     def adaptPSites_NRT2p1(self, inpDat, cOProt):
         lOIP3, sSpS = [cOProt, self.lPs[2]], 'S21'
-        isSucc = Phosphorylation(inpDat, lOInt = lOIP3,
-                                 sSpSite = sSpS).doPyl()
+        lOIP3, isSucc = Phosphorylation(inpDat, lOInt = lOIP3,
+                                        sSpSite = sSpS).doPyl()
         print('Phosphorylation at site', sSpS, 'happened:', isSucc)
-        lOIP4, sSpS = [cOProt, self.lPs[3]], 'S28'
-        isSucc = Dephosphorylation(inpDat, lOInt = lOIP4,
-                                   sSpSite = sSpS).doDePyl()
+        cOProt.printSpecSites()
+        lOIP4, sSpS = [lOIP3[0], self.lPs[3]], 'S28'
+        lOIP4, isSucc = Dephosphorylation(inpDat, lOInt = lOIP4,
+                                          sSpSite = sSpS).doDePyl()
         print('Dephosphorylation at site', sSpS, 'happened:', isSucc)
+        self.lOI[1] = lOIP4[0]
+        self.lOI[1].printSpecSites()
+        
+    def createSystem(self, inpDat):
+        return System(inpDat, lOSys = self.lOI + self.lPs)
 
 ###############################################################################
