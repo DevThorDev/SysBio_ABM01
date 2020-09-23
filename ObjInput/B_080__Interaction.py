@@ -4,7 +4,7 @@
 ###############################################################################
 
 # --- general -----------------------------------------------------------------
-strOType = 'Inter'
+strOType = 'Interaction'
 strNSpec = 'Interaction'
 strCS = 'Inter'
 strCL = 'Interaction'
