@@ -19,13 +19,27 @@ class LargeMolecule(Metabolite):
         super().__init__(inpDat, iTp)
         self.idO = 'LMo'
         self.descO = 'Large molecule'
-        print('Initiated "Large molecule" object.')
+        print('Initiated "LargeMolecule" object.')
 
 class SmallMolecule(Metabolite):
     def __init__(self, inpDat, iTp):
         super().__init__(inpDat, iTp)
         self.idO = 'SMo'
         self.descO = 'Small molecule'
-        print('Initiated "Small molecule" object.')
+        print('Initiated "SmallMolecule" object.')
+
+class SMo_NO3_1m(SmallMolecule):
+    def __init__(self, inpDat, iTp = 501, dStat = {}):
+        super().__init__(inpDat, iTp, dStat)
+        self.idO = 'NO3_1m'
+        self.descO = 'Small molecule NO3-'
+        print('Initiated "SMo_NO3_1m" object.')
+
+class SMo_H2PO4_1m(SmallMolecule):
+    def __init__(self, inpDat, iTp = 501, dStat = {}):
+        super().__init__(inpDat, iTp, dStat)
+        self.idO = 'H2PO4_1m'
+        self.descO = 'Small molecule H2PO4-'
+        print('Initiated "SMo_H2PO4_1m" object.')
 
 ###############################################################################

@@ -14,7 +14,7 @@ NM_EXT_PDF = 'pdf'
 L_ID_MOL = ['Mol']
 L_ID_PRO = ['Pro']
 L_ID_ENZ = ['Enz']
-L_ID_KAS = ['KAs', 'KAs_AT5G49770']
+L_ID_KAS = ['KAs', 'KAs_AT5G49770', 'KAs_X']
 L_ID_PAS = ['PAs', 'PAs1', 'PAs2', 'PAs3', 'PAs4']
 L_ID_LPR = ['LPr', 'LPr_NRT2p1']
 L_ID_SPR = ['SPr', 'SPr_NAR2p1']
@@ -32,8 +32,16 @@ S_SPS_LPR1_S21 = 'S21'
 S_SPS_LPR1_S28 = 'S28'
 
 # --- constants related to interactions ---------------------------------------
+B_DO_PYL = 'Pyl'
+B_DO_DEPYL = 'DePyl'
 B_IS_PYL = 'P+'
 B_NOT_PYL = 'P-'
+
+# --- constants related to states ---------------------------------------------
+S_ST_INT_AT5G49770_NRT2P1 = 'St_Int_AT5G49770_NRT2p1'
+S_ST_TRANS_AT5G49770_NRT2P1 = 'St_Trans_AT5G49770_NRT2p1'
+S_ST_INT_NAR2P1_NRT2P1 = 'St_Int_NAR2p1_NRT2p1'
+S_ST_TRANS_NAR2P1_NRT2P1 = 'St_Trans_NAR2p1_NRT2p1'
 
 # --- other constants ---------------------------------------------------------
 M_DETER = 'Deterministic'

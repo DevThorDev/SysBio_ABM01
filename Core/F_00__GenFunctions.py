@@ -20,6 +20,14 @@ def seedRNG(cMode):
         np.random.seed()
         print('Seeded RNG.')
 
+def lSeToUniqueList(lSe):
+    if len(lSe) > 0:
+        seAll = lSe[0]
+        for cSe in lSe[1:]:
+            seAll = seAll.union(cSe)
+        return list(seAll)
+    return []
+
 def printElapsedTimeSim(stT, cT, sPre = 'Time'):
     # calculate and display elapsed time 
     elT = round(cT - stT, GC.R04)
