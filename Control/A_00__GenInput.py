@@ -9,7 +9,7 @@ levelDebugOut = 2   # level of debug output (0: no debug output)
 
 # --- Input: General ----------------------------------------------------------
 nDigObj = 3         # number of digits reserved for all input objects
-cMode = GC.M_STOCH  # GC.M_DETER / GC.M_STOCH
+cMode = GC.M_DETER  # GC.M_DETER / GC.M_STOCH
 
 # --- Input: Names and directories --------------------------------------------
 nDPlots = 'Plots'                   # name of directory for plots
