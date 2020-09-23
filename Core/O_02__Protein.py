@@ -3,7 +3,7 @@
 # --- O_02__Protein.py --------------------------------------------------------
 ###############################################################################
 import Core.C_00__GenConstants as GC
-import Core.F_00__GenFunctions as GF
+# import Core.F_00__GenFunctions as GF
 
 from Core.O_01__Molecule import Molecule
 

@@ -2,17 +2,16 @@
 ###############################################################################
 # --- O_80__Interaction.py ----------------------------------------------------
 ###############################################################################
-import pprint
-
-import Core.C_00__GenConstants as GC
-import Core.F_00__GenFunctions as GF
+# import Core.C_00__GenConstants as GC
+# import Core.F_00__GenFunctions as GF
+import Core.F_03__OTpFunctions as TF
 
 from Core.O_00__Base import Base
 from Core.O_02__Protein import Kinase, LargeProtein, SmallProtein
 
 # +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 class Interaction(Base):
-    def __init__(self, inpDat, iTp = 80, lOInt = []):
+    def __init__(self, inpDat, lOInt = [], iTp = 80):
         super().__init__(inpDat, iTp)
         assert len(lOInt) >= 2
         self.idO = 'Int'
@@ -36,15 +35,14 @@ class Interaction(Base):
         # dSpS = self.lOI[0].dITp['dInfSpS'][self.sSpS]
         # if dSpS['Stat'] == GC.B_NOT_PYL and self.sPylAse in dSpS['Pyl']:
         #     dSpS['Stat'] = GC.B_IS_PYL
-        #     self.lOI[0].dSpS[self.sSpS].stPTM = dSpS['Stat']
+        #     self.lOI[0].dSpS[self.sSpS].sSPTM = dSpS['Stat']
         #     interDone = True
         # return interDone
     
 # +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 class Phosphorylation(Interaction):
-    def __init__(self, inpDat, iTp = 80, lOInt = [], sSpSite = ''):
-        assert len(lOInt) == 2
-        super().__init__(inpDat, iTp, lOInt)
+    def __init__(self, inpDat, cOB, cPAs, sSpSite, iTp = 80):
+        super().__init__(inpDat, [cOB, cPAs], iTp = iTp)    # order in list!
         self.idO = 'Pyl'
         self.descO = 'Phosphorylation'
         self.sSpS = sSpSite
@@ -53,21 +51,12 @@ class Phosphorylation(Interaction):
         
     def doPyl(self):
         # check if first interaction partner has site to be phosphorylated
-        pylDone = False
-        assert self.sSpS in self.lOI[0].dITp['dInfSpS'] # 1st obj. of list
-        dSpS = self.lOI[0].dITp['dInfSpS'][self.sSpS]
-        if dSpS['Stat'] == GC.B_NOT_PYL and self.sPylAse in dSpS['Pyl']:
-            dSpS['Stat'] = GC.B_IS_PYL
-            self.lOI[0].dSpS[self.sSpS].stPTM = dSpS['Stat']
-            pylDone = True
-        print([self.sSpS], ':', self.lOI[0].dSpS[self.sSpS].stPTM)
-        return self.lOI, pylDone
+        return TF.doSiteChange(self.lOI[0], self.sSpS, self.sPylAse)
 
 # +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 class Dephosphorylation(Interaction):
-    def __init__(self, inpDat, iTp = 80, lOInt = [], sSpSite = ''):
-        assert len(lOInt) == 2
-        super().__init__(inpDat, iTp, lOInt)
+    def __init__(self, inpDat, cOB, cPAs, sSpSite, iTp = 80):
+        super().__init__(inpDat, [cOB, cPAs], iTp = iTp)    # order in list!
         self.idO = 'DePyl'
         self.descO = 'Dephosphorylation'
         self.sSpS = sSpSite
@@ -75,14 +64,8 @@ class Dephosphorylation(Interaction):
         print('Initiated "Dephosphorylation" object.')
         
     def doDePyl(self):
-        # check if first interaction partner has site to be phosphorylated
-        dePylDone = False
-        assert self.sSpS in self.lOI[0].dITp['dInfSpS'] # 1st obj. of list
-        dSpS = self.lOI[0].dITp['dInfSpS'][self.sSpS]
-        if dSpS['Stat'] == GC.B_IS_PYL and self.sDePylAse in dSpS['DePyl']:
-            dSpS['Stat'] = GC.B_NOT_PYL
-            self.lOI[0].dSpS[self.sSpS].stPTM = dSpS['Stat']
-            dePylDone = True
-        return self.lOI, dePylDone
+        # check if first interaction partner has site to be dephosphorylated
+        return TF.doSiteChange(self.lOI[0], self.sSpS, self.sDePylAse,
+                               doDePyl = True)
 
 ###############################################################################

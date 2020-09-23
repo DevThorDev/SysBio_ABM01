@@ -25,6 +25,12 @@ L_ID_INT = ['Int']
 L_ID_PYL = ['Pyl']
 L_ID_DEPYL = ['DePyl']
 
+# --- constants related to specific sites -------------------------------------
+S_SPS_KAS1_S839 = 'S839'
+S_SPS_KAS1_S870 = 'S870'
+S_SPS_LPR1_S21 = 'S21'
+S_SPS_LPR1_S28 = 'S28'
+
 # --- constants related to interactions ---------------------------------------
 B_IS_PYL = 'P+'
 B_NOT_PYL = 'P-'
