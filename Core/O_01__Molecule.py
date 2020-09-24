@@ -16,6 +16,10 @@ class Molecule(Base):
         self.descO = 'Molecule'
         print('Initiated "Molecule" object.')
 
+    def __str__(self):
+        sIn = ('-- Molecule ' + self.idO + ' (' + self.descO + ')')
+        return sIn
+
     def createDSpecSites(self, dInSpS):
         self.nSpS = len(self.dITp['dInfSpS'])   # number of "special sites"
         self.dSpS = {}
@@ -35,6 +39,10 @@ class Molecule(Base):
             print('-'*24 + ' Special sites: ' + '-'*24)
             for cSpS in self.dSpS.values():
                 print(cSpS)
+    
+    def printMolSpecSites(self):
+        print(self)
+        self.printSpecSites()
 
 class SpecSite:
     def __init__(self, dInSpS, sIDSpS, idMol, descMol):

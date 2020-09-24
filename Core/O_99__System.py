@@ -32,7 +32,7 @@ class System(Base):
                      'Proteins': self.lPro,
                      'Enzymes': self.lEnz,
                      'Kinases': self.lKAs,
-                     'Phosphatase': self.lPAs,
+                     'Phosphatases': self.lPAs,
                      'LargeProteins': self.lLPr,
                      'SmallProteins': self.lSPr,
                      'Metabolites': self.lMet,
@@ -49,6 +49,11 @@ class System(Base):
             if len(lCmp) > 0:
                 TF.printSysComp(s, lCmp)
         print('+'*80)
+    
+    def printSystemDetails(self):
+        self.printSystem()
+        for cO in self.lKAs + self.lPAs + self.lLPr + self.lSPr:
+            cO.printSpecSites()
         
     def setToState(self, inpDat, lOIntSt, lPAsSt = []):
         pass

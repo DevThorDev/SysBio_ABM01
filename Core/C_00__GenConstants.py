@@ -38,10 +38,10 @@ B_IS_PYL = 'P+'
 B_NOT_PYL = 'P-'
 
 # --- constants related to states ---------------------------------------------
-S_ST_INT_AT5G49770_NRT2P1 = 'St_Int_AT5G49770_NRT2p1'
-S_ST_TRANS_AT5G49770_NRT2P1 = 'St_Trans_AT5G49770_NRT2p1'
-S_ST_INT_NAR2P1_NRT2P1 = 'St_Int_NAR2p1_NRT2p1'
-S_ST_TRANS_NAR2P1_NRT2P1 = 'St_Trans_NAR2p1_NRT2p1'
+S_ST_A_INT_AT5G49770_NRT2P1 = 'St_A_Int_AT5G49770_NRT2p1'
+S_ST_B_TRANS_AT5G49770_NRT2P1 = 'St_B_Trans_AT5G49770_NRT2p1'
+S_ST_C_INT_NAR2P1_NRT2P1 = 'St_C_Int_NAR2p1_NRT2p1'
+S_ST_D_TRANS_NAR2P1_NRT2P1 = 'St_D_Trans_NAR2p1_NRT2p1'
 
 # --- other constants ---------------------------------------------------------
 M_DETER = 'Deterministic'

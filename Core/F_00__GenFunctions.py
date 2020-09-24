@@ -20,11 +20,11 @@ def seedRNG(cMode):
         np.random.seed()
         print('Seeded RNG.')
 
-def lSeToUniqueList(lSe):
-    if len(lSe) > 0:
-        seAll = lSe[0]
-        for cSe in lSe[1:]:
-            seAll = seAll.union(cSe)
+def lItToUniqueList(lIt):
+    if len(lIt) > 0:
+        seAll = set(lIt[0])
+        for cIt in lIt[1:]:
+            seAll = seAll.union(set(cIt))
         return list(seAll)
     return []
 
