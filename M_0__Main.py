@@ -22,12 +22,25 @@ inDG = InputData(dictInpG)
 inDG.addObjTps(NMD_OBJINP)
 print('Added object types.')
 # -----------------------------------------------------------------------------
-cSystem = MF.iniSystem(inDG)
-cSystem.printSystem()
+# cSystem = MF.iniSystem(inDG)
+# cSystem.printSystem()
 
 # -----------------------------------------------------------------------------
 cState, cSystem = MF.initialState(inDG)
-cSystem.printSystemDetails()
+# cSystem.printSystemDetails()
+print('~'*30, 'INITIAL STATE', '~'*30)
+cState.printStateDetails()
+print('~'*30, 'STATE A', '~'*30)
+cState.to_St_A_Int_AT5G49770_NRT2p1(inDG)
+cState.printStateDetails()
+print('~'*30, 'STATE B', '~'*30)
+cState.to_St_B_Trans_AT5G49770_NRT2p1(inDG)
+cState.printStateDetails()
+print('~'*30, 'STATE C', '~'*30)
+cState.to_St_C_Int_NAR2p1_NRT2p1(inDG)
+cState.printStateDetails()
+print('~'*30, 'STATE D', '~'*30)
+cState.to_St_D_Trans_NAR2p1_NRT2p1(inDG)
 cState.printStateDetails()
 
 # -----------------------------------------------------------------------------
