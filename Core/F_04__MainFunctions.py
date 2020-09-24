@@ -10,10 +10,7 @@ from Core.O_02__Protein import (Kinase_AT5G49770, Kinase_X, Phosphatase1,
                                 Protein_NRT2p1, Protein_NAR2p1)
 from Core.O_03__Metabolite import SMo_NO3_1m, SMo_H2PO4_1m
 from Core.O_80__Interaction import Phosphorylation, Dephosphorylation
-from Core.O_90__State import (St_A_Int_AT5G49770_NRT2p1,
-                              St_B_Trans_AT5G49770_NRT2p1,
-                              St_C_Int_NAR2p1_NRT2p1,
-                              St_D_Trans_NAR2p1_NRT2p1)
+from Core.O_90__State import State_Int_Trans
 from Core.O_99__System import System
 
 # --- Functions (initialisation) ----------------------------------------------
@@ -65,26 +62,10 @@ def initialState(inpDG):
     NO3_1m = SMo_NO3_1m(inpDG)
     H2PO4_1m = SMo_H2PO4_1m(inpDG)
     # Create initial state ----------------------------------------------------
-    if inpDG.dI['sStIni'] == GC.S_ST_A_INT_AT5G49770_NRT2P1:
-        cSta = St_A_Int_AT5G49770_NRT2p1(inpDG, cLPr = NRT2p1, cSPr = NAR2p1,
-                                         lKAs = [KAsAT5G49770, KAsX],
-                                         lPAs = [PAs1, PAs2, PAs3, PAs4],
-                                         lSMo = [NO3_1m, H2PO4_1m])
-    elif inpDG.dI['sStIni'] == GC.S_ST_B_TRANS_AT5G49770_NRT2P1:
-        cSta = St_B_Trans_AT5G49770_NRT2p1(inpDG, cLPr = NRT2p1, cSPr = NAR2p1,
-                                           lKAs = [KAsAT5G49770, KAsX],
-                                           lPAs = [PAs1, PAs2, PAs3, PAs4],
-                                           lSMo = [NO3_1m, H2PO4_1m])
-    elif inpDG.dI['sStIni'] == GC.S_ST_C_INT_NAR2P1_NRT2P1:
-        cSta = St_C_Int_NAR2p1_NRT2p1(inpDG, cLPr = NRT2p1, cSPr = NAR2p1,
-                                      lKAs = [KAsAT5G49770, KAsX],
-                                      lPAs = [PAs1, PAs2, PAs3, PAs4],
-                                      lSMo = [NO3_1m, H2PO4_1m])
-    elif inpDG.dI['sStIni'] == GC.S_ST_D_TRANS_NAR2P1_NRT2P1:
-        cSta = St_D_Trans_NAR2p1_NRT2p1(inpDG,  cLPr = NRT2p1, cSPr = NAR2p1,
-                                        lKAs = [KAsAT5G49770, KAsX],
-                                        lPAs = [PAs1, PAs2, PAs3, PAs4],
-                                        lSMo = [NO3_1m, H2PO4_1m])
+    cSta = State_Int_Trans(inpDG, cLPr = NRT2p1, cSPr = NAR2p1,
+                           lKAs = [KAsAT5G49770, KAsX],
+                           lPAs = [PAs1, PAs2, PAs3, PAs4],
+                           lSMo = [NO3_1m, H2PO4_1m])
     # Create system from state ------------------------------------------------
     return cSta, cSta.createSystem(inpDG)
 

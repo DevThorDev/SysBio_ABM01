@@ -33,10 +33,8 @@ class Molecule(Base):
         return lTInf
     
     def printSpecSites(self):
-        if len(self.dSpS) == 0:
-            print('-'*8, self.idO , '/', self.descO, 'has no special site.')
-        else:
-            print('-'*24 + ' Special sites: ' + '-'*24)
+        if len(self.dSpS) > 0:
+            # print('-'*1 + ' Special sites: ' + '-'*24)
             for cSpS in self.dSpS.values():
                 print(cSpS)
     
@@ -54,7 +52,7 @@ class SpecSite:
         self.descMol = descMol                      # description of molecule
 
     def __str__(self):
-        sIn = ('Special site ' +  self.idSpS + ' of molecule ' + self.idMol +
+        sIn = ('- Special site ' +  self.idSpS + ' of molecule ' + self.idMol +
                ' (' + self.descMol + ') with PTM ' + str(self.sSPTM) +
                ' has phosphorylation agents ' + str(self.lPyl) +
                ' and dephosphorylation agents ' + str(self.lDePyl) + '.')

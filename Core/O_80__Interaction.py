@@ -7,7 +7,7 @@
 import Core.F_03__OTpFunctions as TF
 
 from Core.O_00__Base import Base
-from Core.O_02__Protein import Kinase, LargeProtein, SmallProtein
+# from Core.O_02__Protein import Kinase, LargeProtein, SmallProtein
 
 # +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 class Interaction(Base):
