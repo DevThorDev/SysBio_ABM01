@@ -26,7 +26,9 @@ cSystem = MF.iniSystem(inDG)
 cSystem.printSystem()
 
 # -----------------------------------------------------------------------------
-MF.initialState(inDG)
+cState, cSystem = MF.initialState(inDG)
+cSystem.printSystemDetails()
+cState.printStateDetails()
 
 # -----------------------------------------------------------------------------
 
