@@ -15,6 +15,7 @@ sStIni = GC.S_ST_D_TRANS_NAR2P1_NRT2P1    # initial state ID string
                                         # GC.S_ST_D_TRANS_NAR2P1_NRT2P1
 
 # --- Input: General ----------------------------------------------------------
+maxTS = 50
 nDigObj = 3         # number of digits reserved for all input objects
 cMode = GC.M_DETER  # GC.M_DETER / GC.M_STOCH
 
@@ -27,6 +28,7 @@ dictInpG = {# --- Input: Debug Info
             # --- Input: Initial state
             'sStIni': sStIni,
             # --- Input: General
+            'maxTS': maxTS,
             'nDigObj': nDigObj,
             'Mode': cMode,
             # --- Input: Names and directories
