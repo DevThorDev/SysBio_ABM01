@@ -10,7 +10,7 @@ strCS = 'NAR2.1'
 strCL = 'NAR2p1'
 dInfSpS = {}
 
-# --- create input dictionary --------------------------------------------------
+# --- create input dictionary -------------------------------------------------
 dIO = {'strOType': strOType,
        'strNSpec': strNSpec,
        'strCS': strCS,

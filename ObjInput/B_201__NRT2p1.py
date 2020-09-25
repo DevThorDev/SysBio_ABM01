@@ -16,7 +16,7 @@ dInfSpS = {'S21': {'Stat': GC.B_NOT_PYL,
                    'Pyl': ['Phosphatase4'],
                    'DePyl': ['Phosphatase4']}}
 
-# --- create input dictionary --------------------------------------------------
+# --- create input dictionary -------------------------------------------------
 dIO = {'strOType': strOType,
        'strNSpec': strNSpec,
        'strCS': strCS,

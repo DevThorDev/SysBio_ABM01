@@ -2,6 +2,7 @@
 ###############################################################################
 # --- B_502__H2PO4_1m.py ------------------------------------------------------
 ###############################################################################
+import Core.C_00__GenConstants as GC
 
 # --- general -----------------------------------------------------------------
 strOType = 'Small molecule'
@@ -10,10 +11,24 @@ strCS = 'H2PO4-'
 strCL = 'H2PO4_1m'
 dInfSpS = {}
 
-# --- create input dictionary --------------------------------------------------
+# --- initial state -----------------------------------------------------------
+concIni = 2                             # initial concentration of NO3-
+
+# --- changes over time in deterministic mode ---------------------------------
+mdConcCh = GC.S_CH_SIN                  # conc. change mode (S_CH_SIN)
+perConcCh = 500                         # conc. change period (time steps)
+amplConcCh = 1                          # conc. change amplitude
+
+# --- create input dictionary -------------------------------------------------
 dIO = {'strOType': strOType,
        'strNSpec': strNSpec,
        'strCS': strCS,
        'strCL': strCL,
-       'dInfSpS': dInfSpS}
+       'dInfSpS': dInfSpS,
+       # --- initial state
+       'concIni': concIni,
+       # --- changes over time in deterministic mode
+       'mdConcCh': mdConcCh,
+       'perConcCh': perConcCh,
+       'amplConcCh': amplConcCh}
 ###############################################################################

@@ -9,7 +9,7 @@ strNSpec = 'Interaction'
 strCS = 'Inter'
 strCL = 'Interaction'
 
-# --- create input dictionary --------------------------------------------------
+# --- create input dictionary -------------------------------------------------
 dIO = {'strOType': strOType,
        'strNSpec': strNSpec,
        'strCS': strCS,

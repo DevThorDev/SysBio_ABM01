@@ -10,7 +10,7 @@ strCS = 'Phosphatase3'
 strCL = 'Phosphatase3'
 dInfSpS = {}
 
-# --- create input dictionary --------------------------------------------------
+# --- create input dictionary -------------------------------------------------
 dIO = {'strOType': strOType,
        'strNSpec': strNSpec,
        'strCS': strCS,

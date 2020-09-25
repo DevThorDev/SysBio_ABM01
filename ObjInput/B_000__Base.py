@@ -9,7 +9,7 @@ strNSpec = 'BaseClass'
 strCS = 'Base'
 strCL = 'BaseClass'
 
-# --- create input dictionary --------------------------------------------------
+# --- create input dictionary -------------------------------------------------
 dIO = {'strOType': strOType,
        'strNSpec': strNSpec,
        'strCS': strCS,

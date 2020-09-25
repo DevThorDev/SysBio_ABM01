@@ -9,7 +9,7 @@ strNSpec = 'State'
 strCS = 'Sta'
 strCL = 'State'
 
-# --- create input dictionary --------------------------------------------------
+# --- create input dictionary -------------------------------------------------
 dIO = {'strOType': strOType,
        'strNSpec': strNSpec,
        'strCS': strCS,
