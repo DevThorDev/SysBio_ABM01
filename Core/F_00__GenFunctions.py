@@ -15,7 +15,7 @@ def startSimu():
     print('Systems Biology Framework')
     return startTime
 
-def seedRNG(cMode):
+def seedRNG(cMode):             # legacy function
     if cMode == GC.M_STOCH:
         np.random.seed()
         print('Seeded RNG.')

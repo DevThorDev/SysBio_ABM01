@@ -21,6 +21,10 @@ class State(Base):
         self.llOI = llOInt
         self.lPs = lPAs
         self.lOO = lOOth
+        # properties with dummy values
+        self.cLPr, self.cSPr = [], []
+        self.lKAs, self.lPAs, self.lSMo = [], [], []
+        self.dCnc = {}
         print('Initiated "State" object.')
         
     def __str__(self):
@@ -34,7 +38,10 @@ class State(Base):
         for k, cP in enumerate(self.lPs):
             print('- Phosphatase ' + str(k + 1) + ': ' + cP.idO)
         for k, cO in enumerate(self.lOO):
-            print('- Further component ' + str(k + 1) + ': ' + cO.idO)
+            s = '- Further component ' + str(k + 1) + ': ' + cO.idO
+            if hasattr(cO, 'cCnc'):
+                s += ' with conc. ' + str(round(cO.cCnc, GC.R04))
+            print(s)
         print('-- State component details:')
         for cO in GF.lItToUniqueList(self.llOI) + self.lPs + self.lOO:
             cO.printMolSpecSites()
@@ -43,6 +50,40 @@ class State(Base):
         print(self)
         self.printDetails()
         
+    def printDCnc(self, prID = None, prFull = False):
+        if prFull:
+            print('Dictionary of small molecule concentrations:')
+        for cID, (cCnc, thrLow, thrHigh) in self.dCnc.items():
+            if prFull and (prID is None or cID == prID):
+                print(cID + ': Current conc. ' + str(round(cCnc, GC.R04)) +
+                      '; "low" thr. ' + str(round(thrLow, GC.R04)) +
+                      '; "high" thr. ' + str(round(thrHigh, GC.R04)))
+            elif not prFull and (prID is None or cID == prID):
+                print(cID + ': Current conc. ' + str(round(cCnc, GC.R04)))
+    
+    def adaptPSites(self, inpDat, cO, dSites = {}):
+        for cSite, (bMod, cPAs) in dSites.items():
+            if bMod == GC.B_DO_PYL:
+                if Phosphorylation(inpDat, cO, cPAs, cSite).doPyl():
+                    print('Phosphorylation at site', cSite, 'happened!')
+            elif bMod == GC.B_DO_DEPYL:
+                if Dephosphorylation(inpDat, cO, cPAs, cSite).doDePyl():
+                    print('Dephosphorylation at site', cSite, 'happened!')
+
+    def getConcSMo(self, cID = None):
+        lConc = []
+        for cSMo in self.lSMo:
+            if cID is None or cSMo.idO == cID:
+                lConc.append(cSMo.cCnc)
+        return lConc
+        
+    def changeConcSMo(self, cTS, cID = None):
+        for cSMo in self.lSMo:
+            if cID is None or cSMo.idO == cID:
+                cSMo.changeConc(cTS)
+                assert cSMo.idO in self.dCnc
+                self.dCnc[cSMo.idO][0] = cSMo.cCnc
+        
     def createSystem(self, inpDat):
         lOSy = GF.lItToUniqueList(self.llOI) + self.lPs + self.lOO
         return System(inpDat, lOSys = lOSy)
@@ -50,8 +91,6 @@ class State(Base):
 class State_Int_Trans(State):
     def __init__(self, inpDat, cLPr, cSPr, lKAs, lPAs, lSMo, iTp = 90):
         assert len(lKAs) >= 2 and len(lPAs) >= 4
-        self.cLPr, self.cSPr = cLPr, cSPr
-        self.lKAs, self.lPAs, self.lSMo = lKAs, lPAs, lSMo
         if inpDat.dI['sStIni'] == GC.S_ST_A_INT_AT5G49770_NRT2P1:
             self.ini_St_A_Int_AT5G49770_NRT2p1(inpDat, cLPr, cSPr, lKAs, lPAs,
                                                lSMo, iTp = iTp)
@@ -67,23 +106,12 @@ class State_Int_Trans(State):
         else:
             self.idO = 'St_Int_Trans'
             self.descO = 'State interaction or transition'
-        self.dCnc = {cSMo.idO: cSMo.cCnc for cSMo in lSMo}
+        self.cLPr, self.cSPr = cLPr, cSPr
+        self.lKAs, self.lPAs, self.lSMo = lKAs, lPAs, lSMo
+        self.dCnc = {cSMo.idO: [cSMo.cCnc, cSMo.dITp['thrLowConc'],
+                                cSMo.dITp['thrHighConc']] for cSMo in lSMo}
         print('Initiated "State_Int_Trans" object.')
     
-    def printDCnc(self):
-        print('Dictionary of small molecule concentrations:')
-        for cID, cCnc in self.dCnc.items():
-            print(cID + ': ' + str(round(cCnc, GC.R04)))
-    
-    def adaptPSites(self, inpDat, cO, dSites = {}):
-        for cSite, (bMod, cPAs) in dSites.items():
-            if bMod == GC.B_DO_PYL:
-                if Phosphorylation(inpDat, cO, cPAs, cSite).doPyl():
-                    print('Phosphorylation at site', cSite, 'happened!')
-            elif bMod == GC.B_DO_DEPYL:
-                if Dephosphorylation(inpDat, cO, cPAs, cSite).doDePyl():
-                    print('Dephosphorylation at site', cSite, 'happened!')
-
     def ini_St_A_Int_AT5G49770_NRT2p1(self, inpDat, cLPr, cSPr, lKAs, lPAs,
                                       lSMo, iTp = 90):
         super().__init__(inpDat, llOInt = [[lKAs[0], cLPr]], lPAs = lPAs,
@@ -149,6 +177,7 @@ class State_Int_Trans(State):
         dSts = {GC.S_SPS_LPR1_S21: (GC.B_DO_PYL, self.lPs[2]),
                 GC.S_SPS_LPR1_S28: (GC.B_DO_DEPYL, self.lPs[3])}
         self.adaptPSites(inpDat, self.llOI[0][1], dSites = dSts)
+        print('Changed state to ' + self.idO + ' (' + self.descO + ').')
 
     def to_St_B_Trans_AT5G49770_NRT2p1(self, inpDat):
         self.idO = GC.S_ST_B_TRANS_AT5G49770_NRT2P1
@@ -157,6 +186,7 @@ class State_Int_Trans(State):
         self.lOO = self.lOO[:1] + self.lOO[2:]
         dSts = {GC.S_SPS_KAS1_S839: (GC.B_DO_PYL, self.lPs[0])}
         self.adaptPSites(inpDat, self.llOI[0][0], dSites = dSts)
+        print('Changed state to ' + self.idO + ' (' + self.descO + ').')
 
     def to_St_C_Int_NAR2p1_NRT2p1(self, inpDat):
         self.idO = GC.S_ST_C_INT_NAR2P1_NRT2P1
@@ -169,15 +199,11 @@ class State_Int_Trans(State):
         dSts = {GC.S_SPS_LPR1_S21: (GC.B_DO_DEPYL, self.lPs[2]),
                 GC.S_SPS_LPR1_S28: (GC.B_DO_PYL, self.lPs[3])}
         self.adaptPSites(inpDat, self.llOI[0][1], dSites = dSts)
+        print('Changed state to ' + self.idO + ' (' + self.descO + ').')
 
     def to_St_D_Trans_NAR2p1_NRT2p1(self, inpDat):
         self.idO = GC.S_ST_D_TRANS_NAR2P1_NRT2P1
         self.descO = 'State transition from NAR2p1-NRT2p1'
+        print('Changed state to ' + self.idO + ' (' + self.descO + ').')
     
-    def changeConcSMo(self, cTS):
-        for cSMo in self.lSMo:
-            cSMo.changeConc(cTS)
-            assert cSMo.idO in self.dCnc
-            self.dCnc[cSMo.idO] = cSMo.cCnc
-        
 ###############################################################################

@@ -25,7 +25,15 @@ L_ID_INT = ['Int']
 L_ID_PYL = ['Pyl']
 L_ID_DEPYL = ['DePyl']
 
+S_CONC_INI = 'concIni'
+S_MD_CONC_CH = 'mdConcCh'
+S_PER_CONC_CH = 'perConcCh'
+S_AMPL_CONC_CH = 'amplConcCh'
+S_THR_LOW_CONC = 'thrLowConc'
+S_THR_HIGH_CONC = 'thrHighConc'
 S_CH_SIN = 'sin'
+ID_NO3_1M = 'NO3_1m'
+ID_H2PO4_1M = 'H2PO4_1m'
 
 # --- constants related to specific sites -------------------------------------
 S_SPS_KAS1_S839 = 'S839'

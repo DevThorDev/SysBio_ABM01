@@ -45,7 +45,7 @@ def iniSystem(inpDG):
                DePyl03, DePyl04]
     return System(inpDG, lOSys = lSysCmp)
 
-def initialState(inpDG):
+def initialState(inpDG, ddVOvwr = {}, iV = 0):
     # Kinases AT5G49770 and X -------------------------------------------------
     KAsAT5G49770 = Kinase_AT5G49770(inpDG)
     KAsX = Kinase_X(inpDG)
@@ -61,6 +61,9 @@ def initialState(inpDG):
     # Small molecules NO3- and H2PO4- -----------------------------------------
     NO3_1m = SMo_NO3_1m(inpDG)
     H2PO4_1m = SMo_H2PO4_1m(inpDG)
+    # overwrite type dict. input of small molecules with values of ddVOvwr ----
+    NO3_1m.overwInpV(ddVOvwr, iV)
+    H2PO4_1m.overwInpV(ddVOvwr, iV)
     # Create initial state ----------------------------------------------------
     cSta = State_Int_Trans(inpDG, cLPr = NRT2p1, cSPr = NAR2p1,
                            lKAs = [KAsAT5G49770, KAsX],
@@ -68,5 +71,47 @@ def initialState(inpDG):
                            lSMo = [NO3_1m, H2PO4_1m])
     # Create system from state ------------------------------------------------
     return cSta, cSta.createSystem(inpDG)
+
+def changeStateConcDep(inpDG, cSta):
+    if cSta.dCnc[GC.ID_NO3_1M][0] < cSta.dCnc[GC.ID_NO3_1M][1]:
+        print('Current state is', cSta.idO, 'but might change soon...')
+        if cSta.idO == GC.S_ST_A_INT_AT5G49770_NRT2P1:
+            cSta.to_St_B_Trans_AT5G49770_NRT2p1(inpDG)
+            cSta.to_St_C_Int_NAR2p1_NRT2p1(inpDG)
+        elif cSta.idO == GC.S_ST_B_TRANS_AT5G49770_NRT2P1:
+            cSta.to_St_C_Int_NAR2p1_NRT2p1(inpDG)
+    elif cSta.dCnc[GC.ID_NO3_1M][0] > cSta.dCnc[GC.ID_NO3_1M][2]:
+        print('Current state is', cSta.idO, 'but might change soon...')
+        if cSta.idO == GC.S_ST_C_INT_NAR2P1_NRT2P1:
+            cSta.to_St_D_Trans_NAR2p1_NRT2p1(inpDG)
+            cSta.to_St_A_Int_AT5G49770_NRT2p1(inpDG)
+        elif cSta.idO == GC.S_ST_D_TRANS_NAR2P1_NRT2P1:
+            cSta.to_St_A_Int_AT5G49770_NRT2p1(inpDG)
+
+def evolveIni(inpDG, numSt = 1, ddVOvwr = {}):
+    lSt = []
+    for iSt in range(numSt):
+        cSt, cSys = initialState(inpDG, ddVOvwr, iSt)
+        lSt.append(cSt)
+    print('--- Initialisation done.')
+    return lSt
+
+def evolveTS(inpDG, lSt, curTS, numSt = 1, ddVOvwr = {}):
+    print('--- Current time step:', curTS)
+    for iSt in range(numSt):
+        print('- State', iSt + 1)
+        lSt[iSt].changeConcSMo(curTS)
+        lSt[iSt].printDCnc(prID = GC.ID_NO3_1M)
+        changeStateConcDep(inpDG, lSt[iSt])
+
+def evolveOverTime(inpDG, numSta = 1, ddVOvwr = {}):
+    for curTS in range(inpDG.dI['maxTS'] + 1):
+        if curTS == 0:
+            lSta = evolveIni(inpDG, numSta, ddVOvwr)
+        else:
+            evolveTS(inpDG, lSta, curTS, numSta, ddVOvwr)
+    for k, cSta in enumerate(lSta):
+        print('++++++++ State ' + str(k + 1) + ':')
+        cSta.printStateDetails()
 
 ###############################################################################
