@@ -2,6 +2,9 @@
 ###############################################################################
 # --- M_0__Main.py ------------------------------------------------------------
 ###############################################################################
+from numpy.random import default_rng as RNG
+
+import Core.C_00__GenConstants as GC
 import Core.F_00__GenFunctions as GF
 import Core.F_04__MainFunctions as MF
 
@@ -44,11 +47,12 @@ print('Added object types.')
 # cState.printStateDetails()
 
 # -----------------------------------------------------------------------------
-cState, cSystem = MF.initialState(inDG)
-for curTS in range(1, inDG.dI['maxTS'] + 1):
-    cState.changeConcSMo(curTS)
-    print('--- Current time step:', curTS)
-    cState.printDCnc()
+numStates = 8
+dVStoch = {GC.ID_NO3_1M: {GC.S_CONC_INI: RNG().uniform(4.6, 5.8, numStates),
+                          GC.S_PER_CONC_CH: RNG().uniform(10, 200, numStates)},
+           GC.ID_H2PO4_1M: {GC.S_CONC_INI: RNG().uniform(1.7, 2.2, numStates)}}
+
+MF.evolveOverTime(inDG, numSta = numStates, ddVOvwr = dVStoch)
     
 # -----------------------------------------------------------------------------
 
