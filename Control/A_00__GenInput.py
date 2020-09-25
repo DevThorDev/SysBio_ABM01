@@ -15,7 +15,7 @@ sStIni = GC.S_ST_D_TRANS_NAR2P1_NRT2P1    # initial state ID string
                                         # GC.S_ST_D_TRANS_NAR2P1_NRT2P1
 
 # --- Input: General ----------------------------------------------------------
-maxTS = 50
+maxTS = 10
 nDigObj = 3         # number of digits reserved for all input objects
 cMode = GC.M_DETER  # GC.M_DETER / GC.M_STOCH
 
