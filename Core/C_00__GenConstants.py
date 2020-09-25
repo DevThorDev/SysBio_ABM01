@@ -25,6 +25,8 @@ L_ID_INT = ['Int']
 L_ID_PYL = ['Pyl']
 L_ID_DEPYL = ['DePyl']
 
+S_CH_SIN = 'sin'
+
 # --- constants related to specific sites -------------------------------------
 S_SPS_KAS1_S839 = 'S839'
 S_SPS_KAS1_S870 = 'S870'

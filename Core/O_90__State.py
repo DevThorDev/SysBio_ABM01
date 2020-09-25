@@ -50,6 +50,8 @@ class State(Base):
 class State_Int_Trans(State):
     def __init__(self, inpDat, cLPr, cSPr, lKAs, lPAs, lSMo, iTp = 90):
         assert len(lKAs) >= 2 and len(lPAs) >= 4
+        self.cLPr, self.cSPr = cLPr, cSPr
+        self.lKAs, self.lPAs, self.lSMo = lKAs, lPAs, lSMo
         if inpDat.dI['sStIni'] == GC.S_ST_A_INT_AT5G49770_NRT2P1:
             self.ini_St_A_Int_AT5G49770_NRT2p1(inpDat, cLPr, cSPr, lKAs, lPAs,
                                                lSMo, iTp = iTp)
@@ -65,7 +67,13 @@ class State_Int_Trans(State):
         else:
             self.idO = 'St_Int_Trans'
             self.descO = 'State interaction or transition'
+        self.dCnc = {cSMo.idO: cSMo.cCnc for cSMo in lSMo}
         print('Initiated "State_Int_Trans" object.')
+    
+    def printDCnc(self):
+        print('Dictionary of small molecule concentrations:')
+        for cID, cCnc in self.dCnc.items():
+            print(cID + ': ' + str(round(cCnc, GC.R04)))
     
     def adaptPSites(self, inpDat, cO, dSites = {}):
         for cSite, (bMod, cPAs) in dSites.items():
@@ -165,5 +173,11 @@ class State_Int_Trans(State):
     def to_St_D_Trans_NAR2p1_NRT2p1(self, inpDat):
         self.idO = GC.S_ST_D_TRANS_NAR2P1_NRT2P1
         self.descO = 'State transition from NAR2p1-NRT2p1'
+    
+    def changeConcSMo(self, cTS):
+        for cSMo in self.lSMo:
+            cSMo.changeConc(cTS)
+            assert cSMo.idO in self.dCnc
+            self.dCnc[cSMo.idO] = cSMo.cCnc
         
 ###############################################################################
