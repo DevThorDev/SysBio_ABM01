@@ -1,20 +1,14 @@
 # -*- coding: utf-8 -*-
 ###############################################################################
-# --- B_101__KinaseAT5G49770.py -----------------------------------------------
+# --- B_150__Phosphatase0.py --------------------------------------------------
 ###############################################################################
-import Core.C_00__GenConstants as GC
 
 # --- general -----------------------------------------------------------------
-strOType = 'Kinase'
-strNSpec = 'Kinase A'
-strCS = 'AT5G49770'
-strCL = 'AT5G49770'
-dInfSpS = {'S839': {'Stat': GC.B_NOT_PYL,
-                    'Pyl': [GC.ID_KAS_1],
-                    'DePyl': [GC.ID_PAS_1]},
-           'S870': {'Stat': GC.B_NOT_PYL,
-                    'Pyl': [GC.ID_KAS_2],
-                    'DePyl': [GC.ID_PAS_2]}}
+strOType = 'Phosphatase'
+strNSpec = 'Standard Phosphatase'
+strCS = 'Phosphatase0'
+strCL = 'Standard Phosphatase 0'
+dInfSpS = {}
 
 # --- create input dictionary -------------------------------------------------
 dIO = {'strOType': strOType,

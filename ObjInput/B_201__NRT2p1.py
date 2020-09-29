@@ -10,11 +10,11 @@ strNSpec = 'NRT2.1'
 strCS = 'NRT2.1'
 strCL = 'NRT2p1'
 dInfSpS = {'S21': {'Stat': GC.B_NOT_PYL,
-                   'Pyl': ['Phosphatase3'],
-                   'DePyl': ['Phosphatase3']},
+                   'Pyl': [GC.ID_KAS_3],
+                   'DePyl': [GC.ID_PAS_3]},
            'S28': {'Stat': GC.B_NOT_PYL,
-                   'Pyl': ['Phosphatase4'],
-                   'DePyl': ['Phosphatase4']}}
+                   'Pyl': [GC.ID_KAS_X],
+                   'DePyl': [GC.ID_PAS_4]}}
 
 # --- create input dictionary -------------------------------------------------
 dIO = {'strOType': strOType,

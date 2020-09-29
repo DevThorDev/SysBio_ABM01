@@ -5,7 +5,7 @@
 
 # --- general -----------------------------------------------------------------
 strOType = 'Kinase'
-strNSpec = 'Kinase002'
+strNSpec = 'Kinase X'
 strCS = 'X'
 strCL = 'X'
 dInfSpS = {}
