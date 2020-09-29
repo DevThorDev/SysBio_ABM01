@@ -42,7 +42,7 @@ print('Added object types.')
 # cState.printStateDetails()
 
 # -----------------------------------------------------------------------------
-numStates = 3
+numStates = 2
 dVStoch = {GC.ID_NO3_1M: {GC.S_CONC_INI: RNG().uniform(4.6, 5.8, numStates),
                           GC.S_PER_CONC_CH: RNG().uniform(10, 200, numStates)},
            GC.ID_H2PO4_1M: {GC.S_CONC_INI: RNG().uniform(1.7, 2.2, numStates)}}
