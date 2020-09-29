@@ -41,9 +41,10 @@ class SmallMolecule(Metabolite):
         self.thrHighCnc = self.dITp[GC.S_THR_HIGH_CONC]
 
     def changeConc(self, cTS):
+        cncCh = 0
         if self.sCncCh == GC.S_CH_SIN:
-            self.cCnc = (self.stCnc +
-                         self.amplCncCh*np.sin(cTS*2*np.pi/self.perCncCh))
+            cncCh = self.amplCncCh*np.sin(cTS*2*np.pi/self.perCncCh)
+        self.cCnc = self.stCnc + cncCh
 
 class SMo_NO3_1m(SmallMolecule):
     def __init__(self, inpDat, iTp = 501, dStat = {}):

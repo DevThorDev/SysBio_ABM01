@@ -5,8 +5,6 @@
 import copy
 
 import Core.C_00__GenConstants as GC
-# import Core.F_00__GenFunctions as GF
-# import Core.F_02__PltFunctions as PF
 
 # --- Functions (general) -----------------------------------------------------
 
@@ -31,7 +29,17 @@ def doSiteChange(cO, sSpS, sAse, doDePyl = False):
         cO.dSpS[sSpS].sSPTM = dSpS['Stat']
     return opDone
 
-# --- Functions (O_90__System) ------------------------------------------------
+# --- Functions (O_90_State) --------------------------------------------------
+def complLSpec(inpDt, lOAll, sTp = 'KAs', sD = 'Pyl'):
+    lID = []
+    for cO in lOAll:
+        for cSpS in cO.dITp['dInfSpS']:
+            for idTp in cO.dITp['dInfSpS'][cSpS][sD]:
+                if idTp not in lID:
+                    lID.append(idTp)
+    return sorted(lID)
+
+# --- Functions (O_99__System) ------------------------------------------------
 def printSysComp(sCmp = 'Base', lOCmp = []):
     print('-'*8, sCmp, '-'*8)
     for cO in lOCmp:

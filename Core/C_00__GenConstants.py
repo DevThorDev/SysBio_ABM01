@@ -11,16 +11,30 @@ NM_EXT_PY = 'py'
 NM_EXT_PDF = 'pdf'
 
 # --- constants related to molecule objects -----------------------------------
+SPC_KAS_A = 'KAs_A'
+SPC_KAS_X = 'KAs_X'
+SPC_LPR_A = 'LPr_A'
+SPC_SPR_A = 'SPr_A'
+SPC_L_SMO = 'lSMo'
+
+ID_KAS_AT5G49770, ID_KAS_X = 'KAs_AT5G49770', 'KAs_X'
+ID_KAS_1, ID_KAS_2, ID_KAS_3 = 'KAs1', 'KAs2', 'KAs3'
+ID_PAS_1, ID_PAS_2, ID_PAS_3, ID_PAS_4 = 'PAs1', 'PAs2', 'PAs3', 'PAs4'
+ID_LPR_NRT2P1 = 'LPr_NRT2p1'
+ID_SPR_NAR2P1 = 'SPr_NAR2p1'
+ID_NO3_1M = 'NO3_1m'
+ID_H2PO4_1M = 'H2PO4_1m'
+
 L_ID_MOL = ['Mol']
 L_ID_PRO = ['Pro']
 L_ID_ENZ = ['Enz']
-L_ID_KAS = ['KAs', 'KAs_AT5G49770', 'KAs_X']
-L_ID_PAS = ['PAs', 'PAs1', 'PAs2', 'PAs3', 'PAs4']
-L_ID_LPR = ['LPr', 'LPr_NRT2p1']
-L_ID_SPR = ['SPr', 'SPr_NAR2p1']
+L_ID_KAS = ['KAs', ID_KAS_AT5G49770, ID_KAS_X, ID_KAS_1, ID_KAS_2, ID_KAS_3]
+L_ID_PAS = ['PAs', ID_PAS_1, ID_PAS_2, ID_PAS_3, ID_PAS_4]
+L_ID_LPR = ['LPr', ID_LPR_NRT2P1]
+L_ID_SPR = ['SPr', ID_SPR_NAR2P1]
 L_ID_MET = ['Met']
 L_ID_LMO = ['LMo']
-L_ID_SMO = ['SMo', 'NO3_1m', 'H2PO4_1m']
+L_ID_SMO = ['SMo', ID_NO3_1M, ID_H2PO4_1M]
 L_ID_INT = ['Int']
 L_ID_PYL = ['Pyl']
 L_ID_DEPYL = ['DePyl']
@@ -32,8 +46,6 @@ S_AMPL_CONC_CH = 'amplConcCh'
 S_THR_LOW_CONC = 'thrLowConc'
 S_THR_HIGH_CONC = 'thrHighConc'
 S_CH_SIN = 'sin'
-ID_NO3_1M = 'NO3_1m'
-ID_H2PO4_1M = 'H2PO4_1m'
 
 # --- constants related to specific sites -------------------------------------
 S_SPS_KAS1_S839 = 'S839'
