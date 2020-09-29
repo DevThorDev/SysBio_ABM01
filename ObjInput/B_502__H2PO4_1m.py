@@ -15,11 +15,14 @@ dInfSpS = {}
 concIni = 2                             # initial concentration of NO3-
 
 # --- changes over time in deterministic mode ---------------------------------
-mdConcCh = GC.S_CH_SIN                  # conc. change mode (S_CH_SIN)
+mdConcCh = GC.S_CH_SIN                  # conc. change mode (S_NO, S_CH_SIN)
 perConcCh = 500                         # conc. change period (time steps)
 amplConcCh = 1                          # conc. change amplitude
 thrLowConc = 1.4                        # threshold for "low" concentration
 thrHighConc = 2.5                       # threshold for "high" concentration
+
+propDecStAB = 0.07                      # prop. decrease in states A, B
+propIncStCD = 0.05                      # prop. increase in states C, D
 
 # --- create input dictionary -------------------------------------------------
 dIO = {'strOType': strOType,
@@ -28,11 +31,13 @@ dIO = {'strOType': strOType,
        'strCL': strCL,
        'dInfSpS': dInfSpS,
        # --- initial state
-       'concIni': concIni,
+       GC.S_CONC_INI: concIni,
        # --- changes over time in deterministic mode
-       'mdConcCh': mdConcCh,
-       'perConcCh': perConcCh,
-       'amplConcCh': amplConcCh,
-       'thrLowConc': thrLowConc,
-       'thrHighConc': thrHighConc}
+       GC.S_MD_CONC_CH: mdConcCh,
+       GC.S_PER_CONC_CH: perConcCh,
+       GC.S_AMPL_CONC_CH: amplConcCh,
+       GC.S_THR_LOW_CONC: thrLowConc,
+       GC.S_THR_HIGH_CONC: thrHighConc,
+       GC.S_PROP_DEC_ST_AB: propDecStAB,
+       GC.S_PROP_INC_ST_CD: propIncStCD}
 ###############################################################################
