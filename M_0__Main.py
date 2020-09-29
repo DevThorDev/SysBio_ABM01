@@ -12,11 +12,6 @@ from Control.A_00__GenInput import dictInpG
 from Core.C_00__GenConstants import NMD_OBJINP
 from Core.I_01__InpData import InputData
 
-# from Core.O_02__Protein import Kinase, Phosphatase, LargeProtein, SmallProtein
-# from Core.O_03__Metabolite import LargeMolecule, SmallMolecule
-# from Core.O_80__Interaction import (Interaction, Phosphorylation,
-#                                     Dephosphorylation)
-
 # ### MAIN ####################################################################
 startTime = GF.startSimu()
 # -----------------------------------------------------------------------------
@@ -47,7 +42,7 @@ print('Added object types.')
 # cState.printStateDetails()
 
 # -----------------------------------------------------------------------------
-numStates = 8
+numStates = 3
 dVStoch = {GC.ID_NO3_1M: {GC.S_CONC_INI: RNG().uniform(4.6, 5.8, numStates),
                           GC.S_PER_CONC_CH: RNG().uniform(10, 200, numStates)},
            GC.ID_H2PO4_1M: {GC.S_CONC_INI: RNG().uniform(1.7, 2.2, numStates)}}
