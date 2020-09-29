@@ -2,9 +2,8 @@
 ###############################################################################
 # --- O_03__Metabolite.py -----------------------------------------------------
 ###############################################################################
-import numpy as np
-
 import Core.C_00__GenConstants as GC
+import Core.F_03__OTpFunctions as TF
 
 from Core.O_01__Molecule import Molecule
 
@@ -40,11 +39,21 @@ class SmallMolecule(Metabolite):
         self.thrLowCnc = self.dITp[GC.S_THR_LOW_CONC]
         self.thrHighCnc = self.dITp[GC.S_THR_HIGH_CONC]
 
-    def changeConc(self, cTS):
-        cncCh = 0
-        if self.sCncCh == GC.S_CH_SIN:
-            cncCh = self.amplCncCh*np.sin(cTS*2*np.pi/self.perCncCh)
-        self.cCnc = self.stCnc + cncCh
+    def changeConc(self, cTS, idSt):
+        cCncTS, cCncChSt = self.cCnc, 0
+        if self.sCncCh == GC.S_NO:
+            cCncTS = self.cCnc
+        elif self.sCncCh == GC.S_CH_SIN:
+            cCncTS += TF.doSinChange(cTS, self.perCncCh, self.amplCncCh)
+        if idSt in [GC.S_ST_A_INT_AT5G49770_NRT2P1,
+                    GC.S_ST_B_TRANS_AT5G49770_NRT2P1]:
+            cCncChSt = -self.cCnc*self.dITp['propDecStAB']
+        elif idSt in [GC.S_ST_C_INT_NAR2P1_NRT2P1,
+                      GC.S_ST_D_TRANS_NAR2P1_NRT2P1]:
+            cCncChSt = self.cCnc*self.dITp['propIncStCD']
+        self.cCnc = max(0, cCncTS + cCncChSt)
+        print('cID:', self.idO, '- cTS:', cTS, '- idSt:', idSt, '- cCncTS:',
+              cCncTS, '- cCncChSt:', cCncChSt, '- self.cCnc:', self.cCnc)
 
 class SMo_NO3_1m(SmallMolecule):
     def __init__(self, inpDat, iTp = 501, dStat = {}):

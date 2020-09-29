@@ -45,6 +45,11 @@ S_PER_CONC_CH = 'perConcCh'
 S_AMPL_CONC_CH = 'amplConcCh'
 S_THR_LOW_CONC = 'thrLowConc'
 S_THR_HIGH_CONC = 'thrHighConc'
+
+S_PROP_DEC_ST_AB = 'propDecStAB'
+S_PROP_INC_ST_CD = 'propIncStCD'
+
+S_NO = 'no'
 S_CH_SIN = 'sin'
 
 # --- constants related to specific sites -------------------------------------

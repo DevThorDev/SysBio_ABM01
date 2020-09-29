@@ -63,10 +63,20 @@ class State(Base):
             elif not prFull and (prID is None or cID == prID):
                 print(cID + ': Current conc. ' + str(round(cCnc, GC.R04)))
     
+    def printDEvo(self):
+        for cIDO, ll in self.dEvo.items():
+            assert len(ll) == 3
+            assert len(ll[1]) == len(ll[0]) and len(ll[2]) == len(ll[0])
+            print('*'*8, cIDO, '*'*8)
+            for k in range(len(ll[0])):
+                print(round(ll[0][k], GC.R04), '|\t', round(ll[1][k], GC.R04),
+                      '|\t', ll[2][k], sep = '')
+    
     def complementLO(self, inpDat, dOState):
         self.lSMo = dOState[GC.SPC_L_SMO]
         self.dCnc = {cO.idO: [cO.cCnc, cO.dITp['thrLowConc'],
                               cO.dITp['thrHighConc']] for cO in self.lSMo}
+        self.dEvo = {cO.idO: [[0], [cO.cCnc], [self.idO]] for cO in self.lSMo}
         lOSy = GF.lItToUniqueList(self.llOI) + self.lOO + self.lSMo
         lID = TF.complLSpec(inpDat, lOSy, sTp = 'KAs', sD = 'Pyl')
         print('lID (KAs) =', lID)
@@ -95,9 +105,12 @@ class State(Base):
     def changeConcSMo(self, cTS, cID = None):
         for cSMo in self.lSMo:
             if cID is None or cSMo.idO == cID:
-                cSMo.changeConc(cTS)
+                cSMo.changeConc(cTS, self.idO)
                 assert cSMo.idO in self.dCnc
                 self.dCnc[cSMo.idO][0] = cSMo.cCnc
+            self.dEvo[cSMo.idO][0].append(cTS)
+            self.dEvo[cSMo.idO][1].append(cSMo.cCnc)
+            self.dEvo[cSMo.idO][2].append(self.idO)
         
     def createSystem(self, inpDat):
         lOSy = GF.lItToUniqueList(self.llOI) + self.lOO

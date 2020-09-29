@@ -109,5 +109,6 @@ def evolveOverTime(inpDG, numSta = 1, ddVOvwr = {}):
     for k, cSta in enumerate(lSta):
         print('++++++++ State ' + str(k + 1) + ':')
         cSta.printStateDetails()
+        cSta.printDEvo()
 
 ###############################################################################

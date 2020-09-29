@@ -3,6 +3,7 @@
 # --- F_03__OTpFunctions.py ---------------------------------------------------
 ###############################################################################
 import copy
+import numpy as np
 
 import Core.C_00__GenConstants as GC
 
@@ -13,6 +14,10 @@ def getDITp(dIG, iTp0, iTp):
     dITp = copy.deepcopy(dIG[iTp0])    # content of iTp = 0 input
     dITp.update(dIG[iTp])              # updated with iTp = iTp input
     return dITp
+
+# --- Functions (O_03__Metabolite) --------------------------------------------
+def doSinChange(x, cPer, cAmpl):
+    return cAmpl*np.sin(x*2*np.pi/cPer)
 
 # --- Functions (O_80__Interaction) -------------------------------------------
 def doSiteChange(cO, sSpS, sAse, doDePyl = False):
