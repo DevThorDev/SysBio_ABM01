@@ -4,6 +4,7 @@
 ###############################################################################
 import Core.C_00__GenConstants as GC
 import Core.F_00__GenFunctions as GF
+import Core.F_02__PltFunctions as PF
 import Core.F_03__OTpFunctions as TF
 
 from Core.O_00__Base import Base
@@ -22,8 +23,26 @@ class State(Base):
         self.llOI = llOInt
         self.lOO = lOOth
         self.complementLO(inpDat, dOState)
+        lSCol = [GC.S_TS, GC.S_CONC_NO3_1M, GC.S_CONC_H2PO4_1M, GC.S_STATE]
+        dfrShape = (self.dIG['maxTS'] + 1, len(lSCol))
+        self.dfrEvo = GF.iniPdDfr(lSNmC = lSCol, shape = dfrShape)
+        self.dfrEvo.iloc[0, :] = [0, self.lSMo[0].cCnc, self.lSMo[1].cCnc,
+                                  self.idO]
         print('Initiated "State" object.')
         
+    def complementLO(self, inpDat, dOState):
+        self.lSMo = dOState[GC.SPC_L_SMO]
+        self.dCnc = {cO.idO: [cO.cCnc, cO.dITp['thrLowConc'],
+                              cO.dITp['thrHighConc']] for cO in self.lSMo}
+        lOSy = GF.lItToUniqueList(self.llOI) + self.lOO + self.lSMo
+        lID = TF.complLSpec(inpDat, lOSy, sTp = 'KAs', sD = 'Pyl')
+        print('lID (KAs) =', lID)
+        self.lKAs0 = [Kinase0(inpDat, cID = ID) for ID in lID if ID not in
+                      [GC.ID_KAS_X]]        # as Kinase_X is a specific kinase
+        lID = TF.complLSpec(inpDat, lOSy, sTp = 'PAs', sD = 'DePyl')
+        print('lID (PAs) =', lID)
+        self.lPAs0 = [Phosphatase0(inpDat, cID = ID) for ID in lID]
+    
     def __str__(self):
         sIn = ('++++ State ' + self.idO + ' (' + self.descO + '):')
         return sIn
@@ -63,28 +82,19 @@ class State(Base):
             elif not prFull and (prID is None or cID == prID):
                 print(cID + ': Current conc. ' + str(round(cCnc, GC.R04)))
     
-    def printDEvo(self):
-        for cIDO, ll in self.dEvo.items():
-            assert len(ll) == 3
-            assert len(ll[1]) == len(ll[0]) and len(ll[2]) == len(ll[0])
-            print('*'*8, cIDO, '*'*8)
-            for k in range(len(ll[0])):
-                print(round(ll[0][k], GC.R04), '|\t', round(ll[1][k], GC.R04),
-                      '|\t', ll[2][k], sep = '')
-    
-    def complementLO(self, inpDat, dOState):
-        self.lSMo = dOState[GC.SPC_L_SMO]
-        self.dCnc = {cO.idO: [cO.cCnc, cO.dITp['thrLowConc'],
-                              cO.dITp['thrHighConc']] for cO in self.lSMo}
-        self.dEvo = {cO.idO: [[0], [cO.cCnc], [self.idO]] for cO in self.lSMo}
-        lOSy = GF.lItToUniqueList(self.llOI) + self.lOO + self.lSMo
-        lID = TF.complLSpec(inpDat, lOSy, sTp = 'KAs', sD = 'Pyl')
-        print('lID (KAs) =', lID)
-        self.lKAs0 = [Kinase0(inpDat, cID = ID) for ID in lID if ID not in
-                      [GC.ID_KAS_X]]        # as Kinase_X is a specific kinase
-        lID = TF.complLSpec(inpDat, lOSy, sTp = 'PAs', sD = 'DePyl')
-        print('lID (PAs) =', lID)
-        self.lPAs0 = [Phosphatase0(inpDat, cID = ID) for ID in lID]
+    def savePlotDfrEvo(self, kSt = 0, llIPlot = None):
+        assert len(self.lSMo) > 0
+        dITpSMo = self.lSMo[0].dITp
+        sNSt, sKSt = str(self.dIG['nStates']), str(kSt)
+        sF =  dITpSMo['sF_SMo'] + '_' + '0'*(len(sNSt) - len(sKSt)) + sKSt
+        TF.savePdDfr(self.dIG, self.dfrEvo, self.dIG['sPRes'],
+                     dITpSMo['sD_SMo'], sF)
+        if llIPlot is not None:
+            for lIPlot in llIPlot:
+                sFPlt = sF + '__' + '_'.join([str(iPlot) for iPlot in lIPlot])
+                sP = TF.getPF(self.dIG['sPPlt'], dITpSMo['sD_SMo'], sFPlt,
+                              sFExt = GC.NM_EXT_PDF)
+                PF.plotDfrEvo(self.dfrEvo, sP, lIPlot)
     
     def adaptPSites(self, inpDat, cO, dSites = {}):
         for cSite, (bMod, cAs) in dSites.items():
@@ -108,9 +118,8 @@ class State(Base):
                 cSMo.changeConc(cTS, self.idO)
                 assert cSMo.idO in self.dCnc
                 self.dCnc[cSMo.idO][0] = cSMo.cCnc
-            self.dEvo[cSMo.idO][0].append(cTS)
-            self.dEvo[cSMo.idO][1].append(cSMo.cCnc)
-            self.dEvo[cSMo.idO][2].append(self.idO)
+        self.dfrEvo.iloc[cTS, :] = [cTS, self.lSMo[0].cCnc, self.lSMo[1].cCnc,
+                                    self.idO]
         
     def createSystem(self, inpDat):
         lOSy = GF.lItToUniqueList(self.llOI) + self.lOO

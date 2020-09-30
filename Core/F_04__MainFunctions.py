@@ -84,31 +84,32 @@ def changeStateConcDep(inpDG, cSta):
         elif cSta.idO == GC.S_ST_D_TRANS_NAR2P1_NRT2P1:
             cSta.to_St_A_Int_AT5G49770_NRT2p1(inpDG)
 
-def evolveIni(inpDG, numSt = 1, ddVOvwr = {}):
+def evolveIni(inpDG, nSt = 1, ddVOvwr = {}):
     lSt = []
-    for iSt in range(numSt):
+    for iSt in range(nSt):
         cSt, cSys = initialState(inpDG, ddVOvwr, iSt)
         lSt.append(cSt)
     print('--- Initialisation done.')
     return lSt
 
-def evolveTS(inpDG, lSt, curTS, numSt = 1, ddVOvwr = {}):
+def evolveTS(inpDG, lSt, curTS, nSt = 1, ddVOvwr = {}):
     print('--- Current time step:', curTS)
-    for iSt in range(numSt):
+    for iSt in range(nSt):
         print('- State', iSt + 1)
         lSt[iSt].changeConcSMo(curTS)
         lSt[iSt].printDCnc(prID = GC.ID_NO3_1M)
         changeStateConcDep(inpDG, lSt[iSt])
 
-def evolveOverTime(inpDG, numSta = 1, ddVOvwr = {}):
+def evolveOverTime(inpDG, nSta = 1, ddVOvwr = {}):
     for curTS in range(inpDG.dI['maxTS'] + 1):
         if curTS == 0:
-            lSta = evolveIni(inpDG, numSta, ddVOvwr)
+            lSta = evolveIni(inpDG, nSta, ddVOvwr)
         else:
-            evolveTS(inpDG, lSta, curTS, numSta, ddVOvwr)
+            evolveTS(inpDG, lSta, curTS, nSta, ddVOvwr)
     for k, cSta in enumerate(lSta):
         print('++++++++ State ' + str(k + 1) + ':')
         cSta.printStateDetails()
-        cSta.printDEvo()
+        print(cSta.dfrEvo)
+        cSta.savePlotDfrEvo(kSt = k + 1, llIPlot = [[0, 1], [0, 2]])
 
 ###############################################################################

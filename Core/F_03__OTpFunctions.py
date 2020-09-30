@@ -2,17 +2,31 @@
 ###############################################################################
 # --- F_03__OTpFunctions.py ---------------------------------------------------
 ###############################################################################
-import copy
+import os, copy
 import numpy as np
+# import pandas as pd
 
 import Core.C_00__GenConstants as GC
+import Core.F_00__GenFunctions as GF
 
 # --- Functions (general) -----------------------------------------------------
+def getPF(sP, sD, sF, sFExt = GC.NM_EXT_CSV):
+    return GF.joinToPath(os.path.join(sP, sD), sF + '.' + sFExt)
+
+def savePdDfr(dIG, pdDfr, sP, sD, sF, sFExt = GC.NM_EXT_CSV, saveIt = True):
+    pF = getPF(sP, sD, sF, sFExt = sFExt)
+    if not os.path.isfile(pF) and saveIt:
+        pdDfr.to_csv(pF, sep = dIG['cSep'])
+    return pF
 
 # --- Functions (O_00__Base) --------------------------------------------------
-def getDITp(dIG, iTp0, iTp):
-    dITp = copy.deepcopy(dIG[iTp0])    # content of iTp = 0 input
-    dITp.update(dIG[iTp])              # updated with iTp = iTp input
+def getDITp(dIG, iTp, lITpU):
+    dITp = {}
+    if len(lITpU) > 0:
+        dITp = copy.deepcopy(dIG[lITpU[0]])     # content of lITpU[0] input
+    for iTpU in lITpU[1:]:
+        dITp.update(dIG[iTpU])                  # updated with iTpU input
+    dITp.update(dIG[iTp])                       # updated with iTp input
     return dITp
 
 # --- Functions (O_03__Metabolite) --------------------------------------------

@@ -6,8 +6,8 @@ from Core.O_00__Base import Base
 
 # +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 class Molecule(Base):
-    def __init__(self, inpDat, iTp):
-        super().__init__(inpDat, iTp)
+    def __init__(self, inpDat, iTp, lITpU = [0, 1]):
+        super().__init__(inpDat, iTp, lITpU = lITpU)
         self.idO = 'Mol'
         self.descO = 'Molecule'
         print('Initiated "Molecule" object.')

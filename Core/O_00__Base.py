@@ -5,16 +5,15 @@
 import pprint
 
 import Core.C_00__GenConstants as GC
-# import Core.F_00__GenFunctions as GF
 import Core.F_03__OTpFunctions as TF
 
 # +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 class Base:
-    def __init__(self, inpDat, iTp = 0):
+    def __init__(self, inpDat, iTp = 0, lITpU = [0]):
         self.idO = 'Base'
         self.descO = 'Base class'
         self.dIG = inpDat.dI
-        self.dITp = TF.getDITp(self.dIG, 0, iTp)
+        self.dITp = TF.getDITp(self.dIG, iTp, lITpU)
         self.cM = self.dIG['Mode']
         self.nSpS = 0                       # number of "special sites"
         self.sSpS = ''                      # string of "special site"

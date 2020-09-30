@@ -3,7 +3,6 @@
 # --- O_99__System.py ---------------------------------------------------------
 ###############################################################################
 import Core.C_00__GenConstants as GC
-# import Core.F_00__GenFunctions as GF
 import Core.F_03__OTpFunctions as TF
 
 from Core.O_00__Base import Base

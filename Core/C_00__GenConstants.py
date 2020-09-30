@@ -70,10 +70,16 @@ S_ST_B_TRANS_AT5G49770_NRT2P1 = 'St_B_Trans_AT5G49770_NRT2p1'
 S_ST_C_INT_NAR2P1_NRT2P1 = 'St_C_Int_NAR2p1_NRT2p1'
 S_ST_D_TRANS_NAR2P1_NRT2P1 = 'St_D_Trans_NAR2p1_NRT2p1'
 
+# --- constants related to model output ---------------------------------------
+S_TS = 'TimeStep'
+S_CONC_NO3_1M = 'Conc_NO3-'
+S_CONC_H2PO4_1M = 'Conc_H2PO4-'
+S_STATE = 'State'
+
 # --- other constants ---------------------------------------------------------
 M_DETER = 'Deterministic'
 M_STOCH = 'Stochastic'
-
+SEP_STD = ';'
 R04 = 4
 
 ###############################################################################
