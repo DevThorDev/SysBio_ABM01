@@ -84,9 +84,9 @@ class State(Base):
     
     def savePlotDfrEvo(self, kSt = 0, llIPlot = None):
         assert len(self.lSMo) > 0
-        dITpSMo = self.lSMo[0].dITp
         sNSt, sKSt = str(self.dIG['nStates']), str(kSt)
-        sF =  dITpSMo['sF_SMo'] + '_' + '0'*(len(sNSt) - len(sKSt)) + sKSt
+        dITpSMo, s0 = self.lSMo[0].dITp, '0'*(len(sNSt) - len(sKSt))
+        sF = dITpSMo['sPlt_Conc'] + dITpSMo['sF_SMo'] + '_' + s0 + sKSt
         TF.savePdDfr(self.dIG, self.dfrEvo, self.dIG['sPRes'],
                      dITpSMo['sD_SMo'], sF)
         if llIPlot is not None:
@@ -94,7 +94,8 @@ class State(Base):
                 sFPlt = sF + '__' + '_'.join([str(iPlot) for iPlot in lIPlot])
                 sP = TF.getPF(self.dIG['sPPlt'], dITpSMo['sD_SMo'], sFPlt,
                               sFExt = GC.NM_EXT_PDF)
-                PF.plotDfrEvo(self.dfrEvo, sP, lIPlot)
+                PF.plotDfrEvo(dITpSMo[dITpSMo['sPlt_Conc']], self.dfrEvo,
+                              sP, lIPlot)
     
     def adaptPSites(self, inpDat, cO, dSites = {}):
         for cSite, (bMod, cAs) in dSites.items():

@@ -42,18 +42,20 @@ def decorateSavePlot(pF, pdDfr, sTtl = None, xLbl = None, yLbl = None,
     plt.savefig(pF)
 
 # --- Functions (O_90_State) --------------------------------------------------
-def plotDfrEvo(pdDfr, pFPlt, lIPlt, tpMark = 'x', szMark = 5, ewMark = 2,
-               ecMark = (0.95, 0., 0.), fcMark = (0.9, 0.45, 0.),
+def plotDfrEvo(dIPlt, pdDfr, pFPlt, lIPlt, tpMark = 'x', szMark = 5,
+               ewMark = 2, ecMark = (0.95, 0., 0.), fcMark = (0.9, 0.45, 0.),
                styLn = 'solid', wdthLn = 1, colLn = 'b', sTtl = '', xLbl = '',
                yLbl = ''):
     if not os.path.isfile(pFPlt):
         assert len(lIPlt) >= 2
         cFig = plt.figure()
         cX, cY = pdDfr.iloc[:, lIPlt[0]], pdDfr.iloc[:, lIPlt[1:]]
-        plt.plot(cX, cY, marker = tpMark, ms = szMark, mew = ewMark,
-                 mec = ecMark, mfc = fcMark, ls = styLn, lw = wdthLn,
-                 color = colLn)
-        decorateSavePlot(pFPlt, cY, sTtl, xLbl, yLbl, pltAxXY = (False, True))
+        plt.plot(cX, cY, marker = dIPlt['tpMark'], ms = dIPlt['szMark'],
+                 mew = dIPlt['ewMark'], mec = dIPlt['ecMark'],
+                 mfc = dIPlt['fcMark'], ls = dIPlt['styLn'],
+                 lw = dIPlt['wdthLn'], color = dIPlt['colLn'])
+        decorateSavePlot(pFPlt, cY, dIPlt['title'], dIPlt['xLbl'],
+                         dIPlt['yLbl'], pltAxXY = (False, True))
         plt.close()
 
 ###############################################################################
