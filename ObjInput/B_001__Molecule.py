@@ -2,6 +2,7 @@
 ###############################################################################
 # --- B_001__Molecule.py ------------------------------------------------------
 ###############################################################################
+import Core.C_00__GenConstants as GC
 
 # --- general -----------------------------------------------------------------
 strOType = 'Molecule'
@@ -37,16 +38,16 @@ dIO = {'strOType': strOType,
        'sF_SMo': sF_SMo,
        # --- graphics parameters molecule concentrations plot
        'sPlt_Conc': sPlt_Conc,
-       sPlt_Conc: {'title': title_Conc,
-                   'xLbl': xLbl_Conc,
-                   'yLbl': yLbl_Conc,
-                   'tpMark': tpMark_Conc,
-                   'szMark': szMark_Conc,
-                   'ewMark': ewMark_Conc,
-                   'ecMark': ecMark_Conc,
-                   'fcMark': fcMark_Conc,
-                   'styLn': styLn_Conc,
-                   'wdthLn': wdthLn_Conc,
-                   'colLn': colLn_Conc},
+       GC.S_D_PLT: {sPlt_Conc: {'title': title_Conc,
+                                'xLbl': xLbl_Conc,
+                                'yLbl': yLbl_Conc,
+                                'tpMark': tpMark_Conc,
+                                'szMark': szMark_Conc,
+                                'ewMark': ewMark_Conc,
+                                'ecMark': ecMark_Conc,
+                                'fcMark': fcMark_Conc,
+                                'styLn': styLn_Conc,
+                                'wdthLn': wdthLn_Conc,
+                                'colLn': colLn_Conc}},
        }
 ###############################################################################
