@@ -76,6 +76,9 @@ S_CONC_NO3_1M = 'Conc_NO3-'
 S_CONC_H2PO4_1M = 'Conc_H2PO4-'
 S_STATE = 'State'
 
+# --- constants related to plots ----------------------------------------------
+S_D_PLT = 'dPlt'
+
 # --- other constants ---------------------------------------------------------
 M_DETER = 'Deterministic'
 M_STOCH = 'Stochastic'

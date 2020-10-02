@@ -2,7 +2,7 @@
 ###############################################################################
 # --- F_00__GenFunctions.py ---------------------------------------------------
 ###############################################################################
-import os, time
+import os, copy, time
 
 import numpy as np
 import pandas as pd
@@ -39,6 +39,22 @@ def lItToUniqueList(lIt):
             seAll = seAll.union(set(cIt))
         return list(seAll)
     return []
+
+def updateDITpDIPlt(dITpC, dITpU, lKSpc = [GC.S_D_PLT]):
+    for cKSpc in lKSpc:
+        if cKSpc in dITpC and cKSpc in dITpU:
+            dISpcC, dISpcU = dITpC[cKSpc], dITpU[cKSpc]
+            for cKSub in dISpcC:
+                if cKSub in dISpcU:
+                    dSubC, dSubU = dISpcC[cKSub], dISpcU[cKSub]
+                    dSubC.update(dSubU)
+            for cKSub in dISpcU:
+                if cKSub not in dISpcC:
+                    dISpcC[cKSub] = copy.deepcopy(dISpcU[cKSub])
+        elif cKSpc not in dITpC and cKSpc in dITpU:
+            dITpC[cKSpc] = copy.deepcopy(dITpU[cKSpc])
+    dITpURed = {cK: cV for cK, cV in dITpU.items() if cK not in lKSpc}
+    dITpC.update(dITpURed)
 
 def printElapsedTimeSim(stT, cT, sPre = 'Time'):
     # calculate and display elapsed time 
@@ -86,11 +102,5 @@ def iniPdDfr(data = None, lSNmC = [], lSNmR = [], shape = (0, 0)):
                                     index = lSNmR, columns = lSNmC)
             else:
                 return pd.DataFrame(data, index = lSNmR, columns = lSNmC)
-
-def savePdDfr(dITp, pdDfr, nmF, nmFExt = GC.NM_EXT_CSV, saveIt = True):
-    pF = getPF(dITp, nmF, nmFExt)
-    if not os.path.isfile(pF) and saveIt:
-        pdDfr.to_csv(pF, sep = dITp['cSep'])
-    return pF
 
 ###############################################################################

@@ -24,9 +24,9 @@ def getDITp(dIG, iTp, lITpU):
     dITp = {}
     if len(lITpU) > 0:
         dITp = copy.deepcopy(dIG[lITpU[0]])     # content of lITpU[0] input
-    for iTpU in lITpU[1:]:
-        dITp.update(dIG[iTpU])                  # updated with iTpU input
-    dITp.update(dIG[iTp])                       # updated with iTp input
+        for iTpU in lITpU[1:]:
+            GF.updateDITpDIPlt(dITp, dIG[iTpU]) # updated with iTpU input
+    GF.updateDITpDIPlt(dITp, dIG[iTp])          # updated with iTp input
     return dITp
 
 # --- Functions (O_03__Metabolite) --------------------------------------------

@@ -110,6 +110,7 @@ def evolveOverTime(inpDG, nSta = 1, ddVOvwr = {}):
         print('++++++++ State ' + str(k + 1) + ':')
         cSta.printStateDetails()
         print(cSta.dfrEvo)
-        cSta.savePlotDfrEvo(kSt = k + 1, llIPlot = [[0, 1], [0, 2]])
+        cSta.savePlotDfrEvo(kSt = k + 1, llIPlot = [[0, 1], [0, 2]], iSMo = 0)
+        cSta.savePlotDfrEvo(kSt = k + 1, llIPlot = [[0, 1], [0, 2]], iSMo = 1)
 
 ###############################################################################

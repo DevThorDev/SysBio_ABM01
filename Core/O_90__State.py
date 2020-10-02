@@ -82,20 +82,20 @@ class State(Base):
             elif not prFull and (prID is None or cID == prID):
                 print(cID + ': Current conc. ' + str(round(cCnc, GC.R04)))
     
-    def savePlotDfrEvo(self, kSt = 0, llIPlot = None):
-        assert len(self.lSMo) > 0
+    def savePlotDfrEvo(self, kSt = 0, llIPlot = None, iSMo = 0):
+        assert len(self.lSMo) > iSMo
         sNSt, sKSt = str(self.dIG['nStates']), str(kSt)
-        dITpSMo, s0 = self.lSMo[0].dITp, '0'*(len(sNSt) - len(sKSt))
+        dITpSMo, s0 = self.lSMo[iSMo].dITp, '0'*(len(sNSt) - len(sKSt))
         sF = dITpSMo['sPlt_Conc'] + dITpSMo['sF_SMo'] + '_' + s0 + sKSt
         TF.savePdDfr(self.dIG, self.dfrEvo, self.dIG['sPRes'],
                      dITpSMo['sD_SMo'], sF)
         if llIPlot is not None:
-            for lIPlot in llIPlot:
-                sFPlt = sF + '__' + '_'.join([str(iPlot) for iPlot in lIPlot])
-                sP = TF.getPF(self.dIG['sPPlt'], dITpSMo['sD_SMo'], sFPlt,
-                              sFExt = GC.NM_EXT_PDF)
-                PF.plotDfrEvo(dITpSMo[dITpSMo['sPlt_Conc']], self.dfrEvo,
-                              sP, lIPlot)
+            lIPlot = llIPlot[iSMo]
+            sFPlt = sF + '__' + '_'.join([str(iPlot) for iPlot in lIPlot])
+            sP = TF.getPF(self.dIG['sPPlt'], dITpSMo['sD_SMo'], sFPlt,
+                          sFExt = GC.NM_EXT_PDF)
+            PF.plotDfrEvo(dITpSMo[GC.S_D_PLT][dITpSMo['sPlt_Conc']],
+                          self.dfrEvo, sP, lIPlot)
     
     def adaptPSites(self, inpDat, cO, dSites = {}):
         for cSite, (bMod, cAs) in dSites.items():
