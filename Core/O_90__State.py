@@ -23,6 +23,7 @@ class State(Base):
         self.llOI = llOInt
         self.lOO = lOOth
         self.complementLO(inpDat, dOState)
+        self.prTrans = 0
         lSCol = [GC.S_TS, GC.S_CONC_NO3_1M, GC.S_CONC_H2PO4_1M, GC.S_STATE]
         dfrShape = (self.dIG['maxTS'] + 1, len(lSCol))
         self.dfrEvo = GF.iniPdDfr(lSNmC = lSCol, shape = dfrShape)
@@ -36,11 +37,9 @@ class State(Base):
                               cO.dITp['thrHighConc']] for cO in self.lSMo}
         lOSy = GF.lItToUniqueList(self.llOI) + self.lOO + self.lSMo
         lID = TF.complLSpec(inpDat, lOSy, sTp = 'KAs', sD = 'Pyl')
-        print('lID (KAs) =', lID)
         self.lKAs0 = [Kinase0(inpDat, cID = ID) for ID in lID if ID not in
                       [GC.ID_KAS_X]]        # as Kinase_X is a specific kinase
         lID = TF.complLSpec(inpDat, lOSy, sTp = 'PAs', sD = 'DePyl')
-        print('lID (PAs) =', lID)
         self.lPAs0 = [Phosphatase0(inpDat, cID = ID) for ID in lID]
     
     def __str__(self):

@@ -55,7 +55,7 @@ def plotDfrEvo(dIPlt, pdDfr, pFPlt, lIPlt, tpMark = 'x', szMark = 5,
                  mfc = dIPlt['fcMark'], ls = dIPlt['styLn'],
                  lw = dIPlt['wdthLn'], color = dIPlt['colLn'])
         decorateSavePlot(pFPlt, cY, dIPlt['title'], dIPlt['xLbl'],
-                         dIPlt['yLbl'], pltAxXY = (False, True))
+                         dIPlt['yLbl'], pltAxXY = dIPlt['pltAxXY_Conc'])
         plt.close()
 
 ###############################################################################
