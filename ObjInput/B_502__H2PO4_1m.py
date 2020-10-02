@@ -27,6 +27,7 @@ propIncStCD = 0.05                      # prop. increase in states C, D
 # --- graphics parameters molecule concentrations plot ------------------------
 sPlt_Conc = 'Conc'     # name of the plot and key of the input dict
 yLbl_Conc = 'Concentration H2PO4- [mMol]'    # y-label of plot
+yLbl_Conc = '$[H_2PO_4^-]$ (mM)'    # y-label of plot
 
 # --- create input dictionary -------------------------------------------------
 dIO = {'strOType': strOType,

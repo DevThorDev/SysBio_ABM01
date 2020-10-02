@@ -26,7 +26,7 @@ propIncStCD = 0.04                      # prop. increase in states C, D
 
 # --- graphics parameters molecule concentrations plot ------------------------
 sPlt_Conc = 'Conc'     # name of the plot and key of the input dict
-yLbl_Conc = 'Concentration NO3- [mMol]'    # y-label of plot
+yLbl_Conc = '$[NO_3^-]$ (mM)'    # y-label of plot
 
 # --- create input dictionary -------------------------------------------------
 dIO = {'strOType': strOType,

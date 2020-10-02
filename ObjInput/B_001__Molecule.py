@@ -27,6 +27,7 @@ fcMark_Conc = (1., 0.5, 0.)    # marker face colour of plot
 styLn_Conc = 'solid'    # line style of plot
 wdthLn_Conc = 1         # line width of plot
 colLn_Conc = (1., 0.5, 0.)     # line colour of plot
+pltAxXY_Conc = (True, True)    # plot x- and/or y-axis
 
 # --- create input dictionary -------------------------------------------------
 dIO = {'strOType': strOType,
@@ -48,6 +49,7 @@ dIO = {'strOType': strOType,
                                 'fcMark': fcMark_Conc,
                                 'styLn': styLn_Conc,
                                 'wdthLn': wdthLn_Conc,
-                                'colLn': colLn_Conc}},
+                                'colLn': colLn_Conc,
+                                'pltAxXY_Conc': pltAxXY_Conc}},
        }
 ###############################################################################
