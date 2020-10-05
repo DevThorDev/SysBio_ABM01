@@ -36,9 +36,9 @@ class Phosphorylation(Interaction):
         self.idAse = self.lOI[1].idO                        # 2nd obj. of list
         print('Initiated "Phosphorylation" object.')
         
-    def doPyl(self):
+    def doPyl(self, iLO = 0):
         # check if first interaction partner has site to be phosphorylated
-        return TF.doSiteChange(self.lOI[0], self.sSpS, self.idAse)
+        return TF.doSiteChange(self.lOI[iLO], self.sSpS, self.idAse)
 
 # +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 class Dephosphorylation(Interaction):
@@ -50,9 +50,9 @@ class Dephosphorylation(Interaction):
         self.idAse = self.lOI[1].idO                        # 2nd obj. of list
         print('Initiated "Dephosphorylation" object.')
         
-    def doDePyl(self):
+    def doDePyl(self, iLO = 0):
         # check if first interaction partner has site to be dephosphorylated
-        return TF.doSiteChange(self.lOI[0], self.sSpS, self.idAse,
+        return TF.doSiteChange(self.lOI[iLO], self.sSpS, self.idAse,
                                doDePyl = True)
 
 ###############################################################################

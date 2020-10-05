@@ -2,6 +2,8 @@
 ###############################################################################
 # --- O_01__Molecule.py -------------------------------------------------------
 ###############################################################################
+import Core.F_00__GenFunctions as GF
+
 from Core.O_00__Base import Base
 
 # +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -30,7 +32,6 @@ class Molecule(Base):
     
     def printSpecSites(self):
         if len(self.dSpS) > 0:
-            # print('-'*1 + ' Special sites: ' + '-'*24)
             for cSpS in self.dSpS.values():
                 print(cSpS)
     
@@ -42,8 +43,10 @@ class SpecSite:
     def __init__(self, dInSpS, sIDSpS, idMol, descMol):
         self.idSpS = sIDSpS                         # ID string of site
         self.sSPTM = dInSpS[self.idSpS]['Stat']     # status of PTM ('P-',...)
-        self.lPyl = dInSpS[self.idSpS]['Pyl']       # list of Pyl agents
-        self.lDePyl = dInSpS[self.idSpS]['DePyl']   # list of DePyl agents
+        self.lPyl = GF.getLFromLIt(dInSpS[self.idSpS]['Pyl'])     # list Pyl
+        self.lDePyl = GF.getLFromLIt(dInSpS[self.idSpS]['DePyl']) # list DePyl
+        self.lDParPPyl = GF.getLFromLIt(dInSpS[self.idSpS]['Pyl'], k = 1)
+        self.lDParPDePyl = GF.getLFromLIt(dInSpS[self.idSpS]['DePyl'], k = 1)
         self.idMol = idMol                          # ID of molecule
         self.descMol = descMol                      # description of molecule
 
@@ -51,7 +54,9 @@ class SpecSite:
         sIn = ('- Special site ' +  self.idSpS + ' of molecule ' + self.idMol +
                ' (' + self.descMol + ') with PTM ' + str(self.sSPTM) +
                ' has phosphorylation agents ' + str(self.lPyl) +
-               ' and dephosphorylation agents ' + str(self.lDePyl) + '.')
+               ' and dephosphorylation agents ' + str(self.lDePyl) +
+               '\nas well as Pyl prob. parameters\n' + str(self.lDParPPyl) +
+               '\nand DePyl prob. parameters\n' + str(self.lDParPDePyl) + '.')
         return sIn
 
 ###############################################################################

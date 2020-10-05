@@ -4,7 +4,6 @@
 ###############################################################################
 import os, copy
 import numpy as np
-# import pandas as pd
 
 import Core.C_00__GenConstants as GC
 import Core.F_00__GenFunctions as GF
@@ -36,16 +35,16 @@ def doSinChange(x, cPer, cAmpl):
 # --- Functions (O_80__Interaction) -------------------------------------------
 def doSiteChange(cO, sSpS, sAse, doDePyl = False):
     opDone = False
-    assert sSpS in cO.dITp['dInfSpS']
-    dSpS = cO.dITp['dInfSpS'][sSpS]
-    if not doDePyl and dSpS['Stat'] == GC.B_NOT_PYL and sAse in dSpS['Pyl']:
-        dSpS['Stat'] = GC.B_IS_PYL
+    assert sSpS in cO.dITp['dInfSpS'] and sSpS in cO.dSpS
+    dISpS, cSpS = cO.dITp['dInfSpS'][sSpS], cO.dSpS[sSpS]
+    if not doDePyl and dISpS['Stat'] == GC.B_NOT_PYL and sAse in cSpS.lPyl:
+        dISpS['Stat'] = GC.B_IS_PYL
         opDone = True
-    elif doDePyl and dSpS['Stat'] == GC.B_IS_PYL and sAse in dSpS['DePyl']:
-        dSpS['Stat'] = GC.B_NOT_PYL
+    elif doDePyl and dISpS['Stat'] == GC.B_IS_PYL and sAse in cSpS.lDePyl:
+        dISpS['Stat'] = GC.B_NOT_PYL
         opDone = True
     if opDone:
-        cO.dSpS[sSpS].sSPTM = dSpS['Stat']
+        cSpS.sSPTM = dISpS['Stat']
     return opDone
 
 # --- Functions (O_90_State) --------------------------------------------------
@@ -53,7 +52,7 @@ def complLSpec(inpDt, lOAll, sTp = 'KAs', sD = 'Pyl'):
     lID = []
     for cO in lOAll:
         for cSpS in cO.dITp['dInfSpS']:
-            for idTp in cO.dITp['dInfSpS'][cSpS][sD]:
+            for idTp in GF.getLFromLIt(cO.dITp['dInfSpS'][cSpS][sD]):
                 if idTp not in lID:
                     lID.append(idTp)
     return sorted(lID)

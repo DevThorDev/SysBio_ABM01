@@ -40,6 +40,15 @@ def lItToUniqueList(lIt):
         return list(seAll)
     return []
 
+def getLFromLIt(lIt, k = 0):
+    return [cIt[k] for cIt in lIt]
+
+def calcPSigmoidal(x, dParP):
+    pMin, pMax = dParP['prMin'], dParP['prMax']
+    B, C, D = dParP['B'], dParP['C'], dParP['D']
+    pInc = (pMax - pMin)*(B*(B + C)/C*(1/(B + C*np.exp(-D*x)) - 1/(B + C)))
+    return pMin + pInc
+
 def updateDITpDIPlt(dITpC, dITpU, lKSpc = [GC.S_D_PLT]):
     for cKSpc in lKSpc:
         if cKSpc in dITpC and cKSpc in dITpU:
