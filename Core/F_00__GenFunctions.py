@@ -25,12 +25,12 @@ def createDir(pF):
     if not os.path.isdir(pF):
         os.mkdir(pF)
 
-def joinToPath(pF = '', nmF = 'Dummy.txt'):
+def joinToPath(pF = '', sF = 'Dummy.txt'):
     if len(pF) > 0:
         createDir(pF)
-        return os.path.join(pF, nmF)
+        return os.path.join(pF, sF)
     else:
-        return nmF
+        return sF
 
 def lItToUniqueList(lIt):
     if len(lIt) > 0:

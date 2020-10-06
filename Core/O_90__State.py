@@ -96,6 +96,12 @@ class State(Base):
             PF.plotDfrEvo(dITpSMo[GC.S_D_PLT][dITpSMo['sPlt_Conc']],
                           self.dfrEvo, sP, lIPlot)
     
+    def changePSite(self, inpDat, cO):
+        if self.cM == GC.M_STOCH:
+            pass
+        else:
+            pass
+    
     def adaptPSites(self, inpDat, cO, dSites = {}):
         for cSite, (bMod, cAs) in dSites.items():
             if bMod == GC.B_DO_PYL:

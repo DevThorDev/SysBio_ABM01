@@ -45,8 +45,8 @@ def decorateSavePlot(pF, pdDfr, sTtl = None, xLbl = None, yLbl = None,
 def plotDfrEvo(dIPlt, pdDfr, pFPlt, lIPlt, tpMark = 'x', szMark = 5,
                ewMark = 2, ecMark = (0.95, 0., 0.), fcMark = (0.9, 0.45, 0.),
                styLn = 'solid', wdthLn = 1, colLn = 'b', sTtl = '', xLbl = '',
-               yLbl = ''):
-    if not os.path.isfile(pFPlt):
+               yLbl = '', overWrite = True):
+    if not os.path.isfile(pFPlt) or overWrite:
         assert len(lIPlt) >= 2
         cFig = plt.figure()
         cX, cY = pdDfr.iloc[:, lIPlt[0]], pdDfr.iloc[:, lIPlt[1:]]
