@@ -12,6 +12,8 @@ class Base:
     def __init__(self, inpDat, iTp = 0, lITpU = [0]):
         self.idO = 'Base'
         self.descO = 'Base class'
+        print('TEMP - inpDat Base:')
+        print(inpDat)
         self.dIG = inpDat.dI
         self.dITp = TF.getDITp(self.dIG, iTp, lITpU)
         self.cM = self.dIG['Mode']

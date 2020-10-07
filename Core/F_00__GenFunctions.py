@@ -43,6 +43,18 @@ def lItToUniqueList(lIt):
 def getLFromLIt(lIt, k = 0):
     return [cIt[k] for cIt in lIt]
 
+def addToDictCt(cD, cK, cCt = 1):
+    if cK in cD:
+        cD[cK] += cCt
+    else:
+        cD[cK] = cCt
+
+def addToDictL(cD, cK, cE):
+    if cK in cD:
+        cD[cK].append(cE)
+    else:
+        cD[cK] = [cE]
+
 def calcPSigmoidal(x, dParP):
     pMin, pMax = dParP['prMin'], dParP['prMax']
     B, C, D = dParP['B'], dParP['C'], dParP['D']

@@ -72,9 +72,10 @@ S_ST_D_TRANS_NAR2P1_NRT2P1 = 'St_D_Trans_NAR2p1_NRT2p1'
 
 # --- constants related to model output ---------------------------------------
 S_TS = 'TimeStep'
+S_TIME = 'Time'
+S_STATE = 'State'
 S_CONC_NO3_1M = 'Conc_NO3-'
 S_CONC_H2PO4_1M = 'Conc_H2PO4-'
-S_STATE = 'State'
 
 # --- constants related to plots ----------------------------------------------
 S_D_PLT = 'dPlt'
