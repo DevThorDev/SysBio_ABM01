@@ -2,15 +2,16 @@
 ###############################################################################
 # --- M_0__Main.py ------------------------------------------------------------
 ###############################################################################
-from numpy.random import default_rng as RNG
+# from numpy.random import default_rng as RNG
 
-import Core.C_00__GenConstants as GC
+# import Core.C_00__GenConstants as GC
 import Core.F_00__GenFunctions as GF
-import Core.F_04__MainFunctions as MF
+# import Core.F_04__MainFunctions as MF
 
 from Control.A_00__GenInput import dictInpG
 from Core.C_00__GenConstants import NMD_OBJINP
 from Core.I_01__InpData import InputData
+from Core.O_99__System import System
 
 # ### MAIN ####################################################################
 startTime = GF.startSimu()
@@ -42,13 +43,16 @@ print('Added object types.')
 # cState.printStateDetails()
 
 # -----------------------------------------------------------------------------
-nStates = inDG.dI['nStates']
-dStoch = {GC.ID_NO3_1M: {GC.S_CONC_INI: RNG().uniform(4.6, 5.8, nStates),
-                         GC.S_PER_CONC_CH: RNG().uniform(10, 200, nStates)},
-          GC.ID_H2PO4_1M: {GC.S_CONC_INI: RNG().uniform(1.7, 2.2, nStates)}}
+cSystem = System(inDG) 
+cSystem.printSystemIDs()
+cSystem.printSystemObj()
+# nStaObj = inDG.dI['nStaObj']
+# dStoch = {GC.ID_NO3_1M: {GC.S_CONC_INI: RNG().uniform(4.6, 5.8, nStaObj),
+#                          GC.S_PER_CONC_CH: RNG().uniform(10, 200, nStaObj)},
+#           GC.ID_H2PO4_1M: {GC.S_CONC_INI: RNG().uniform(1.7, 2.2, nStaObj)}}
 
-MF.evolveOverTime(inDG, nSta = nStates, ddVOvwr = dStoch)
-    
+# MF.evolve_TimeSteps(inDG, nObj = nStaObj, ddVOvwr = dStoch)
+
 # -----------------------------------------------------------------------------
 
 print('-'*80)
