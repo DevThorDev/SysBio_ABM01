@@ -9,6 +9,7 @@ strOType = 'Kinase'
 strNSpec = 'Kinase A'
 strCS = 'AT5G49770'
 strCL = 'AT5G49770'
+# 
 dParP_S839_KAs1_Pyl = {'prMin': 0, 'prMax': 0.15,
                        'B': 3, 'C': 2.5, 'D': 0.03}
 dParP_S839_PAs1_DePyl = {'prMin': 0, 'prMax': 0.25,
