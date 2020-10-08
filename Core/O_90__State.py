@@ -95,7 +95,7 @@ class State(Base):
             lIPlot = llIPlot[iSMo]
             sFPlt = sF + '__' + '_'.join([str(iPlot) for iPlot in lIPlot])
             sP = TF.getPF(self.dIG['sPPlt'], dITpSMo['sD_SMo'], sFPlt,
-                          sFExt = GC.NM_EXT_PDF)
+                          sFExt = GC.S_EXT_PDF)
             PF.plotDfrEvo(dITpSMo[GC.S_D_PLT][dITpSMo['sPlt_Conc']],
                           self.dfrEvo, sP, lIPlot)
     
@@ -137,8 +137,6 @@ class State(Base):
 
 class State_Int_Trans(State):
     def __init__(self, inpDat, sState, iTp = 90):
-        print('TEMP - inpDat State_Int_Trans:')
-        print(inpDat)
         self.createDOState(inpDat)
         if sState == GC.S_ST_A_INT_AT5G49770_NRT2P1:
             self.ini_St_A_Int_AT5G49770_NRT2p1(inpDat, iTp = iTp)
@@ -155,8 +153,6 @@ class State_Int_Trans(State):
     
     def createDOState(self, inpDat, ddVOvwr = {}, iV = 0):
         # Kinases KAsAT5G49770, KAsX ------------------------------------------
-        print('TEMP - inpDat Kinase:')
-        print(inpDat)
         KAsAT5G49770 = Kinase_AT5G49770(inpDat)
         KAsX = Kinase_X(inpDat)
         # Large protein NRT2.1 -----------------------------------------------

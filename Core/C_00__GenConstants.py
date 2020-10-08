@@ -3,12 +3,12 @@
 # --- C_00__GenConstants.py ---------------------------------------------------
 ###############################################################################
 # --- names of files and dirs -------------------------------------------------
-NMD_OBJINP = 'ObjInput'
-NMF_OBJINP_PRE = 'B_'
+S_D_OBJINP = 'ObjInput'
+S_F_OBJINP_PRE = 'B_'
 
-NM_EXT_CSV = 'csv'
-NM_EXT_PY = 'py'
-NM_EXT_PDF = 'pdf'
+S_EXT_CSV = 'csv'
+S_EXT_PY = 'py'
+S_EXT_PDF = 'pdf'
 
 # --- constants related to molecule objects -----------------------------------
 SPC_KAS_A = 'KAs_A'

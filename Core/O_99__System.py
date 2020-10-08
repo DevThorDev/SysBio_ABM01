@@ -2,9 +2,9 @@
 ###############################################################################
 # --- O_99__System.py ---------------------------------------------------------
 ###############################################################################
-# import Core.C_00__GenConstants as GC
+import Core.C_00__GenConstants as GC
 import Core.F_00__GenFunctions as GF
-# import Core.F_03__OTpFunctions as TF
+import Core.F_03__OTpFunctions as TF
 
 from Core.O_00__Base import Base
 from Core.O_90__State import State_Int_Trans
@@ -21,7 +21,7 @@ class System(Base):
         print('Initiated "System" object.')
     
     def addStObj(self, inpDat):
-        for sSt, nSt in self.dITp['dNStates'].items():
+        for sSt, nSt in self.dITp['dNStaObj'].items():
             for cSt in range(nSt):
                 self.lStO.append(State_Int_Trans(inpDat, sSt))
     
@@ -44,6 +44,11 @@ class System(Base):
             for cSt in lSt:
                 cSt.printStateDetails()
         print('*'*80)
+    
+    def evolveOverTime(self):
+        self.dResEvo = TF.Gillespie_StateMod(self.dIG, self.dITp)
+        self.pFResEvo = TF.saveDfrResEvo(self.dIG, self.dITp, self.dResEvo,
+                                         overWrite = True)
 
 # # +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # class System(Base):

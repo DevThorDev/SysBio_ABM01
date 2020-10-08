@@ -34,7 +34,7 @@ class InputData:
         return sIn
 
     def addObjTps(self, nmDObjInp):
-        nmPre, pyX = GC.NMF_OBJINP_PRE, GC.NM_EXT_PY
+        nmPre, pyX = GC.S_F_OBJINP_PRE, GC.S_EXT_PY
         for nmF in os.listdir(nmDObjInp):
             if len(nmF) >= len(nmPre) + self.dI['nDigObj'] + len(pyX):
                 if nmF.startswith(nmPre) and nmF.endswith(pyX):
