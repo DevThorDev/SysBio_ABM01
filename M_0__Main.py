@@ -9,7 +9,7 @@ import Core.F_00__GenFunctions as GF
 # import Core.F_04__MainFunctions as MF
 
 from Control.A_00__GenInput import dictInpG
-from Core.C_00__GenConstants import NMD_OBJINP
+from Core.C_00__GenConstants import S_D_OBJINP
 from Core.I_01__InpData import InputData
 from Core.O_99__System import System
 
@@ -18,7 +18,7 @@ startTime = GF.startSimu()
 # -----------------------------------------------------------------------------
 print('='*80, '\n', '-'*33, 'M_0__Main.py', '-'*33, '\n', '-'*80)
 inDG = InputData(dictInpG)
-inDG.addObjTps(NMD_OBJINP)
+inDG.addObjTps(S_D_OBJINP)
 print('Added object types.')
 # -----------------------------------------------------------------------------
 # cSystem = MF.iniSystem(inDG)
@@ -45,7 +45,9 @@ print('Added object types.')
 # -----------------------------------------------------------------------------
 cSystem = System(inDG) 
 cSystem.printSystemIDs()
-cSystem.printSystemObj()
+# cSystem.printSystemObj()
+cSystem.evolveOverTime()
+
 # nStaObj = inDG.dI['nStaObj']
 # dStoch = {GC.ID_NO3_1M: {GC.S_CONC_INI: RNG().uniform(4.6, 5.8, nStaObj),
 #                          GC.S_PER_CONC_CH: RNG().uniform(10, 200, nStaObj)},
