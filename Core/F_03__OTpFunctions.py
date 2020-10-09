@@ -3,7 +3,6 @@
 # --- F_03__OTpFunctions.py ---------------------------------------------------
 ###############################################################################
 import os, copy
-from operator import itemgetter
 import numpy as np
 from numpy.random import default_rng as RNG
 import pandas as pd
@@ -15,11 +14,17 @@ import Core.F_00__GenFunctions as GF
 def getPF(sP, sD, sF, sFExt = GC.S_EXT_CSV):
     return GF.joinToPath(os.path.join(sP, sD), sF + '.' + sFExt)
 
-def savePdDfr(dIG, pdDfr, sP, sD, sF, sFExt = GC.S_EXT_CSV, saveIt = True):
-    pF = getPF(sP, sD, sF, sFExt = sFExt)
-    if not os.path.isfile(pF) and saveIt:
-        pdDfr.to_csv(pF, sep = dIG['cSep'])
-    return pF
+def savePdDfr(dIG, pdDfr, sD, sF, overWrite = True, sFExt = GC.S_EXT_CSV):
+    sP = getPF(dIG['sPRes'], sD, sF, sFExt = sFExt)
+    if not os.path.isfile(sP) and overWrite:
+        pdDfr.to_csv(sP, sep = dIG['cSep'])
+    return sP
+
+def saveAsPdDfr(dIG, dRes, sD, sF, overWrite = True, sFExt = GC.S_EXT_CSV):
+    sP = getPF(dIG['sPRes'], sD, sF, sFExt = sFExt)
+    if not os.path.isfile(sP) or overWrite:
+        pd.DataFrame(dRes).to_csv(sP, sep = dIG['cSep'])
+    return sP
 
 # --- Functions (O_00__Base) --------------------------------------------------
 def getDITp(dIG, iTp, lITpU):
@@ -61,25 +66,18 @@ def complLSpec(inpDt, lOAll, sTp = 'KAs', sD = 'Pyl'):
     return sorted(lID)
 
 # --- Functions (O_99__System) ------------------------------------------------
-def iniDictOut(dITp, t = 0.):
+def createDCnc(dITp):
+    dCI = dITp['dConcIni']
+    return {s: GF.drawFromDist(dCI[s]['cTp'], dCI[s]['dPar']) for s in dCI}
+
+def iniDictOut(dITp, dCnc, t = 0.):
     dO = {'dN': {}, 'dH': {}, 'h': 0., 'dRes': {GC.S_TIME: [t]}}
+    for s, cCnc in dCnc.items():
+        dO['dRes'][s] = [cCnc]
     for s, k in dITp['dNStaObj'].items():
         dO['dRes'][s] = [k]
         dO['dN'][s] = k
     return dO
-
-def reCalcReactHazardsCR(dITp, dO):
-    dRRC, dH = dITp['dRRC'], dO['dH']
-    # recalculate dH, which contains the h_i (i = 1,... len(dH))
-    dH['A_B'] = dRRC['A_B']*dO['dN'][GC.S_ST_A_INT_AT5G49770_NRT2P1]
-    dH['B_C'] = dRRC['B_C']*dO['dN'][GC.S_ST_B_TRANS_AT5G49770_NRT2P1]
-    dH['C_D'] = dRRC['C_D']*dO['dN'][GC.S_ST_C_INT_NAR2P1_NRT2P1]
-    dH['D_A'] = dRRC['D_A']*dO['dN'][GC.S_ST_D_TRANS_NAR2P1_NRT2P1]
-    # h, the sum of the h_i, is the overall reaction hazard
-    dO['h'] = sum(dH.values())
-    # sort dH in ascending order for numerical stability
-    dO['dH'] = {cK: cV/dO['h'] for cK, cV in
-                sorted(dH.items(), key = itemgetter(1))}
 
 def getSRct(dO):
     uRN, cSum, rIdx = RNG().random(), 0., len(dO['dH']) - 1
@@ -122,30 +120,26 @@ def nextEvent(dITp, dO, T, cTS):
         tToNxt = T - dO['dRes'][GC.S_TIME][cTS]
     return tToNxt
 
-def updateDictOut(dITp, dO, t):
+def updateDictOut(dITp, dO, dCnc, t):
     dO['dRes'][GC.S_TIME].append(t)
+    for s, cCnc in dCnc.items():
+        dO['dRes'][s].append(cCnc)
     for s in dO['dN']:
         dO['dRes'][s].append(dO['dN'][s])
      
-def Gillespie_StateMod(dIG, dITp):
-    t, T, cTSt = dIG['tStart'], dIG['tMax'], 0
-    dO = iniDictOut(dITp, t)
-    while t < T:
-        # adapt the re-calc reaction rate hazards function to current system
-        reCalcReactHazardsCR(dITp, dO)
-        # do next event and update time with tToNext
-        t += nextEvent(dITp, dO, T, cTSt)
-        # update the data storage matrix
-        if t < T:
-            updateDictOut(dITp, dO, t)
-        cTSt += 1
-    return dO['dRes']
-
-def saveDfrResEvo(dIG, dITp, dResEvo, overWrite = True):
-    sP = getPF(dIG['sPRes'], dITp['sD_Sys'], dITp['sF_SysEvo'])
-    if not os.path.isfile(sP) or overWrite:
-        pd.DataFrame(dResEvo).to_csv(sP, sep = dIG['cSep'])
-    return sP
+# def Gillespie_StateMod(dIG, dITp):
+#     t, T, cTSt = dIG['tStart'], dIG['tMax'], 0
+#     dO = iniDictOut(dITp, t)
+#     while t < T:
+#         # adapt the re-calc reaction rate hazards function to current system
+#         reCalcReactHazardsCR(dITp, dO)
+#         # do next event and update time with tToNext
+#         t += nextEvent(dITp, dO, T, cTSt)
+#         # update the data storage matrix
+#         if t < T:
+#             updateDictOut(dITp, dO, t)
+#         cTSt += 1
+#     return dO['dRes']
 
 # def printSysComp(sCmp = 'Base', lOCmp = []):
 #     print('-'*8, sCmp, '-'*8)

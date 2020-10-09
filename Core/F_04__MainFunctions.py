@@ -46,9 +46,6 @@ from Core.O_90__State import State_Int_Trans
 #                DePyl01, DePyl02, DePyl03, DePyl04]
 #     return System(inpDG, lOSys = lSysCmp)
 
-def iniSystem(inpDG):
-    pass
-
 def initialState(inpDG, ddVOvwr = {}, iV = 0):
     # Kinases KAsAT5G49770, KAsX ----------------------------------------------
     KAsAT5G49770 = Kinase_AT5G49770(inpDG)
@@ -110,18 +107,6 @@ def evolve_TimeSteps(inpDG, nObj = 1, ddVOvwr = {}):
     lStO = evolveIni(inpDG, nObj, ddVOvwr)
     for curTS in range(1, inpDG.dI['maxTS'] + 1):
         evolveTS(inpDG, lStO, curTS, nObj, ddVOvwr)
-    for k, cStO in enumerate(lStO):
-        print('++++++++ State ' + str(k + 1) + ':')
-        cStO.printStateDetails()
-        print(cStO.dfrEvo)
-        cStO.savePlotDfrEvo(kSt = k + 1, llIPlot = [[0, 1], [0, 2]], iSMo = 0)
-        cStO.savePlotDfrEvo(kSt = k + 1, llIPlot = [[0, 1], [0, 2]], iSMo = 1)
-
-def evolve_MaxTime(inpDG, nObj = 1, ddVOvwr = {}):
-    lStO = evolveIni(inpDG, nObj, ddVOvwr)
-    t, T = inpDG.dI['tStart'], inpDG.dI['tMax']
-    while t < T:
-        evolveTS(inpDG, lStO, t, nObj, ddVOvwr)
     for k, cStO in enumerate(lStO):
         print('++++++++ State ' + str(k + 1) + ':')
         cStO.printStateDetails()

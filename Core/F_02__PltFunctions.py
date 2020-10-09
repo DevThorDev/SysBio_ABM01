@@ -4,6 +4,7 @@
 ###############################################################################
 import os
 import matplotlib.pyplot as plt
+import pandas as pd
 
 # --- Functions (general) -----------------------------------------------------
 def pltXYAxis(cDfr, nmCX = None, nmCY = None, pltAxXY = (True, True)):
@@ -42,13 +43,14 @@ def decorateSavePlot(pF, pdDfr, sTtl = None, xLbl = None, yLbl = None,
     plt.savefig(pF)
 
 # --- Functions (O_90_State) --------------------------------------------------
-def plotDfrEvo(dIPlt, pdDfr, pFPlt, lIPlt, tpMark = 'x', szMark = 5,
+def plotDCncEvo(dIPlt, dCncEvo, pFPlt, lIPlt, tpMark = 'x', szMark = 5,
                ewMark = 2, ecMark = (0.95, 0., 0.), fcMark = (0.9, 0.45, 0.),
                styLn = 'solid', wdthLn = 1, colLn = 'b', sTtl = '', xLbl = '',
                yLbl = '', overWrite = True):
     if not os.path.isfile(pFPlt) or overWrite:
         assert len(lIPlt) >= 2
         cFig = plt.figure()
+        pdDfr = pd.DataFrame(dCncEvo)
         cX, cY = pdDfr.iloc[:, lIPlt[0]], pdDfr.iloc[:, lIPlt[1:]]
         plt.plot(cX, cY, marker = dIPlt['tpMark'], ms = dIPlt['szMark'],
                  mew = dIPlt['ewMark'], mec = dIPlt['ecMark'],

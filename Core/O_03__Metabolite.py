@@ -39,21 +39,21 @@ class SmallMolecule(Metabolite):
         self.thrLowCnc = self.dITp[GC.S_THR_LOW_CONC]
         self.thrHighCnc = self.dITp[GC.S_THR_HIGH_CONC]
 
-    def changeConc(self, cTS, idSt):
-        cCncTS, cCncChSt = self.cCnc, 0
+    def changeConc(self, t, idSt):
+        cCnc_t, cCncChSt = self.cCnc, 0
         if self.sCncCh == GC.S_NO:
-            cCncTS = self.cCnc
+            cCnc_t = self.cCnc
         elif self.sCncCh == GC.S_CH_SIN:
-            cCncTS += TF.doSinChange(cTS, self.perCncCh, self.amplCncCh)
+            cCnc_t += TF.doSinChange(t, self.perCncCh, self.amplCncCh)
         if idSt in [GC.S_ST_A_INT_AT5G49770_NRT2P1,
                     GC.S_ST_B_TRANS_AT5G49770_NRT2P1]:
             cCncChSt = -self.cCnc*self.dITp['propDecStAB']
         elif idSt in [GC.S_ST_C_INT_NAR2P1_NRT2P1,
                       GC.S_ST_D_TRANS_NAR2P1_NRT2P1]:
             cCncChSt = self.cCnc*self.dITp['propIncStCD']
-        self.cCnc = max(0, cCncTS + cCncChSt)
-        print('cID:', self.idO, '- cTS:', cTS, '- idSt:', idSt, '- cCncTS:',
-              cCncTS, '- cCncChSt:', cCncChSt, '- self.cCnc:', self.cCnc)
+        self.cCnc = max(0, cCnc_t + cCncChSt)
+        # print('cID:', self.idO, '- t:', t, '- idSt:', idSt, '- cCnc_t:',
+        #       cCnc_t, '- cCncChSt:', cCncChSt, '- self.cCnc:', self.cCnc)
 
 class SMo_NO3_1m(SmallMolecule):
     def __init__(self, inpDat, iTp = 501, dStat = {}):

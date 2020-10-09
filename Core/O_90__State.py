@@ -27,11 +27,10 @@ class State(Base):
         self.lOO = lOOth
         self.complementLO(inpDat, dOState)
         self.prTrans = 0
-        lSCol = [GC.S_TS, GC.S_CONC_NO3_1M, GC.S_CONC_H2PO4_1M, GC.S_STATE]
-        dfrShape = (self.dIG['maxTS'] + 1, len(lSCol))
-        self.dfrEvo = GF.iniPdDfr(lSNmC = lSCol, shape = dfrShape)
-        self.dfrEvo.iloc[0, :] = [0, self.lSMo[0].cCnc, self.lSMo[1].cCnc,
-                                  self.idO]
+        self.dCncEvo = {GC.S_TIME: [self.dIG['tStart']],
+                        GC.S_CONC_NO3_1M: [self.lSMo[0].cCnc],
+                        GC.S_CONC_H2PO4_1M: [self.lSMo[1].cCnc],
+                        GC.S_STATE: [self.idO]}
         print('Initiated "State" object.')
         
     def complementLO(self, inpDat, dOState):
@@ -84,20 +83,20 @@ class State(Base):
             elif not prFull and (prID is None or cID == prID):
                 print(cID + ': Current conc. ' + str(round(cCnc, GC.R04)))
     
-    def savePlotDfrEvo(self, kSt = 0, llIPlot = None, iSMo = 0):
+    def savePlotDCncEvo(self, kSt = 0, llIPlot = None, iSMo = 0):
         assert len(self.lSMo) > iSMo
         sNSt, sKSt = str(self.dIG['nStates']), str(kSt)
         dITpSMo, s0 = self.lSMo[iSMo].dITp, '0'*(len(sNSt) - len(sKSt))
         sF = dITpSMo['sPlt_Conc'] + dITpSMo['sF_SMo'] + '_' + s0 + sKSt
-        TF.savePdDfr(self.dIG, self.dfrEvo, self.dIG['sPRes'],
-                     dITpSMo['sD_SMo'], sF)
+        TF.saveAsPdDfr(self.dIG, self.dCncEvo, dITpSMo['sD_SMo'], sF,
+                       overWrite = True)
         if llIPlot is not None:
             lIPlot = llIPlot[iSMo]
             sFPlt = sF + '__' + '_'.join([str(iPlot) for iPlot in lIPlot])
             sP = TF.getPF(self.dIG['sPPlt'], dITpSMo['sD_SMo'], sFPlt,
                           sFExt = GC.S_EXT_PDF)
-            PF.plotDfrEvo(dITpSMo[GC.S_D_PLT][dITpSMo['sPlt_Conc']],
-                          self.dfrEvo, sP, lIPlot)
+            PF.plotDCncEvo(dITpSMo[GC.S_D_PLT][dITpSMo['sPlt_Conc']],
+                           self.dCncEvo, sP, lIPlot)
     
     def changePSite(self, inpDat, cO):
         if self.cM == GC.M_STOCH:
@@ -121,19 +120,14 @@ class State(Base):
                 lConc.append(cSMo.cCnc)
         return lConc
         
-    def changeConcSMo(self, cTS, cID = None):
+    def changeConcSMo(self, t, cID = None):
         for cSMo in self.lSMo:
             if cID is None or cSMo.idO == cID:
-                cSMo.changeConc(cTS, self.idO)
+                cSMo.changeConc(t, self.idO)
                 assert cSMo.idO in self.dCnc
                 self.dCnc[cSMo.idO][0] = cSMo.cCnc
-        self.dfrEvo.iloc[cTS, :] = [cTS, self.lSMo[0].cCnc, self.lSMo[1].cCnc,
-                                    self.idO]
-        
-    # def createSystem(self, inpDat):
-    #     lOSy = GF.lItToUniqueList(self.llOI) + self.lOO
-    #     lOSy += self.lKAs0 + self.lPAs0 + self.lSMo
-    #     return System(inpDat, lOSys = lOSy)
+        lCEl = [t, self.lSMo[0].cCnc, self.lSMo[1].cCnc, self.idO]
+        GF.appendToDictL(self.dCncEvo, lCEl)
 
 class State_Int_Trans(State):
     def __init__(self, inpDat, sState, iTp = 90):

@@ -5,6 +5,7 @@
 import os, copy, time
 
 import numpy as np
+from numpy.random import default_rng as RNG
 import pandas as pd
 
 import Core.C_00__GenConstants as GC
@@ -54,6 +55,22 @@ def addToDictL(cD, cK, cE):
         cD[cK].append(cE)
     else:
         cD[cK] = [cE]
+
+def appendToDictL(cD, lE):
+    assert len(lE) == len(cD)
+    for i, cK in enumerate(cD):
+        cD[cK].append(lE[i])
+
+def drawFromDist(sDist, dPar, nVal = None):
+    if sDist == 'uniform':
+        assert 'min' in dPar and 'max' in dPar
+        return RNG().uniform(dPar['min'], dPar['max'], nVal)
+    elif sDist == 'normal':
+        assert 'mean' in dPar and 'sd' in dPar
+        return RNG().normal(dPar['min'], dPar['max'], nVal)
+    else:
+        print('WARNING: Option', sDist, 'not implemented. Returning 0...')
+        return 0
 
 def calcPSigmoidal(x, dParP):
     pMin, pMax = dParP['prMin'], dParP['prMax']

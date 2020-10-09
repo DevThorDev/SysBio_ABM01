@@ -51,6 +51,5 @@ class Base:
                     elif cK == GC.S_THR_HIGH_CONC:
                         self.thrHighCnc = cArr[i]
                     print('Changed', cK, 'to', round(cArr[i], 4))
-            
 
 ###############################################################################
