@@ -44,11 +44,10 @@ print('Added object types.')
 
 # -----------------------------------------------------------------------------
 cSystem = System(inDG) 
+cSystem.evolveOverTime()
 cSystem.printSystemIDs()
 # cSystem.printSystemObj()
-cSystem.evolveOverTime()
 
-# nStaObj = inDG.dI['nStaObj']
 # dStoch = {GC.ID_NO3_1M: {GC.S_CONC_INI: RNG().uniform(4.6, 5.8, nStaObj),
 #                          GC.S_PER_CONC_CH: RNG().uniform(10, 200, nStaObj)},
 #           GC.ID_H2PO4_1M: {GC.S_CONC_INI: RNG().uniform(1.7, 2.2, nStaObj)}}
