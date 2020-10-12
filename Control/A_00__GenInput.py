@@ -17,9 +17,10 @@ levelDebugOut = 2   # level of debug output (0: no debug output)
 #                                         # GC.S_ST_D_TRANS_NAR2P1_NRT2P1
 
 # --- Input: Flow control -----------------------------------------------------
-maxTS = 100                             # for the time step mode
-tStart = 0                              # for the max time mode
-tMax = 100.0                            # for the max time mode
+tStart = 0
+tMax = 1000.
+maxTS = 1000000
+dispTS = 50
 
 # --- Input: General ----------------------------------------------------------
 nDigObj = 3         # number of digits reserved for all input objects
@@ -34,9 +35,10 @@ sPPlt = os.path.join('..', '..', '11_SysBio01_ABM01', '50_ModelPlots')
 dictInpG = {# --- Input: Debug Info
             'lvlDbg': levelDebugOut,
             # --- Input: Flow control
-            'maxTS': maxTS,
             'tStart': tStart,
             'tMax': tMax,
+            'maxTS': maxTS,
+            'dispTS': dispTS,
             # --- Input: General
             'nDigObj': nDigObj,
             'Mode': cMode,
