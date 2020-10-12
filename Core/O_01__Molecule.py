@@ -12,7 +12,7 @@ class Molecule(Base):
         super().__init__(inpDat, iTp, lITpU = lITpU)
         self.idO = 'Mol'
         self.descO = 'Molecule'
-        print('Initiated "Molecule" object.')
+        # print('Initiated "Molecule" object.')
 
     def __str__(self):
         sIn = ('-- Molecule ' + self.idO + ' (' + self.descO + ')')

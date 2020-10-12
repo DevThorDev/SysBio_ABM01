@@ -72,11 +72,14 @@ def drawFromDist(sDist, dPar, nVal = None):
         print('WARNING: Option', sDist, 'not implemented. Returning 0...')
         return 0
 
-def calcPSigmoidal(x, dParP):
+def calcPSigmoidal(x, dParP, isIncr = True):
     pMin, pMax = dParP['prMin'], dParP['prMax']
     B, C, D = dParP['B'], dParP['C'], dParP['D']
-    pInc = (pMax - pMin)*(B*(B + C)/C*(1/(B + C*np.exp(-D*x)) - 1/(B + C)))
-    return pMin + pInc
+    fCh = (B*(B + C)/C*(1/(B + C*np.exp(-D*x)) - 1/(B + C)))
+    if isIncr:
+        return pMin + (pMax - pMin)*fCh
+    else:
+        return pMax + (pMin - pMax)*fCh
 
 def updateDITpDIPlt(dITpC, dITpU, lKSpc = [GC.S_D_PLT]):
     for cKSpc in lKSpc:

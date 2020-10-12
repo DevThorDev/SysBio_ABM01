@@ -14,7 +14,7 @@ class Interaction(Base):
         self.idO = 'Int'
         self.descO = 'Interaction'
         self.lOI = lOInt
-        print('Initiated "Interaction" object.')
+        # print('Initiated "Interaction" object.')
 
     def printObjInt(self):
         lTIP = []
@@ -34,7 +34,7 @@ class Phosphorylation(Interaction):
         self.descO = 'Phosphorylation'
         self.sSpS = sSpSite
         self.idAse = self.lOI[1].idO                        # 2nd obj. of list
-        print('Initiated "Phosphorylation" object.')
+        # print('Initiated "Phosphorylation" object.')
         
     def doPyl(self, iLO = 0):
         # check if first interaction partner has site to be phosphorylated
@@ -48,7 +48,7 @@ class Dephosphorylation(Interaction):
         self.descO = 'Dephosphorylation'
         self.sSpS = sSpSite
         self.idAse = self.lOI[1].idO                        # 2nd obj. of list
-        print('Initiated "Dephosphorylation" object.')
+        # print('Initiated "Dephosphorylation" object.')
         
     def doDePyl(self, iLO = 0):
         # check if first interaction partner has site to be dephosphorylated

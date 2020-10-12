@@ -31,7 +31,7 @@ class State(Base):
                         GC.S_CONC_NO3_1M: [self.lSMo[0].cCnc],
                         GC.S_CONC_H2PO4_1M: [self.lSMo[1].cCnc],
                         GC.S_STATE: [self.idO]}
-        print('Initiated "State" object.')
+        # print('Initiated "State" object.')
         
     def complementLO(self, inpDat, dOState):
         self.lSMo = dOState[GC.SPC_L_SMO]
@@ -143,7 +143,7 @@ class State_Int_Trans(State):
         else:
             self.idO = 'St_Int_Trans'
             self.descO = 'State interaction or transition'
-        print('Initiated "State_Int_Trans" object.')
+        # print('Initiated "State_Int_Trans" object.')
     
     def createDOState(self, inpDat, ddVOvwr = {}, iV = 0):
         # Kinases KAsAT5G49770, KAsX ------------------------------------------

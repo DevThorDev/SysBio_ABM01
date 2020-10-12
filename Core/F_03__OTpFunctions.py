@@ -3,6 +3,7 @@
 # --- F_03__OTpFunctions.py ---------------------------------------------------
 ###############################################################################
 import os, copy
+from operator import itemgetter
 import numpy as np
 from numpy.random import default_rng as RNG
 import pandas as pd
@@ -70,8 +71,8 @@ def createDCnc(dITp):
     dCI = dITp['dConcIni']
     return {s: GF.drawFromDist(dCI[s]['cTp'], dCI[s]['dPar']) for s in dCI}
 
-def iniDictOut(dITp, dCnc, t = 0.):
-    dO = {'dN': {}, 'dH': {}, 'h': 0., 'dRes': {GC.S_TIME: [t]}}
+def iniDictOut(dITp, dCnc, t = 0., tDlt = 0.):
+    dO = {'dN': {}, 'dH': {}, 'h': 0., 'tDlt': tDlt, 'dRes': {GC.S_TIME: [t]}}
     for s, cCnc in dCnc.items():
         dO['dRes'][s] = [cCnc]
     for s, k in dITp['dNStaObj'].items():
@@ -79,6 +80,49 @@ def iniDictOut(dITp, dCnc, t = 0.):
         dO['dN'][s] = k
     return dO
 
+def changeConcSMo(dITp, dO, dCncSMo, cID = None, iDsp = -1):
+    if iDsp == 0:
+        print('TEMP - tDelta =', dO['tDlt'], '- number of state objects =', dITp['nStaObj'])
+        print('TEMP - dCncCh:\n', dITp['dConcChg'])
+        print('TEMP - dN:\n', dO['dN'])
+        print('TEMP - dCncSMo[', GC.ID_NO3_1M, '] (before):\n', dCncSMo[GC.ID_NO3_1M])
+    for sSMo in dCncSMo:
+        cncCh = 0.
+        for s in dO['dN']:
+            assert s in dITp['dConcChg'][sSMo]
+            cncCh += dITp['dConcChg'][sSMo][s]*dO['dN'][s]
+        dCncSMo[sSMo] += cncCh*dO['tDlt']/dITp['nStaObj']*dITp['concChgScale']
+        if iDsp == 0:
+            if sSMo == GC.ID_NO3_1M:
+                print('TEMP - cncCh =', cncCh, '- scale =', dITp['concChgScale'])
+                print('TEMP - dCncSMo[', sSMo, '] (after):\n', dCncSMo[sSMo])
+
+def updateDictH(dITp, dO, dCncSMo, iDsp = -1):
+    dRRC, dCncCh, dRUp = dITp['dRRC'], dITp['dConcChg'], {}
+    sMoN, sMoP = GC.ID_NO3_1M, GC.ID_H2PO4_1M
+    # lSt = [GC.S_ST_A_INT_AT5G49770_NRT2P1, GC.S_ST_B_TRANS_AT5G49770_NRT2P1,
+    #        GC.S_ST_C_INT_NAR2P1_NRT2P1, GC.S_ST_D_TRANS_NAR2P1_NRT2P1]
+    # update the reaction rate constants according to the current [NO3-]
+    for sRRC, cRRC in dRRC.items():
+        dRUp[sRRC] = cRRC*GF.calcPSigmoidal(dCncSMo[sMoN], dCncCh[sRRC][sMoN])
+    # recalculate dH, which contains the h_i (i = 1,... len(dH))
+    dO['dH'][GC.S_STCH_A_B] = dRUp[GC.S_STCH_A_B]*dO['dN'][GC.S_ST_A_INT_AT5G49770_NRT2P1]
+    dO['dH'][GC.S_STCH_B_C] = dRUp[GC.S_STCH_B_C]*dO['dN'][GC.S_ST_B_TRANS_AT5G49770_NRT2P1]
+    dO['dH'][GC.S_STCH_C_D] = dRUp[GC.S_STCH_C_D]*dO['dN'][GC.S_ST_C_INT_NAR2P1_NRT2P1]
+    dO['dH'][GC.S_STCH_D_A] = dRUp[GC.S_STCH_D_A]*dO['dN'][GC.S_ST_D_TRANS_NAR2P1_NRT2P1]
+
+def reCalcReactHazardsCS(dITp, dO, dCncSMo, iDsp = -1):
+    if iDsp == 0:
+        print('TEMP - dH (Before reCalcReactHazards, h =', dO['h'], '):\n', dO['dH'])
+    updateDictH(dITp, dO, dCncSMo, iDsp = iDsp)
+    # h, the sum of the h_i, is the overall reaction hazard
+    dO['h'] = sum(dO['dH'].values())
+    # sort dH in ascending order for numerical stability
+    dO['dH'] = {cK: cV/dO['h'] for cK, cV in
+                sorted(dO['dH'].items(), key = itemgetter(1))}
+    if iDsp == 0:
+        print('TEMP - dH (After reCalcReactHazards, h =', dO['h'], '):\n', dO['dH'])
+    
 def getSRct(dO):
     uRN, cSum, rIdx = RNG().random(), 0., len(dO['dH']) - 1
     for k, cV in enumerate(dO['dH'].values()):
@@ -90,17 +134,18 @@ def getSRct(dO):
 
 def eventReactionSys(dO):
     sRct = getSRct(dO)
+    # print('TEMP - sRct =', sRct)
     # update the numbers of state objects in dO['dN']
-    if sRct == 'A_B':
+    if sRct == GC.S_STCH_A_B:
         dO['dN'][GC.S_ST_A_INT_AT5G49770_NRT2P1] -= 1
         dO['dN'][GC.S_ST_B_TRANS_AT5G49770_NRT2P1] += 1
-    elif sRct == 'B_C':
+    elif sRct == GC.S_STCH_B_C:
         dO['dN'][GC.S_ST_B_TRANS_AT5G49770_NRT2P1] -= 1
         dO['dN'][GC.S_ST_C_INT_NAR2P1_NRT2P1] += 1
-    elif sRct == 'C_D':
+    elif sRct == GC.S_STCH_C_D:
         dO['dN'][GC.S_ST_C_INT_NAR2P1_NRT2P1] -= 1
         dO['dN'][GC.S_ST_D_TRANS_NAR2P1_NRT2P1] += 1
-    elif sRct == 'D_A':
+    elif sRct == GC.S_STCH_D_A:
         dO['dN'][GC.S_ST_D_TRANS_NAR2P1_NRT2P1] -= 1
         dO['dN'][GC.S_ST_A_INT_AT5G49770_NRT2P1] += 1
     else:
@@ -108,17 +153,19 @@ def eventReactionSys(dO):
         assert False
 
 def nextEvent(dITp, dO, T, cTS):
-    tToNxt = 0
     if dO['h'] > 0:    # otherwise the while-loop ends, see the other case
         # draw the time to the next event from exponential(lambd = 1./h)
-        tToNxt = RNG().exponential(1./dO['h'])
+        dO['tDlt'] = RNG().exponential(1./dO['h'])
         # adapt the event reactions to considered system
+        # print('TEMP - dN (Before eventReactionSys):\n', dO['dN'])
         eventReactionSys(dO)
+        # print('TEMP - dN (After eventReactionSys):\n', dO['dN'])
     else:
         # if no reaction is possible, then h becomes 0, therefore stop
         print('The combined reaction hazard is 0 - no reaction possible')
-        tToNxt = T - dO['dRes'][GC.S_TIME][cTS]
-    return tToNxt
+        dO['tDlt'] = T - dO['dRes'][GC.S_TIME][cTS]
+    # print('TEMP - tDlt =', dO['tDlt'])
+    return dO['tDlt']
 
 def updateDictOut(dITp, dO, dCnc, t):
     dO['dRes'][GC.S_TIME].append(t)

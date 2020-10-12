@@ -17,7 +17,7 @@ class Base:
         self.cM = self.dIG['Mode']
         self.nSpS = 0                       # number of "special sites"
         self.sSpS = ''                      # string of "special site"
-        print('Initiated "Base" object.')
+        # print('Initiated "Base" object.')
 
     def __str__(self):
         sIn = ('~'*24 + ' ' + self.descO + ' with ID ' + str(self.idO) + ' ' +

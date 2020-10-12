@@ -2,8 +2,6 @@
 ###############################################################################
 # --- O_99__System.py ---------------------------------------------------------
 ###############################################################################
-from operator import itemgetter
-
 import Core.C_00__GenConstants as GC
 import Core.F_00__GenFunctions as GF
 import Core.F_03__OTpFunctions as TF
@@ -21,7 +19,7 @@ class System(Base):
         self.dCncSMo = TF.createDCnc(self.dITp)
         self.addStObj(inpDat)
         self.getDictsStObj()
-        print('Initiated "System" object.')
+        # print('Initiated "System" object.')
     
     def addStObj(self, inpDat):
         for sSt, nSt in self.dITp['dNStaObj'].items():
@@ -41,59 +39,40 @@ class System(Base):
     
     def printSystemIDs(self):
         print('*'*16, 'Counts of state objects contained in System:', '*'*18)
-        for sSt, ctSt in self.dIDStO.items():
-            print(sSt + ':', ctSt)
+        for sSt, ctStO in self.dIDStO.items():
+            print(sSt + ':', ctStO)
         print('*'*80)
     
     def printSystemObj(self):
         print('*'*16, 'Details of state objects contained in System:', '*'*17)
-        for sSt, lSt in self.dStO.items():
+        for sSt, lStO in self.dStO.items():
             print('~'*20, 'States with ID', sSt, '~'*20)
-            for cSt in lSt:
-                cSt.printStateDetails()
+            for cStO in lStO:
+                cStO.printStateDetails()
         print('*'*80)
     
-    def changeConcSMo(self, dO, cID = None):
-        dCncCh = self.dITp['dConcChg']
-        for sSMo in self.dCncSMo:
-            cncCh = 0.
-            for s in self.dIDStO:
-                assert s in dCncCh[sSMo]
-                cncCh += dCncCh[sSMo][s]*self.dIDStO[s]
-            self.dCncSMo[sSMo] += cncCh*self.dITp['concChgScale']
-
-    def reCalcReactHazardsCS(self, dITp, dO):
-        dRRC, dH = dITp['dRRC'], dO['dH']
-        # recalculate dH, which contains the h_i (i = 1,... len(dH))
-        dH['A_B'] = dRRC['A_B']*dO['dN'][GC.S_ST_A_INT_AT5G49770_NRT2P1]
-        dH['B_C'] = dRRC['B_C']*dO['dN'][GC.S_ST_B_TRANS_AT5G49770_NRT2P1]
-        dH['C_D'] = dRRC['C_D']*dO['dN'][GC.S_ST_C_INT_NAR2P1_NRT2P1]
-        dH['D_A'] = dRRC['D_A']*dO['dN'][GC.S_ST_D_TRANS_NAR2P1_NRT2P1]
-        # h, the sum of the h_i, is the overall reaction hazard
-        dO['h'] = sum(dH.values())
-        # sort dH in ascending order for numerical stability
-        dO['dH'] = {cK: cV/dO['h'] for cK, cV in
-                    sorted(dH.items(), key = itemgetter(1))}
-    
     def evolveOverTime(self):
-        t, T, cTSt = self.dIG['tStart'], self.dIG['tMax'], 0
-        dO = TF.iniDictOut(self.dITp, self.dCncSMo, t)
-        while t < T:
+        t, T, tDelta, cTSt = self.dIG['tStart'], self.dIG['tMax'], 0, 0
+        dO = TF.iniDictOut(self.dITp, self.dCncSMo, t, tDelta)
+        # print('TEMP - dO (Start):\n', dO)
+        while t < T and cTSt <= self.dIG['maxTS']:
+            # print('TEMP - Starting with t =', t, 'and time step', cTSt)
             # change the concentrations of the small molecules
-            self.changeConcSMo(dO)
-            # for s, lOCSt in self.dStO.items():
-            #     for oCSt in lOCSt:
-            #         oCSt.changeConcSMo(t)
+            TF.changeConcSMo(self.dITp, dO, self.dCncSMo, iDsp = cTSt%self.dIG['dispTS'])
             # adapt the re-calc reaction hazards function to current system
-            self.reCalcReactHazardsCS(self.dITp, dO)
+            TF.reCalcReactHazardsCS(self.dITp, dO, self.dCncSMo, iDsp = cTSt%self.dIG['dispTS'])
             # do next event and update time with tToNext
             t += TF.nextEvent(self.dITp, dO, T, cTSt)
+            # print('TEMP - t increased to', t, 'so go on is', t < T)
             # update the data storage matrix
             if t < T:
                 TF.updateDictOut(self.dITp, dO, self.dCncSMo, t)
+            if cTSt%self.dIG['dispTS'] == 0:
+                print('Reached time step', cTSt, 'at time', round(t, GC.R04))
             cTSt += 1
         # self.dResEvo = TF.Gillespie_StateMod(self.dIG, self.dITp)
         self.dResEvo = dO['dRes']
+        self.dIDStO = dO['dN']
         dR, sD, sF = self.dResEvo, self.dITp['sD_Sys'], self.dITp['sF_SysEvo']
         self.pFResEvo = TF.saveAsPdDfr(self.dIG, dR, sD, sF, overWrite = True)
 

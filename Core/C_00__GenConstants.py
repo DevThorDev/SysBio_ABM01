@@ -70,6 +70,11 @@ S_ST_B_TRANS_AT5G49770_NRT2P1 = 'St_B_Trans_AT5G49770_NRT2p1'
 S_ST_C_INT_NAR2P1_NRT2P1 = 'St_C_Int_NAR2p1_NRT2p1'
 S_ST_D_TRANS_NAR2P1_NRT2P1 = 'St_D_Trans_NAR2p1_NRT2p1'
 
+S_STCH_A_B = 'A_B'
+S_STCH_B_C = 'B_C'
+S_STCH_C_D = 'C_D'
+S_STCH_D_A = 'D_A'
+
 # --- constants related to model output ---------------------------------------
 S_TS = 'TimeStep'
 S_TIME = 'Time'
