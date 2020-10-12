@@ -43,16 +43,16 @@ def iniDictOut(dI, t = 0.):
 
 # Functions (Gillespie core) --------------------------------------------------
 def reCalcReactHazardsCR(dI, dO):
-    dRRC, dH = dI['dRRC'], dO['dH']
+    dRRC = dI['dRRC']
     # recalculate dH, which contains the h_i (i = 1,... len(dH))
-    dH['EpS_to_ES'] = dRRC['EpS_to_ES']*dO['dN']['E']*dO['dN']['S']
-    dH['ES_to_EpS'] = dRRC['ES_to_EpS']*dO['dN']['ES']
-    dH['ES_to_EpP'] = dRRC['ES_to_EpP']*dO['dN']['ES']
+    dO['dH']['EpS_to_ES'] = dRRC['EpS_to_ES']*dO['dN']['E']*dO['dN']['S']
+    dO['dH']['ES_to_EpS'] = dRRC['ES_to_EpS']*dO['dN']['ES']
+    dO['dH']['ES_to_EpP'] = dRRC['ES_to_EpP']*dO['dN']['ES']
     # h, the sum of the h_i, is the overall reaction hazard
-    dO['h'] = sum(dH.values())
+    dO['h'] = sum(dO['dH'].values())
     # sort dH in ascending order for numerical stability
     dO['dH'] = {cK: cV/dO['h'] for cK, cV in
-                sorted(dH.items(), key = itemgetter(1))}
+                sorted(dO['dH'].items(), key = itemgetter(1))}
 
 def getSRct(dO):
     uRN, cSum, rIdx = RNG().random(), 0., len(dO['dH']) - 1
