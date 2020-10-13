@@ -61,6 +61,9 @@ def appendToDictL(cD, lE):
     for i, cK in enumerate(cD):
         cD[cK].append(lE[i])
 
+def implMinMax(x, lowB = 0, upB = 1):
+    return min(max(x, lowB), upB)
+
 def drawFromDist(sDist, dPar, nVal = None):
     if sDist == 'uniform':
         assert 'min' in dPar and 'max' in dPar
@@ -72,14 +75,11 @@ def drawFromDist(sDist, dPar, nVal = None):
         print('WARNING: Option', sDist, 'not implemented. Returning 0...')
         return 0
 
-def calcPSigmoidal(x, dParP, isIncr = True):
-    pMin, pMax = dParP['prMin'], dParP['prMax']
-    B, C, D = dParP['B'], dParP['C'], dParP['D']
+def calcPSigmoidal(x, dPar):
+    pMin, pMax = dPar['prMin'], dPar['prMax']
+    B, C, D = dPar['B'], dPar['C'], dPar['D']
     fCh = (B*(B + C)/C*(1/(B + C*np.exp(-D*x)) - 1/(B + C)))
-    if isIncr:
-        return pMin + (pMax - pMin)*fCh
-    else:
-        return pMax + (pMin - pMax)*fCh
+    return pMin + (pMax - pMin)*fCh
 
 def updateDITpDIPlt(dITpC, dITpU, lKSpc = [GC.S_D_PLT]):
     for cKSpc in lKSpc:

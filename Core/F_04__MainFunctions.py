@@ -74,16 +74,16 @@ def initialState(inpDG, ddVOvwr = {}, iV = 0):
 
 def changeStateConcDep(inpDG, cSta):
     if cSta.dCnc[GC.ID_NO3_1M][0] < cSta.dCnc[GC.ID_NO3_1M][1]:
-        if cSta.idO == GC.S_ST_A_INT_AT5G49770_NRT2P1:
+        if cSta.idO == GC.S_ST_A_KIN_INT:
             cSta.to_St_B_Trans_AT5G49770_NRT2p1(inpDG)
             cSta.to_St_C_Int_NAR2p1_NRT2p1(inpDG)
-        elif cSta.idO == GC.S_ST_B_TRANS_AT5G49770_NRT2P1:
+        elif cSta.idO == GC.S_ST_B_KIN_TRA:
             cSta.to_St_C_Int_NAR2p1_NRT2p1(inpDG)
     elif cSta.dCnc[GC.ID_NO3_1M][0] > cSta.dCnc[GC.ID_NO3_1M][2]:
-        if cSta.idO == GC.S_ST_C_INT_NAR2P1_NRT2P1:
+        if cSta.idO == GC.S_ST_C_SPR_INT:
             cSta.to_St_D_Trans_NAR2p1_NRT2p1(inpDG)
             cSta.to_St_A_Int_AT5G49770_NRT2p1(inpDG)
-        elif cSta.idO == GC.S_ST_D_TRANS_NAR2P1_NRT2P1:
+        elif cSta.idO == GC.S_ST_D_SPR_TRA:
             cSta.to_St_A_Int_AT5G49770_NRT2p1(inpDG)
 
 def evolveIni(inpDG, nStO = 1, ddVOvwr = {}):

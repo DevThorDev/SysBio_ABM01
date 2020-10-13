@@ -132,13 +132,13 @@ class State(Base):
 class State_Int_Trans(State):
     def __init__(self, inpDat, sState, iTp = 90):
         self.createDOState(inpDat)
-        if sState == GC.S_ST_A_INT_AT5G49770_NRT2P1:
+        if sState == GC.S_ST_A_KIN_INT:
             self.ini_St_A_Int_AT5G49770_NRT2p1(inpDat, iTp = iTp)
-        elif sState == GC.S_ST_B_TRANS_AT5G49770_NRT2P1:
+        elif sState == GC.S_ST_B_KIN_TRA:
             self.ini_St_B_Trans_AT5G49770_NRT2p1(inpDat, iTp = iTp)
-        elif sState == GC.S_ST_C_INT_NAR2P1_NRT2P1:
+        elif sState == GC.S_ST_C_SPR_INT:
             self.ini_St_C_Int_NAR2p1_NRT2p1(inpDat, iTp = iTp)
-        elif sState == GC.S_ST_D_TRANS_NAR2P1_NRT2P1:
+        elif sState == GC.S_ST_D_SPR_TRA:
             self.ini_St_D_Trans_NAR2p1_NRT2p1(inpDat, iTp = iTp)
         else:
             self.idO = 'St_Int_Trans'
@@ -170,7 +170,7 @@ class State_Int_Trans(State):
         llOI = [[self.dOSta[GC.SPC_KAS_A], self.dOSta[GC.SPC_LPR_A]]]
         lOO = [self.dOSta[GC.SPC_SPR_A], self.dOSta[GC.SPC_KAS_X]]
         super().__init__(inpDat, self.dOSta, llOI, lOO, iTp = iTp)
-        self.idO = GC.S_ST_A_INT_AT5G49770_NRT2P1
+        self.idO = GC.S_ST_A_KIN_INT
         self.descO = 'State interaction AT5G49770-NRT2p1'
         dSts = {GC.S_SPS_KAS1_S839: (GC.B_DO_DEPYL, self.lPAs0[0]),
                 GC.S_SPS_KAS1_S870: (GC.B_DO_PYL, self.lKAs0[1])}
@@ -184,7 +184,7 @@ class State_Int_Trans(State):
                 [self.dOSta[GC.SPC_KAS_X], self.dOSta[GC.SPC_LPR_A]]]
         lOO = [self.dOSta[GC.SPC_SPR_A]]
         super().__init__(inpDat, self.dOSta, llOI, lOO, iTp = iTp)
-        self.idO = GC.S_ST_B_TRANS_AT5G49770_NRT2P1
+        self.idO = GC.S_ST_B_KIN_TRA
         self.descO = 'State transition from AT5G49770-NRT2p1'
         dSts = {GC.S_SPS_KAS1_S839: (GC.B_DO_PYL, self.lKAs0[0]),
                 GC.S_SPS_KAS1_S870: (GC.B_DO_PYL, self.lKAs0[1])}
@@ -197,7 +197,7 @@ class State_Int_Trans(State):
         llOI = [[self.dOSta[GC.SPC_SPR_A], self.dOSta[GC.SPC_LPR_A]]]
         lOO = [self.dOSta[GC.SPC_KAS_A], self.dOSta[GC.SPC_KAS_X]]
         super().__init__(inpDat, self.dOSta, llOI, lOO, iTp = iTp)
-        self.idO = GC.S_ST_C_INT_NAR2P1_NRT2P1
+        self.idO = GC.S_ST_C_SPR_INT
         self.descO = 'State interaction NAR2p1-NRT2p1'
         dSts = {GC.S_SPS_KAS1_S839: (GC.B_DO_PYL, self.lKAs0[0]),
                 GC.S_SPS_KAS1_S870: (GC.B_DO_DEPYL, self.lPAs0[1])}
@@ -210,7 +210,7 @@ class State_Int_Trans(State):
         llOI = [[self.dOSta[GC.SPC_SPR_A], self.dOSta[GC.SPC_LPR_A]]]
         lOO = [self.dOSta[GC.SPC_KAS_A], self.dOSta[GC.SPC_KAS_X]]
         super().__init__(inpDat, self.dOSta, llOI, lOO, iTp = iTp)
-        self.idO = GC.S_ST_D_TRANS_NAR2P1_NRT2P1
+        self.idO = GC.S_ST_D_SPR_TRA
         self.descO = 'State transition from NAR2p1-NRT2p1'
         dSts = {GC.S_SPS_KAS1_S839: (GC.B_DO_PYL, self.lKAs0[0]),
                 GC.S_SPS_KAS1_S870: (GC.B_DO_DEPYL, self.lPAs0[1])}
@@ -220,7 +220,7 @@ class State_Int_Trans(State):
         self.adaptPSites(inpDat, self.dOSta[GC.SPC_LPR_A], dSites = dSts)
 
     def to_St_A_Int_AT5G49770_NRT2p1(self, inpDat):
-        self.idO = GC.S_ST_A_INT_AT5G49770_NRT2P1
+        self.idO = GC.S_ST_A_KIN_INT
         self.descO = 'State interaction AT5G49770-NRT2p1'
         self.lOO[0], self.llOI[0][0] = self.llOI[0][0], self.lOO[0]
         dSts = {GC.S_SPS_KAS1_S839: (GC.B_DO_DEPYL, self.lPAs0[0]),
@@ -232,7 +232,7 @@ class State_Int_Trans(State):
         print('Changed state to ' + self.idO + ' (' + self.descO + ').')
 
     def to_St_B_Trans_AT5G49770_NRT2p1(self, inpDat):
-        self.idO = GC.S_ST_B_TRANS_AT5G49770_NRT2P1
+        self.idO = GC.S_ST_B_KIN_TRA
         self.descO = 'State transition from AT5G49770-NRT2p1'
         self.llOI.append([self.lOO[1], self.llOI[0][1]])
         self.lOO = self.lOO[:1]
@@ -241,7 +241,7 @@ class State_Int_Trans(State):
         print('Changed state to ' + self.idO + ' (' + self.descO + ').')
 
     def to_St_C_Int_NAR2p1_NRT2p1(self, inpDat):
-        self.idO = GC.S_ST_C_INT_NAR2P1_NRT2P1
+        self.idO = GC.S_ST_C_SPR_INT
         self.descO = 'State interaction NAR2p1-NRT2p1'
         llOInt = [[self.lOO[0], self.llOI[0][1]]]
         lOOth = [self.llOI[0][0], self.llOI[1][0]]
@@ -254,7 +254,7 @@ class State_Int_Trans(State):
         print('Changed state to ' + self.idO + ' (' + self.descO + ').')
 
     def to_St_D_Trans_NAR2p1_NRT2p1(self, inpDat):
-        self.idO = GC.S_ST_D_TRANS_NAR2P1_NRT2P1
+        self.idO = GC.S_ST_D_SPR_TRA
         self.descO = 'State transition from NAR2p1-NRT2p1'
         print('Changed state to ' + self.idO + ' (' + self.descO + ').')
     

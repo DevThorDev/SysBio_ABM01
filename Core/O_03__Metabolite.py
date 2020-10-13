@@ -45,11 +45,11 @@ class SmallMolecule(Metabolite):
             cCnc_t = self.cCnc
         elif self.sCncCh == GC.S_CH_SIN:
             cCnc_t += TF.doSinChange(t, self.perCncCh, self.amplCncCh)
-        if idSt in [GC.S_ST_A_INT_AT5G49770_NRT2P1,
-                    GC.S_ST_B_TRANS_AT5G49770_NRT2P1]:
+        if idSt in [GC.S_ST_A_KIN_INT,
+                    GC.S_ST_B_KIN_TRA]:
             cCncChSt = -self.cCnc*self.dITp['propDecStAB']
-        elif idSt in [GC.S_ST_C_INT_NAR2P1_NRT2P1,
-                      GC.S_ST_D_TRANS_NAR2P1_NRT2P1]:
+        elif idSt in [GC.S_ST_C_SPR_INT,
+                      GC.S_ST_D_SPR_TRA]:
             cCncChSt = self.cCnc*self.dITp['propIncStCD']
         self.cCnc = max(0, cCnc_t + cCncChSt)
         # print('cID:', self.idO, '- t:', t, '- idSt:', idSt, '- cCnc_t:',

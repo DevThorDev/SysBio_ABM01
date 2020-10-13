@@ -54,25 +54,22 @@ class System(Base):
     def evolveOverTime(self):
         t, T, tDelta, cTSt = self.dIG['tStart'], self.dIG['tMax'], 0, 0
         dO = TF.iniDictOut(self.dITp, self.dCncSMo, t, tDelta)
-        # print('TEMP - dO (Start):\n', dO)
         while t < T and cTSt <= self.dIG['maxTS']:
-            # print('TEMP - Starting with t =', t, 'and time step', cTSt)
+            dspCnd = (cTSt >= self.dIG['minDispTS'] and
+                      cTSt%self.dIG['modDispTS'] == 0)
             # change the concentrations of the small molecules
-            TF.changeConcSMo(self.dITp, dO, self.dCncSMo, iDsp = cTSt%self.dIG['dispTS'])
+            TF.changeConcSMo(self.dITp, dO, self.dCncSMo, dspI = dspCnd)
             # adapt the re-calc reaction hazards function to current system
-            TF.reCalcReactHazardsCS(self.dITp, dO, self.dCncSMo, iDsp = cTSt%self.dIG['dispTS'])
+            TF.reCalcReactHazardsCS(self.dITp, dO, self.dCncSMo, dspI = dspCnd)
             # do next event and update time with tToNext
             t += TF.nextEvent(self.dITp, dO, T, cTSt)
-            # print('TEMP - t increased to', t, 'so go on is', t < T)
             # update the data storage matrix
             if t < T:
                 TF.updateDictOut(self.dITp, dO, self.dCncSMo, t)
-            if cTSt%self.dIG['dispTS'] == 0:
+            if dspCnd:
                 print('Reached time step', cTSt, 'at time', round(t, GC.R04))
             cTSt += 1
-        # self.dResEvo = TF.Gillespie_StateMod(self.dIG, self.dITp)
-        self.dResEvo = dO['dRes']
-        self.dIDStO = dO['dN']
+        self.dResEvo, self.dIDStO = dO['dRes'], dO['dN']
         dR, sD, sF = self.dResEvo, self.dITp['sD_Sys'], self.dITp['sF_SysEvo']
         self.pFResEvo = TF.saveAsPdDfr(self.dIG, dR, sD, sF, overWrite = True)
 
