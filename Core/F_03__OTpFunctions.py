@@ -5,7 +5,6 @@
 import os, copy
 from operator import itemgetter
 import numpy as np
-from numpy.random import default_rng as RNG
 import pandas as pd
 
 import Core.C_00__GenConstants as GC
@@ -96,17 +95,24 @@ def updateDictH(dITp, dO, dCncSMo, dspI = False):
     dRRC, dCncCh, dRUp = dITp['dRRC'], dITp['dConcChg'], {}
     sMoN, sMoP = GC.ID_NO3_1M, GC.ID_H2PO4_1M
     # update the reaction rate constants according to the current [NO3-]
-    for sRRC, cRRC in dRRC.items():
-        dRUp[sRRC] = cRRC*GF.calcPSigmoidal(dCncSMo[sMoN], dCncCh[sRRC][sMoN])
-    # recalculate dH, which contains the h_i (i = 1,... len(dH))
-    dO['dH'][GC.S_STCH_A_B] = dRUp[GC.S_STCH_A_B]*dO['dN'][GC.S_ST_A_KIN_INT]
-    dO['dH'][GC.S_STCH_B_C] = dRUp[GC.S_STCH_B_C]*dO['dN'][GC.S_ST_B_KIN_TRA]
-    dO['dH'][GC.S_STCH_C_D] = dRUp[GC.S_STCH_C_D]*dO['dN'][GC.S_ST_C_SPR_INT]
-    dO['dH'][GC.S_STCH_D_A] = dRUp[GC.S_STCH_D_A]*dO['dN'][GC.S_ST_D_SPR_TRA]
+    for tS, tRRC in dRRC.items():
+        assert len(tS) == len(tRRC)
+        for k, s in enumerate(tS):
+            # TEMP - BEGIN:
+            if k >= len(dCncCh[tS][sMoN]):
+                print('ERROR: Tuple for', tS, 'and molecule', sMoN,
+                      'in dCncCh is', dCncCh[tS][sMoN], 'but k =', k)
+                assert False
+            # TEMP - END.
+            p = GF.calcPSigmoidal(dCncSMo[sMoN], dCncCh[tS][sMoN][k])
+            dRUp[s] = tRRC[k]*p
+            # recalculate dH, which contains the h_i (i = 1,... len(dH))
+            dO['dH'][s] = dRUp[s]*dO['dN'][s.split('_')[0]]
+    # (?) update the reaction rate constants according to the current [H2PO4-]
     if dspI:
         pass
 
-def reCalcReactHazardsCS(dITp, dO, dCncSMo, dspI = False):
+def reCalcReactHazards(dITp, dO, dCncSMo, dspI = False):
     updateDictH(dITp, dO, dCncSMo, dspI = dspI)
     # h, the sum of the h_i, is the overall reaction hazard
     dO['h'] = sum(dO['dH'].values())
@@ -115,39 +121,20 @@ def reCalcReactHazardsCS(dITp, dO, dCncSMo, dspI = False):
                 sorted(dO['dH'].items(), key = itemgetter(1))}
     if dspI:
         pass
-    
-def getSRct(dO):
-    uRN, cSum, rIdx = RNG().random(), 0., len(dO['dH']) - 1
-    for k, cV in enumerate(dO['dH'].values()):
-        cSum += cV
-        if uRN < cSum:
-            rIdx = k
-            break
-    return list(dO['dH'])[rIdx]
 
 def eventReactionSys(dO):
-    sRct = getSRct(dO)
+    # get the string consisting of the LHS and RHS of the reaction
+    sRct = GF.getSRct(dO['dH'])
     # update the numbers of state objects in dO['dN']
-    if sRct == GC.S_STCH_A_B:
-        dO['dN'][GC.S_ST_A_KIN_INT] -= 1
-        dO['dN'][GC.S_ST_B_KIN_TRA] += 1
-    elif sRct == GC.S_STCH_B_C:
-        dO['dN'][GC.S_ST_B_KIN_TRA] -= 1
-        dO['dN'][GC.S_ST_C_SPR_INT] += 1
-    elif sRct == GC.S_STCH_C_D:
-        dO['dN'][GC.S_ST_C_SPR_INT] -= 1
-        dO['dN'][GC.S_ST_D_SPR_TRA] += 1
-    elif sRct == GC.S_STCH_D_A:
-        dO['dN'][GC.S_ST_D_SPR_TRA] -= 1
-        dO['dN'][GC.S_ST_A_KIN_INT] += 1
-    else:
-        print('No reaction occurred!?')
-        assert False
+    sLHS, sRHS = GF.partI(sRct, 0), GF.partI(sRct, 1)
+    assert sLHS in dO['dN'] and sRHS in dO['dN']
+    dO['dN'][sLHS] -= 1
+    dO['dN'][sRHS] += 1
 
 def nextEvent(dITp, dO, T, cTS):
     if dO['h'] > 0:    # otherwise the while-loop ends, see the other case
         # draw the time to the next event from exponential(lambd = 1./h)
-        dO['tDlt'] = RNG().exponential(1./dO['h'])
+        dO['tDlt'] = GF.drawFromDist('exponential', dPar = {'h': dO['h']})
         # adapt the event reactions to considered system
         eventReactionSys(dO)
     else:
@@ -162,20 +149,25 @@ def updateDictOut(dITp, dO, dCnc, t):
         dO['dRes'][s].append(cCnc)
     for s in dO['dN']:
         dO['dRes'][s].append(dO['dN'][s])
-     
-# def Gillespie_StateMod(dIG, dITp):
-#     t, T, cTSt = dIG['tStart'], dIG['tMax'], 0
-#     dO = iniDictOut(dITp, t)
-#     while t < T:
-#         # adapt the re-calc reaction rate hazards function to current system
-#         reCalcReactHazardsCR(dITp, dO)
-#         # do next event and update time with tToNext
-#         t += nextEvent(dITp, dO, T, cTSt)
-#         # update the data storage matrix
-#         if t < T:
-#             updateDictOut(dITp, dO, t)
-#         cTSt += 1
-#     return dO['dRes']
+
+def evolveGillespie(dIG, dITp, dCncSMo):
+    t, T, tDelta, cTSt = dIG['tStart'], dIG['tMax'], 0, 0
+    dO = iniDictOut(dITp, dCncSMo, t, tDelta)
+    while t < T and cTSt <= dIG['maxTS']:
+        dspCnd = (cTSt >= dIG['minDispTS'] and cTSt%dIG['modDispTS'] == 0)
+        # change the concentrations of the small molecules
+        changeConcSMo(dITp, dO, dCncSMo, dspI = dspCnd)
+        # adapt the re-calc reaction hazards function to current system
+        reCalcReactHazards(dITp, dO, dCncSMo, dspI = dspCnd)
+        # do next event and update time with tToNext
+        t += nextEvent(dITp, dO, T, cTSt)
+        # update the data storage matrix
+        if t < T:
+            updateDictOut(dITp, dO, dCncSMo, t)
+        if dspCnd:
+            print('Reached time step', cTSt, 'at time', round(t, GC.R04))
+        cTSt += 1
+    return dO['dRes'], dO['dN']
 
 # def printSysComp(sCmp = 'Base', lOCmp = []):
 #     print('-'*8, sCmp, '-'*8)

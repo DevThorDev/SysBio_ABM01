@@ -33,6 +33,9 @@ def joinToPath(pF = '', sF = 'Dummy.txt'):
     else:
         return sF
 
+def partI(s, i = 0, sSpl = GC.S_SPL):
+    return s.split(sSpl)[i]
+
 def lItToUniqueList(lIt):
     if len(lIt) > 0:
         seAll = set(lIt[0])
@@ -64,6 +67,12 @@ def appendToDictL(cD, lE):
 def implMinMax(x, lowB = 0, upB = 1):
     return min(max(x, lowB), upB)
 
+def calcPSigmoidal(x, dPar):
+    pMin, pMax = dPar['prMin'], dPar['prMax']
+    B, C, D = dPar['B'], dPar['C'], dPar['D']
+    fCh = (B*(B + C)/C*(1/(B + C*np.exp(-D*x)) - 1/(B + C)))
+    return pMin + (pMax - pMin)*fCh
+
 def drawFromDist(sDist, dPar, nVal = None):
     if sDist == 'uniform':
         assert 'min' in dPar and 'max' in dPar
@@ -71,15 +80,21 @@ def drawFromDist(sDist, dPar, nVal = None):
     elif sDist == 'normal':
         assert 'mean' in dPar and 'sd' in dPar
         return RNG().normal(dPar['min'], dPar['max'], nVal)
+    elif sDist == 'exponential':
+        assert 'h' in dPar
+        return RNG().exponential(1./dPar['h'], nVal)
     else:
         print('WARNING: Option', sDist, 'not implemented. Returning 0...')
         return 0
 
-def calcPSigmoidal(x, dPar):
-    pMin, pMax = dPar['prMin'], dPar['prMax']
-    B, C, D = dPar['B'], dPar['C'], dPar['D']
-    fCh = (B*(B + C)/C*(1/(B + C*np.exp(-D*x)) - 1/(B + C)))
-    return pMin + (pMax - pMin)*fCh
+def getSRct(dH):
+    uRN, cSum, rIdx = RNG().random(), 0., len(dH) - 1
+    for k, cV in enumerate(dH.values()):
+        cSum += cV
+        if uRN < cSum:
+            rIdx = k
+            break
+    return list(dH)[rIdx]
 
 def updateDITpDIPlt(dITpC, dITpU, lKSpc = [GC.S_D_PLT]):
     for cKSpc in lKSpc:
