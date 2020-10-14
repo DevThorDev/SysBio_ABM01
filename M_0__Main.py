@@ -2,9 +2,6 @@
 ###############################################################################
 # --- M_0__Main.py ------------------------------------------------------------
 ###############################################################################
-# from numpy.random import default_rng as RNG
-
-# import Core.C_00__GenConstants as GC
 import Core.F_00__GenFunctions as GF
 # import Core.F_04__MainFunctions as MF
 
@@ -23,8 +20,8 @@ print('Added object types.')
 # -----------------------------------------------------------------------------
 cSystem = System(inDG) 
 cSystem.evolveOverTime()
-cSystem.printSystemIDs()
-# cSystem.printSystemObj()
+cSystem.printNStateObjSys()
+# cSystem.printAllStateObjSys()
 
 # -----------------------------------------------------------------------------
 
