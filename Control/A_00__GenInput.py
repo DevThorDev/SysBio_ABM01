@@ -11,10 +11,10 @@ levelDebugOut = 2   # level of debug output (0: no debug output)
 
 # --- Input: Flow control -----------------------------------------------------
 tStart = 0
-tMax = 10000.
-maxTS = 1000000
-minDispTS = 1000000
-modDispTS = 100000
+tMax = 100.
+maxTS = 100000
+minDispTS = 0
+modDispTS = 1000
 
 # --- Input: General ----------------------------------------------------------
 nDigObj = 3         # number of digits reserved for all input objects
@@ -24,6 +24,10 @@ cSep = GC.SEP_STD
 # --- Input: Names of paths, directories and files ----------------------------
 sPRes = os.path.join('..', '..', '11_SysBio01_ABM01', '40_ModelResults')
 sPPlt = os.path.join('..', '..', '11_SysBio01_ABM01', '50_ModelPlots')
+
+# --- Input: Constants --------------------------------------------------------
+dS_St = GC.DS_ST
+dS_StCh = GC.DS_STCH
 
 # --- create input dictionary -------------------------------------------------
 dictInpG = {# --- Input: Debug Info
@@ -40,6 +44,9 @@ dictInpG = {# --- Input: Debug Info
             'cSep': cSep,
             # --- Input: Names of paths, directories and files
             'sPRes': sPRes,
-            'sPPlt': sPPlt}
+            'sPPlt': sPPlt,
+            # --- Input: Constants
+            'dS_St': dS_St,
+            'dS_StCh': dS_StCh}
 
 ###############################################################################
