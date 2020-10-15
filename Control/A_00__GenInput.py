@@ -12,9 +12,9 @@ levelDebugOut = 2   # level of debug output (0: no debug output)
 # --- Input: Flow control -----------------------------------------------------
 tStart = 0
 tMax = 100.
-maxTS = 100000
+maxTS = 1000000
 minDispTS = 0
-modDispTS = 1000
+modDispTS = 100000
 
 # --- Input: General ----------------------------------------------------------
 nDigObj = 3         # number of digits reserved for all input objects
