@@ -12,38 +12,38 @@ strCL = 'System'
 
 # --- data containing state, state transition and conc. change info -----------
 # initial number of objects for each possible state
-dNStaObj = {GC.S_ST_A_KIN_INT_1001: 630,
+dNStaObj = {GC.S_ST_A_KIN_INT_1001: 600,
             GC.S_ST_B_KIN_TRA_0000: 10,
-            GC.S_ST_B_KIN_TRA_0001: 20,
-            GC.S_ST_B_KIN_TRA_0010: 30,
-            GC.S_ST_B_KIN_TRA_0011: 40,
-            GC.S_ST_B_KIN_TRA_0100: 50,
-            GC.S_ST_B_KIN_TRA_0101: 60,
-            GC.S_ST_B_KIN_TRA_0110: 70,
-            GC.S_ST_B_KIN_TRA_0111: 80,
-            GC.S_ST_B_KIN_TRA_1000: 90,
-            GC.S_ST_B_KIN_TRA_1010: 95,
-            GC.S_ST_B_KIN_TRA_1011: 85,
-            GC.S_ST_B_KIN_TRA_1100: 75,
-            GC.S_ST_B_KIN_TRA_1101: 65,
-            GC.S_ST_B_KIN_TRA_1110: 55,
-            GC.S_ST_B_KIN_TRA_1111: 45,
+            GC.S_ST_B_KIN_TRA_0001: 10,
+            GC.S_ST_B_KIN_TRA_0010: 10,
+            GC.S_ST_B_KIN_TRA_0011: 10,
+            GC.S_ST_B_KIN_TRA_0100: 10,
+            GC.S_ST_B_KIN_TRA_0101: 10,
+            GC.S_ST_B_KIN_TRA_0110: 10,
+            GC.S_ST_B_KIN_TRA_0111: 10,
+            GC.S_ST_B_KIN_TRA_1000: 10,
+            GC.S_ST_B_KIN_TRA_1010: 10,
+            GC.S_ST_B_KIN_TRA_1011: 10,
+            GC.S_ST_B_KIN_TRA_1100: 10,
+            GC.S_ST_B_KIN_TRA_1101: 10,
+            GC.S_ST_B_KIN_TRA_1110: 10,
+            GC.S_ST_B_KIN_TRA_1111: 10,
             GC.S_ST_C_SPR_INT_0110: 100,
-            GC.S_ST_D_SPR_TRA_0000: 15,
-            GC.S_ST_D_SPR_TRA_0001: 25,
-            GC.S_ST_D_SPR_TRA_0010: 35,
-            GC.S_ST_D_SPR_TRA_0011: 45,
-            GC.S_ST_D_SPR_TRA_0100: 55,
-            GC.S_ST_D_SPR_TRA_0101: 65,
-            GC.S_ST_D_SPR_TRA_0111: 75,
-            GC.S_ST_D_SPR_TRA_1000: 85,
-            GC.S_ST_D_SPR_TRA_1001: 95,
-            GC.S_ST_D_SPR_TRA_1010: 80,
-            GC.S_ST_D_SPR_TRA_1011: 70,
-            GC.S_ST_D_SPR_TRA_1100: 60,
-            GC.S_ST_D_SPR_TRA_1101: 50,
-            GC.S_ST_D_SPR_TRA_1110: 40,
-            GC.S_ST_D_SPR_TRA_1111: 30}
+            GC.S_ST_D_SPR_TRA_0000: 10,
+            GC.S_ST_D_SPR_TRA_0001: 10,
+            GC.S_ST_D_SPR_TRA_0010: 10,
+            GC.S_ST_D_SPR_TRA_0011: 10,
+            GC.S_ST_D_SPR_TRA_0100: 10,
+            GC.S_ST_D_SPR_TRA_0101: 10,
+            GC.S_ST_D_SPR_TRA_0111: 10,
+            GC.S_ST_D_SPR_TRA_1000: 10,
+            GC.S_ST_D_SPR_TRA_1001: 10,
+            GC.S_ST_D_SPR_TRA_1010: 10,
+            GC.S_ST_D_SPR_TRA_1011: 10,
+            GC.S_ST_D_SPR_TRA_1100: 10,
+            GC.S_ST_D_SPR_TRA_1101: 10,
+            GC.S_ST_D_SPR_TRA_1110: 10,
+            GC.S_ST_D_SPR_TRA_1111: 10}
 
 # basic weights for interaction partner changes
 wIPC_KAs_SPr = 5.
@@ -401,7 +401,28 @@ dConcChg = {GC.ID_NO3_1M: {GC.S_ST_A_KIN_INT_1001: dPar_N_A1001,
             GC.TS_STCH_D1111: {GC.ID_NO3_1M: tDPar_D1111_N,
                                GC.ID_H2PO4_1M: tDPar_D1111_P}}
 
-concChgScale = 10.    # scale of concentration change def. in dConcChg
+concChgScale = 1.    # scale of concentration change def. in dConcChg
+
+# --- graphics parameters: state numbers and molecule conc. plot -----
+sPlt_AllStCnc = '01_AllStatesConc'      # name of all states and conc. plot
+sPlt_SelStCnc = '02_SelStatesConc'      # name of sel. states and conc. plot
+
+title_StCnc = None          # title of plot
+yLbl_Cnc_N = '$[NO_3^-]$ (mM)'          # y-label of NO3- concentration plot
+yLbl_Cnc_P = '$[H_2PO_4^-]$ (mM)'       # y-label of H2PO4- concentration plot
+yLbl_StCnc = 'State incidence and molecule concentration (mM)'
+yLbl_St = 'State incidence'
+yLbl_Cnc = 'Molecule concentration (mM)'
+xLbl_StCnc = 'Time step'    # x-label of plot
+tpMark_StCnc = 'x'          # marker type of plot
+szMark_StCnc = 1            # marker size of plot
+ewMark_StCnc = 1            # marker edge width of plot
+ecMark_StCnc = (1., 0., 0.)     # marker edge colour of plot
+fcMark_StCnc = (1., 0.5, 0.)    # marker face colour of plot
+styLn_StCnc = 'solid'       # line style of plot
+wdthLn_StCnc = 1            # line width of plot
+colLn_StCnc = (1., 0.5, 0.)     # line colour of plot
+pltAxXY_StCnc = (True, True)    # plot x- and/or y-axis
 
 # --- path, directory and file names ------------------------------------------
 sD_Sys = '99_Sys'
@@ -421,6 +442,25 @@ dIO = {'strOType': strOType,
        'concChgScale': concChgScale,
        # --- path, directory and file names
        'sD_Sys': sD_Sys,
-       'sF_SysEvo': sF_SysEvo}
+       'sF_SysEvo': sF_SysEvo,
+       # --- graphics parameters: state numbers and molecule conc. plot
+       GC.S_D_PLT: {GC.S_STA_CNC: {'sPlt_AllStCnc': sPlt_AllStCnc,
+                                   'sPlt_SelStCnc': sPlt_SelStCnc,
+                                   'title': title_StCnc,
+                                   'yLbl_Cnc_N': yLbl_Cnc_N,
+                                   'yLbl_Cnc_P': yLbl_Cnc_P,
+                                   'yLbl_StCnc': yLbl_StCnc,
+                                   'yLbl_St': yLbl_St,
+                                   'yLbl_Cnc': yLbl_Cnc,
+                                   'xLbl': xLbl_StCnc,
+                                   'tpMark': tpMark_StCnc,
+                                   'szMark': szMark_StCnc,
+                                   'ewMark': ewMark_StCnc,
+                                   'ecMark': ecMark_StCnc,
+                                   'fcMark': fcMark_StCnc,
+                                   'styLn': styLn_StCnc,
+                                   'wdthLn': wdthLn_StCnc,
+                                   'colLn': colLn_StCnc,
+                                   'pltAxXY': pltAxXY_StCnc}}}
 
 ###############################################################################
