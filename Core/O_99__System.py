@@ -4,6 +4,7 @@
 ###############################################################################
 import Core.C_00__GenConstants as GC
 import Core.F_00__GenFunctions as GF
+import Core.F_02__PltFunctions as PF
 import Core.F_03__OTpFunctions as TF
 
 from Core.O_00__Base import Base
@@ -52,11 +53,19 @@ class System(Base):
                 cStO.printStateDetails()
         print('*'*80)
     
+    def plotResEvo(self, lSSt = None, lIDSMo = None):
+        dParPlt, lPPltF = self.dITp[GC.S_D_PLT][GC.S_STA_CNC], []
+        for sF0 in [dParPlt['sPlt_AllStCnc'], dParPlt['sPlt_SelStCnc']]:
+            lPPltF.append(TF.getPF(self.dIG['sPPlt'], self.dITp['sD_Sys'], sF0,
+                                   sFExt = GC.S_EXT_PDF))
+        PF.plotEvo(dParPlt, self.dResEvo, lPPltF, lSSt = lSSt, lIDSMo = lIDSMo)
+    
     def evolveOverTime(self):
         self.dResEvo, self.dIDStO = TF.evolveGillespie(self.dIG, self.dITp,
                                                        self.dCncSMo)
         dR, sD, sF = self.dResEvo, self.dITp['sD_Sys'], self.dITp['sF_SysEvo']
         self.pFResEvo = TF.saveAsPdDfr(self.dIG, dR, sD, sF, overWrite = True)
+        self.plotResEvo()
 
 # # +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # class System(Base):
