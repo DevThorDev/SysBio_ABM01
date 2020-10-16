@@ -89,7 +89,7 @@ class State(Base):
         dITpSMo, s0 = self.lSMo[iSMo].dITp, '0'*(len(sNSt) - len(sKSt))
         sF = dITpSMo['sPlt_Conc'] + dITpSMo['sF_SMo'] + '_' + s0 + sKSt
         TF.saveAsPdDfr(self.dIG, self.dCncEvo, dITpSMo['sD_SMo'], sF,
-                       overWrite = True)
+                       overWr = True)
         if llIPlot is not None:
             lIPlot = llIPlot[iSMo]
             sFPlt = sF + '__' + '_'.join([str(iPlot) for iPlot in lIPlot])

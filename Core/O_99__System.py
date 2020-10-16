@@ -53,18 +53,20 @@ class System(Base):
                 cStO.printStateDetails()
         print('*'*80)
     
-    def plotResEvo(self, lSSt = None, lIDSMo = None):
-        dParPlt, lPPltF = self.dITp[GC.S_D_PLT][GC.S_STA_CNC], []
-        for sF0 in [dParPlt['sPlt_AllStCnc'], dParPlt['sPlt_SelStCnc']]:
-            lPPltF.append(TF.getPF(self.dIG['sPPlt'], self.dITp['sD_Sys'], sF0,
-                                   sFExt = GC.S_EXT_PDF))
-        PF.plotEvo(dParPlt, self.dResEvo, lPPltF, lSSt = lSSt, lIDSMo = lIDSMo)
+    def plotResEvo(self):
+        dParPlt = self.dITp[GC.S_D_PLT][GC.S_STA_CNC]
+        for cK, cT in dParPlt['dlSY'].items():
+            assert len(cK) == 2 and len(cT) == 2
+            sPltF = '_'.join([str(cEl) for cEl in cK if cEl is not None])
+            pPltF = TF.getPF(self.dIG['sPPlt'], self.dITp['sD_Sys'], sPltF,
+                             sFExt = GC.S_EXT_PDF)
+            PF.plotEvo(dParPlt, self.dResEvo, pPltF, tKey = cK, tDat = cT)
     
     def evolveOverTime(self):
         self.dResEvo, self.dIDStO = TF.evolveGillespie(self.dIG, self.dITp,
                                                        self.dCncSMo)
         dR, sD, sF = self.dResEvo, self.dITp['sD_Sys'], self.dITp['sF_SysEvo']
-        self.pFResEvo = TF.saveAsPdDfr(self.dIG, dR, sD, sF, overWrite = True)
+        self.pFResEvo = TF.saveAsPdDfr(self.dIG, dR, sD, sF, overWr = True)
         self.plotResEvo()
 
 # # +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

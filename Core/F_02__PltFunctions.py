@@ -7,10 +7,15 @@ import matplotlib.pyplot as plt
 import pandas as pd
 
 import Core.C_00__GenConstants as GC
+import Core.F_00__GenFunctions as GF
 
 # --- Functions (general) -----------------------------------------------------
 def pltXYAxis(cDfr, nmCX = None, nmCY = None, pltAxXY = (True, True)):
-    minDfr, maxDfr = min(0, cDfr.stack().min()), cDfr.stack().max()
+    minDfr, maxDfr = 0, 1
+    if cDfr.ndim == 1:
+        minDfr, maxDfr = min(0, cDfr.min()), cDfr.max()
+    elif cDfr.ndim > 1:
+        minDfr, maxDfr = min(0, cDfr.stack().min()), cDfr.stack().max()
     if pltAxXY[0]:
         if nmCX is not None:
             minX, maxX = min(0, min(cDfr.loc[:, nmCX])), max(cDfr.loc[:, nmCX])
@@ -48,8 +53,8 @@ def decorateSavePlot(pF, pdDfr, sTtl = None, xLbl = None, yLbl = None,
 def plotDCncEvo(dIPlt, dCncEvo, pFPlt, lIPlt, tpMark = 'x', szMark = 5,
                ewMark = 2, ecMark = (0.95, 0., 0.), fcMark = (0.9, 0.45, 0.),
                styLn = 'solid', wdthLn = 1, colLn = 'b', sTtl = '', xLbl = '',
-               yLbl = '', overWrite = True):
-    if not os.path.isfile(pFPlt) or overWrite:
+               yLbl = '', overWr = True):
+    if not os.path.isfile(pFPlt) or overWr:
         assert len(lIPlt) >= 2
         cFig = plt.figure()
         pdDfr = pd.DataFrame(dCncEvo)
@@ -63,20 +68,47 @@ def plotDCncEvo(dIPlt, dCncEvo, pFPlt, lIPlt, tpMark = 'x', szMark = 5,
         plt.close()
 
 # --- Functions (O_99_System) -------------------------------------------------
-def plotEvo(dIPlt, dResEvo, lPPltF, lSSt = None, lIDSMo = None,
-            overWrite = True):
-    assert len(lPPltF) >= 2
-    if not os.path.isfile(lPPltF[0]) or overWrite:
+def preProcMeanSum(pdDfr, sLX, lSLY, k1):
+    d4Sel, mdDfr, lSLYMd = {}, pd.DataFrame(), list(GC.DS_ST_4)
+    for sCol in lSLY:
+        for sSimple in GC.DS_ST_4:
+            if len(sCol) >= 2:
+                if sCol[0] == sSimple and set(sCol[1:]) <= {'0', '1'}:
+                    GF.addToDictL(d4Sel, sSimple, sCol)
+                else:
+                    if ((sCol[0] not in GC.DS_ST_4) or
+                        (not set(sCol[1:]) <= {'0', '1'})):
+                        GF.addToDictL(d4Sel, sCol, sCol)
+                        lSLYMd.append(sCol)
+    mdDfr.loc[:, sLX] = pdDfr.loc[:, sLX]
+    for sStS in d4Sel:
+        if sStS in GC.DS_ST_4:
+            if k1 == GC.S_MEAN:
+                mdDfr.loc[:, sStS] = pdDfr.loc[:, d4Sel[sStS]].T.mean()
+            elif k1 == GC.S_SUM:
+                mdDfr.loc[:, sStS] = pdDfr.loc[:, d4Sel[sStS]].T.sum()
+        else:
+            mdDfr.loc[:, sStS] = pdDfr[:, sStS]
+    return mdDfr, lSLYMd
+
+def plotEvo(dIPlt, dResEvo, pF, tKey, tDat, sLblX = GC.S_TIME, overWr = True):
+    if (not os.path.isfile(pF) or overWr) and len(tDat[0]) > 0:
+        ((_, k1), (lSLblY, t1)) = (tKey, tDat)
+        pdDfr = pd.DataFrame(dResEvo).loc[:, [sLblX] + lSLblY]
+        if k1 in [GC.S_MEAN, GC.S_SUM]:
+            pdDfr, lSLblY = preProcMeanSum(pdDfr, sLblX, lSLblY, k1)
         cFig = plt.figure()
-        pdDfr = pd.DataFrame(dResEvo)
-        lSLblY = GC.L_ID_SMO_USED + list(GC.DS_STCH)
-        cX, cY = pdDfr.loc[:, GC.S_TIME], pdDfr.loc[:, lSLblY]
-        plt.plot(cX, cY, marker = dIPlt['tpMark'], ms = dIPlt['szMark'],
-                 mew = dIPlt['ewMark'], mec = dIPlt['ecMark'],
-                 mfc = dIPlt['fcMark'], ls = dIPlt['styLn'],
-                 lw = dIPlt['wdthLn'], color = dIPlt['colLn'])
-        decorateSavePlot(lPPltF[0], cY, dIPlt['title'], dIPlt['xLbl'],
-                         dIPlt['yLbl_StCnc'], pltAxXY = dIPlt['pltAxXY'])
+        for sLblY in lSLblY:
+            plt.plot(pdDfr.loc[:, sLblX], pdDfr.loc[:, sLblY],
+                     marker = dIPlt['tpMark'], ms = dIPlt['szMark'],
+                     mew = dIPlt['ewMark'], mec = dIPlt['ecMark'],
+                     mfc = dIPlt['fcMark'], ls = dIPlt['styLn'],
+                     lw = dIPlt['wdthLn'], color = dIPlt['colLn'],
+                     label = sLblY)
+        plt.legend(loc = 'best')
+        decorateSavePlot(pF, pdDfr, sTtl = dIPlt['title'],
+                         xLbl = dIPlt['xLbl'], yLbl = t1, nmCX = sLblX,
+                         pltAxXY = dIPlt['pltAxXY'])
         plt.close()
 
 ###############################################################################

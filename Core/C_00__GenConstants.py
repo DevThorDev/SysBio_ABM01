@@ -66,10 +66,18 @@ B_IS_PYL = 'P+'
 B_NOT_PYL = 'P-'
 
 # --- constants related to states ---------------------------------------------
+S_ST_A_SIMPLE = 'A'
+S_ST_B_SIMPLE = 'B'
+S_ST_C_SIMPLE = 'C'
+S_ST_D_SIMPLE = 'D'
+
 S_ST_A_KIN_INT = 'St_A_Int_AT5G49770_NRT2p1'
 S_ST_B_KIN_TRA = 'St_B_Trans_AT5G49770_NRT2p1'
 S_ST_C_SPR_INT = 'St_C_Int_NAR2p1_NRT2p1'
 S_ST_D_SPR_TRA = 'St_D_Trans_NAR2p1_NRT2p1'
+
+DS_ST_4 = {S_ST_A_SIMPLE: S_ST_A_KIN_INT, S_ST_B_SIMPLE: S_ST_B_KIN_TRA,
+           S_ST_C_SIMPLE: S_ST_C_SPR_INT, S_ST_D_SIMPLE: S_ST_D_SPR_TRA}
 
 # --- constants related to new states -----------------------------------------
 S_ST_A_KIN_INT_1001 = 'A1001'
@@ -200,6 +208,8 @@ S_TIME = 'Time'
 S_STATE = 'State'
 S_CONC_NO3_1M = 'Conc_NO3-'
 S_CONC_H2PO4_1M = 'Conc_H2PO4-'
+S_MEAN = 'Mean'
+S_SUM = 'Sum'
 
 # --- constants related to plots ----------------------------------------------
 S_D_PLT = 'dPlt'

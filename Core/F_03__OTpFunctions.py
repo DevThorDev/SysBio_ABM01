@@ -14,15 +14,15 @@ import Core.F_00__GenFunctions as GF
 def getPF(sP, sD, sF, sFExt = GC.S_EXT_CSV):
     return GF.joinToPath(os.path.join(sP, sD), sF + '.' + sFExt)
 
-def savePdDfr(dIG, pdDfr, sD, sF, overWrite = True, sFExt = GC.S_EXT_CSV):
+def savePdDfr(dIG, pdDfr, sD, sF, overWr = True, sFExt = GC.S_EXT_CSV):
     sP = getPF(dIG['sPRes'], sD, sF, sFExt = sFExt)
-    if not os.path.isfile(sP) and overWrite:
+    if not os.path.isfile(sP) and overWr:
         pdDfr.to_csv(sP, sep = dIG['cSep'])
     return sP
 
-def saveAsPdDfr(dIG, dRes, sD, sF, overWrite = True, sFExt = GC.S_EXT_CSV):
+def saveAsPdDfr(dIG, dRes, sD, sF, overWr = True, sFExt = GC.S_EXT_CSV):
     sP = getPF(dIG['sPRes'], sD, sF, sFExt = sFExt)
-    if not os.path.isfile(sP) or overWrite:
+    if not os.path.isfile(sP) or overWr:
         pd.DataFrame(dRes).to_csv(sP, sep = dIG['cSep'])
     return sP
 
@@ -155,6 +155,8 @@ def evolveGillespie(dIG, dITp, dCncSMo):
     dO = iniDictOut(dITp, dCncSMo, t, tDelta)
     while t < T and cTSt <= dIG['maxTS']:
         dspCnd = (cTSt >= dIG['minDispTS'] and cTSt%dIG['modDispTS'] == 0)
+        if dspCnd:
+            print('Reached time step', cTSt, 'at time', round(t, GC.R04))
         # change the concentrations of the small molecules
         changeConcSMo(dITp, dO, dCncSMo, dspI = dspCnd)
         # adapt the re-calc reaction hazards function to current system
@@ -164,8 +166,6 @@ def evolveGillespie(dIG, dITp, dCncSMo):
         # update the data storage matrix
         if t < T:
             updateDictOut(dITp, dO, dCncSMo, t)
-        if dspCnd:
-            print('Reached time step', cTSt, 'at time', round(t, GC.R04))
         cTSt += 1
     return dO['dRes'], dO['dN']
 
