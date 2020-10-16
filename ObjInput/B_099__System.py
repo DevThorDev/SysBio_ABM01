@@ -46,8 +46,8 @@ dNStaObj = {GC.S_ST_A_KIN_INT_1001: 600,
             GC.S_ST_D_SPR_TRA_1111: 10}
 
 # basic weights for interaction partner changes
-wIPC_KAs_SPr = 5.
-wIPC_SPr_KAs = 4.
+wIPC_KAs_SPr = 10.
+wIPC_SPr_KAs = 8.
 
 # basic weights for phosphorylations and dephosphorylations at the four sites
 wPyl_S21 = 1.
@@ -401,28 +401,41 @@ dConcChg = {GC.ID_NO3_1M: {GC.S_ST_A_KIN_INT_1001: dPar_N_A1001,
             GC.TS_STCH_D1111: {GC.ID_NO3_1M: tDPar_D1111_N,
                                GC.ID_H2PO4_1M: tDPar_D1111_P}}
 
-concChgScale = 1.    # scale of concentration change def. in dConcChg
+concChgScale = 25.    # scale of concentration change def. in dConcChg
 
-# --- graphics parameters: state numbers and molecule conc. plot -----
-sPlt_AllStCnc = '01_AllStatesConc'      # name of all states and conc. plot
-sPlt_SelStCnc = '02_SelStatesConc'      # name of sel. states and conc. plot
+# --- graphics parameters: state numbers and molecule conc. plot --------------
+sPlt_SSC = '01_SelStatesConc'           # name of all states and conc. plot
+sPlt_SSt = '02_SelStates'               # name of sel. states and conc. plot
+sPlt_SCn = '03_SelConc'                 # name of sel. states and conc. plot
 
-title_StCnc = None          # title of plot
-yLbl_Cnc_N = '$[NO_3^-]$ (mM)'          # y-label of NO3- concentration plot
-yLbl_Cnc_P = '$[H_2PO_4^-]$ (mM)'       # y-label of H2PO4- concentration plot
+title_StCnc = None                      # title of plot
+xLbl_StCnc = GC.S_TIME                  # x-label of plot
 yLbl_StCnc = 'State incidence and molecule concentration (mM)'
 yLbl_St = 'State incidence'
 yLbl_Cnc = 'Molecule concentration (mM)'
-xLbl_StCnc = 'Time step'    # x-label of plot
-tpMark_StCnc = 'x'          # marker type of plot
-szMark_StCnc = 1            # marker size of plot
-ewMark_StCnc = 1            # marker edge width of plot
-ecMark_StCnc = (1., 0., 0.)     # marker edge colour of plot
-fcMark_StCnc = (1., 0.5, 0.)    # marker face colour of plot
-styLn_StCnc = 'solid'       # line style of plot
-wdthLn_StCnc = 1            # line width of plot
-colLn_StCnc = (1., 0.5, 0.)     # line colour of plot
-pltAxXY_StCnc = (True, True)    # plot x- and/or y-axis
+yLbl_Cnc_N = '$[NO_3^-]$ (mM)'          # y-label of NO3- concentration plot
+yLbl_Cnc_P = '$[H_2PO_4^-]$ (mM)'       # y-label of H2PO4- concentration plot
+tpMark_StCnc = None                     # marker type of plot
+szMark_StCnc = 1                        # marker size of plot
+ewMark_StCnc = 1                        # marker edge width of plot
+ecMark_StCnc = (1., 0., 0.)             # marker edge colour of plot
+fcMark_StCnc = (1., 0.5, 0.)            # marker face colour of plot
+styLn_StCnc = 'solid'                   # line style of plot
+wdthLn_StCnc = 1                        # line width of plot
+colLn_StCnc = None                      # line colour of plot
+pltAxXY_StCnc = (True, True)            # plot x- and/or y-axis
+
+# dict. of concentration or state strings to be plotted, incl. y-label
+dlSY = {(sPlt_SSC, None): ([GC.S_ST_A_KIN_INT_1001, GC.S_ST_B_KIN_TRA_0110,
+                            GC.S_ST_C_SPR_INT_0110, GC.S_ST_D_SPR_TRA_1001,
+                            GC.ID_NO3_1M], yLbl_StCnc),
+        (sPlt_SSt, 1): (list(GC.DS_STCH)[:8], yLbl_St),
+        (sPlt_SSt, 2): (list(GC.DS_STCH)[8:16], yLbl_St),
+        (sPlt_SSt, 3): (list(GC.DS_STCH)[16:24], yLbl_St),
+        (sPlt_SSt, 4): (list(GC.DS_STCH)[24:], yLbl_St),
+        (sPlt_SSt, GC.S_MEAN): (list(GC.DS_STCH), yLbl_St),
+        (sPlt_SSt, GC.S_SUM): (list(GC.DS_STCH), yLbl_St),
+        (sPlt_SCn, None): ([GC.ID_NO3_1M, GC.ID_H2PO4_1M], yLbl_Cnc)}
 
 # --- path, directory and file names ------------------------------------------
 sD_Sys = '99_Sys'
@@ -444,15 +457,16 @@ dIO = {'strOType': strOType,
        'sD_Sys': sD_Sys,
        'sF_SysEvo': sF_SysEvo,
        # --- graphics parameters: state numbers and molecule conc. plot
-       GC.S_D_PLT: {GC.S_STA_CNC: {'sPlt_AllStCnc': sPlt_AllStCnc,
-                                   'sPlt_SelStCnc': sPlt_SelStCnc,
+       GC.S_D_PLT: {GC.S_STA_CNC: {'sPlt_SSC': sPlt_SSC,
+                                   'sPlt_SSt': sPlt_SSt,
+                                   'sPlt_SCn': sPlt_SCn,
                                    'title': title_StCnc,
-                                   'yLbl_Cnc_N': yLbl_Cnc_N,
-                                   'yLbl_Cnc_P': yLbl_Cnc_P,
+                                   'xLbl': xLbl_StCnc,
                                    'yLbl_StCnc': yLbl_StCnc,
                                    'yLbl_St': yLbl_St,
                                    'yLbl_Cnc': yLbl_Cnc,
-                                   'xLbl': xLbl_StCnc,
+                                   'yLbl_Cnc_N': yLbl_Cnc_N,
+                                   'yLbl_Cnc_P': yLbl_Cnc_P,
                                    'tpMark': tpMark_StCnc,
                                    'szMark': szMark_StCnc,
                                    'ewMark': ewMark_StCnc,
@@ -461,6 +475,7 @@ dIO = {'strOType': strOType,
                                    'styLn': styLn_StCnc,
                                    'wdthLn': wdthLn_StCnc,
                                    'colLn': colLn_StCnc,
-                                   'pltAxXY': pltAxXY_StCnc}}}
+                                   'pltAxXY': pltAxXY_StCnc,
+                                   'dlSY': dlSY}}}
 
 ###############################################################################
