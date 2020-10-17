@@ -46,8 +46,8 @@ dNStaObj = {GC.S_ST_A_KIN_INT_1001: 600,
             GC.S_ST_D_SPR_TRA_1111: 10}
 
 # basic weights for interaction partner changes
-wIPC_KAs_SPr = 10.
-wIPC_SPr_KAs = 8.
+wIPC_KAs_SPr = 1.
+wIPC_SPr_KAs = 1.1
 
 # basic weights for phosphorylations and dephosphorylations at the four sites
 wPyl_S21 = 1.
@@ -60,42 +60,50 @@ wDPy_S28 = 0.85
 wDPy_S839 = 1.15
 wDPy_S870 = 0.6
 
+# basic weights for chenges between state groups
+w_A_B = 1.
+w_B_B = 10.
+w_B_C = 1.
+w_C_D = 1.
+w_D_D = 10.
+w_D_A = 1.
+
 # dictionary of basic reaction rate weights
-dRRC = {GC.TS_STCH_A1001: (wDPy_S21, wDPy_S870, wPyl_S839, wPyl_S28),
-        GC.TS_STCH_B0000: (wPyl_S870, wPyl_S839, wPyl_S28, wPyl_S21),
-        GC.TS_STCH_B0001: (wDPy_S870, wPyl_S839, wPyl_S28, wPyl_S21),
-        GC.TS_STCH_B0010: (wDPy_S839, wPyl_S870, wPyl_S28, wPyl_S21),
-        GC.TS_STCH_B0011: (wDPy_S839, wDPy_S870, wPyl_S28, wPyl_S21),
-        GC.TS_STCH_B0100: (wDPy_S28, wPyl_S870, wPyl_S839, wPyl_S21),
-        GC.TS_STCH_B0101: (wDPy_S28, wDPy_S870, wPyl_S839, wPyl_S21),
-        GC.TS_STCH_B0110: (wDPy_S28, wDPy_S839, wPyl_S870, wPyl_S21,
-                           wIPC_KAs_SPr),
-        GC.TS_STCH_B0111: (wDPy_S28, wDPy_S839, wDPy_S870, wPyl_S21),
-        GC.TS_STCH_B1000: (wDPy_S21, wPyl_S870, wPyl_S839, wPyl_S28),
-        GC.TS_STCH_B1010: (wDPy_S21, wDPy_S839, wPyl_S870, wPyl_S28),
-        GC.TS_STCH_B1011: (wDPy_S21, wDPy_S839, wDPy_S870, wPyl_S28),
-        GC.TS_STCH_B1100: (wDPy_S21, wDPy_S28, wPyl_S870, wPyl_S839),
-        GC.TS_STCH_B1101: (wDPy_S21, wDPy_S28, wDPy_S870, wPyl_S839),
-        GC.TS_STCH_B1110: (wDPy_S21, wDPy_S28, wDPy_S839, wPyl_S870),
-        GC.TS_STCH_B1111: (wDPy_S21, wDPy_S28, wDPy_S839, wDPy_S870),
+dRRC = {GC.TS_STCH_A1001: (wDPy_S21*w_A_B, wDPy_S870*w_A_B, wPyl_S839*w_A_B, wPyl_S28*w_A_B),
+        GC.TS_STCH_B0000: (wPyl_S870*w_B_B, wPyl_S839*w_B_B, wPyl_S28*w_B_B, wPyl_S21*w_B_B),
+        GC.TS_STCH_B0001: (wDPy_S870*w_B_B, wPyl_S839*w_B_B, wPyl_S28*w_B_B, wPyl_S21*w_B_B),
+        GC.TS_STCH_B0010: (wDPy_S839*w_B_B, wPyl_S870*w_B_B, wPyl_S28*w_B_B, wPyl_S21*w_B_B),
+        GC.TS_STCH_B0011: (wDPy_S839*w_B_B, wDPy_S870*w_B_B, wPyl_S28*w_B_B, wPyl_S21*w_B_B),
+        GC.TS_STCH_B0100: (wDPy_S28*w_B_B, wPyl_S870*w_B_B, wPyl_S839*w_B_B, wPyl_S21*w_B_B),
+        GC.TS_STCH_B0101: (wDPy_S28*w_B_B, wDPy_S870*w_B_B, wPyl_S839*w_B_B, wPyl_S21*w_B_B),
+        GC.TS_STCH_B0110: (wDPy_S28*w_B_B, wDPy_S839*w_B_B, wPyl_S870*w_B_B, wPyl_S21*w_B_B,
+                           wIPC_KAs_SPr*w_B_C),
+        GC.TS_STCH_B0111: (wDPy_S28*w_B_B, wDPy_S839*w_B_B, wDPy_S870*w_B_B, wPyl_S21*w_B_B),
+        GC.TS_STCH_B1000: (wDPy_S21*w_B_B, wPyl_S870*w_B_B, wPyl_S839*w_B_B, wPyl_S28*w_B_B),
+        GC.TS_STCH_B1010: (wDPy_S21*w_B_B, wDPy_S839*w_B_B, wPyl_S870*w_B_B, wPyl_S28*w_B_B),
+        GC.TS_STCH_B1011: (wDPy_S21*w_B_B, wDPy_S839*w_B_B, wDPy_S870*w_B_B, wPyl_S28*w_B_B),
+        GC.TS_STCH_B1100: (wDPy_S21*w_B_B, wDPy_S28*w_B_B, wPyl_S870*w_B_B, wPyl_S839*w_B_B),
+        GC.TS_STCH_B1101: (wDPy_S21*w_B_B, wDPy_S28*w_B_B, wDPy_S870*w_B_B, wPyl_S839*w_B_B),
+        GC.TS_STCH_B1110: (wDPy_S21*w_B_B, wDPy_S28*w_B_B, wDPy_S839*w_B_B, wPyl_S870*w_B_B),
+        GC.TS_STCH_B1111: (wDPy_S21*w_B_B, wDPy_S28*w_B_B, wDPy_S839*w_B_B, wDPy_S870*w_B_B),
         
-        GC.TS_STCH_C0110: (wDPy_S28, wDPy_S839, wPyl_S870, wPyl_S21),
-        GC.TS_STCH_D0000: (wPyl_S870, wPyl_S839, wPyl_S28, wPyl_S21),
-        GC.TS_STCH_D0001: (wDPy_S870, wPyl_S839, wPyl_S28, wPyl_S21),
-        GC.TS_STCH_D0010: (wDPy_S839, wPyl_S870, wPyl_S28, wPyl_S21),
-        GC.TS_STCH_D0011: (wDPy_S839, wDPy_S870, wPyl_S28, wPyl_S21),
-        GC.TS_STCH_D0100: (wDPy_S28, wPyl_S870, wPyl_S839, wPyl_S21),
-        GC.TS_STCH_D0101: (wDPy_S28, wDPy_S870, wPyl_S839, wPyl_S21),
-        GC.TS_STCH_D0111: (wDPy_S28, wDPy_S839, wDPy_S870, wPyl_S21),
-        GC.TS_STCH_D1000: (wDPy_S21, wPyl_S870, wPyl_S839, wPyl_S28),
-        GC.TS_STCH_D1001: (wDPy_S21, wDPy_S870, wPyl_S839, wPyl_S28,
-                           wIPC_SPr_KAs),
-        GC.TS_STCH_D1010: (wDPy_S21, wDPy_S839, wPyl_S870, wPyl_S28),
-        GC.TS_STCH_D1011: (wDPy_S21, wDPy_S839, wDPy_S870, wPyl_S28),
-        GC.TS_STCH_D1100: (wDPy_S21, wDPy_S28, wPyl_S870, wPyl_S839),
-        GC.TS_STCH_D1101: (wDPy_S21, wDPy_S28, wDPy_S870, wPyl_S839),
-        GC.TS_STCH_D1110: (wDPy_S21, wDPy_S28, wDPy_S839, wPyl_S870),
-        GC.TS_STCH_D1111: (wDPy_S21, wDPy_S28, wDPy_S839, wDPy_S870)}
+        GC.TS_STCH_C0110: (wDPy_S28*w_C_D, wDPy_S839*w_C_D, wPyl_S870*w_C_D, wPyl_S21*w_C_D),
+        GC.TS_STCH_D0000: (wPyl_S870*w_D_D, wPyl_S839*w_D_D, wPyl_S28*w_D_D, wPyl_S21*w_D_D),
+        GC.TS_STCH_D0001: (wDPy_S870*w_D_D, wPyl_S839*w_D_D, wPyl_S28*w_D_D, wPyl_S21*w_D_D),
+        GC.TS_STCH_D0010: (wDPy_S839*w_D_D, wPyl_S870*w_D_D, wPyl_S28*w_D_D, wPyl_S21*w_D_D),
+        GC.TS_STCH_D0011: (wDPy_S839*w_D_D, wDPy_S870*w_D_D, wPyl_S28*w_D_D, wPyl_S21*w_D_D),
+        GC.TS_STCH_D0100: (wDPy_S28*w_D_D, wPyl_S870*w_D_D, wPyl_S839*w_D_D, wPyl_S21*w_D_D),
+        GC.TS_STCH_D0101: (wDPy_S28*w_D_D, wDPy_S870*w_D_D, wPyl_S839*w_D_D, wPyl_S21*w_D_D),
+        GC.TS_STCH_D0111: (wDPy_S28*w_D_D, wDPy_S839*w_D_D, wDPy_S870*w_D_D, wPyl_S21*w_D_D),
+        GC.TS_STCH_D1000: (wDPy_S21*w_D_D, wPyl_S870*w_D_D, wPyl_S839*w_D_D, wPyl_S28*w_D_D),
+        GC.TS_STCH_D1001: (wDPy_S21*w_D_D, wDPy_S870*w_D_D, wPyl_S839*w_D_D, wPyl_S28*w_D_D,
+                           wIPC_SPr_KAs*w_D_A),
+        GC.TS_STCH_D1010: (wDPy_S21*w_D_D, wDPy_S839*w_D_D, wPyl_S870*w_D_D, wPyl_S28*w_D_D),
+        GC.TS_STCH_D1011: (wDPy_S21*w_D_D, wDPy_S839*w_D_D, wDPy_S870*w_D_D, wPyl_S28*w_D_D),
+        GC.TS_STCH_D1100: (wDPy_S21*w_D_D, wDPy_S28*w_D_D, wPyl_S870*w_D_D, wPyl_S839*w_D_D),
+        GC.TS_STCH_D1101: (wDPy_S21*w_D_D, wDPy_S28*w_D_D, wDPy_S870*w_D_D, wPyl_S839*w_D_D),
+        GC.TS_STCH_D1110: (wDPy_S21*w_D_D, wDPy_S28*w_D_D, wDPy_S839*w_D_D, wPyl_S870*w_D_D),
+        GC.TS_STCH_D1111: (wDPy_S21*w_D_D, wDPy_S28*w_D_D, wDPy_S839*w_D_D, wDPy_S870*w_D_D)}
 
 # dictionary of initial, min. and max. concentrations of small molecules
 dConcSMo = {'Ini': {GC.ID_NO3_1M: {'cTp': 'uniform',
@@ -401,7 +409,7 @@ dConcChg = {GC.ID_NO3_1M: {GC.S_ST_A_KIN_INT_1001: dPar_N_A1001,
             GC.TS_STCH_D1111: {GC.ID_NO3_1M: tDPar_D1111_N,
                                GC.ID_H2PO4_1M: tDPar_D1111_P}}
 
-concChgScale = 25.    # scale of concentration change def. in dConcChg
+concChgScale = 5.    # scale of concentration change def. in dConcChg
 
 # --- graphics parameters: state numbers and molecule conc. plot --------------
 sPlt_SSC = '01_SelStatesConc'           # name of all states and conc. plot
