@@ -60,7 +60,7 @@ wDPy_S28 = 0.85
 wDPy_S839 = 1.15
 wDPy_S870 = 0.6
 
-# basic weights for chenges between state groups
+# basic weights for changes between state groups
 w_A_B = 1.
 w_B_B = 10.
 w_B_C = 1.
