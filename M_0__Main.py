@@ -18,8 +18,11 @@ inDG = InputData(dictInpG)
 inDG.addObjTps(S_D_OBJINP)
 print('Added object types.')
 # -----------------------------------------------------------------------------
-cSystem = System(inDG) 
-cSystem.evolveOverTime()
+cSystem = System(inDG)
+if cSystem.dIG['doEvoT']:
+    cSystem.evolveOverTime(doPlots = cSystem.dIG['doPlots'])
+if cSystem.dIG['doPlots']:
+    cSystem.plotResEvo(sFRes = cSystem.dITp['sF_SysEvo'], overWr = False)
 cSystem.printNStateObjSys()
 # cSystem.printAllStateObjSys()
 
