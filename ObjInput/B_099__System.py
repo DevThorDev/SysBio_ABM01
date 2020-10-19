@@ -62,10 +62,10 @@ wDPy_S870 = 0.6
 
 # basic weights for changes between state groups
 w_A_B = 1.
-w_B_B = 10.
+w_B_B = 500.
 w_B_C = 1.
 w_C_D = 1.
-w_D_D = 10.
+w_D_D = 500.
 w_D_A = 1.
 
 # dictionary of basic reaction rate weights
@@ -409,7 +409,7 @@ dConcChg = {GC.ID_NO3_1M: {GC.S_ST_A_KIN_INT_1001: dPar_N_A1001,
             GC.TS_STCH_D1111: {GC.ID_NO3_1M: tDPar_D1111_N,
                                GC.ID_H2PO4_1M: tDPar_D1111_P}}
 
-concChgScale = 5.    # scale of concentration change def. in dConcChg
+concChgScale = 50.    # scale of concentration change def. in dConcChg
 
 # --- graphics parameters: state numbers and molecule conc. plot --------------
 sPlt_SSC = '01_SelStatesConc'           # name of all states and conc. plot
@@ -434,16 +434,28 @@ colLn_StCnc = None                      # line colour of plot
 pltAxXY_StCnc = (True, True)            # plot x- and/or y-axis
 
 # dict. of concentration or state strings to be plotted, incl. y-label
-dlSY = {(sPlt_SSC, None): ([GC.S_ST_A_KIN_INT_1001, GC.S_ST_B_KIN_TRA_0110,
-                            GC.S_ST_C_SPR_INT_0110, GC.S_ST_D_SPR_TRA_1001,
-                            GC.ID_NO3_1M], yLbl_StCnc),
-        (sPlt_SSt, 1): (list(GC.DS_STCH)[:8], yLbl_St),
-        (sPlt_SSt, 2): (list(GC.DS_STCH)[8:16], yLbl_St),
-        (sPlt_SSt, 3): (list(GC.DS_STCH)[16:24], yLbl_St),
-        (sPlt_SSt, 4): (list(GC.DS_STCH)[24:], yLbl_St),
-        (sPlt_SSt, GC.S_MEAN): (list(GC.DS_STCH), yLbl_St),
-        (sPlt_SSt, GC.S_SUM): (list(GC.DS_STCH), yLbl_St),
-        (sPlt_SCn, None): ([GC.ID_NO3_1M, GC.ID_H2PO4_1M], yLbl_Cnc)}
+# key: (start string of plot, number of plot)
+# value: (list of states to be plotted, y-label of plot, dictionary of ops)
+dAC = {cK: {GC.S_ST_A_SIMPLE: [GC.S_ST_A_SIMPLE, GC.S_ST_B_SIMPLE],
+            GC.S_ST_C_SIMPLE: [GC.S_ST_C_SIMPLE, GC.S_ST_D_SIMPLE]}
+       for cK in [GC.S_MEAN, GC.S_SUM]}
+dABCD = {cK: {GC.S_ST_A_SIMPLE: [GC.S_ST_A_SIMPLE],
+              GC.S_ST_B_SIMPLE: [GC.S_ST_B_SIMPLE],
+              GC.S_ST_C_SIMPLE: [GC.S_ST_C_SIMPLE],
+              GC.S_ST_D_SIMPLE: [GC.S_ST_D_SIMPLE]}
+         for cK in [GC.S_MEAN, GC.S_SUM]}
+dlSY = {(sPlt_SSC, 'AC'): (list(GC.DS_STCH) + [GC.ID_NO3_1M], yLbl_StCnc, dAC),
+        (sPlt_SSC, 'ABCD'): (list(GC.DS_STCH) + [GC.ID_NO3_1M], yLbl_StCnc,
+                             dABCD),
+        (sPlt_SSC, 'Sel4'): ([GC.S_ST_A_KIN_INT_1001, GC.S_ST_B_KIN_TRA_0110,
+                              GC.S_ST_C_SPR_INT_0110, GC.S_ST_D_SPR_TRA_1001,
+                              GC.ID_NO3_1M], yLbl_StCnc, None),
+        (sPlt_SSt, 1): (list(GC.DS_STCH)[:8], yLbl_St, None),
+        (sPlt_SSt, 2): (list(GC.DS_STCH)[8:16], yLbl_St, None),
+        (sPlt_SSt, 3): (list(GC.DS_STCH)[16:24], yLbl_St, None),
+        (sPlt_SSt, 4): (list(GC.DS_STCH)[24:], yLbl_St, None),
+        (sPlt_SSt, None): (list(GC.DS_STCH), yLbl_St, dABCD),
+        (sPlt_SCn, None): ([GC.ID_NO3_1M, GC.ID_H2PO4_1M], yLbl_Cnc, None)}
 
 # --- path, directory and file names ------------------------------------------
 sD_Sys = '99_Sys'
