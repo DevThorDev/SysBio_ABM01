@@ -87,12 +87,12 @@ class State(Base):
         assert len(self.lSMo) > iSMo
         sNSt, sKSt = str(self.dIG['nStates']), str(kSt)
         dITpSMo, s0 = self.lSMo[iSMo].dITp, '0'*(len(sNSt) - len(sKSt))
-        sF = dITpSMo['sPlt_Conc'] + dITpSMo['sF_SMo'] + '_' + s0 + sKSt
+        sF = dITpSMo['sPlt_Conc'] + dITpSMo['sF_SMo'] + GC.S_USC + s0 + sKSt
         TF.saveAsPdDfr(self.dIG, self.dCncEvo, dITpSMo['sD_SMo'], sF,
                        overWr = True)
         if llIPlot is not None:
             lIPlot = llIPlot[iSMo]
-            sFPlt = sF + '__' + '_'.join([str(iPlot) for iPlot in lIPlot])
+            sFPlt = sF + '__' + GC.S_USC.join([str(iPlot) for iPlot in lIPlot])
             sP = TF.getPF(self.dIG['sPPlt'], dITpSMo['sD_SMo'], sFPlt,
                           sFExt = GC.S_EXT_PDF)
             PF.plotDCncEvo(dITpSMo[GC.S_D_PLT][dITpSMo['sPlt_Conc']],

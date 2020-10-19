@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 import pandas as pd
 
 import Core.C_00__GenConstants as GC
-import Core.F_00__GenFunctions as GF
+import Core.F_01__SpcFunctions as SF
 
 # --- Functions (general) -----------------------------------------------------
 def pltXYAxis(cDfr, nmCX = None, nmCY = None, pltAxXY = (True, True)):
@@ -68,47 +68,28 @@ def plotDCncEvo(dIPlt, dCncEvo, pFPlt, lIPlt, tpMark = 'x', szMark = 5,
         plt.close()
 
 # --- Functions (O_99_System) -------------------------------------------------
-def preProcMeanSum(pdDfr, sLX, lSLY, k1):
-    d4Sel, mdDfr, lSLYMd = {}, pd.DataFrame(), list(GC.DS_ST_4)
-    for sCol in lSLY:
-        for sSimple in GC.DS_ST_4:
-            if len(sCol) >= 2:
-                if sCol[0] == sSimple and set(sCol[1:]) <= {'0', '1'}:
-                    GF.addToDictL(d4Sel, sSimple, sCol)
-                else:
-                    if ((sCol[0] not in GC.DS_ST_4) or
-                        (not set(sCol[1:]) <= {'0', '1'})):
-                        GF.addToDictL(d4Sel, sCol, sCol)
-                        lSLYMd.append(sCol)
-    mdDfr.loc[:, sLX] = pdDfr.loc[:, sLX]
-    for sStS in d4Sel:
-        if sStS in GC.DS_ST_4:
-            if k1 == GC.S_MEAN:
-                mdDfr.loc[:, sStS] = pdDfr.loc[:, d4Sel[sStS]].T.mean()
-            elif k1 == GC.S_SUM:
-                mdDfr.loc[:, sStS] = pdDfr.loc[:, d4Sel[sStS]].T.sum()
-        else:
-            mdDfr.loc[:, sStS] = pdDfr[:, sStS]
-    return mdDfr, lSLYMd
+def plotEvoFig(dIPlt, dfrR, pF, sHdCX, dSHdCY, sLblY):
+    cFig = plt.figure()
+    for sHdCY, lSY in dSHdCY.items():
+        plt.plot(dfrR.loc[:, sHdCX], dfrR.loc[:, sHdCY],
+                 marker = dIPlt['tpMark'], ms = dIPlt['szMark'],
+                 mew = dIPlt['ewMark'], mec = dIPlt['ecMark'],
+                 mfc = dIPlt['fcMark'], ls = dIPlt['styLn'],
+                 lw = dIPlt['wdthLn'], color = dIPlt['colLn'], label = lSY[0])
+    plt.legend(loc = 'best')
+    decorateSavePlot(pF, dfrR, sTtl = dIPlt['title'], xLbl = dIPlt['xLbl'],
+                     yLbl = sLblY, nmCX = sHdCX, pltAxXY = dIPlt['pltAxXY'])
+    plt.close()
 
-def plotEvo(dIPlt, dResEvo, pF, tKey, tDat, sLblX = GC.S_TIME, overWr = True):
-    if (not os.path.isfile(pF) or overWr) and len(tDat[0]) > 0:
-        ((_, k1), (lSLblY, t1)) = (tKey, tDat)
-        pdDfr = pd.DataFrame(dResEvo).loc[:, [sLblX] + lSLblY]
-        if k1 in [GC.S_MEAN, GC.S_SUM]:
-            pdDfr, lSLblY = preProcMeanSum(pdDfr, sLblX, lSLblY, k1)
-        cFig = plt.figure()
-        for sLblY in lSLblY:
-            plt.plot(pdDfr.loc[:, sLblX], pdDfr.loc[:, sLblY],
-                     marker = dIPlt['tpMark'], ms = dIPlt['szMark'],
-                     mew = dIPlt['ewMark'], mec = dIPlt['ecMark'],
-                     mfc = dIPlt['fcMark'], ls = dIPlt['styLn'],
-                     lw = dIPlt['wdthLn'], color = dIPlt['colLn'],
-                     label = sLblY)
-        plt.legend(loc = 'best')
-        decorateSavePlot(pF, pdDfr, sTtl = dIPlt['title'],
-                         xLbl = dIPlt['xLbl'], yLbl = t1, nmCX = sLblX,
-                         pltAxXY = dIPlt['pltAxXY'])
-        plt.close()
+def plotEvo(dIPlt, dResEvo, dPF, tDat, sHdCX = GC.S_TIME, overWr = True):
+    for pF, tKDSt in dPF.items():
+        if (not os.path.isfile(pF) or overWr) and len(tDat[0]) > 0:
+            lSHdCY, sLblY = tDat
+            dfrR = pd.DataFrame(dResEvo).loc[:, [sHdCX] + lSHdCY]
+            if tKDSt is None:
+                dSHdCY =  {sHd: [sHd] for sHd in lSHdCY}
+            else:
+                dfrR, dSHdCY = SF.preProcMeanSum(dfrR, sHdCX, lSHdCY, tKDSt)
+            plotEvoFig(dIPlt, dfrR, pF, sHdCX, dSHdCY, sLblY)
 
 ###############################################################################

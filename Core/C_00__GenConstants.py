@@ -219,7 +219,8 @@ S_STA_CNC = 'A_StaConc'
 M_DETER = 'Deterministic'
 M_STOCH = 'Stochastic'
 SEP_STD = ';'
-S_SPL = '_'
+S_USC = '_'
+S_COM_BL = ', '
 R04 = 4
 
 ###############################################################################

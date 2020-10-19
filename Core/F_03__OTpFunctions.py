@@ -98,16 +98,10 @@ def updateDictH(dITp, dO, dCncSMo, dspI = False):
     for tS, tRRC in dRRC.items():
         assert len(tS) == len(tRRC)
         for k, s in enumerate(tS):
-            # TEMP - BEGIN:
-            if k >= len(dCncCh[tS][sMoN]):
-                print('ERROR: Tuple for', tS, 'and molecule', sMoN,
-                      'in dCncCh is', dCncCh[tS][sMoN], 'but k =', k)
-                assert False
-            # TEMP - END.
             p = GF.calcPSigmoidal(dCncSMo[sMoN], dCncCh[tS][sMoN][k])
             dRUp[s] = tRRC[k]*p
             # recalculate dH, which contains the h_i (i = 1,... len(dH))
-            dO['dH'][s] = dRUp[s]*dO['dN'][s.split('_')[0]]
+            dO['dH'][s] = dRUp[s]*dO['dN'][s.split(GC.S_USC)[0]]
     # (?) update the reaction rate constants according to the current [H2PO4-]
     if dspI:
         pass
@@ -168,6 +162,26 @@ def evolveGillespie(dIG, dITp, dCncSMo):
             updateDictOut(dITp, dO, dCncSMo, t)
         cTSt += 1
     return dO['dRes'], dO['dN']
+
+def getPFResEvo(dIG, dITp, sFRs):
+    pFRes = getPF(dIG['sPRes'], dITp['sD_Sys'], sFRs, sFExt = GC.S_EXT_CSV)
+    if os.path.isfile(pFRes):
+        return GF.readCSV(pFRes, iCol = 0)
+    return None
+
+def getDPFPltEvo(dIG, dITp, tKey, dMS = None):
+    dP = {}
+    if dMS is None:
+        sF = GC.S_USC.join([str(cEl) for cEl in tKey if cEl is not None])
+        dP[getPF(dIG['sPPlt'], dITp['sD_Sys'], sF, sFExt = GC.S_EXT_PDF)] = dMS
+    else:
+        for sMS, dSt in dMS.items():
+            sF = str(tKey[0]) + GC.S_USC + sMS
+            if tKey[1] is not None:
+                sF +=  GC.S_USC + str(tKey[1])
+            pF = getPF(dIG['sPPlt'], dITp['sD_Sys'], sF, sFExt = GC.S_EXT_PDF)
+            dP[pF] = (sMS, dSt)
+    return dP
 
 # def printSysComp(sCmp = 'Base', lOCmp = []):
 #     print('-'*8, sCmp, '-'*8)

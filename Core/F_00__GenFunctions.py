@@ -33,7 +33,7 @@ def joinToPath(pF = '', sF = 'Dummy.txt'):
     else:
         return sF
 
-def partI(s, i = 0, sSpl = GC.S_SPL):
+def partI(s, i = 0, sSpl = GC.S_USC):
     return s.split(sSpl)[i]
 
 def lItToUniqueList(lIt):
@@ -53,9 +53,10 @@ def addToDictCt(cD, cK, cCt = 1):
     else:
         cD[cK] = cCt
 
-def addToDictL(cD, cK, cE):
+def addToDictL(cD, cK, cE, lUnique = False):
     if cK in cD:
-        cD[cK].append(cE)
+        if not lUnique or cE not in cD[cK]:
+            cD[cK].append(cE)
     else:
         cD[cK] = [cE]
 
@@ -131,6 +132,9 @@ def endSimu(startTime):
     print('*'*20 + ' DONE', time.ctime(time.time()), '*'*20)
 
 # --- Functions (Pandas) ------------------------------------------------------
+def readCSV(pF, sepD = GC.SEP_STD, iCol = None, dDtype = None):
+    return pd.read_csv(pF, sep = sepD, index_col = iCol, dtype = dDtype)
+
 def iniPdDfr(data = None, lSNmC = [], lSNmR = [], shape = (0, 0)):
     assert len(shape) == 2
     nR, nC = shape
