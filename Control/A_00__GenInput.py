@@ -10,8 +10,10 @@ import Core.C_00__GenConstants as GC
 levelDebugOut = 2   # level of debug output (0: no debug output)
 
 # --- Input: Flow control -----------------------------------------------------
+doEvoT = True
+doPlots = True
 tStart = 0
-tMax = 20.
+tMax = 5.
 maxTS = 1000000
 minDispTS = 0
 modDispTS = 10000
@@ -33,6 +35,8 @@ dS_StCh = GC.DS_STCH
 dictInpG = {# --- Input: Debug Info
             'lvlDbg': levelDebugOut,
             # --- Input: Flow control
+            'doEvoT': doEvoT,
+            'doPlots': doPlots,
             'tStart': tStart,
             'tMax': tMax,
             'maxTS': maxTS,
