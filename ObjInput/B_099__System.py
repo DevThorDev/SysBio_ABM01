@@ -12,38 +12,38 @@ strCL = 'System'
 
 # --- data containing state, state transition and conc. change info -----------
 # initial number of objects for each possible state
-dNStaObj = {GC.S_ST_A_KIN_INT_1001: 600,
-            GC.S_ST_B_KIN_TRA_0000: 10,
-            GC.S_ST_B_KIN_TRA_0001: 10,
-            GC.S_ST_B_KIN_TRA_0010: 10,
-            GC.S_ST_B_KIN_TRA_0011: 10,
-            GC.S_ST_B_KIN_TRA_0100: 10,
-            GC.S_ST_B_KIN_TRA_0101: 10,
-            GC.S_ST_B_KIN_TRA_0110: 10,
-            GC.S_ST_B_KIN_TRA_0111: 10,
-            GC.S_ST_B_KIN_TRA_1000: 10,
-            GC.S_ST_B_KIN_TRA_1010: 10,
-            GC.S_ST_B_KIN_TRA_1011: 10,
-            GC.S_ST_B_KIN_TRA_1100: 10,
-            GC.S_ST_B_KIN_TRA_1101: 10,
-            GC.S_ST_B_KIN_TRA_1110: 10,
-            GC.S_ST_B_KIN_TRA_1111: 10,
+dNStaObj = {GC.S_ST_A_KIN_INT_1001: 300,
+            GC.S_ST_B_KIN_TRA_0000: 20,
+            GC.S_ST_B_KIN_TRA_0001: 20,
+            GC.S_ST_B_KIN_TRA_0010: 20,
+            GC.S_ST_B_KIN_TRA_0011: 20,
+            GC.S_ST_B_KIN_TRA_0100: 20,
+            GC.S_ST_B_KIN_TRA_0101: 20,
+            GC.S_ST_B_KIN_TRA_0110: 20,
+            GC.S_ST_B_KIN_TRA_0111: 20,
+            GC.S_ST_B_KIN_TRA_1000: 20,
+            GC.S_ST_B_KIN_TRA_1010: 20,
+            GC.S_ST_B_KIN_TRA_1011: 20,
+            GC.S_ST_B_KIN_TRA_1100: 20,
+            GC.S_ST_B_KIN_TRA_1101: 20,
+            GC.S_ST_B_KIN_TRA_1110: 20,
+            GC.S_ST_B_KIN_TRA_1111: 20,
             GC.S_ST_C_SPR_INT_0110: 100,
-            GC.S_ST_D_SPR_TRA_0000: 10,
-            GC.S_ST_D_SPR_TRA_0001: 10,
-            GC.S_ST_D_SPR_TRA_0010: 10,
-            GC.S_ST_D_SPR_TRA_0011: 10,
-            GC.S_ST_D_SPR_TRA_0100: 10,
-            GC.S_ST_D_SPR_TRA_0101: 10,
-            GC.S_ST_D_SPR_TRA_0111: 10,
-            GC.S_ST_D_SPR_TRA_1000: 10,
-            GC.S_ST_D_SPR_TRA_1001: 10,
-            GC.S_ST_D_SPR_TRA_1010: 10,
-            GC.S_ST_D_SPR_TRA_1011: 10,
-            GC.S_ST_D_SPR_TRA_1100: 10,
-            GC.S_ST_D_SPR_TRA_1101: 10,
-            GC.S_ST_D_SPR_TRA_1110: 10,
-            GC.S_ST_D_SPR_TRA_1111: 10}
+            GC.S_ST_D_SPR_TRA_0000: 20,
+            GC.S_ST_D_SPR_TRA_0001: 20,
+            GC.S_ST_D_SPR_TRA_0010: 20,
+            GC.S_ST_D_SPR_TRA_0011: 20,
+            GC.S_ST_D_SPR_TRA_0100: 20,
+            GC.S_ST_D_SPR_TRA_0101: 20,
+            GC.S_ST_D_SPR_TRA_0111: 20,
+            GC.S_ST_D_SPR_TRA_1000: 20,
+            GC.S_ST_D_SPR_TRA_1001: 20,
+            GC.S_ST_D_SPR_TRA_1010: 20,
+            GC.S_ST_D_SPR_TRA_1011: 20,
+            GC.S_ST_D_SPR_TRA_1100: 20,
+            GC.S_ST_D_SPR_TRA_1101: 20,
+            GC.S_ST_D_SPR_TRA_1110: 20,
+            GC.S_ST_D_SPR_TRA_1111: 20}
 
 # basic weights for interaction partner changes
 wIPC_KAs_SPr = 1.
@@ -61,12 +61,12 @@ wDPy_S839 = 1.15
 wDPy_S870 = 0.6
 
 # basic weights for changes between state groups
-w_A_B = 1.
-w_B_B = 500.
-w_B_C = 1.
-w_C_D = 1.
-w_D_D = 500.
-w_D_A = 1.
+w_A_B = 0.1
+w_B_B = 10.
+w_B_C = 0.1
+w_C_D = 0.1
+w_D_D = 10.
+w_D_A = 0.1
 
 # dictionary of basic reaction rate weights
 dRRC = {GC.TS_STCH_A1001: (wDPy_S21*w_A_B, wDPy_S870*w_A_B, wPyl_S839*w_A_B, wPyl_S28*w_A_B),
@@ -107,7 +107,7 @@ dRRC = {GC.TS_STCH_A1001: (wDPy_S21*w_A_B, wDPy_S870*w_A_B, wPyl_S839*w_A_B, wPy
 
 # dictionary of initial, min. and max. concentrations of small molecules
 dConcSMo = {'Ini': {GC.ID_NO3_1M: {'cTp': 'uniform',
-                                   'dPar': {'min': 250., 'max': 350.}},
+                                   'dPar': {'min': 9., 'max': 11.}},
                     GC.ID_H2PO4_1M: {'cTp': 'uniform',
                                      'dPar': {'min': 1.7, 'max': 2.2}}},
             'Min': {GC.ID_NO3_1M: 1., GC.ID_H2PO4_1M: 0.01},
@@ -409,7 +409,7 @@ dConcChg = {GC.ID_NO3_1M: {GC.S_ST_A_KIN_INT_1001: dPar_N_A1001,
             GC.TS_STCH_D1111: {GC.ID_NO3_1M: tDPar_D1111_N,
                                GC.ID_H2PO4_1M: tDPar_D1111_P}}
 
-concChgScale = 50.    # scale of concentration change def. in dConcChg
+concChgScale = 1.    # scale of concentration change def. in dConcChg
 
 # --- graphics parameters: state numbers and molecule conc. plot --------------
 sPlt_SSC = '01_SelStatesConc'           # name of all states and conc. plot
@@ -439,12 +439,16 @@ pltAxXY_StCnc = (True, True)            # plot x- and/or y-axis
 dAC = {cK: {GC.S_ST_A_SIMPLE: [GC.S_ST_A_SIMPLE, GC.S_ST_B_SIMPLE],
             GC.S_ST_C_SIMPLE: [GC.S_ST_C_SIMPLE, GC.S_ST_D_SIMPLE]}
        for cK in [GC.S_MEAN, GC.S_SUM]}
+dAB = {cK: {GC.S_ST_A_SIMPLE: [GC.S_ST_A_SIMPLE, GC.S_ST_C_SIMPLE],
+            GC.S_ST_B_SIMPLE: [GC.S_ST_B_SIMPLE, GC.S_ST_D_SIMPLE]}
+       for cK in [GC.S_MEAN, GC.S_SUM]}
 dABCD = {cK: {GC.S_ST_A_SIMPLE: [GC.S_ST_A_SIMPLE],
               GC.S_ST_B_SIMPLE: [GC.S_ST_B_SIMPLE],
               GC.S_ST_C_SIMPLE: [GC.S_ST_C_SIMPLE],
               GC.S_ST_D_SIMPLE: [GC.S_ST_D_SIMPLE]}
          for cK in [GC.S_MEAN, GC.S_SUM]}
 dlSY = {(sPlt_SSC, 'AC'): (list(GC.DS_STCH) + [GC.ID_NO3_1M], yLbl_StCnc, dAC),
+        (sPlt_SSC, 'AB'): (list(GC.DS_STCH) + [GC.ID_NO3_1M], yLbl_StCnc, dAB),
         (sPlt_SSC, 'ABCD'): (list(GC.DS_STCH) + [GC.ID_NO3_1M], yLbl_StCnc,
                              dABCD),
         (sPlt_SSC, 'Sel4'): ([GC.S_ST_A_KIN_INT_1001, GC.S_ST_B_KIN_TRA_0110,
