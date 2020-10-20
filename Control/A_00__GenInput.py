@@ -13,8 +13,8 @@ levelDebugOut = 2   # level of debug output (0: no debug output)
 doEvoT = True
 doPlots = True
 tStart = 0
-tMax = 5.
-maxTS = 1000000
+tMax = 100.
+maxTS = 10000000
 minDispTS = 0
 modDispTS = 10000
 
