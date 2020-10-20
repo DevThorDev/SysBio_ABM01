@@ -23,6 +23,7 @@ if cSystem.dIG['doEvoT']:
     cSystem.evolveOverTime(doPlots = cSystem.dIG['doPlots'])
 if cSystem.dIG['doPlots']:
     cSystem.plotResEvo(sFRes = cSystem.dITp['sF_SysEvo'], overWr = False)
+    # cSystem.plotResEvo(sFRes = 'SysEvo__T100__Sc050__0p1_50', overWr = False)
 cSystem.printNStateObjSys()
 # cSystem.printAllStateObjSys()
 
