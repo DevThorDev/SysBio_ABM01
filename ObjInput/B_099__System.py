@@ -86,7 +86,7 @@ dRRC = {GC.TS_STCH_A1001: (wDPy_S21*w_A_B, wDPy_S870*w_A_B, wPyl_S839*w_A_B, wPy
         GC.TS_STCH_B1101: (wDPy_S21*w_B_B, wDPy_S28*w_B_B, wDPy_S870*w_B_B, wPyl_S839*w_B_B),
         GC.TS_STCH_B1110: (wDPy_S21*w_B_B, wDPy_S28*w_B_B, wDPy_S839*w_B_B, wPyl_S870*w_B_B),
         GC.TS_STCH_B1111: (wDPy_S21*w_B_B, wDPy_S28*w_B_B, wDPy_S839*w_B_B, wDPy_S870*w_B_B),
-        
+
         GC.TS_STCH_C0110: (wDPy_S28*w_C_D, wDPy_S839*w_C_D, wPyl_S870*w_C_D, wPyl_S21*w_C_D),
         GC.TS_STCH_D0000: (wPyl_S870*w_D_D, wPyl_S839*w_D_D, wPyl_S28*w_D_D, wPyl_S21*w_D_D),
         GC.TS_STCH_D0001: (wDPy_S870*w_D_D, wPyl_S839*w_D_D, wPyl_S28*w_D_D, wPyl_S21*w_D_D),
@@ -291,7 +291,7 @@ dConcChg = {GC.ID_NO3_1M: {GC.S_ST_A_KIN_INT_1001: dPar_N_A1001,
                            GC.S_ST_B_KIN_TRA_1101: dPar_N_B1101,
                            GC.S_ST_B_KIN_TRA_1110: dPar_N_B1110,
                            GC.S_ST_B_KIN_TRA_1111: dPar_N_B1111,
-                           
+
                            GC.S_ST_C_SPR_INT_0110: dPar_N_C0110,
                            GC.S_ST_D_SPR_TRA_0000: dPar_N_D0000,
                            GC.S_ST_D_SPR_TRA_0001: dPar_N_D0001,
@@ -308,7 +308,7 @@ dConcChg = {GC.ID_NO3_1M: {GC.S_ST_A_KIN_INT_1001: dPar_N_A1001,
                            GC.S_ST_D_SPR_TRA_1101: dPar_N_D1101,
                            GC.S_ST_D_SPR_TRA_1110: dPar_N_D1110,
                            GC.S_ST_D_SPR_TRA_1111: dPar_N_D1111},
-            
+
             GC.ID_H2PO4_1M: {GC.S_ST_A_KIN_INT_1001: dPar_P_A1001,
                              GC.S_ST_B_KIN_TRA_0000: dPar_P_B0000,
                              GC.S_ST_B_KIN_TRA_0001: dPar_P_B0001,
@@ -325,7 +325,7 @@ dConcChg = {GC.ID_NO3_1M: {GC.S_ST_A_KIN_INT_1001: dPar_N_A1001,
                              GC.S_ST_B_KIN_TRA_1101: dPar_P_B1101,
                              GC.S_ST_B_KIN_TRA_1110: dPar_P_B1110,
                              GC.S_ST_B_KIN_TRA_1111: dPar_P_B1111,
-                             
+
                              GC.S_ST_C_SPR_INT_0110: dPar_P_C0110,
                              GC.S_ST_D_SPR_TRA_0000: dPar_P_D0000,
                              GC.S_ST_D_SPR_TRA_0001: dPar_P_D0001,
@@ -342,7 +342,7 @@ dConcChg = {GC.ID_NO3_1M: {GC.S_ST_A_KIN_INT_1001: dPar_N_A1001,
                              GC.S_ST_D_SPR_TRA_1101: dPar_P_D1101,
                              GC.S_ST_D_SPR_TRA_1110: dPar_P_D1110,
                              GC.S_ST_D_SPR_TRA_1111: dPar_P_D1111},
-            
+
             GC.TS_STCH_A1001: {GC.ID_NO3_1M: tDPar_A1001_N,
                                GC.ID_H2PO4_1M: tDPar_A1001_P},
             GC.TS_STCH_B0000: {GC.ID_NO3_1M: tDPar_B0000_N,
@@ -375,7 +375,7 @@ dConcChg = {GC.ID_NO3_1M: {GC.S_ST_A_KIN_INT_1001: dPar_N_A1001,
                                GC.ID_H2PO4_1M: tDPar_B1110_P},
             GC.TS_STCH_B1111: {GC.ID_NO3_1M: tDPar_B1111_N,
                                GC.ID_H2PO4_1M: tDPar_B1111_P},
-            
+
             GC.TS_STCH_C0110: {GC.ID_NO3_1M: tDPar_C0110_N,
                                GC.ID_H2PO4_1M: tDPar_C0110_P},
             GC.TS_STCH_D0000: {GC.ID_NO3_1M: tDPar_D0000_N,
