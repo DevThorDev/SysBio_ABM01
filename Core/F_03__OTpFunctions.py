@@ -43,16 +43,14 @@ def doSinChange(x, cPer, cAmpl):
 # --- Functions (O_80__Interaction) -------------------------------------------
 def doSiteChange(cO, sSpS, sAse, doDePyl = False):
     opDone = False
-    assert sSpS in cO.dITp['dInfSpS'] and sSpS in cO.dSpS
-    dISpS, cSpS = cO.dITp['dInfSpS'][sSpS], cO.dSpS[sSpS]
-    if not doDePyl and dISpS['Stat'] == GC.B_NOT_PYL and sAse in cSpS.lPyl:
-        dISpS['Stat'] = GC.B_IS_PYL
+    assert sSpS in cO.dSpS
+    cSpS = cO.dSpS[sSpS]
+    if not doDePyl and cSpS.sSPTM == GC.B_NOT_PYL and sAse in cSpS.lPyl:
+        cSpS.sSPTM = GC.B_IS_PYL
         opDone = True
-    elif doDePyl and dISpS['Stat'] == GC.B_IS_PYL and sAse in cSpS.lDePyl:
-        dISpS['Stat'] = GC.B_NOT_PYL
+    elif doDePyl and cSpS.sSPTM == GC.B_IS_PYL and sAse in cSpS.lDePyl:
+        cSpS.sSPTM = GC.B_NOT_PYL
         opDone = True
-    if opDone:
-        cSpS.sSPTM = dISpS['Stat']
     return opDone
 
 # --- Functions (O_90_State) --------------------------------------------------

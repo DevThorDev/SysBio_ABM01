@@ -4,6 +4,7 @@
 ###############################################################################
 import Core.C_00__GenConstants as GC
 import Core.F_00__GenFunctions as GF
+import Core.F_01__SpcFunctions as SF
 import Core.F_02__PltFunctions as PF
 import Core.F_03__OTpFunctions as TF
 
@@ -21,6 +22,8 @@ class State(Base):
             assert len(cLOInt) >= 2
         self.idO = 'Sta'
         self.descO = 'State'
+        if not hasattr(self, 'sSt'):
+            self.sSt = '____'
         if not hasattr(self, 'dOSta'):
             self.dOSta = dOState
         self.llOI = llOInt
@@ -32,7 +35,7 @@ class State(Base):
                         GC.S_CONC_H2PO4_1M: [self.lSMo[1].cCnc],
                         GC.S_STATE: [self.idO]}
         # print('Initiated "State" object.')
-        
+
     def complementLO(self, inpDat, dOState):
         self.lSMo = dOState[GC.SPC_L_SMO]
         self.dCnc = {cO.idO: [cO.cCnc, cO.dITp['thrLowConc'],
@@ -43,11 +46,15 @@ class State(Base):
                       [GC.ID_KAS_X]]        # as Kinase_X is a specific kinase
         lID = TF.complLSpec(inpDat, lOSy, sTp = 'PAs', sD = 'DePyl')
         self.lPAs0 = [Phosphatase0(inpDat, cID = ID) for ID in lID]
-    
+        self.lKAs = [self.lKAs0[k] for k in range(3)]
+        self.lKAs += [self.dOSta[GC.SPC_KAS_X]]
+        self.lPAs = [self.lPAs0[k] for k in range(4)]
+
     def __str__(self):
-        sIn = ('++++ State ' + self.idO + ' (' + self.descO + '):')
+        sIn = ('++++ State ' + self.idO + ' (' + self.sSt + ' / ' +
+               self.descO + '):')
         return sIn
-    
+
     def printDetails(self):
         for k, lOI in enumerate(self.llOI):
             print('- Interacting pair ' + str(k + 1) + ': (' + lOI[0].idO +
@@ -67,11 +74,11 @@ class State(Base):
         for cO in list(set(GF.lItToUniqueList(self.llOI) + self.lOO +
                            self.lKAs0 + self.lPAs0 + self.lSMo)):
             cO.printMolSpecSites()
-    
+
     def printStateDetails(self):
         print(self)
         self.printDetails()
-        
+
     def printDCnc(self, prID = None, prFull = False):
         if prFull:
             print('Dictionary of small molecule concentrations:')
@@ -82,7 +89,7 @@ class State(Base):
                       '; "high" thr. ' + str(round(thrHigh, GC.R04)))
             elif not prFull and (prID is None or cID == prID):
                 print(cID + ': Current conc. ' + str(round(cCnc, GC.R04)))
-    
+
     def savePlotDCncEvo(self, kSt = 0, llIPlot = None, iSMo = 0):
         assert len(self.lSMo) > iSMo
         sNSt, sKSt = str(self.dIG['nStates']), str(kSt)
@@ -97,21 +104,18 @@ class State(Base):
                           sFExt = GC.S_EXT_PDF)
             PF.plotDCncEvo(dITpSMo[GC.S_D_PLT][dITpSMo['sPlt_Conc']],
                            self.dCncEvo, sP, lIPlot)
-    
-    def changePSite(self, inpDat, cO):
-        if self.cM == GC.M_STOCH:
-            pass
-        else:
-            pass
-    
-    def adaptPSites(self, inpDat, cO, dSites = {}):
-        for cSite, (bMod, cAs) in dSites.items():
-            if bMod == GC.B_DO_PYL:
-                if Phosphorylation(inpDat, cO, cAs, cSite).doPyl():
-                    print('Phosphorylation at site', cSite, 'happened!')
-            elif bMod == GC.B_DO_DEPYL:
-                if Dephosphorylation(inpDat, cO, cAs, cSite).doDePyl():
-                    print('Dephosphorylation at site', cSite, 'happened!')
+
+    def adaptPSites(self, inpDat, cO, sSt):
+        for sSpS, dI in GC.DS_SPS[cO.idO].items():
+            sPylDPy, cAs = SF.setPylDPy(dI, sSt, self.lKAs, self.lPAs)
+            if sPylDPy == GC.B_DO_PYL:
+                _ = Phosphorylation(inpDat, cO, cAs, sSpS).doPyl()
+                # if Phosphorylation(inpDat, cO, cAs, sSpS).doPyl():
+                #     print('Phosphorylation at site', sSpS, 'happened!')
+            elif sPylDPy == GC.B_DO_DEPYL:
+                _ = Dephosphorylation(inpDat, cO, cAs, sSpS).doDePyl()
+                # if Dephosphorylation(inpDat, cO, cAs, sSpS).doDePyl():
+                #     print('Dephosphorylation at site', sSpS, 'happened!')
 
     def getConcSMo(self, cID = None):
         lConc = []
@@ -119,7 +123,7 @@ class State(Base):
             if cID is None or cSMo.idO == cID:
                 lConc.append(cSMo.cCnc)
         return lConc
-        
+
     def changeConcSMo(self, t, cID = None):
         for cSMo in self.lSMo:
             if cID is None or cSMo.idO == cID:
@@ -131,20 +135,21 @@ class State(Base):
 
 class State_Int_Trans(State):
     def __init__(self, inpDat, sState, iTp = 90):
+        self.sSt = sState
         self.createDOState(inpDat)
-        if sState == GC.S_ST_A_KIN_INT:
-            self.ini_St_A_Kin_Int(inpDat, iTp = iTp)
-        elif sState == GC.S_ST_B_KIN_TRA:
-            self.ini_St_B_Kin_Tra(inpDat, iTp = iTp)
-        elif sState == GC.S_ST_C_SPR_INT:
-            self.ini_St_C_SPr_Int(inpDat, iTp = iTp)
-        elif sState == GC.S_ST_D_SPR_TRA:
-            self.ini_St_D_SPr_Tra(inpDat, iTp = iTp)
+        if sState in inpDat.dI['dS_St'][GC.S_ST_A_KIN_INT]:
+            self.ini_St_A_Kin_Int(inpDat, sState, iTp = iTp)
+        elif sState in inpDat.dI['dS_St'][GC.S_ST_B_KIN_TRA]:
+            self.ini_St_B_Kin_Tra(inpDat, sState, iTp = iTp)
+        elif sState in inpDat.dI['dS_St'][GC.S_ST_C_SPR_INT]:
+            self.ini_St_C_SPr_Int(inpDat, sState, iTp = iTp)
+        elif sState in inpDat.dI['dS_St'][GC.S_ST_D_SPR_TRA]:
+            self.ini_St_D_SPr_Tra(inpDat, sState, iTp = iTp)
         else:
             self.idO = 'St_Int_Trans'
             self.descO = 'State interaction or transition'
-        # print('Initiated "State_Int_Trans" object.')
-    
+        # print('Initiated "State_Int_Trans" object ' + sState + '.')
+
     def createDOState(self, inpDat, ddVOvwr = {}, iV = 0):
         # Kinases KAsAT5G49770, KAsX ------------------------------------------
         KAsAT5G49770 = Kinase_AT5G49770(inpDat)
@@ -156,7 +161,7 @@ class State_Int_Trans(State):
         # Small molecules NO3- and H2PO4- -------------------------------------
         NO3_1m = SMo_NO3_1m(inpDat)
         H2PO4_1m = SMo_H2PO4_1m(inpDat)
-        # overwrite type dict. input of small molecules with values of ddVOvwr 
+        # overwrite type dict. input of small molecules with values of ddVOvwr
         NO3_1m.overwInpV(ddVOvwr, iV)
         H2PO4_1m.overwInpV(ddVOvwr, iV)
         # Create initial state ------------------------------------------------
@@ -166,96 +171,83 @@ class State_Int_Trans(State):
                       GC.SPC_SPR_A: NAR2p1,
                       GC.SPC_L_SMO: [NO3_1m, H2PO4_1m]}
 
-    def ini_St_A_Kin_Int(self, inpDat, iTp = 90):
+    def ini_St_A_Kin_Int(self, inpDat, sSt, iTp = 90):
         llOI = [[self.dOSta[GC.SPC_KAS_A], self.dOSta[GC.SPC_LPR_A]]]
         lOO = [self.dOSta[GC.SPC_SPR_A], self.dOSta[GC.SPC_KAS_X]]
         super().__init__(inpDat, self.dOSta, llOI, lOO, iTp = iTp)
         self.idO = GC.S_ST_A_KIN_INT
         self.descO = 'State interaction AT5G49770-NRT2p1'
-        dSts = {GC.S_SPS_KAS1_S839: (GC.B_DO_DEPYL, self.lPAs0[0]),
-                GC.S_SPS_KAS1_S870: (GC.B_DO_PYL, self.lKAs0[1])}
-        self.adaptPSites(inpDat, self.dOSta[GC.SPC_KAS_A], dSites = dSts)
-        dSts = {GC.S_SPS_LPR1_S21: (GC.B_DO_PYL, self.lKAs0[2]),
-                GC.S_SPS_LPR1_S28: (GC.B_DO_DEPYL, self.lPAs0[3])}
-        self.adaptPSites(inpDat, self.dOSta[GC.SPC_LPR_A], dSites = dSts)
+        self.adaptPSites(inpDat, self.dOSta[GC.SPC_KAS_A], sSt)
+        self.adaptPSites(inpDat, self.dOSta[GC.SPC_LPR_A], sSt)
 
-    def ini_St_B_Kin_Tra(self, inpDat, iTp = 90):
+    def ini_St_B_Kin_Tra(self, inpDat, sSt, iTp = 90):
         llOI = [[self.dOSta[GC.SPC_KAS_A], self.dOSta[GC.SPC_LPR_A]],
                 [self.dOSta[GC.SPC_KAS_X], self.dOSta[GC.SPC_LPR_A]]]
         lOO = [self.dOSta[GC.SPC_SPR_A]]
         super().__init__(inpDat, self.dOSta, llOI, lOO, iTp = iTp)
         self.idO = GC.S_ST_B_KIN_TRA
         self.descO = 'State transition from AT5G49770-NRT2p1'
-        dSts = {GC.S_SPS_KAS1_S839: (GC.B_DO_PYL, self.lKAs0[0]),
-                GC.S_SPS_KAS1_S870: (GC.B_DO_PYL, self.lKAs0[1])}
-        self.adaptPSites(inpDat, self.dOSta[GC.SPC_KAS_A], dSites = dSts)
-        dSts = {GC.S_SPS_LPR1_S21: (GC.B_DO_PYL, self.lKAs0[2]),
-                GC.S_SPS_LPR1_S28: (GC.B_DO_DEPYL, self.lPAs0[3])}
-        self.adaptPSites(inpDat, self.dOSta[GC.SPC_LPR_A], dSites = dSts)
+        self.adaptPSites(inpDat, self.dOSta[GC.SPC_KAS_A], sSt)
+        self.adaptPSites(inpDat, self.dOSta[GC.SPC_LPR_A], sSt)
 
-    def ini_St_C_SPr_Int(self, inpDat, iTp = 90):
+    def ini_St_C_SPr_Int(self, inpDat, sSt, iTp = 90):
         llOI = [[self.dOSta[GC.SPC_SPR_A], self.dOSta[GC.SPC_LPR_A]]]
         lOO = [self.dOSta[GC.SPC_KAS_A], self.dOSta[GC.SPC_KAS_X]]
         super().__init__(inpDat, self.dOSta, llOI, lOO, iTp = iTp)
         self.idO = GC.S_ST_C_SPR_INT
         self.descO = 'State interaction NAR2p1-NRT2p1'
-        dSts = {GC.S_SPS_KAS1_S839: (GC.B_DO_PYL, self.lKAs0[0]),
-                GC.S_SPS_KAS1_S870: (GC.B_DO_DEPYL, self.lPAs0[1])}
-        self.adaptPSites(inpDat, self.dOSta[GC.SPC_KAS_A], dSites = dSts)
-        dSts = {GC.S_SPS_LPR1_S21: (GC.B_DO_DEPYL, self.lPAs0[2]),
-                GC.S_SPS_LPR1_S28: (GC.B_DO_PYL, self.dOSta[GC.SPC_KAS_X])}
-        self.adaptPSites(inpDat, self.dOSta[GC.SPC_LPR_A], dSites = dSts)
+        self.adaptPSites(inpDat, self.dOSta[GC.SPC_KAS_A], sSt)
+        self.adaptPSites(inpDat, self.dOSta[GC.SPC_LPR_A], sSt)
 
-    def ini_St_D_SPr_Tra(self, inpDat, iTp = 90):
+    def ini_St_D_SPr_Tra(self, inpDat, sSt, iTp = 90):
         llOI = [[self.dOSta[GC.SPC_SPR_A], self.dOSta[GC.SPC_LPR_A]]]
         lOO = [self.dOSta[GC.SPC_KAS_A], self.dOSta[GC.SPC_KAS_X]]
         super().__init__(inpDat, self.dOSta, llOI, lOO, iTp = iTp)
         self.idO = GC.S_ST_D_SPR_TRA
         self.descO = 'State transition from NAR2p1-NRT2p1'
-        dSts = {GC.S_SPS_KAS1_S839: (GC.B_DO_PYL, self.lKAs0[0]),
-                GC.S_SPS_KAS1_S870: (GC.B_DO_DEPYL, self.lPAs0[1])}
-        self.adaptPSites(inpDat, self.dOSta[GC.SPC_KAS_A], dSites = dSts)
-        dSts = {GC.S_SPS_LPR1_S21: (GC.B_DO_DEPYL, self.lPAs0[2]),
-                GC.S_SPS_LPR1_S28: (GC.B_DO_PYL, self.dOSta[GC.SPC_KAS_X])}
-        self.adaptPSites(inpDat, self.dOSta[GC.SPC_LPR_A], dSites = dSts)
+        self.adaptPSites(inpDat, self.dOSta[GC.SPC_KAS_A], sSt)
+        self.adaptPSites(inpDat, self.dOSta[GC.SPC_LPR_A], sSt)
 
-    def to_St_A_Kin_Int(self, inpDat):
-        self.idO = GC.S_ST_A_KIN_INT
-        self.descO = 'State interaction AT5G49770-NRT2p1'
-        self.lOO[0], self.llOI[0][0] = self.llOI[0][0], self.lOO[0]
-        dSts = {GC.S_SPS_KAS1_S839: (GC.B_DO_DEPYL, self.lPAs0[0]),
-                GC.S_SPS_KAS1_S870: (GC.B_DO_PYL, self.lKAs0[1])}
-        self.adaptPSites(inpDat, self.llOI[0][0], dSites = dSts)
-        dSts = {GC.S_SPS_LPR1_S21: (GC.B_DO_PYL, self.lKAs0[2]),
-                GC.S_SPS_LPR1_S28: (GC.B_DO_DEPYL, self.lPAs0[3])}
-        self.adaptPSites(inpDat, self.llOI[0][1], dSites = dSts)
-        print('Changed state to ' + self.idO + ' (' + self.descO + ').')
+    # def to_other_St(self, inpDat, sStN):
+    #     pass
 
-    def to_St_B_Kin_Tra(self, inpDat):
-        self.idO = GC.S_ST_B_KIN_TRA
-        self.descO = 'State transition from AT5G49770-NRT2p1'
-        self.llOI.append([self.lOO[1], self.llOI[0][1]])
-        self.lOO = self.lOO[:1]
-        dSts = {GC.S_SPS_KAS1_S839: (GC.B_DO_PYL, self.lKAs0[0])}
-        self.adaptPSites(inpDat, self.llOI[0][0], dSites = dSts)
-        print('Changed state to ' + self.idO + ' (' + self.descO + ').')
+    # def to_St_A_Kin_Int(self, inpDat, sStN):
+    #     self.idO = GC.S_ST_A_KIN_INT
+    #     self.descO = 'State interaction AT5G49770-NRT2p1'
+    #     self.lOO[0], self.llOI[0][0] = self.llOI[0][0], self.lOO[0]
+    #     dSts = {GC.S_SPS_KAS1_S839: (GC.B_DO_DEPYL, self.lPAs0[0]),
+    #             GC.S_SPS_KAS1_S870: (GC.B_DO_PYL, self.lKAs0[1])}
+    #     self.adaptPSites(inpDat, self.llOI[0][0]
+    #     dSts = {GC.S_SPS_LPR1_S21: (GC.B_DO_PYL, self.lKAs0[2]),
+    #             GC.S_SPS_LPR1_S28: (GC.B_DO_DEPYL, self.lPAs0[3])}
+    #     self.adaptPSites(inpDat, self.llOI[0][1]
+    #     print('Changed state to ' + self.idO + ' (' + self.descO + ').')
 
-    def to_St_C_SPr_Int(self, inpDat):
-        self.idO = GC.S_ST_C_SPR_INT
-        self.descO = 'State interaction NAR2p1-NRT2p1'
-        llOInt = [[self.lOO[0], self.llOI[0][1]]]
-        lOOth = [self.llOI[0][0], self.llOI[1][0]]
-        self.llOI, self.lOO = llOInt, lOOth
-        dSts = {GC.S_SPS_KAS1_S870: (GC.B_DO_DEPYL, self.lPAs0[1])}
-        self.adaptPSites(inpDat, self.lOO[0], dSites = dSts)
-        dSts = {GC.S_SPS_LPR1_S21: (GC.B_DO_DEPYL, self.lPAs0[2]),
-                GC.S_SPS_LPR1_S28: (GC.B_DO_PYL, self.lOO[1])}
-        self.adaptPSites(inpDat, self.llOI[0][1], dSites = dSts)
-        print('Changed state to ' + self.idO + ' (' + self.descO + ').')
+    # def to_St_B_Kin_Tra(self, inpDat, sStN):
+    #     self.idO = GC.S_ST_B_KIN_TRA
+    #     self.descO = 'State transition from AT5G49770-NRT2p1'
+    #     self.llOI.append([self.lOO[1], self.llOI[0][1]])
+    #     self.lOO = self.lOO[:1]
+    #     dSts = {GC.S_SPS_KAS1_S839: (GC.B_DO_PYL, self.lKAs0[0])}
+    #     self.adaptPSites(inpDat, self.llOI[0][0]
+    #     print('Changed state to ' + self.idO + ' (' + self.descO + ').')
 
-    def to_St_D_SPr_Tra(self, inpDat):
-        self.idO = GC.S_ST_D_SPR_TRA
-        self.descO = 'State transition from NAR2p1-NRT2p1'
-        print('Changed state to ' + self.idO + ' (' + self.descO + ').')
-    
+    # def to_St_C_SPr_Int(self, inpDat, sStN):
+    #     self.idO = GC.S_ST_C_SPR_INT
+    #     self.descO = 'State interaction NAR2p1-NRT2p1'
+    #     llOInt = [[self.lOO[0], self.llOI[0][1]]]
+    #     lOOth = [self.llOI[0][0], self.llOI[1][0]]
+    #     self.llOI, self.lOO = llOInt, lOOth
+    #     dSts = {GC.S_SPS_KAS1_S870: (GC.B_DO_DEPYL, self.lPAs0[1])}
+    #     self.adaptPSites(inpDat, self.lOO[0]
+    #     dSts = {GC.S_SPS_LPR1_S21: (GC.B_DO_DEPYL, self.lPAs0[2]),
+    #             GC.S_SPS_LPR1_S28: (GC.B_DO_PYL, self.lOO[1])}
+    #     self.adaptPSites(inpDat, self.llOI[0][1]
+    #     print('Changed state to ' + self.idO + ' (' + self.descO + ').')
+
+    # def to_St_D_SPr_Tra(self, inpDat, sStN):
+    #     self.idO = GC.S_ST_D_SPR_TRA
+    #     self.descO = 'State transition from NAR2p1-NRT2p1'
+    #     print('Changed state to ' + self.idO + ' (' + self.descO + ').')
+
 ###############################################################################

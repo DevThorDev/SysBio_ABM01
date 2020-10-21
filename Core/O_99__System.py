@@ -21,30 +21,34 @@ class System(Base):
         self.addStObj(inpDat)
         self.getDictsStObj()
         # print('Initiated "System" object.')
-    
-    def addStObj(self, inpDat):
-        for sSt, nSt in self.dITp['dNStaObj'].items():
+
+    def addStObj(self, inpDat, refreshStO = False):
+        dNStO = self.dITp['dNStaObj']
+        if refreshStO:
+            self.lStO = []
+            dNStO = self.dNStO
+        for sSt, nSt in dNStO.items():
             for cSt in range(nSt):
                 self.lStO.append(State_Int_Trans(inpDat, sSt))
-    
+
     def getDictsStObj(self):
-        self.dIDStO, self.dStO = {}, {}
+        self.dNStO, self.dStO = {}, {}
         for cStO in self.lStO:
-            GF.addToDictCt(self.dIDStO, cStO.idO)
+            GF.addToDictCt(self.dNStO, cStO.idO)
             GF.addToDictL(self.dStO, cStO.idO, cStO)
-    
+
     def printCncSMo(self):
         print('--- Concentrations of small molecules in system', self.idO)
-        for s, cCnc in self.dCncSMo:
+        for s, cCnc in self.dCncSMo.items():
             print(s + ':\t' + str(cCnc))
-    
+
     def printNStateObjSys(self):
         print('*'*16, 'Counts of state objects contained in System:', '*'*18)
-        for sSt, ctStO in self.dIDStO.items():
+        for sSt, ctStO in self.dNStO.items():
             print(sSt + ':', ctStO)
-        print('- Total:', self.dITp['nStaObj'], '/', sum(self.dIDStO.values()))
+        print('- Total:', self.dITp['nStaObj'], '/', sum(self.dNStO.values()))
         print('*'*80)
-    
+
     def printAllStateObjSys(self):
         print('*'*16, 'Details of state objects contained in System:', '*'*17)
         for sSt, lStO in self.dStO.items():
@@ -52,7 +56,7 @@ class System(Base):
             for cStO in lStO:
                 cStO.printStateDetails()
         print('*'*80)
-    
+
     def plotResEvo(self, sFRes = None, overWr = True):
         dParPlt = self.dITp[GC.S_D_PLT][GC.S_STA_CNC]
         if sFRes is not None:
@@ -63,10 +67,15 @@ class System(Base):
             if self.dResEvo is not None:
                 PF.plotEvo(dParPlt, self.dResEvo, dPPltF, tDat = cT[:2],
                            overWr = overWr)
-    
-    def evolveOverTime(self, doPlots = True):
-        self.dResEvo, self.dIDStO = TF.evolveGillespie(self.dIG, self.dITp,
-                                                       self.dCncSMo)
+
+    def evolveOverTime(self, inpDat, doPlots = True):
+        self.dResEvo, self.dNStO = TF.evolveGillespie(self.dIG, self.dITp,
+                                                      self.dCncSMo)
+        self.addStObj(inpDat, refreshStO = True)
+        self.getDictsStObj()
+        # self.printCncSMo()
+        # self.printNStateObjSys()
+        # self.printAllStateObjSys()
         dR, sD, sF = self.dResEvo, self.dITp['sD_Sys'], self.dITp['sF_SysEvo']
         self.pFResEvo = TF.saveAsPdDfr(self.dIG, dR, sD, sF, overWr = True)
         if doPlots:
@@ -106,19 +115,19 @@ class System(Base):
 #                      'Phosphorylations': self.lPyl,
 #                      'Dephosphorylations': self.lDePyl}
 #         print('Initiated "System" object.')
-    
+
 #     def printSystem(self):
 #         print('+'*16, 'System consists of:', '+'*43)
 #         for s, lCmp in self.dCmp.items():
 #             if len(lCmp) > 0:
 #                 TF.printSysComp(s, lCmp)
 #         print('+'*80)
-    
+
 #     def printSystemDetails(self):
 #         self.printSystem()
 #         for cO in self.lKAs + self.lPAs + self.lLPr + self.lSPr:
 #             cO.printSpecSites()
-        
+
 #     def setToState(self, inpDat, lOIntSt, lPAsSt = []):
 #         pass
 

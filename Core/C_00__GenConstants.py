@@ -59,6 +59,13 @@ S_SPS_KAS1_S870 = 'S870'
 S_SPS_LPR1_S21 = 'S21'
 S_SPS_LPR1_S28 = 'S28'
 
+DS_SPS_KAS_AT5G49770 = {S_SPS_KAS1_S839: {'iSP': 3, 'iLAse': 0},
+                        S_SPS_KAS1_S870: {'iSP': 4, 'iLAse': 1}}
+DS_SPS_LPR_NRT2P1 = {S_SPS_LPR1_S21: {'iSP': 1, 'iLAse': 2},
+                     S_SPS_LPR1_S28: {'iSP': 2, 'iLAse': 3}}
+DS_SPS = {ID_KAS_AT5G49770: DS_SPS_KAS_AT5G49770,
+          ID_LPR_NRT2P1: DS_SPS_LPR_NRT2P1}
+
 # --- constants related to interactions ---------------------------------------
 B_DO_PYL = 'Pyl'
 B_DO_DEPYL = 'DePyl'
@@ -79,7 +86,7 @@ S_ST_D_SPR_TRA = 'St_D_Trans_NAR2p1_NRT2p1'
 DS_ST_4 = {S_ST_A_SIMPLE: S_ST_A_KIN_INT, S_ST_B_SIMPLE: S_ST_B_KIN_TRA,
            S_ST_C_SIMPLE: S_ST_C_SPR_INT, S_ST_D_SIMPLE: S_ST_D_SPR_TRA}
 
-# --- constants related to new states -----------------------------------------
+# --- constants related to extended states -----------------------------------
 S_ST_A_KIN_INT_1001 = 'A1001'
 S_ST_B_KIN_TRA_0000 = 'B0000'
 S_ST_B_KIN_TRA_0001 = 'B0001'
@@ -184,7 +191,7 @@ DS_STCH = {S_ST_A_KIN_INT_1001: TS_STCH_A1001,
            S_ST_B_KIN_TRA_1101: TS_STCH_B1101,
            S_ST_B_KIN_TRA_1110: TS_STCH_B1110,
            S_ST_B_KIN_TRA_1111: TS_STCH_B1111,
-           
+
            S_ST_C_SPR_INT_0110: TS_STCH_C0110,
            S_ST_D_SPR_TRA_0000: TS_STCH_D0000,
            S_ST_D_SPR_TRA_0001: TS_STCH_D0001,
@@ -201,6 +208,11 @@ DS_STCH = {S_ST_A_KIN_INT_1001: TS_STCH_A1001,
            S_ST_D_SPR_TRA_1101: TS_STCH_D1101,
            S_ST_D_SPR_TRA_1110: TS_STCH_D1110,
            S_ST_D_SPR_TRA_1111: TS_STCH_D1111}
+
+SET_01 = {'0', '1'}
+
+# --- constants related to phosphorylations and dephosphorylations of sites ---
+DS_SITES_PYL = {'0': B_DO_DEPYL, '1': B_DO_PYL}
 
 # --- constants related to model output ---------------------------------------
 S_TS = 'TimeStep'
