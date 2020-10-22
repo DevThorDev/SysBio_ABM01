@@ -181,15 +181,4 @@ def getDPFPltEvo(dIG, dITp, tKey, dMS = None):
             dP[pF] = (sMS, dSt)
     return dP
 
-# def printSysComp(sCmp = 'Base', lOCmp = []):
-#     print('-'*8, sCmp, '-'*8)
-#     for cO in lOCmp:
-#         s = cO.descO + ' ' + cO.dITp['strCS'] + ' with ID ' + str(cO.idO)
-#         if cO.nSpS > 0:
-#             s += ' and special sites '
-#             s += str(cO.extractLSpecSitesS())
-#         if len(cO.sSpS) > 0:
-#             s += ' for special site ' + cO.sSpS
-#         print(s)
-
 ###############################################################################
