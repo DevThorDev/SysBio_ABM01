@@ -19,8 +19,8 @@ minDispTS = 0
 modDispTS = 10000
 
 # --- Input: General ----------------------------------------------------------
-nDigObj = 3         # number of digits reserved for all input objects
-cMode = GC.M_DETER  # GC.M_DETER / GC.M_STOCH
+nDigObj = 2         # number of digits reserved for all input objects
+cMode = GC.M_STOCH  # GC.M_DETER / GC.M_STOCH
 cSep = GC.SEP_STD
 
 # --- Input: Names of paths, directories and files ----------------------------
