@@ -30,7 +30,8 @@ colLn_Conc = (1., 0.5, 0.)     # line colour of plot
 pltAxXY_Conc = (True, True)    # plot x- and/or y-axis
 
 # --- create input dictionary -------------------------------------------------
-dIO = {'strOType': strOType,
+dIO = {# --- general
+       'strOType': strOType,
        'strNSpec': strNSpec,
        'strCS': strCS,
        'strCL': strCL,

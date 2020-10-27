@@ -8,12 +8,16 @@ strOType = 'Kinase'
 strNSpec = 'Kinase X'
 strCS = 'X'
 strCL = 'X'
+
+# --- dictionary of parameters for special sites ------------------------------
 dInfSpS = {}
 
 # --- create input dictionary -------------------------------------------------
-dIO = {'strOType': strOType,
+dIO = {# --- general
+       'strOType': strOType,
        'strNSpec': strNSpec,
        'strCS': strCS,
        'strCL': strCL,
+       # --- dictionary of parameters for special sites
        'dInfSpS': dInfSpS}
 ###############################################################################

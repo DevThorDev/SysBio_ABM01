@@ -8,12 +8,16 @@ strOType = 'Phosphatase'
 strNSpec = 'Standard Phosphatase'
 strCS = 'Phosphatase0'
 strCL = 'Standard Phosphatase 0'
+
+# --- dictionary of parameters for special sites ------------------------------
 dInfSpS = {}
 
 # --- create input dictionary -------------------------------------------------
-dIO = {'strOType': strOType,
+dIO = {# --- general
+       'strOType': strOType,
        'strNSpec': strNSpec,
        'strCS': strCS,
        'strCL': strCL,
+       # --- dictionary of parameters for special sites
        'dInfSpS': dInfSpS}
 ###############################################################################

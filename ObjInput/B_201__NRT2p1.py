@@ -9,6 +9,8 @@ strOType = 'Large protein'
 strNSpec = 'NRT2.1'
 strCS = 'NRT2.1'
 strCL = 'NRT2p1'
+
+# --- dictionary of parameters for special sites ------------------------------
 dParP_S21_KAs3_Pyl = {'prMin': 0, 'prMax': 0.2,
                       'B': 10., 'C': 1., 'D': 0.025}
 dParP_S21_PAs3_DePyl = {'prMin': 0, 'prMax': 0.3,
@@ -25,9 +27,11 @@ dInfSpS = {'S21': {'Stat': GC.B_NOT_PYL,
                    'DePyl': [(GC.ID_PAS_4, dParP_S28_PAs4_DePyl)]}}
 
 # --- create input dictionary -------------------------------------------------
-dIO = {'strOType': strOType,
+dIO = {# --- general
+       'strOType': strOType,
        'strNSpec': strNSpec,
        'strCS': strCS,
        'strCL': strCL,
+       # --- dictionary of parameters for special sites
        'dInfSpS': dInfSpS}
 ###############################################################################

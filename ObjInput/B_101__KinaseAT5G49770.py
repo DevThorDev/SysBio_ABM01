@@ -9,7 +9,8 @@ strOType = 'Kinase'
 strNSpec = 'Kinase A'
 strCS = 'AT5G49770'
 strCL = 'AT5G49770'
-# 
+
+# --- dictionary of parameters for special sites ------------------------------
 dParP_S839_KAs1_Pyl = {'prMin': 0, 'prMax': 0.15,
                        'B': 3., 'C': 2.5, 'D': 0.03}
 dParP_S839_PAs1_DePyl = {'prMin': 0, 'prMax': 0.25,
@@ -26,9 +27,11 @@ dInfSpS = {'S839': {'Stat': GC.B_NOT_PYL,
                     'DePyl': [(GC.ID_PAS_2, dParP_S870_PAs2_DePyl)]}}
 
 # --- create input dictionary -------------------------------------------------
-dIO = {'strOType': strOType,
+dIO = {# --- general
+       'strOType': strOType,
        'strNSpec': strNSpec,
        'strCS': strCS,
        'strCL': strCL,
+       # --- dictionary of parameters for special sites
        'dInfSpS': dInfSpS}
 ###############################################################################

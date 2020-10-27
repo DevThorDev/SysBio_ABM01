@@ -9,6 +9,8 @@ strOType = 'Small molecule'
 strNSpec = 'Dihydrogenphosphate'
 strCS = 'H2PO4-'
 strCL = 'H2PO4_1m'
+
+# --- dictionary of parameters for special sites ------------------------------
 dInfSpS = {}
 
 # --- initial state -----------------------------------------------------------
@@ -29,10 +31,12 @@ sPlt_Conc = 'Conc'                  # name of plot and key of input dict
 yLbl_Conc = '$[H_2PO_4^-]$ (mM)'    # y-label of plot
 
 # --- create input dictionary -------------------------------------------------
-dIO = {'strOType': strOType,
+dIO = {# --- general
+       'strOType': strOType,
        'strNSpec': strNSpec,
        'strCS': strCS,
        'strCL': strCL,
+       # --- dictionary of parameters for special sites
        'dInfSpS': dInfSpS,
        # --- initial state
        GC.S_CONC_INI: concIni,

@@ -10,6 +10,10 @@ strNSpec = 'System'
 strCS = 'Sys'
 strCL = 'System'
 
+# --- plant cell data ---------------------------------------------------------
+VolC = 10000                        # volume (microns^3)
+MassC = 2                           # nanograms
+
 # --- data containing state, state transition and conc. change info -----------
 # initial number of objects for each possible state
 dNStaObj = {GC.S_ST_A_KIN_INT_1001: 300,
@@ -117,39 +121,39 @@ dConcSMo = {'Ini': {GC.ID_NO3_1M: {'cTp': 'uniform',
 # small molecules depending on the distribution of states, and vice versa
 
 # depenency of small molecule concentration changes on state
-dPar_N_A1001 = {'absChg': -20.}
-dPar_N_B0000 = {'absChg': -0.5}
-dPar_N_B0001 = {'absChg': -0.3}
-dPar_N_B0010 = {'absChg': -0.4}
-dPar_N_B0011 = {'absChg': -0.6}
-dPar_N_B0100 = {'absChg': -0.55}
-dPar_N_B0101 = {'absChg': -0.45}
-dPar_N_B0110 = {'absChg': -0.35}
-dPar_N_B0111 = {'absChg': -0.65}
-dPar_N_B1000 = {'absChg': -0.75}
-dPar_N_B1010 = {'absChg': -0.8}
-dPar_N_B1011 = {'absChg': -0.7}
-dPar_N_B1100 = {'absChg': -0.125}
-dPar_N_B1101 = {'absChg': -0.375}
-dPar_N_B1110 = {'absChg': -0.9}
-dPar_N_B1111 = {'absChg': -0.95}
+dPar_N_A1001 = {'absChg': -0.001}
+dPar_N_B0000 = {'absChg': -0.0}
+dPar_N_B0001 = {'absChg': -0.0}
+dPar_N_B0010 = {'absChg': -0.0}
+dPar_N_B0011 = {'absChg': -0.0}
+dPar_N_B0100 = {'absChg': -0.0}
+dPar_N_B0101 = {'absChg': -0.0}
+dPar_N_B0110 = {'absChg': -0.0}
+dPar_N_B0111 = {'absChg': -0.0}
+dPar_N_B1000 = {'absChg': -0.0}
+dPar_N_B1010 = {'absChg': -0.0}
+dPar_N_B1011 = {'absChg': -0.0}
+dPar_N_B1100 = {'absChg': -0.0}
+dPar_N_B1101 = {'absChg': -0.0}
+dPar_N_B1110 = {'absChg': -0.0}
+dPar_N_B1111 = {'absChg': -0.0}
 
-dPar_N_C0110 = {'absChg': 10.}
-dPar_N_D0000 = {'absChg': 0.5}
-dPar_N_D0001 = {'absChg': 0.3}
-dPar_N_D0010 = {'absChg': 0.4}
-dPar_N_D0011 = {'absChg': 0.6}
-dPar_N_D0100 = {'absChg': 0.55}
-dPar_N_D0101 = {'absChg': 0.45}
-dPar_N_D0111 = {'absChg': 0.65}
-dPar_N_D1000 = {'absChg': 0.75}
-dPar_N_D1001 = {'absChg': 0.35}
-dPar_N_D1010 = {'absChg': 0.8}
-dPar_N_D1011 = {'absChg': 0.7}
-dPar_N_D1100 = {'absChg': 0.125}
-dPar_N_D1101 = {'absChg': 0.375}
-dPar_N_D1110 = {'absChg': 0.9}
-dPar_N_D1111 = {'absChg': 0.95}
+dPar_N_C0110 = {'absChg': 0.001}
+dPar_N_D0000 = {'absChg': 0.0}
+dPar_N_D0001 = {'absChg': 0.0}
+dPar_N_D0010 = {'absChg': 0.0}
+dPar_N_D0011 = {'absChg': 0.0}
+dPar_N_D0100 = {'absChg': 0.0}
+dPar_N_D0101 = {'absChg': 0.0}
+dPar_N_D0111 = {'absChg': 0.0}
+dPar_N_D1000 = {'absChg': 0.0}
+dPar_N_D1001 = {'absChg': 0.0}
+dPar_N_D1010 = {'absChg': 0.0}
+dPar_N_D1011 = {'absChg': 0.0}
+dPar_N_D1100 = {'absChg': 0.0}
+dPar_N_D1101 = {'absChg': 0.0}
+dPar_N_D1110 = {'absChg': 0.0}
+dPar_N_D1111 = {'absChg': 0.0}
 
 dPar_P_A1001 = {'absChg': 0}
 dPar_P_B0000 = {'absChg': 0}
@@ -466,10 +470,14 @@ sD_Sys = '99_Sys'
 sF_SysEvo = 'SysEvo'
 
 # --- create input dictionary -------------------------------------------------
-dIO = {'strOType': strOType,
+dIO = {# --- general
+       'strOType': strOType,
        'strNSpec': strNSpec,
        'strCS': strCS,
        'strCL': strCL,
+       # --- plant cell data
+       'VolC': VolC,
+       'MassC': MassC,
        # --- data containing state, state transition and conc. change info
        'dNStaObj': dNStaObj,
        'nStaObj': sum(dNStaObj.values()),
