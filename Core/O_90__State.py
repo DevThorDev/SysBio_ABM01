@@ -9,7 +9,7 @@ import Core.F_02__PltFunctions as PF
 import Core.F_03__OTpFunctions as TF
 
 from Core.O_00__Base import Base
-from Core.O_02__Protein import (Kinase_AT5G49770, Kinase_X, Kinase0,
+from Core.O_02__Protein import (Kinase_HPCAL1, Kinase_X, Kinase0,
                                 Phosphatase0, Protein_NRT2p1, Protein_NAR2p1)
 from Core.O_03__Metabolite import SMo_NO3_1m, SMo_H2PO4_1m
 from Core.O_80__Interaction import Phosphorylation, Dephosphorylation
@@ -151,10 +151,10 @@ class State_Int_Trans(State):
         # print('Initiated "State_Int_Trans" object ' + sState + '.')
 
     def createDOState(self, inpDat, ddVOvwr = {}, iV = 0):
-        # Kinases KAsAT5G49770, KAsX ------------------------------------------
-        KAsAT5G49770 = Kinase_AT5G49770(inpDat)
+        # Kinases KAsHPCAL1, KAsX ---------------------------------------------
+        KAsHPCAL1 = Kinase_HPCAL1(inpDat)
         KAsX = Kinase_X(inpDat)
-        # Large protein NRT2.1 -----------------------------------------------
+        # Large protein NRT2.1 ------------------------------------------------
         NRT2p1 = Protein_NRT2p1(inpDat)
         # Small protein NAR2.1 ------------------------------------------------
         NAR2p1 = Protein_NAR2p1(inpDat)
@@ -165,7 +165,7 @@ class State_Int_Trans(State):
         NO3_1m.overwInpV(ddVOvwr, iV)
         H2PO4_1m.overwInpV(ddVOvwr, iV)
         # Create initial state ------------------------------------------------
-        self.dOSta = {GC.SPC_KAS_A: KAsAT5G49770,
+        self.dOSta = {GC.SPC_KAS_A: KAsHPCAL1,
                       GC.SPC_KAS_X: KAsX,
                       GC.SPC_LPR_A: NRT2p1,
                       GC.SPC_SPR_A: NAR2p1,
@@ -176,7 +176,7 @@ class State_Int_Trans(State):
         lOO = [self.dOSta[GC.SPC_SPR_A], self.dOSta[GC.SPC_KAS_X]]
         super().__init__(inpDat, self.dOSta, llOI, lOO, iTp = iTp)
         self.idO = GC.S_ST_A_KIN_INT
-        self.descO = 'State interaction AT5G49770-NRT2p1'
+        self.descO = 'State interaction HPCAL1-NRT2p1'
         self.adaptPSites(inpDat, self.dOSta[GC.SPC_KAS_A], sSt)
         self.adaptPSites(inpDat, self.dOSta[GC.SPC_LPR_A], sSt)
 
@@ -186,7 +186,7 @@ class State_Int_Trans(State):
         lOO = [self.dOSta[GC.SPC_SPR_A]]
         super().__init__(inpDat, self.dOSta, llOI, lOO, iTp = iTp)
         self.idO = GC.S_ST_B_KIN_TRA
-        self.descO = 'State transition from AT5G49770-NRT2p1'
+        self.descO = 'State transition from HPCAL1-NRT2p1'
         self.adaptPSites(inpDat, self.dOSta[GC.SPC_KAS_A], sSt)
         self.adaptPSites(inpDat, self.dOSta[GC.SPC_LPR_A], sSt)
 
@@ -213,7 +213,7 @@ class State_Int_Trans(State):
 
     # def to_St_A_Kin_Int(self, inpDat, sStN):
     #     self.idO = GC.S_ST_A_KIN_INT
-    #     self.descO = 'State interaction AT5G49770-NRT2p1'
+    #     self.descO = 'State interaction HPCAL1-NRT2p1'
     #     self.lOO[0], self.llOI[0][0] = self.llOI[0][0], self.lOO[0]
     #     dSts = {GC.S_SPS_KAS1_S839: (GC.B_DO_DEPYL, self.lPAs0[0]),
     #             GC.S_SPS_KAS1_S870: (GC.B_DO_PYL, self.lKAs0[1])}
@@ -225,7 +225,7 @@ class State_Int_Trans(State):
 
     # def to_St_B_Kin_Tra(self, inpDat, sStN):
     #     self.idO = GC.S_ST_B_KIN_TRA
-    #     self.descO = 'State transition from AT5G49770-NRT2p1'
+    #     self.descO = 'State transition from HPCAL1-NRT2p1'
     #     self.llOI.append([self.lOO[1], self.llOI[0][1]])
     #     self.lOO = self.lOO[:1]
     #     dSts = {GC.S_SPS_KAS1_S839: (GC.B_DO_PYL, self.lKAs0[0])}

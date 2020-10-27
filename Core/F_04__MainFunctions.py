@@ -4,7 +4,7 @@
 ###############################################################################
 import Core.C_00__GenConstants as GC
 
-from Core.O_02__Protein import (Kinase_AT5G49770, Kinase_X, Kinase0,
+from Core.O_02__Protein import (Kinase_HPCAL1, Kinase_X, Kinase0,
                                 Phosphatase0, Protein_NRT2p1, Protein_NAR2p1)
 from Core.O_03__Metabolite import SMo_NO3_1m, SMo_H2PO4_1m
 # from Core.O_80__Interaction import Phosphorylation, Dephosphorylation
@@ -13,8 +13,8 @@ from Core.O_90__State import State_Int_Trans
 
 # --- Functions (initialisation) ----------------------------------------------
 # def iniSystem(inpDG):
-#     # Kinases KAsAT5G49770, KAsX, KAs1, KAs2, KAs3 ----------------------------
-#     KAsAT5G49770 = Kinase_AT5G49770(inpDG)
+#     # Kinases KAsHPCAL1, KAsX, KAs1, KAs2, KAs3 -------------------------------
+#     KAsHPCAL1 = Kinase_HPCAL1(inpDG)
 #     KAsX = Kinase_X(inpDG)
 #     KAs1 = Kinase0(inpDG, cID = GC.ID_KAS_1)
 #     KAs2 = Kinase0(inpDG, cID = GC.ID_KAS_2)
@@ -32,23 +32,23 @@ from Core.O_90__State import State_Int_Trans
 #     NO3_1m = SMo_NO3_1m(inpDG)
 #     H2PO4_1m = SMo_H2PO4_1m(inpDG)
 #     # Interactions: phosphorylation and dephosphorylation ---------------------
-#     Pyl01 = Phosphorylation(inpDG, KAsAT5G49770, PAs1, 'S839')
-#     Pyl02 = Phosphorylation(inpDG, KAsAT5G49770, PAs2, 'S870')
+#     Pyl01 = Phosphorylation(inpDG, KAsHPCAL1, PAs1, 'S839')
+#     Pyl02 = Phosphorylation(inpDG, KAsHPCAL1, PAs2, 'S870')
 #     Pyl03 = Phosphorylation(inpDG, NRT2p1, PAs3, 'S21')
 #     Pyl04 = Phosphorylation(inpDG, NRT2p1, PAs4, 'S28')
-#     DePyl01 = Dephosphorylation(inpDG, KAsAT5G49770, PAs1, 'S839')
-#     DePyl02 = Dephosphorylation(inpDG, KAsAT5G49770, PAs2, 'S870')
+#     DePyl01 = Dephosphorylation(inpDG, KAsHPCAL1, PAs1, 'S839')
+#     DePyl02 = Dephosphorylation(inpDG, KAsHPCAL1, PAs2, 'S870')
 #     DePyl03 = Dephosphorylation(inpDG, NRT2p1, PAs3, 'S21')
 #     DePyl04 = Dephosphorylation(inpDG, NRT2p1, PAs4, 'S28')
 #     # List of system components -----------------------------------------------
-#     lSysCmp = [KAsAT5G49770, KAsX, KAs1, KAs2, KAs3, PAs1, PAs2, PAs3, PAs4,
+#     lSysCmp = [KAsHPCAL1, KAsX, KAs1, KAs2, KAs3, PAs1, PAs2, PAs3, PAs4,
 #                NRT2p1, NAR2p1, NO3_1m, H2PO4_1m, Pyl01, Pyl02, Pyl03, Pyl04,
 #                DePyl01, DePyl02, DePyl03, DePyl04]
 #     return System(inpDG, lOSys = lSysCmp)
 
 def initialState(inpDG, ddVOvwr = {}, iV = 0):
-    # Kinases KAsAT5G49770, KAsX ----------------------------------------------
-    KAsAT5G49770 = Kinase_AT5G49770(inpDG)
+    # Kinases KAsHPCAL1, KAsX -------------------------------------------------
+    KAsHPCAL1 = Kinase_HPCAL1(inpDG)
     KAsX = Kinase_X(inpDG)
     # Large protein NRT2.1 ----------------------------------------------------
     NRT2p1 = Protein_NRT2p1(inpDG)
@@ -61,7 +61,7 @@ def initialState(inpDG, ddVOvwr = {}, iV = 0):
     NO3_1m.overwInpV(ddVOvwr, iV)
     H2PO4_1m.overwInpV(ddVOvwr, iV)
     # Create initial state ----------------------------------------------------
-    dOSta = {GC.SPC_KAS_A: KAsAT5G49770,
+    dOSta = {GC.SPC_KAS_A: KAsHPCAL1,
              GC.SPC_KAS_X: KAsX,
              GC.SPC_LPR_A: NRT2p1,
              GC.SPC_SPR_A: NAR2p1,
@@ -75,16 +75,16 @@ def initialState(inpDG, ddVOvwr = {}, iV = 0):
 def changeStateConcDep(inpDG, cSta):
     if cSta.dCnc[GC.ID_NO3_1M][0] < cSta.dCnc[GC.ID_NO3_1M][1]:
         if cSta.idO == GC.S_ST_A_KIN_INT:
-            cSta.to_St_B_Trans_AT5G49770_NRT2p1(inpDG)
+            cSta.to_St_B_Trans_HPCAL1_NRT2p1(inpDG)
             cSta.to_St_C_Int_NAR2p1_NRT2p1(inpDG)
         elif cSta.idO == GC.S_ST_B_KIN_TRA:
             cSta.to_St_C_Int_NAR2p1_NRT2p1(inpDG)
     elif cSta.dCnc[GC.ID_NO3_1M][0] > cSta.dCnc[GC.ID_NO3_1M][2]:
         if cSta.idO == GC.S_ST_C_SPR_INT:
             cSta.to_St_D_Trans_NAR2p1_NRT2p1(inpDG)
-            cSta.to_St_A_Int_AT5G49770_NRT2p1(inpDG)
+            cSta.to_St_A_Int_HPCAL1_NRT2p1(inpDG)
         elif cSta.idO == GC.S_ST_D_SPR_TRA:
-            cSta.to_St_A_Int_AT5G49770_NRT2p1(inpDG)
+            cSta.to_St_A_Int_HPCAL1_NRT2p1(inpDG)
 
 def evolveIni(inpDG, nStO = 1, ddVOvwr = {}):
     lStO = []
