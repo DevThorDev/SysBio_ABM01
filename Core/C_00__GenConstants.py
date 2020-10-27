@@ -72,21 +72,41 @@ B_DO_DEPYL = 'DePyl'
 B_IS_PYL = 'P+'
 B_NOT_PYL = 'P-'
 
-# --- constants related to states ---------------------------------------------
+# --- constants related to simple states --------------------------------------
+S_ST_X_SIMPLE = 'X'
+S_ST_Y_SIMPLE = 'Y'
+S_ST_Z_SIMPLE = 'Z'
 S_ST_A_SIMPLE = 'A'
 S_ST_B_SIMPLE = 'B'
 S_ST_C_SIMPLE = 'C'
 S_ST_D_SIMPLE = 'D'
 
+S_ST_X_LPR = 'St_X_NRT2p1'
+S_ST_Y_SPR = 'St_Y_NAR2p1'
+S_ST_Z_KAS = 'St_Z_AT5G49770'
 S_ST_A_KIN_INT = 'St_A_Int_AT5G49770_NRT2p1'
 S_ST_B_KIN_TRA = 'St_B_Trans_AT5G49770_NRT2p1'
 S_ST_C_SPR_INT = 'St_C_Int_NAR2p1_NRT2p1'
 S_ST_D_SPR_TRA = 'St_D_Trans_NAR2p1_NRT2p1'
 
-DS_ST_4 = {S_ST_A_SIMPLE: S_ST_A_KIN_INT, S_ST_B_SIMPLE: S_ST_B_KIN_TRA,
-           S_ST_C_SIMPLE: S_ST_C_SPR_INT, S_ST_D_SIMPLE: S_ST_D_SPR_TRA}
+DS_ST_7 = {S_ST_X_SIMPLE: S_ST_X_LPR, S_ST_Y_SIMPLE: S_ST_Y_SPR,
+           S_ST_Z_SIMPLE: S_ST_Z_KAS, S_ST_A_SIMPLE: S_ST_A_KIN_INT,
+           S_ST_B_SIMPLE: S_ST_B_KIN_TRA, S_ST_C_SIMPLE: S_ST_C_SPR_INT,
+           S_ST_D_SIMPLE: S_ST_D_SPR_TRA}
+
+# DS_ST_4 = {S_ST_A_SIMPLE: S_ST_A_KIN_INT, S_ST_B_SIMPLE: S_ST_B_KIN_TRA,
+#            S_ST_C_SIMPLE: S_ST_C_SPR_INT, S_ST_D_SIMPLE: S_ST_D_SPR_TRA}
 
 # --- constants related to extended states -----------------------------------
+S_ST_X_LPR_00 = 'X00__'
+S_ST_X_LPR_01 = 'X01__'
+S_ST_X_LPR_10 = 'X10__'
+S_ST_X_LPR_11 = 'X11__'
+S_ST_Y_SPR_ = 'Y____'
+S_ST_Z_KAS_00 = 'Z00__'
+S_ST_Z_KAS_01 = 'Z01__'
+S_ST_Z_KAS_10 = 'Z10__'
+S_ST_Z_KAS_11 = 'Z11__'
 S_ST_A_KIN_INT_1001 = 'A1001'
 S_ST_B_KIN_TRA_0000 = 'B0000'
 S_ST_B_KIN_TRA_0001 = 'B0001'
@@ -120,7 +140,12 @@ S_ST_D_SPR_TRA_1101 = 'D1101'
 S_ST_D_SPR_TRA_1110 = 'D1110'
 S_ST_D_SPR_TRA_1111 = 'D1111'
 
-DS_ST = {S_ST_A_KIN_INT: [S_ST_A_KIN_INT_1001],
+DS_ST = {S_ST_X_LPR: [S_ST_X_LPR_00, S_ST_X_LPR_01, S_ST_X_LPR_10,
+                      S_ST_X_LPR_11],
+         S_ST_Y_SPR: [S_ST_Y_SPR_],
+         S_ST_Z_KAS: [S_ST_Z_KAS_00, S_ST_Z_KAS_01, S_ST_Z_KAS_10,
+                      S_ST_Z_KAS_11],
+         S_ST_A_KIN_INT: [S_ST_A_KIN_INT_1001],
          S_ST_B_KIN_TRA: [S_ST_B_KIN_TRA_0000, S_ST_B_KIN_TRA_0001,
                           S_ST_B_KIN_TRA_0010, S_ST_B_KIN_TRA_0011,
                           S_ST_B_KIN_TRA_0100, S_ST_B_KIN_TRA_0101,
@@ -138,6 +163,10 @@ DS_ST = {S_ST_A_KIN_INT: [S_ST_A_KIN_INT_1001],
                           S_ST_D_SPR_TRA_1011, S_ST_D_SPR_TRA_1100,
                           S_ST_D_SPR_TRA_1101, S_ST_D_SPR_TRA_1110,
                           S_ST_D_SPR_TRA_1111]}
+
+
+TS_STCH_X00 = ('X00_X01', 'X00_X10', 'X00_B1011', 'X00_B1101')
+TS_STCH_X00 = ('A1001_B0001', 'A1001_B1000', 'A1001_B1011', 'A1001_B1101')
 
 TS_STCH_A1001 = ('A1001_B0001', 'A1001_B1000', 'A1001_B1011', 'A1001_B1101')
 TS_STCH_B0000 = ('B0000_B0001', 'B0000_B0010', 'B0000_B0100', 'B0000_B1000')
@@ -210,6 +239,7 @@ DS_STCH = {S_ST_A_KIN_INT_1001: TS_STCH_A1001,
            S_ST_D_SPR_TRA_1111: TS_STCH_D1111}
 
 SET_01 = {'0', '1'}
+SET_01_ = {'0', '1', '_'}
 
 # --- constants related to phosphorylations and dephosphorylations of sites ---
 DS_SITES_PYL = {'0': B_DO_DEPYL, '1': B_DO_PYL}
