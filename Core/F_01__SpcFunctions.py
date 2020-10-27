@@ -9,9 +9,9 @@ import Core.F_00__GenFunctions as GF
 
 # --- Functions (O_90__State) -------------------------------------------------
 def setPylDPy(dIdx, sState, lKAs, lPAs, dSitesPyl = GC.DS_SITES_PYL):
-    assert len(sState) == 1 + 4
-    assert set(sState[1:]) <= GC.SET_01_
-    assert dIdx['iSP'] >= 1 and dIdx['iSP'] < len(sState)
+    assert len(sState) == 3 + 4
+    assert set(sState[3:]) <= GC.SET_01_
+    assert dIdx['iSP'] >= 3 and dIdx['iSP'] < len(sState)
     sPylDePyl, cAse = dSitesPyl[sState[dIdx['iSP']]], None
     if sPylDePyl == GC.B_DO_PYL:
         cAse = lKAs[dIdx['iLAse']]
