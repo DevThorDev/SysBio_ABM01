@@ -8,7 +8,7 @@ import Core.F_02__PltFunctions as PF
 import Core.F_03__OTpFunctions as TF
 
 from Core.O_00__Base import Base
-from Core.O_90__State import State_Int_Trans
+from Core.O_90__Component import Component
 
 # +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 class System(Base):
@@ -29,7 +29,7 @@ class System(Base):
             dNStO = self.dNStO
         for sSt, nSt in dNStO.items():
             for cSt in range(nSt):
-                self.lStO.append(State_Int_Trans(inpDat, sSt))
+                self.lStO.append(Component(inpDat, sSt))
 
     def getDictsStObj(self):
         self.dNStO, self.dStO = {}, {}
@@ -42,23 +42,23 @@ class System(Base):
         for s, cCnc in self.dCncSMo.items():
             print(s + ':\t' + str(cCnc))
 
-    def printNStateObjSys(self):
-        print('*'*16, 'Counts of state objects contained in System:', '*'*18)
+    def printNCompObjSys(self):
+        print('*'*16, 'Counts of comp. objects contained in System:', '*'*18)
         for sSt, ctStO in self.dNStO.items():
             print(sSt + ':', ctStO)
         print('- Total:', self.dITp['nStaObj'], '/', sum(self.dNStO.values()))
         print('*'*80)
 
-    def printAllStateObjSys(self):
-        print('*'*16, 'Details of state objects contained in System:', '*'*17)
+    def printAllCompObjSys(self):
+        print('*'*16, 'Details of comp. objects contained in System:', '*'*17)
         for sSt, lStO in self.dStO.items():
-            print('~'*20, 'States with ID', sSt, '~'*20)
+            print('~'*20, 'Components with ID', sSt, '~'*20)
             for cStO in lStO:
-                cStO.printStateDetails()
+                cStO.printComponentDetails()
         print('*'*80)
 
     def plotResEvo(self, sFRes = None, overWr = True):
-        dParPlt = self.dITp[GC.S_D_PLT][GC.S_STA_CNC]
+        dParPlt = self.dITp[GC.S_D_PLT][GC.S_CP_CNC]
         if sFRes is not None:
             self.dResEvo = TF.getPFResEvo(self.dIG, self.dITp, sFRs = sFRes)
         for cK, cT in dParPlt['dlSY'].items():
@@ -74,8 +74,8 @@ class System(Base):
         self.addStObj(inpDat, refreshStO = True)
         self.getDictsStObj()
         # self.printCncSMo()
-        # self.printNStateObjSys()
-        # self.printAllStateObjSys()
+        # self.printNCompObjSys()
+        # self.printAllCompObjSys()
         dR, sD, sF = self.dResEvo, self.dITp['sD_Sys'], self.dITp['sF_SysEvo']
         self.pFResEvo = TF.saveAsPdDfr(self.dIG, dR, sD, sF, overWr = True)
         if doPlots:
@@ -128,7 +128,7 @@ class System(Base):
 #         for cO in self.lKAs + self.lPAs + self.lLPr + self.lSPr:
 #             cO.printSpecSites()
 
-#     def setToState(self, inpDat, lOIntSt, lPAsSt = []):
+#     def setToComp(self, inpDat, lOIntSt, lPAsSt = []):
 #         pass
 
 ###############################################################################

@@ -8,7 +8,7 @@ from Core.O_02__Protein import (Kinase_HPCAL1, Kinase_X, Kinase0,
                                 Phosphatase0, Protein_NRT2p1, Protein_NAR2p1)
 from Core.O_03__Metabolite import SMo_NO3_1m, SMo_H2PO4_1m
 # from Core.O_80__Interaction import Phosphorylation, Dephosphorylation
-from Core.O_90__State import State_Int_Trans
+from Core.O_90__Component import Component
 # from Core.O_99__System import System
 
 # --- Functions (initialisation) ----------------------------------------------
@@ -66,7 +66,7 @@ def initialState(inpDG, ddVOvwr = {}, iV = 0):
              GC.SPC_LPR_A: NRT2p1,
              GC.SPC_SPR_A: NAR2p1,
              GC.SPC_L_SMO: [NO3_1m, H2PO4_1m]}
-    cSta = State_Int_Trans(inpDG, dOState = dOSta)
+    cSta = Component(inpDG, dOState = dOSta)
     # Create system from state ------------------------------------------------
     # return cSta, cSta.createSystem(inpDG)
     # Return the current state ------------------------------------------------

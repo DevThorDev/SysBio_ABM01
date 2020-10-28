@@ -33,8 +33,20 @@ def joinToPath(pF = '', sF = 'Dummy.txt'):
     else:
         return sF
 
-def partI(s, i = 0, sSpl = GC.S_USC):
-    return s.split(sSpl)[i]
+def partStr(s0, sSplO = GC.S_USC, sSplI = GC.S_PLUS):
+    lSSplRet = [[s0]]
+    if sSplO is not None:
+        lSSplRet = s0.split(sSplO)
+        for k, s1 in enumerate(lSSplRet):
+            if sSplI is not None:
+                lSSplRet[k] = s1.split(sSplI)
+            else:
+                lSSplRet[k] = [s1]
+    else:
+        if sSplI is not None:
+            lSSplRet = s0.split(sSplI)
+            lSSplRet = [[s1] for s1 in lSSplRet]
+    return lSSplRet
 
 def lItToUniqueList(lIt):
     if len(lIt) > 0:

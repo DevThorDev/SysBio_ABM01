@@ -49,7 +49,7 @@ def decorateSavePlot(pF, pdDfr, sTtl = None, xLbl = None, yLbl = None,
         plt.ylim(yLim)
     plt.savefig(pF)
 
-# --- Functions (O_90_State) --------------------------------------------------
+# --- Functions (O_90_Component) ----------------------------------------------
 def plotDCncEvo(dIPlt, dCncEvo, pFPlt, lIPlt, tpMark = 'x', szMark = 5,
                ewMark = 2, ecMark = (0.95, 0., 0.), fcMark = (0.9, 0.45, 0.),
                styLn = 'solid', wdthLn = 1, colLn = 'b', sTtl = '', xLbl = '',
@@ -82,14 +82,14 @@ def plotEvoFig(dIPlt, dfrR, pF, sHdCX, dSHdCY, sLblY):
     plt.close()
 
 def plotEvo(dIPlt, dResEvo, dPF, tDat, sHdCX = GC.S_TIME, overWr = True):
-    for pF, tKDSt in dPF.items():
+    for pF, tKDCp in dPF.items():
         if (not os.path.isfile(pF) or overWr) and len(tDat[0]) > 0:
             lSHdCY, sLblY = tDat
             dfrR = pd.DataFrame(dResEvo).loc[:, [sHdCX] + lSHdCY]
-            if tKDSt is None:
+            if tKDCp is None:
                 dSHdCY =  {sHd: [sHd] for sHd in lSHdCY}
             else:
-                dfrR, dSHdCY = SF.preProcMeanSum(dfrR, sHdCX, lSHdCY, tKDSt)
+                dfrR, dSHdCY = SF.preProcMeanSum(dfrR, sHdCX, lSHdCY, tKDCp)
             plotEvoFig(dIPlt, dfrR, pF, sHdCX, dSHdCY, sLblY)
 
 ###############################################################################

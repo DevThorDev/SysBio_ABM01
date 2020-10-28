@@ -53,7 +53,7 @@ def doSiteChange(cO, sSpS, sAse, doDePyl = False):
         opDone = True
     return opDone
 
-# --- Functions (O_90_State) --------------------------------------------------
+# --- Functions (O_90_Component) ----------------------------------------------
 def complLSpec(inpDt, lOAll, sTp = 'KAs', sD = 'Pyl'):
     lID = []
     for cO in lOAll:
@@ -72,7 +72,7 @@ def iniDictOut(dITp, dCnc, t = 0., tDlt = 0.):
     dO = {'dN': {}, 'dH': {}, 'h': 0., 'tDlt': tDlt, 'dRes': {GC.S_TIME: [t]}}
     for s, cCnc in dCnc.items():
         dO['dRes'][s] = [cCnc]
-    for s, k in dITp['dNStaObj'].items():
+    for s, k in dITp['dNCpObj'].items():
         dO['dRes'][s] = [k]
         dO['dN'][s] = k
     return dO
@@ -86,7 +86,7 @@ def changeConcSMo(dITp, dO, dCncSMo, cID = None, dspI = False):
         for s in dO['dN']:
             assert s in dITp['dConcChg'][sSMo]
             cncCh += dITp['dConcChg'][sSMo][s]['absChg']*dO['dN'][s]
-        dCncSMo[sSMo] += cncCh*dO['tDlt']/dITp['nStaObj']*dITp['concChgScale']
+        dCncSMo[sSMo] += cncCh*dO['tDlt']/dITp['nCpObj']*dITp['concChgScale']
         dCncSMo[sSMo] = GF.implMinMax(dCncSMo[sSMo], dMin[sSMo], dMax[sSMo])
 
 def updateDictH(dITp, dO, dCncSMo, dspI = False):
@@ -117,11 +117,16 @@ def reCalcReactHazards(dITp, dO, dCncSMo, dspI = False):
 def eventReactionSys(dO):
     # get the string consisting of the LHS and RHS of the reaction
     sRct = GF.getSRct(dO['dH'])
-    # update the numbers of state objects in dO['dN']
-    sLHS, sRHS = GF.partI(sRct, 0), GF.partI(sRct, 1)
-    assert sLHS in dO['dN'] and sRHS in dO['dN']
-    dO['dN'][sLHS] -= 1
-    dO['dN'][sRHS] += 1
+    # update the numbers of component objects in dO['dN']
+    llSCmp = GF.partStr(sRct)
+    assert len(llSCmp) >= 2
+    for k, lSCmp in enumerate(llSCmp):
+        for sCmp in lSCmp:
+            assert sCmp in dO['dN']
+            if k == 0:              # left-hand side of the reaction equation
+                dO['dN'][sCmp] -= 1
+            elif k == 1:            # right-hand side of the reaction equation
+                dO['dN'][sCmp] += 1
 
 def nextEvent(dITp, dO, T, cTS):
     if dO['h'] > 0:    # otherwise the while-loop ends, see the other case
@@ -173,12 +178,12 @@ def getDPFPltEvo(dIG, dITp, tKey, dMS = None):
         sF = GC.S_USC.join([str(cEl) for cEl in tKey if cEl is not None])
         dP[getPF(dIG['sPPlt'], dITp['sD_Sys'], sF, sFExt = GC.S_EXT_PDF)] = dMS
     else:
-        for sMS, dSt in dMS.items():
+        for sMS, dCp in dMS.items():
             sF = str(tKey[0]) + GC.S_USC + sMS
             if tKey[1] is not None:
                 sF +=  GC.S_USC + str(tKey[1])
             pF = getPF(dIG['sPPlt'], dITp['sD_Sys'], sF, sFExt = GC.S_EXT_PDF)
-            dP[pF] = (sMS, dSt)
+            dP[pF] = (sMS, dCp)
     return dP
 
 ###############################################################################
