@@ -14,40 +14,40 @@ strCL = 'System'
 VolC = 10000                        # volume (microns^3)
 MassC = 2                           # nanograms
 
-# --- data containing state, state transition and conc. change info -----------
-# initial number of objects for each possible state
-dNStaObj = {GC.S_ST_A_KIN_INT_1001: 300,
-            GC.S_ST_B_KIN_TRA_0000: 20,
-            GC.S_ST_B_KIN_TRA_0001: 20,
-            GC.S_ST_B_KIN_TRA_0010: 20,
-            GC.S_ST_B_KIN_TRA_0011: 20,
-            GC.S_ST_B_KIN_TRA_0100: 20,
-            GC.S_ST_B_KIN_TRA_0101: 20,
-            GC.S_ST_B_KIN_TRA_0110: 20,
-            GC.S_ST_B_KIN_TRA_0111: 20,
-            GC.S_ST_B_KIN_TRA_1000: 20,
-            GC.S_ST_B_KIN_TRA_1010: 20,
-            GC.S_ST_B_KIN_TRA_1011: 20,
-            GC.S_ST_B_KIN_TRA_1100: 20,
-            GC.S_ST_B_KIN_TRA_1101: 20,
-            GC.S_ST_B_KIN_TRA_1110: 20,
-            GC.S_ST_B_KIN_TRA_1111: 20,
-            GC.S_ST_C_SPR_INT_0110: 100,
-            GC.S_ST_D_SPR_TRA_0000: 20,
-            GC.S_ST_D_SPR_TRA_0001: 20,
-            GC.S_ST_D_SPR_TRA_0010: 20,
-            GC.S_ST_D_SPR_TRA_0011: 20,
-            GC.S_ST_D_SPR_TRA_0100: 20,
-            GC.S_ST_D_SPR_TRA_0101: 20,
-            GC.S_ST_D_SPR_TRA_0111: 20,
-            GC.S_ST_D_SPR_TRA_1000: 20,
-            GC.S_ST_D_SPR_TRA_1001: 20,
-            GC.S_ST_D_SPR_TRA_1010: 20,
-            GC.S_ST_D_SPR_TRA_1011: 20,
-            GC.S_ST_D_SPR_TRA_1100: 20,
-            GC.S_ST_D_SPR_TRA_1101: 20,
-            GC.S_ST_D_SPR_TRA_1110: 20,
-            GC.S_ST_D_SPR_TRA_1111: 20}
+# --- data containing components, reactions and conc. change info -------------
+# initial number of objects for each possible component
+dNCpObj = {GC.S_ST_A_KIN_INT_1001: 300,
+           GC.S_ST_B_KIN_TRA_0000: 20,
+           GC.S_ST_B_KIN_TRA_0001: 20,
+           GC.S_ST_B_KIN_TRA_0010: 20,
+           GC.S_ST_B_KIN_TRA_0011: 20,
+           GC.S_ST_B_KIN_TRA_0100: 20,
+           GC.S_ST_B_KIN_TRA_0101: 20,
+           GC.S_ST_B_KIN_TRA_0110: 20,
+           GC.S_ST_B_KIN_TRA_0111: 20,
+           GC.S_ST_B_KIN_TRA_1000: 20,
+           GC.S_ST_B_KIN_TRA_1010: 20,
+           GC.S_ST_B_KIN_TRA_1011: 20,
+           GC.S_ST_B_KIN_TRA_1100: 20,
+           GC.S_ST_B_KIN_TRA_1101: 20,
+           GC.S_ST_B_KIN_TRA_1110: 20,
+           GC.S_ST_B_KIN_TRA_1111: 20,
+           GC.S_ST_C_SPR_INT_0110: 100,
+           GC.S_ST_D_SPR_TRA_0000: 20,
+           GC.S_ST_D_SPR_TRA_0001: 20,
+           GC.S_ST_D_SPR_TRA_0010: 20,
+           GC.S_ST_D_SPR_TRA_0011: 20,
+           GC.S_ST_D_SPR_TRA_0100: 20,
+           GC.S_ST_D_SPR_TRA_0101: 20,
+           GC.S_ST_D_SPR_TRA_0111: 20,
+           GC.S_ST_D_SPR_TRA_1000: 20,
+           GC.S_ST_D_SPR_TRA_1001: 20,
+           GC.S_ST_D_SPR_TRA_1010: 20,
+           GC.S_ST_D_SPR_TRA_1011: 20,
+           GC.S_ST_D_SPR_TRA_1100: 20,
+           GC.S_ST_D_SPR_TRA_1101: 20,
+           GC.S_ST_D_SPR_TRA_1110: 20,
+           GC.S_ST_D_SPR_TRA_1111: 20}
 
 # basic weights for interaction partner changes
 wIPC_KAs_SPr = 1.
@@ -64,7 +64,7 @@ wDPy_S28 = 0.85
 wDPy_S839 = 1.15
 wDPy_S870 = 0.6
 
-# basic weights for changes between state groups
+# basic weights for changes between component groups
 w_A_B = 0.1
 w_B_B = 10.
 w_B_C = 0.1
@@ -118,9 +118,9 @@ dConcSMo = {'Ini': {GC.ID_NO3_1M: {'cTp': 'uniform',
             'Max': {GC.ID_NO3_1M: 1000., GC.ID_H2PO4_1M: 100.}}
 
 # dictionary containing parameters which determine concentration changes of
-# small molecules depending on the distribution of states, and vice versa
+# small molecules depending on the distribution of components, and vice versa
 
-# depenency of small molecule concentration changes on state
+# depenency of small molecule concentration changes on component
 dPar_N_A1001 = {'absChg': -0.001}
 dPar_N_B0000 = {'absChg': -0.0}
 dPar_N_B0001 = {'absChg': -0.0}
@@ -415,31 +415,31 @@ dConcChg = {GC.ID_NO3_1M: {GC.S_ST_A_KIN_INT_1001: dPar_N_A1001,
 
 concChgScale = 1.    # scale of concentration change def. in dConcChg
 
-# --- graphics parameters: state numbers and molecule conc. plot --------------
-sPlt_SSC = '01_SelStatesConc'           # name of all states and conc. plot
-sPlt_SSt = '02_SelStates'               # name of sel. states and conc. plot
-sPlt_SCn = '03_SelConc'                 # name of sel. states and conc. plot
+# --- graphics parameters: component numbers and molecule conc. plot ----------
+sPlt_SSC = '01_SelCpConc'               # name of sel. comps and conc. plot
+sPlt_SCp = '02_SelCp'                   # name of sel. comps plot
+sPlt_SCn = '03_SelConc'                 # name of sel. conc. plot
 
-title_StCnc = None                      # title of plot
-xLbl_StCnc = GC.S_TIME                  # x-label of plot
-yLbl_StCnc = 'State incidence and molecule concentration (mM)'
-yLbl_St = 'State incidence'
+title_CpCnc = None                      # title of plot
+xLbl_CpCnc = GC.S_TIME                  # x-label of plot
+yLbl_CpCnc = 'Component incidence and molecule concentration (mM)'
+yLbl_Cp = 'Component incidence'
 yLbl_Cnc = 'Molecule concentration (mM)'
 yLbl_Cnc_N = '$[NO_3^-]$ (mM)'          # y-label of NO3- concentration plot
 yLbl_Cnc_P = '$[H_2PO_4^-]$ (mM)'       # y-label of H2PO4- concentration plot
-tpMark_StCnc = None                     # marker type of plot
-szMark_StCnc = 1                        # marker size of plot
-ewMark_StCnc = 1                        # marker edge width of plot
-ecMark_StCnc = (1., 0., 0.)             # marker edge colour of plot
-fcMark_StCnc = (1., 0.5, 0.)            # marker face colour of plot
-styLn_StCnc = 'solid'                   # line style of plot
-wdthLn_StCnc = 1                        # line width of plot
-colLn_StCnc = None                      # line colour of plot
-pltAxXY_StCnc = (True, True)            # plot x- and/or y-axis
+tpMark_CpCnc = None                     # marker type of plot
+szMark_CpCnc = 1                        # marker size of plot
+ewMark_CpCnc = 1                        # marker edge width of plot
+ecMark_CpCnc = (1., 0., 0.)             # marker edge colour of plot
+fcMark_CpCnc = (1., 0.5, 0.)            # marker face colour of plot
+styLn_CpCnc = 'solid'                   # line style of plot
+wdthLn_CpCnc = 1                        # line width of plot
+colLn_CpCnc = None                      # line colour of plot
+pltAxXY_CpCnc = (True, True)            # plot x- and/or y-axis
 
-# dict. of concentration or state strings to be plotted, incl. y-label
+# dict. of concentration or component strings to be plotted, incl. y-label
 # key: (start string of plot, number of plot)
-# value: (list of states to be plotted, y-label of plot, dictionary of ops)
+# value: (list of components to be plotted, y-label of plot, dictionary of ops)
 dAC = {cK: {GC.S_ST_A_SIMPLE: [GC.S_ST_A_SIMPLE, GC.S_ST_B_SIMPLE],
             GC.S_ST_C_SIMPLE: [GC.S_ST_C_SIMPLE, GC.S_ST_D_SIMPLE]}
        for cK in [GC.S_MEAN, GC.S_SUM]}
@@ -451,18 +451,18 @@ dABCD = {cK: {GC.S_ST_A_SIMPLE: [GC.S_ST_A_SIMPLE],
               GC.S_ST_C_SIMPLE: [GC.S_ST_C_SIMPLE],
               GC.S_ST_D_SIMPLE: [GC.S_ST_D_SIMPLE]}
          for cK in [GC.S_MEAN, GC.S_SUM]}
-dlSY = {(sPlt_SSC, 'AC'): (list(GC.DS_STCH) + [GC.ID_NO3_1M], yLbl_StCnc, dAC),
-        (sPlt_SSC, 'AB'): (list(GC.DS_STCH) + [GC.ID_NO3_1M], yLbl_StCnc, dAB),
-        (sPlt_SSC, 'ABCD'): (list(GC.DS_STCH) + [GC.ID_NO3_1M], yLbl_StCnc,
+dlSY = {(sPlt_SSC, 'AC'): (list(GC.DS_STCH) + [GC.ID_NO3_1M], yLbl_CpCnc, dAC),
+        (sPlt_SSC, 'AB'): (list(GC.DS_STCH) + [GC.ID_NO3_1M], yLbl_CpCnc, dAB),
+        (sPlt_SSC, 'ABCD'): (list(GC.DS_STCH) + [GC.ID_NO3_1M], yLbl_CpCnc,
                              dABCD),
         (sPlt_SSC, 'Sel4'): ([GC.S_ST_A_KIN_INT_1001, GC.S_ST_B_KIN_TRA_0110,
                               GC.S_ST_C_SPR_INT_0110, GC.S_ST_D_SPR_TRA_1001,
-                              GC.ID_NO3_1M], yLbl_StCnc, None),
-        (sPlt_SSt, 1): (list(GC.DS_STCH)[:8], yLbl_St, None),
-        (sPlt_SSt, 2): (list(GC.DS_STCH)[8:16], yLbl_St, None),
-        (sPlt_SSt, 3): (list(GC.DS_STCH)[16:24], yLbl_St, None),
-        (sPlt_SSt, 4): (list(GC.DS_STCH)[24:], yLbl_St, None),
-        (sPlt_SSt, None): (list(GC.DS_STCH), yLbl_St, dABCD),
+                              GC.ID_NO3_1M], yLbl_CpCnc, None),
+        (sPlt_SCp, 1): (list(GC.DS_STCH)[:8], yLbl_Cp, None),
+        (sPlt_SCp, 2): (list(GC.DS_STCH)[8:16], yLbl_Cp, None),
+        (sPlt_SCp, 3): (list(GC.DS_STCH)[16:24], yLbl_Cp, None),
+        (sPlt_SCp, 4): (list(GC.DS_STCH)[24:], yLbl_Cp, None),
+        (sPlt_SCp, None): (list(GC.DS_STCH), yLbl_Cp, dABCD),
         (sPlt_SCn, None): ([GC.ID_NO3_1M, GC.ID_H2PO4_1M], yLbl_Cnc, None)}
 
 # --- path, directory and file names ------------------------------------------
@@ -478,9 +478,9 @@ dIO = {# --- general
        # --- plant cell data
        'VolC': VolC,
        'MassC': MassC,
-       # --- data containing state, state transition and conc. change info
-       'dNStaObj': dNStaObj,
-       'nStaObj': sum(dNStaObj.values()),
+       # --- data containing components, reactions and conc. change info
+       'dNCpObj': dNCpObj,
+       'nCpObj': sum(dNCpObj.values()),
        'dRRC': dRRC,
        'dConcSMo': dConcSMo,
        'dConcChg': dConcChg,
@@ -488,26 +488,26 @@ dIO = {# --- general
        # --- path, directory and file names
        'sD_Sys': sD_Sys,
        'sF_SysEvo': sF_SysEvo,
-       # --- graphics parameters: state numbers and molecule conc. plot
-       GC.S_D_PLT: {GC.S_STA_CNC: {'sPlt_SSC': sPlt_SSC,
-                                   'sPlt_SSt': sPlt_SSt,
-                                   'sPlt_SCn': sPlt_SCn,
-                                   'title': title_StCnc,
-                                   'xLbl': xLbl_StCnc,
-                                   'yLbl_StCnc': yLbl_StCnc,
-                                   'yLbl_St': yLbl_St,
-                                   'yLbl_Cnc': yLbl_Cnc,
-                                   'yLbl_Cnc_N': yLbl_Cnc_N,
-                                   'yLbl_Cnc_P': yLbl_Cnc_P,
-                                   'tpMark': tpMark_StCnc,
-                                   'szMark': szMark_StCnc,
-                                   'ewMark': ewMark_StCnc,
-                                   'ecMark': ecMark_StCnc,
-                                   'fcMark': fcMark_StCnc,
-                                   'styLn': styLn_StCnc,
-                                   'wdthLn': wdthLn_StCnc,
-                                   'colLn': colLn_StCnc,
-                                   'pltAxXY': pltAxXY_StCnc,
-                                   'dlSY': dlSY}}}
+       # --- graphics parameters: component numbers and molecule conc. plot
+       GC.S_D_PLT: {GC.S_CP_CNC: {'sPlt_SSC': sPlt_SSC,
+                                  'sPlt_SCp': sPlt_SCp,
+                                  'sPlt_SCn': sPlt_SCn,
+                                  'title': title_CpCnc,
+                                  'xLbl': xLbl_CpCnc,
+                                  'yLbl_CpCnc': yLbl_CpCnc,
+                                  'yLbl_Cp': yLbl_Cp,
+                                  'yLbl_Cnc': yLbl_Cnc,
+                                  'yLbl_Cnc_N': yLbl_Cnc_N,
+                                  'yLbl_Cnc_P': yLbl_Cnc_P,
+                                  'tpMark': tpMark_CpCnc,
+                                  'szMark': szMark_CpCnc,
+                                  'ewMark': ewMark_CpCnc,
+                                  'ecMark': ecMark_CpCnc,
+                                  'fcMark': fcMark_CpCnc,
+                                  'styLn': styLn_CpCnc,
+                                  'wdthLn': wdthLn_CpCnc,
+                                  'colLn': colLn_CpCnc,
+                                  'pltAxXY': pltAxXY_CpCnc,
+                                  'dlSY': dlSY}}}
 
 ###############################################################################
