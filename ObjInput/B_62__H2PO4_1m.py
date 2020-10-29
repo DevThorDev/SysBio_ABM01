@@ -14,7 +14,7 @@ strCL = 'H2PO4_1m'
 dInfSpS = {}
 
 # --- initial state -----------------------------------------------------------
-concIni = 2                             # initial concentration of NO3-
+concIni = 2                             # initial concentration of H2PO4-
 
 # --- changes over time in deterministic mode ---------------------------------
 mdConcCh = GC.S_CH_SIN                  # conc. change mode (S_NO, S_CH_SIN)
@@ -23,8 +23,8 @@ amplConcCh = 1                          # conc. change amplitude
 thrLowConc = 1.4                        # threshold for "low" concentration
 thrHighConc = 2.5                       # threshold for "high" concentration
 
-propIncCpLS = 0.05                      # prop. increase in states C, D
-propDecCpLK = 0.07                      # prop. decrease in states A, B
+propIncCpLS = 0.05                      # prop. increase in states LSI, LST
+propDecCpLK = 0.07                      # prop. decrease in states LKI, LKT
 
 # --- graphics parameters molecule concentrations plot ------------------------
 sPlt_Conc = 'Conc'                  # name of plot and key of input dict

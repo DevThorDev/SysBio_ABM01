@@ -46,7 +46,7 @@ from Core.O_90__Component import Component
 #                DePyl01, DePyl02, DePyl03, DePyl04]
 #     return System(inpDG, lOSys = lSysCmp)
 
-def initialState(inpDG, ddVOvwr = {}, iV = 0):
+def iniComponent(inpDG, ddVOvwr = {}, iV = 0):
     # Kinases KAsHPCAL1, KAsX -------------------------------------------------
     KAsHPCAL1 = Kinase_HPCAL1(inpDG)
     KAsX = Kinase_X(inpDG)
@@ -61,57 +61,57 @@ def initialState(inpDG, ddVOvwr = {}, iV = 0):
     NO3_1m.overwInpV(ddVOvwr, iV)
     H2PO4_1m.overwInpV(ddVOvwr, iV)
     # Create initial state ----------------------------------------------------
-    dOSta = {GC.SPC_KAS_A: KAsHPCAL1,
-             GC.SPC_KAS_X: KAsX,
-             GC.SPC_LPR_A: NRT2p1,
-             GC.SPC_SPR_A: NAR2p1,
-             GC.SPC_L_SMO: [NO3_1m, H2PO4_1m]}
-    cSta = Component(inpDG, dOState = dOSta)
+    dOCp = {GC.SPC_KAS_A: KAsHPCAL1,
+            GC.SPC_KAS_X: KAsX,
+            GC.SPC_LPR_A: NRT2p1,
+            GC.SPC_SPR_A: NAR2p1,
+            GC.SPC_L_SMO: [NO3_1m, H2PO4_1m]}
+    cCp = Component(inpDG, dOComp = dOCp)
     # Create system from state ------------------------------------------------
-    # return cSta, cSta.createSystem(inpDG)
+    # return cCp, cCp.createSystem(inpDG)
     # Return the current state ------------------------------------------------
-    return cSta
+    return cCp
 
-def changeStateConcDep(inpDG, cSta):
-    if cSta.dCnc[GC.ID_NO3_1M][0] < cSta.dCnc[GC.ID_NO3_1M][1]:
-        if cSta.idO == GC.S_ST_A_KIN_INT:
-            cSta.to_St_B_Trans_HPCAL1_NRT2p1(inpDG)
-            cSta.to_St_C_Int_NAR2p1_NRT2p1(inpDG)
-        elif cSta.idO == GC.S_ST_B_KIN_TRA:
-            cSta.to_St_C_Int_NAR2p1_NRT2p1(inpDG)
-    elif cSta.dCnc[GC.ID_NO3_1M][0] > cSta.dCnc[GC.ID_NO3_1M][2]:
-        if cSta.idO == GC.S_ST_C_SPR_INT:
-            cSta.to_St_D_Trans_NAR2p1_NRT2p1(inpDG)
-            cSta.to_St_A_Int_HPCAL1_NRT2p1(inpDG)
-        elif cSta.idO == GC.S_ST_D_SPR_TRA:
-            cSta.to_St_A_Int_HPCAL1_NRT2p1(inpDG)
+def changeComponentConcDep(inpDG, cCp):
+    if cCp.dCnc[GC.ID_NO3_1M][0] > cCp.dCnc[GC.ID_NO3_1M][2]:
+        if cCp.idO == GC.S_CP_LSI_LONG:
+            cCp.to_Cp_LST(inpDG)
+            cCp.to_Cp_LKI(inpDG)
+        elif cCp.idO == GC.S_CP_LST_LONG:
+            cCp.to_Cp_LKI(inpDG)
+    elif cCp.dCnc[GC.ID_NO3_1M][0] < cCp.dCnc[GC.ID_NO3_1M][1]:
+        if cCp.idO == GC.S_CP_LKI_LONG:
+            cCp.to_Cp_LKT(inpDG)
+            cCp.to_Cp_LSI(inpDG)
+        elif cCp.idO == GC.S_CP_LKT_LONG:
+            cCp.to_Cp_LSI(inpDG)
 
-def evolveIni(inpDG, nStO = 1, ddVOvwr = {}):
-    lStO = []
-    for iStO in range(nStO):
-        # cStO, cSys = initialState(inpDG, ddVOvwr, iStO)
-        cStO = initialState(inpDG, ddVOvwr, iStO)
-        lStO.append(cStO)
+def evolveIni(inpDG, nCpO = 1, ddVOvwr = {}):
+    lCpO = []
+    for iCpO in range(nCpO):
+        # cCpO, cSys = iniComponent(inpDG, ddVOvwr, iCpO)
+        cCpO = iniComponent(inpDG, ddVOvwr, iCpO)
+        lCpO.append(cCpO)
     print('--- Initialisation done.')
-    return lStO
+    return lCpO
 
-def evolveTS(inpDG, lStO, curTS, nStO = 1, ddVOvwr = {}):
+def evolveTS(inpDG, lCpO, curTS, nCpO = 1, ddVOvwr = {}):
     print('--- Current time step:', curTS)
-    for iStO in range(nStO):
-        print('- State', iStO + 1)
-        lStO[iStO].changeConcSMo(curTS)
-        lStO[iStO].printDCnc(prID = GC.ID_NO3_1M)
-        changeStateConcDep(inpDG, lStO[iStO])
+    for iCpO in range(nCpO):
+        print('- Component', iCpO + 1)
+        lCpO[iCpO].changeConcSMo(curTS)
+        lCpO[iCpO].printDCnc(prID = GC.ID_NO3_1M)
+        changeComponentConcDep(inpDG, lCpO[iCpO])
 
 def evolve_TimeSteps(inpDG, nObj = 1, ddVOvwr = {}):
-    lStO = evolveIni(inpDG, nObj, ddVOvwr)
+    lCpO = evolveIni(inpDG, nObj, ddVOvwr)
     for curTS in range(1, inpDG.dI['maxTS'] + 1):
-        evolveTS(inpDG, lStO, curTS, nObj, ddVOvwr)
-    for k, cStO in enumerate(lStO):
-        print('++++++++ State ' + str(k + 1) + ':')
-        cStO.printStateDetails()
-        print(cStO.dfrEvo)
-        cStO.savePlotDfrEvo(kSt = k + 1, llIPlot = [[0, 1], [0, 2]], iSMo = 0)
-        cStO.savePlotDfrEvo(kSt = k + 1, llIPlot = [[0, 1], [0, 2]], iSMo = 1)
+        evolveTS(inpDG, lCpO, curTS, nObj, ddVOvwr)
+    for k, cCpO in enumerate(lCpO):
+        print('++++++++ Component ' + str(k + 1) + ':')
+        cCpO.printComponentDetails()
+        print(cCpO.dfrEvo)
+        cCpO.savePlotDfrEvo(kCp = k + 1, llIPlot = [[0, 1], [0, 2]], iSMo = 0)
+        cCpO.savePlotDfrEvo(kCp = k + 1, llIPlot = [[0, 1], [0, 2]], iSMo = 1)
 
 ###############################################################################

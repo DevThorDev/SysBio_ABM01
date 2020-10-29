@@ -23,8 +23,8 @@ amplConcCh = 4                          # conc. change amplitude
 thrLowConc = 4                          # threshold for "low" concentration
 thrHighConc = 7                         # threshold for "high" concentration
 
-propIncCpLS = 0.04                      # prop. increase in states C, D
-propDecCpLK = 0.03                      # prop. decrease in states A, B
+propIncCpLS = 0.04                      # prop. increase in states LSI, LST
+propDecCpLK = 0.03                      # prop. decrease in states LKI, LKT
 
 # --- graphics parameters molecule concentrations plot ------------------------
 sPlt_Conc = 'Conc'                  # name of plot and key of input dict

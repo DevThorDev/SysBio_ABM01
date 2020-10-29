@@ -28,8 +28,8 @@ sPRes = os.path.join('..', '..', '11_SysBio01_ABM01', '40_ModelResults')
 sPPlt = os.path.join('..', '..', '11_SysBio01_ABM01', '50_ModelPlots')
 
 # --- Input: Constants --------------------------------------------------------
-dS_St = GC.DS_ST
-dS_StCh = GC.DS_STCH
+dS_Cp = GC.DS_CP
+dS_Rct = GC.DS_RCT
 
 # --- create input dictionary -------------------------------------------------
 dictInpG = {# --- Input: Debug Info
@@ -50,7 +50,7 @@ dictInpG = {# --- Input: Debug Info
             'sPRes': sPRes,
             'sPPlt': sPPlt,
             # --- Input: Constants
-            'dS_St': dS_St,
-            'dS_StCh': dS_StCh}
+            'dS_Cp': dS_Cp,
+            'dS_Rct': dS_Rct}
 
 ###############################################################################

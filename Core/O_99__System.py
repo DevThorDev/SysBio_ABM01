@@ -12,30 +12,30 @@ from Core.O_90__Component import Component
 
 # +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 class System(Base):
-    def __init__(self, inpDat, lStObj = [], iTp = 99):
+    def __init__(self, inpDat, lCpObj = [], iTp = 99):
         super().__init__(inpDat, iTp)
         self.idO = 'Sys'
         self.descO = 'System'
-        self.lStO = lStObj
+        self.lCpO = lCpObj
         self.dCncSMo = TF.createDCnc(self.dITp)
-        self.addStObj(inpDat)
-        self.getDictsStObj()
+        self.addCpObj(inpDat)
+        self.getDictsCpObj()
         # print('Initiated "System" object.')
 
-    def addStObj(self, inpDat, refreshStO = False):
-        dNStO = self.dITp['dNStaObj']
-        if refreshStO:
-            self.lStO = []
-            dNStO = self.dNStO
-        for sSt, nSt in dNStO.items():
-            for cSt in range(nSt):
-                self.lStO.append(Component(inpDat, sSt))
+    def addCpObj(self, inpDat, refreshCpO = False):
+        dNCpO = self.dITp['dNCpObj']
+        if refreshCpO:
+            self.lCpO = []
+            dNCpO = self.dNCpO
+        for sCp, nCp in dNCpO.items():
+            for cCp in range(nCp):
+                self.lCpO.append(Component(inpDat, sCp))
 
-    def getDictsStObj(self):
-        self.dNStO, self.dStO = {}, {}
-        for cStO in self.lStO:
-            GF.addToDictCt(self.dNStO, cStO.idO)
-            GF.addToDictL(self.dStO, cStO.idO, cStO)
+    def getDictsCpObj(self):
+        self.dNCpO, self.dCpO = {}, {}
+        for cCpO in self.lCpO:
+            GF.addToDictCt(self.dNCpO, cCpO.idO)
+            GF.addToDictL(self.dCpO, cCpO.idO, cCpO)
 
     def printCncSMo(self):
         print('--- Concentrations of small molecules in system', self.idO)
@@ -44,17 +44,17 @@ class System(Base):
 
     def printNCompObjSys(self):
         print('*'*16, 'Counts of comp. objects contained in System:', '*'*18)
-        for sSt, ctStO in self.dNStO.items():
-            print(sSt + ':', ctStO)
-        print('- Total:', self.dITp['nStaObj'], '/', sum(self.dNStO.values()))
+        for sCp, ctCpO in self.dNCpO.items():
+            print(sCp + ':', ctCpO)
+        print('- Total:', self.dITp['nCpObj'], '/', sum(self.dNCpO.values()))
         print('*'*80)
 
     def printAllCompObjSys(self):
         print('*'*16, 'Details of comp. objects contained in System:', '*'*17)
-        for sSt, lStO in self.dStO.items():
-            print('~'*20, 'Components with ID', sSt, '~'*20)
-            for cStO in lStO:
-                cStO.printComponentDetails()
+        for sCp, lCpO in self.dCpO.items():
+            print('~'*20, 'Components with ID', sCp, '~'*20)
+            for cCpO in lCpO:
+                cCpO.printComponentDetails()
         print('*'*80)
 
     def plotResEvo(self, sFRes = None, overWr = True):
@@ -69,10 +69,10 @@ class System(Base):
                            overWr = overWr)
 
     def evolveOverTime(self, inpDat, doPlots = True):
-        self.dResEvo, self.dNStO = TF.evolveGillespie(self.dIG, self.dITp,
+        self.dResEvo, self.dNCpO = TF.evolveGillespie(self.dIG, self.dITp,
                                                       self.dCncSMo)
-        self.addStObj(inpDat, refreshStO = True)
-        self.getDictsStObj()
+        self.addCpObj(inpDat, refreshCpO = True)
+        self.getDictsCpObj()
         # self.printCncSMo()
         # self.printNCompObjSys()
         # self.printAllCompObjSys()
@@ -128,7 +128,7 @@ class System(Base):
 #         for cO in self.lKAs + self.lPAs + self.lLPr + self.lSPr:
 #             cO.printSpecSites()
 
-#     def setToComp(self, inpDat, lOIntSt, lPAsSt = []):
+#     def setToComp(self, inpDat, lOIntCp, lPAsCp = []):
 #         pass
 
 ###############################################################################

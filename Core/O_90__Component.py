@@ -5,7 +5,6 @@
 import Core.C_00__GenConstants as GC
 import Core.F_00__GenFunctions as GF
 import Core.F_01__SpcFunctions as SF
-import Core.F_02__PltFunctions as PF
 import Core.F_03__OTpFunctions as TF
 
 from Core.O_00__Base import Base
@@ -22,10 +21,10 @@ class ComponentBase(Base):
             assert len(cLOInt) >= 2
         self.idO = 'CpBase'
         self.descO = 'ComponentBase'
-        if not hasattr(self, 'sSt'):
-            self.sSt = '____'
-        if not hasattr(self, 'dOSta'):
-            self.dOSta = dOComp
+        if not hasattr(self, 'sCp'):
+            self.sCp = '_'*7
+        if not hasattr(self, 'dOCp'):
+            self.dOCp = dOComp
         self.llOI = llOInt
         self.lOO = lOOth
         self.complementLO(inpDat, dOComp)
@@ -47,11 +46,11 @@ class ComponentBase(Base):
         lID = TF.complLSpec(inpDat, lOSy, sTp = 'PAs', sD = 'DePyl')
         self.lPAs0 = [Phosphatase0(inpDat, cID = ID) for ID in lID]
         self.lKAs = [self.lKAs0[k] for k in range(3)]
-        self.lKAs += [self.dOSta[GC.SPC_KAS_X]]
+        self.lKAs += [self.dOCp[GC.SPC_KAS_X]]
         self.lPAs = [self.lPAs0[k] for k in range(4)]
 
     def __str__(self):
-        sIn = ('++++ Component ' + self.idO + ' (' + self.sSt + ' / ' +
+        sIn = ('++++ Component ' + self.idO + ' (' + self.sCp + ' / ' +
                self.descO + '):')
         return sIn
 
@@ -90,11 +89,11 @@ class ComponentBase(Base):
             elif not prFull and (prID is None or cID == prID):
                 print(cID + ': Current conc. ' + str(round(cCnc, GC.R04)))
 
-    # def savePlotDCncEvo(self, kSt = 0, llIPlot = None, iSMo = 0):
+    # def savePlotDCncEvo(self, kCp = 0, llIPlot = None, iSMo = 0):
     #     assert len(self.lSMo) > iSMo
-    #     sNSt, sKSt = str(self.dIG['nStates']), str(kSt)
-    #     dITpSMo, s0 = self.lSMo[iSMo].dITp, '0'*(len(sNSt) - len(sKSt))
-    #     sF = dITpSMo['sPlt_Conc'] + dITpSMo['sF_SMo'] + GC.S_USC + s0 + sKSt
+    #     sNCp, sKCp = str(self.dIG['nComponents']), str(kCp)
+    #     dITpSMo, s0 = self.lSMo[iSMo].dITp, '0'*(len(sNCp) - len(sKCp))
+    #     sF = dITpSMo['sPlt_Conc'] + dITpSMo['sF_SMo'] + GC.S_USC + s0 + sKCp
     #     TF.saveAsPdDfr(self.dIG, self.dCncEvo, dITpSMo['sD_SMo'], sF,
     #                    overWr = True)
     #     if llIPlot is not None:
@@ -105,9 +104,9 @@ class ComponentBase(Base):
     #         PF.plotDCncEvo(dITpSMo[GC.S_D_PLT][dITpSMo['sPlt_Conc']],
     #                        self.dCncEvo, sP, lIPlot)
 
-    def adaptPSites(self, inpDat, cO, sSt):
+    def adaptPSites(self, inpDat, cO, sCp):
         for sSpS, dI in GC.DS_SPS[cO.idO].items():
-            sPylDPy, cAs = SF.setPylDPy(dI, sSt, self.lKAs, self.lPAs)
+            sPylDPy, cAs = SF.setPylDPy(dI, sCp, self.lKAs, self.lPAs)
             if sPylDPy == GC.B_DO_PYL:
                 _ = Phosphorylation(inpDat, cO, cAs, sSpS).doPyl()
                 # if Phosphorylation(inpDat, cO, cAs, sSpS).doPyl():
@@ -135,16 +134,22 @@ class ComponentBase(Base):
 
 class Component(ComponentBase):
     def __init__(self, inpDat, sComp, iTp = 90):
-        self.sSt = sComp
+        self.sCp = sComp
         self.createdOComp(inpDat)
-        if sComp in inpDat.dI['dS_St'][GC.S_ST_A_KIN_INT]:
-            self.ini_St_A_Kin_Int(inpDat, sComp, iTp = iTp)
-        elif sComp in inpDat.dI['dS_St'][GC.S_ST_B_KIN_TRA]:
-            self.ini_St_B_Kin_Tra(inpDat, sComp, iTp = iTp)
-        elif sComp in inpDat.dI['dS_St'][GC.S_ST_C_SPR_INT]:
-            self.ini_St_C_SPr_Int(inpDat, sComp, iTp = iTp)
-        elif sComp in inpDat.dI['dS_St'][GC.S_ST_D_SPR_TRA]:
-            self.ini_St_D_SPr_Tra(inpDat, sComp, iTp = iTp)
+        if sComp in inpDat.dI['dS_Cp'][GC.S_CP_L_LONG]:
+            pass
+        elif sComp in inpDat.dI['dS_Cp'][GC.S_CP_S_LONG]:
+            pass
+        elif sComp in inpDat.dI['dS_Cp'][GC.S_CP_K_LONG]:
+            pass
+        elif sComp in inpDat.dI['dS_Cp'][GC.S_CP_LSI_LONG]:
+            self.ini_Cp_LSI(inpDat, sComp, iTp = iTp)
+        elif sComp in inpDat.dI['dS_Cp'][GC.S_CP_LST_LONG]:
+            self.ini_Cp_LST(inpDat, sComp, iTp = iTp)
+        elif sComp in inpDat.dI['dS_Cp'][GC.S_CP_LKI_LONG]:
+            self.ini_Cp_LKI(inpDat, sComp, iTp = iTp)
+        elif sComp in inpDat.dI['dS_Cp'][GC.S_CP_LKT_LONG]:
+            self.ini_Cp_LKT(inpDat, sComp, iTp = iTp)
         else:
             self.idO = 'Cp'
             self.descO = 'Component'
@@ -165,89 +170,89 @@ class Component(ComponentBase):
         NO3_1m.overwInpV(ddVOvwr, iV)
         H2PO4_1m.overwInpV(ddVOvwr, iV)
         # Create initial component --------------------------------------------
-        self.dOSta = {GC.SPC_KAS_A: KAsHPCAL1,
-                      GC.SPC_KAS_X: KAsX,
-                      GC.SPC_LPR_A: NRT2p1,
-                      GC.SPC_SPR_A: NAR2p1,
-                      GC.SPC_L_SMO: [NO3_1m, H2PO4_1m]}
+        self.dOCp = {GC.SPC_KAS_A: KAsHPCAL1,
+                     GC.SPC_KAS_X: KAsX,
+                     GC.SPC_LPR_A: NRT2p1,
+                     GC.SPC_SPR_A: NAR2p1,
+                     GC.SPC_L_SMO: [NO3_1m, H2PO4_1m]}
 
-    def ini_St_A_Kin_Int(self, inpDat, sSt, iTp = 90):
-        llOI = [[self.dOSta[GC.SPC_KAS_A], self.dOSta[GC.SPC_LPR_A]]]
-        lOO = [self.dOSta[GC.SPC_SPR_A], self.dOSta[GC.SPC_KAS_X]]
-        super().__init__(inpDat, self.dOSta, llOI, lOO, iTp = iTp)
-        self.idO = GC.S_ST_A_KIN_INT
-        self.descO = 'State interaction HPCAL1-NRT2p1'
-        self.adaptPSites(inpDat, self.dOSta[GC.SPC_KAS_A], sSt)
-        self.adaptPSites(inpDat, self.dOSta[GC.SPC_LPR_A], sSt)
+    def ini_Cp_LSI(self, inpDat, sCp, iTp = 90):
+        llOI = [[self.dOCp[GC.SPC_SPR_A], self.dOCp[GC.SPC_LPR_A]]]
+        lOO = [self.dOCp[GC.SPC_KAS_A], self.dOCp[GC.SPC_KAS_X]]
+        super().__init__(inpDat, self.dOCp, llOI, lOO, iTp = iTp)
+        self.idO = GC.S_CP_LSI_LONG
+        self.descO = 'Component NRT2p1-NAR2p1 interaction'
+        self.adaptPSites(inpDat, self.dOCp[GC.SPC_KAS_A], sCp)
+        self.adaptPSites(inpDat, self.dOCp[GC.SPC_LPR_A], sCp)
 
-    def ini_St_B_Kin_Tra(self, inpDat, sSt, iTp = 90):
-        llOI = [[self.dOSta[GC.SPC_KAS_A], self.dOSta[GC.SPC_LPR_A]],
-                [self.dOSta[GC.SPC_KAS_X], self.dOSta[GC.SPC_LPR_A]]]
-        lOO = [self.dOSta[GC.SPC_SPR_A]]
-        super().__init__(inpDat, self.dOSta, llOI, lOO, iTp = iTp)
-        self.idO = GC.S_ST_B_KIN_TRA
-        self.descO = 'State transition from HPCAL1-NRT2p1'
-        self.adaptPSites(inpDat, self.dOSta[GC.SPC_KAS_A], sSt)
-        self.adaptPSites(inpDat, self.dOSta[GC.SPC_LPR_A], sSt)
+    def ini_Cp_LST(self, inpDat, sCp, iTp = 90):
+        llOI = [[self.dOCp[GC.SPC_SPR_A], self.dOCp[GC.SPC_LPR_A]]]
+        lOO = [self.dOCp[GC.SPC_KAS_A], self.dOCp[GC.SPC_KAS_X]]
+        super().__init__(inpDat, self.dOCp, llOI, lOO, iTp = iTp)
+        self.idO = GC.S_CP_LST_LONG
+        self.descO = 'Component NRT2p1-NAR2p1 transition'
+        self.adaptPSites(inpDat, self.dOCp[GC.SPC_KAS_A], sCp)
+        self.adaptPSites(inpDat, self.dOCp[GC.SPC_LPR_A], sCp)
 
-    def ini_St_C_SPr_Int(self, inpDat, sSt, iTp = 90):
-        llOI = [[self.dOSta[GC.SPC_SPR_A], self.dOSta[GC.SPC_LPR_A]]]
-        lOO = [self.dOSta[GC.SPC_KAS_A], self.dOSta[GC.SPC_KAS_X]]
-        super().__init__(inpDat, self.dOSta, llOI, lOO, iTp = iTp)
-        self.idO = GC.S_ST_C_SPR_INT
-        self.descO = 'State interaction NAR2p1-NRT2p1'
-        self.adaptPSites(inpDat, self.dOSta[GC.SPC_KAS_A], sSt)
-        self.adaptPSites(inpDat, self.dOSta[GC.SPC_LPR_A], sSt)
+    def ini_Cp_LKI(self, inpDat, sCp, iTp = 90):
+        llOI = [[self.dOCp[GC.SPC_KAS_A], self.dOCp[GC.SPC_LPR_A]]]
+        lOO = [self.dOCp[GC.SPC_SPR_A], self.dOCp[GC.SPC_KAS_X]]
+        super().__init__(inpDat, self.dOCp, llOI, lOO, iTp = iTp)
+        self.idO = GC.S_CP_LKI_LONG
+        self.descO = 'Component NRT2p1-HPCAL1 interaction'
+        self.adaptPSites(inpDat, self.dOCp[GC.SPC_KAS_A], sCp)
+        self.adaptPSites(inpDat, self.dOCp[GC.SPC_LPR_A], sCp)
 
-    def ini_St_D_SPr_Tra(self, inpDat, sSt, iTp = 90):
-        llOI = [[self.dOSta[GC.SPC_SPR_A], self.dOSta[GC.SPC_LPR_A]]]
-        lOO = [self.dOSta[GC.SPC_KAS_A], self.dOSta[GC.SPC_KAS_X]]
-        super().__init__(inpDat, self.dOSta, llOI, lOO, iTp = iTp)
-        self.idO = GC.S_ST_D_SPR_TRA
-        self.descO = 'State transition from NAR2p1-NRT2p1'
-        self.adaptPSites(inpDat, self.dOSta[GC.SPC_KAS_A], sSt)
-        self.adaptPSites(inpDat, self.dOSta[GC.SPC_LPR_A], sSt)
+    def ini_Cp_LKT(self, inpDat, sCp, iTp = 90):
+        llOI = [[self.dOCp[GC.SPC_KAS_A], self.dOCp[GC.SPC_LPR_A]],
+                [self.dOCp[GC.SPC_KAS_X], self.dOCp[GC.SPC_LPR_A]]]
+        lOO = [self.dOCp[GC.SPC_SPR_A]]
+        super().__init__(inpDat, self.dOCp, llOI, lOO, iTp = iTp)
+        self.idO = GC.S_CP_LKT_LONG
+        self.descO = 'Component NRT2p1-HPCAL1 transition'
+        self.adaptPSites(inpDat, self.dOCp[GC.SPC_KAS_A], sCp)
+        self.adaptPSites(inpDat, self.dOCp[GC.SPC_LPR_A], sCp)
 
-    # def to_other_St(self, inpDat, sStN):
+    # def to_other_Cp(self, inpDat, sCpN):
     #     pass
 
-    # def to_St_A_Kin_Int(self, inpDat, sStN):
-    #     self.idO = GC.S_ST_A_KIN_INT
-    #     self.descO = 'State interaction HPCAL1-NRT2p1'
-    #     self.lOO[0], self.llOI[0][0] = self.llOI[0][0], self.lOO[0]
-    #     dSts = {GC.S_SPS_KAS1_S839: (GC.B_DO_DEPYL, self.lPAs0[0]),
-    #             GC.S_SPS_KAS1_S870: (GC.B_DO_PYL, self.lKAs0[1])}
-    #     self.adaptPSites(inpDat, self.llOI[0][0]
-    #     dSts = {GC.S_SPS_LPR1_S21: (GC.B_DO_PYL, self.lKAs0[2]),
-    #             GC.S_SPS_LPR1_S28: (GC.B_DO_DEPYL, self.lPAs0[3])}
-    #     self.adaptPSites(inpDat, self.llOI[0][1]
-    #     print('Changed state to ' + self.idO + ' (' + self.descO + ').')
-
-    # def to_St_B_Kin_Tra(self, inpDat, sStN):
-    #     self.idO = GC.S_ST_B_KIN_TRA
-    #     self.descO = 'State transition from HPCAL1-NRT2p1'
-    #     self.llOI.append([self.lOO[1], self.llOI[0][1]])
-    #     self.lOO = self.lOO[:1]
-    #     dSts = {GC.S_SPS_KAS1_S839: (GC.B_DO_PYL, self.lKAs0[0])}
-    #     self.adaptPSites(inpDat, self.llOI[0][0]
-    #     print('Changed state to ' + self.idO + ' (' + self.descO + ').')
-
-    # def to_St_C_SPr_Int(self, inpDat, sStN):
-    #     self.idO = GC.S_ST_C_SPR_INT
-    #     self.descO = 'State interaction NAR2p1-NRT2p1'
+    # def to_Cp_LSI(self, inpDat, sCpN):
+    #     self.idO = GC.S_CP_LSI_LONG
+    #     self.descO = 'Component NRT2p1-NAR2p1 interaction'
     #     llOInt = [[self.lOO[0], self.llOI[0][1]]]
     #     lOOth = [self.llOI[0][0], self.llOI[1][0]]
     #     self.llOI, self.lOO = llOInt, lOOth
-    #     dSts = {GC.S_SPS_KAS1_S870: (GC.B_DO_DEPYL, self.lPAs0[1])}
+    #     dCps = {GC.S_SPS_KAS1_S870: (GC.B_DO_DEPYL, self.lPAs0[1])}
     #     self.adaptPSites(inpDat, self.lOO[0]
-    #     dSts = {GC.S_SPS_LPR1_S21: (GC.B_DO_DEPYL, self.lPAs0[2]),
+    #     dCps = {GC.S_SPS_LPR1_S21: (GC.B_DO_DEPYL, self.lPAs0[2]),
     #             GC.S_SPS_LPR1_S28: (GC.B_DO_PYL, self.lOO[1])}
     #     self.adaptPSites(inpDat, self.llOI[0][1]
     #     print('Changed state to ' + self.idO + ' (' + self.descO + ').')
 
-    # def to_St_D_SPr_Tra(self, inpDat, sStN):
-    #     self.idO = GC.S_ST_D_SPR_TRA
-    #     self.descO = 'State transition from NAR2p1-NRT2p1'
+    # def to_Cp_LST(self, inpDat, sCpN):
+    #     self.idO = GC.S_CP_LST_LONG
+    #     self.descO = 'Component NRT2p1-NAR2p1 transition'
+    #     print('Changed state to ' + self.idO + ' (' + self.descO + ').')
+
+    # def to_Cp_LKI(self, inpDat, sCpN):
+    #     self.idO = GC.S_CP_LKI_LONG
+    #     self.descO = 'Component NRT2p1-HPCAL1 interaction'
+    #     self.lOO[0], self.llOI[0][0] = self.llOI[0][0], self.lOO[0]
+    #     dCps = {GC.S_SPS_KAS1_S839: (GC.B_DO_DEPYL, self.lPAs0[0]),
+    #             GC.S_SPS_KAS1_S870: (GC.B_DO_PYL, self.lKAs0[1])}
+    #     self.adaptPSites(inpDat, self.llOI[0][0]
+    #     dCps = {GC.S_SPS_LPR1_S21: (GC.B_DO_PYL, self.lKAs0[2]),
+    #             GC.S_SPS_LPR1_S28: (GC.B_DO_DEPYL, self.lPAs0[3])}
+    #     self.adaptPSites(inpDat, self.llOI[0][1]
+    #     print('Changed state to ' + self.idO + ' (' + self.descO + ').')
+
+    # def to_Cp_LKT(self, inpDat, sCpN):
+    #     self.idO = GC.S_CP_LKT_LONG
+    #     self.descO = 'Component NRT2p1-HPCAL1 transition'
+    #     self.llOI.append([self.lOO[1], self.llOI[0][1]])
+    #     self.lOO = self.lOO[:1]
+    #     dCps = {GC.S_SPS_KAS1_S839: (GC.B_DO_PYL, self.lKAs0[0])}
+    #     self.adaptPSites(inpDat, self.llOI[0][0]
     #     print('Changed state to ' + self.idO + ' (' + self.descO + ').')
 
 ###############################################################################
