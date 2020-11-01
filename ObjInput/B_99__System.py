@@ -166,7 +166,7 @@ dConcSMo = {'Ini': {GC.ID_NO3_1M: {'cTp': 'uniform',
 # dictionary containing parameters which determine concentration changes of
 # small molecules depending on the distribution of components, and vice versa
 
-# depenency of small molecule concentration changes on component
+# dependency of small molecule concentration changes on component
 dPar_N_L00 = {'absChg': 0.0}
 dPar_N_L01 = {'absChg': 0.0}
 dPar_N_L10 = {'absChg': 0.0}

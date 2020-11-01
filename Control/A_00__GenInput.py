@@ -24,8 +24,15 @@ cMode = GC.M_STOCH  # GC.M_DETER / GC.M_STOCH
 cSep = GC.SEP_STD
 
 # --- Input: Names of paths, directories and files ----------------------------
+sPInD = os.path.join('..', '..', '11_SysBio01_ABM01', '20_InputData')
 sPRes = os.path.join('..', '..', '11_SysBio01_ABM01', '40_ModelResults')
 sPPlt = os.path.join('..', '..', '11_SysBio01_ABM01', '50_ModelPlots')
+
+dSFInD = {'01': '01_InitialSysComponents',
+          '02': '02_InitialConc',
+          '03': '03_Weights4Rct',
+          '04': '04_SMoConcDependencies',
+          '05': '05_CompIncidDependencies'}
 
 # --- Input: Constants --------------------------------------------------------
 dS_Cp = GC.DS_CP
@@ -47,8 +54,10 @@ dictInpG = {# --- Input: Debug Info
             'Mode': cMode,
             'cSep': cSep,
             # --- Input: Names of paths, directories and files
+            'sPInD': sPInD,
             'sPRes': sPRes,
             'sPPlt': sPPlt,
+            'dSFInD': dSFInD,
             # --- Input: Constants
             'dS_Cp': dS_Cp,
             'dS_Rct': dS_Rct}
