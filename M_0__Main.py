@@ -21,6 +21,7 @@ print('Added object types.')
 # -----------------------------------------------------------------------------
 cInpFrame = InputFrames(inDG)
 print(cInpFrame.dSCp7)
+print(cInpFrame.dSCpTp)
 # cSystem = System(inDG)
 # if cSystem.dIG['doEvoT']:
 #     cSystem.evolveOverTime(inDG, doPlots = cSystem.dIG['doPlots'])

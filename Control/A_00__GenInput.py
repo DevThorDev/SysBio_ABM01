@@ -30,13 +30,13 @@ sPPlt = os.path.join('..', '..', '11_SysBio01_ABM01', '50_ModelPlots')
 
 dSFInD = {'00': ('00_Strings', 1),
           '01': ('01_InitialSysComponents', 1),
-          '02': ('02_InitialConc', 0),
+          '02': ('02_Conc', 0),
           '03': ('03_Weights4Rct', 1),
           '04': ('04_SMoConcDependencies', 1),
           '05': ('05_CompIncidDependencies', 1)}
 
 # --- Input: Constants --------------------------------------------------------
-dS_Cp = GC.DS_CP
+# dS_Cp = GC.DS_CP
 dS_Rct = GC.DS_RCT
 
 # --- create input dictionary -------------------------------------------------
@@ -60,7 +60,7 @@ dictInpG = {# --- Input: Debug Info
             'sPPlt': sPPlt,
             'dSFInD': dSFInD,
             # --- Input: Constants
-            'dS_Cp': dS_Cp,
+            # 'dS_Cp': dS_Cp,
             'dS_Rct': dS_Rct}
 
 ###############################################################################

@@ -10,6 +10,14 @@ S_EXT_CSV = 'csv'
 S_EXT_PY = 'py'
 S_EXT_PDF = 'pdf'
 
+# --- constants related to input data -----------------------------------------
+S_00 = '00'
+S_01 = '01'
+S_02 = '02'
+S_03 = '03'
+S_04 = '04'
+S_05 = '05'
+
 # --- constants related to molecule objects -----------------------------------
 SPC_LPR_A = 'LPr_A'
 SPC_SPR_A = 'SPr_A'
@@ -77,6 +85,21 @@ S_COMPDESC = 'ComponentDescription'
 S_COMPVAR = 'ComponentVariable'
 S_COMPSTR = 'ComponentString'
 S_NUM = 'Number'
+S_ID_SMO = 'ID_SmallMolecule'
+S_INI_CNC_DISTR = 'IniConcDistributionType'
+S_INI_CNC_MIN = 'IniConcMin'
+S_INI_CNC_MAX = 'IniConcMax'
+S_CNC_MIN = 'ConcMin'
+S_CNC_MAX = 'ConcMax'
+S_VAL = 'Value'
+S_VAL_ABS_CH = 'ValueAbsoluteChange'
+S_PAR_DESC = 'ParameterDescription'
+S_PAR_VAR = 'ParameterVariable'
+S_PAR_PMIN = 'ProbMin'
+S_PAR_PMAX = 'ProbMax'
+S_PAR_B = 'B'
+S_PAR_C = 'C'
+S_PAR_D = 'D'
 
 # --- constants related to components (short and long form) -------------------
 S_SHORT = 'SHORT'
@@ -90,18 +113,18 @@ S_CP_LST_SHORT = 'LST'
 S_CP_LKI_SHORT = 'LKI'
 S_CP_LKT_SHORT = 'LKT'
 
-S_CP_L_LONG = 'Cp_L_NRT2p1'
-S_CP_S_LONG = 'Cp_S_NAR2p1'
-S_CP_K_LONG = 'Cp_K_HPCAL1'
-S_CP_LSI_LONG = 'Cp_NRT2p1_NAR2p1_Inter'
-S_CP_LST_LONG = 'Cp_NRT2p1_NAR2p1_Trans'
-S_CP_LKI_LONG = 'Cp_NRT2p1_HPCAL1_Inter'
-S_CP_LKT_LONG = 'Cp_NRT2p1_HPCAL1_Trans'
+# S_CP_L_LONG = 'Cp_L_NRT2p1'
+# S_CP_S_LONG = 'Cp_S_NAR2p1'
+# S_CP_K_LONG = 'Cp_K_HPCAL1'
+# S_CP_LSI_LONG = 'Cp_NRT2p1_NAR2p1_Inter'
+# S_CP_LST_LONG = 'Cp_NRT2p1_NAR2p1_Trans'
+# S_CP_LKI_LONG = 'Cp_NRT2p1_HPCAL1_Inter'
+# S_CP_LKT_LONG = 'Cp_NRT2p1_HPCAL1_Trans'
 
-DS_CP_7 = {S_CP_L_SHORT: S_CP_L_LONG, S_CP_S_SHORT: S_CP_S_LONG,
-           S_CP_K_SHORT: S_CP_K_LONG, S_CP_LSI_SHORT: S_CP_LSI_LONG,
-           S_CP_LST_SHORT: S_CP_LST_LONG, S_CP_LKI_SHORT: S_CP_LKI_LONG,
-           S_CP_LKT_SHORT: S_CP_LKT_LONG}
+# DS_CP_7 = {S_CP_L_SHORT: S_CP_L_LONG, S_CP_S_SHORT: S_CP_S_LONG,
+#            S_CP_K_SHORT: S_CP_K_LONG, S_CP_LSI_SHORT: S_CP_LSI_LONG,
+#            S_CP_LST_SHORT: S_CP_LST_LONG, S_CP_LKI_SHORT: S_CP_LKI_LONG,
+#            S_CP_LKT_SHORT: S_CP_LKT_LONG}
 
 # --- constants related to components (extended form) -------------------------
 S_CP_L00 = 'L--00--'
@@ -134,17 +157,17 @@ S_CP_LKT1101 = 'LKT1101'
 S_CP_LKT1110 = 'LKT1110'
 S_CP_LKT1111 = 'LKT1111'
 
-DS_CP = {S_CP_L_LONG: [S_CP_L00, S_CP_L01, S_CP_L10, S_CP_L11],
-         S_CP_S_LONG: [S_CP_S__],
-         S_CP_K_LONG: [S_CP_K00, S_CP_K01, S_CP_K10, S_CP_K11],
-         S_CP_LSI_LONG: [S_CP_LSI01],
-         S_CP_LST_LONG: [S_CP_LST00,  S_CP_LST10, S_CP_LST11],
-         S_CP_LKI_LONG: [S_CP_LKI1001],
-         S_CP_LKT_LONG: [S_CP_LKT0000, S_CP_LKT0001, S_CP_LKT0010,
-                         S_CP_LKT0011, S_CP_LKT0100, S_CP_LKT0101,
-                         S_CP_LKT0110, S_CP_LKT0111, S_CP_LKT1000,
-                         S_CP_LKT1010, S_CP_LKT1011, S_CP_LKT1100,
-                         S_CP_LKT1101, S_CP_LKT1110, S_CP_LKT1111]}
+# DS_CP = {S_CP_L_LONG: [S_CP_L00, S_CP_L01, S_CP_L10, S_CP_L11],
+#          S_CP_S_LONG: [S_CP_S__],
+#          S_CP_K_LONG: [S_CP_K00, S_CP_K01, S_CP_K10, S_CP_K11],
+#          S_CP_LSI_LONG: [S_CP_LSI01],
+#          S_CP_LST_LONG: [S_CP_LST00,  S_CP_LST10, S_CP_LST11],
+#          S_CP_LKI_LONG: [S_CP_LKI1001],
+#          S_CP_LKT_LONG: [S_CP_LKT0000, S_CP_LKT0001, S_CP_LKT0010,
+#                          S_CP_LKT0011, S_CP_LKT0100, S_CP_LKT0101,
+#                          S_CP_LKT0110, S_CP_LKT0111, S_CP_LKT1000,
+#                          S_CP_LKT1010, S_CP_LKT1011, S_CP_LKT1100,
+#                          S_CP_LKT1101, S_CP_LKT1110, S_CP_LKT1111]}
 
 TS_RCT_L00_S = ('L--00--+S------_LST00--')
 TS_RCT_L01_S = ('L--01--+S------_LSI01--')

@@ -9,13 +9,14 @@ import Core.F_00__GenFunctions as GF
 class InputFrames:
     def __init__(self, inpDat):
         self.dIG = inpDat.dI
-        self.dDfrIn, sK00 = {}, '00'
+        self.dDfrIn = {}
         for sK, (sFInD, iC) in self.dIG['dSFInD'].items():
             sP = GF.joinToPath(self.dIG['sPInD'], sFInD + '.' + GC.S_EXT_CSV)
             self.dDfrIn[sK] = GF.readCSV(sP, iCol = iC)
-        self.getDSCp7(sK = sK00)
+        self.getDSCp7()
+        self.getDSCpTp()
 
-    def getDSCp7(self, sK = '00'):
+    def getDSCp7(self, sK = GC.S_00):
         self.dSCp7, lTK, lTV = {}, [], []
         if sK in self.dDfrIn:
             assert GC.S_COMPSTR in self.dDfrIn[sK].columns
@@ -34,6 +35,22 @@ class InputFrames:
                         break
         else:
             print('ERROR: Key', sK, 'not in DataFrames dictionary!')
+
+    def getDSCpTp(self, sK1 = GC.S_00, sK2 = GC.S_01):
+        self.dSCpTp = {}
+        if sK1 in self.dDfrIn and sK2 in self.dDfrIn:
+            for sL in self.dDfrIn[sK1].index:
+                if sL.endswith(GC.S_LONG):
+                    sInd = sL.strip(GC.S_LONG).strip(GC.S_USC)
+                    for sCpV in self.dDfrIn[sK2].index:
+                        if len(sCpV) > len(sInd) and sCpV[:len(sInd)] == sInd:
+                            if sCpV[len(sInd)] in GC.SET_01_:
+                                cK = self.dDfrIn[sK1].at[sL, GC.S_COMPSTR]
+                                cV = self.dDfrIn[sK2].at[sCpV, GC.S_COMPSTR]
+                                GF.addToDictL(self.dSCpTp, cK, cV)
+        else:
+            print('ERROR: Key', sK1, 'or key', sK2, 'not in DataFrames',
+                  'dictionary!')
 
     def __str__(self):
         sIn = ('*'*24 + ' "InputFrames" type ' + '*'*24 +
