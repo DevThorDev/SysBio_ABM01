@@ -28,11 +28,12 @@ sPInD = os.path.join('..', '..', '11_SysBio01_ABM01', '20_InputData')
 sPRes = os.path.join('..', '..', '11_SysBio01_ABM01', '40_ModelResults')
 sPPlt = os.path.join('..', '..', '11_SysBio01_ABM01', '50_ModelPlots')
 
-dSFInD = {'01': '01_InitialSysComponents',
-          '02': '02_InitialConc',
-          '03': '03_Weights4Rct',
-          '04': '04_SMoConcDependencies',
-          '05': '05_CompIncidDependencies'}
+dSFInD = {'00': ('00_Strings', 1),
+          '01': ('01_InitialSysComponents', 1),
+          '02': ('02_InitialConc', 0),
+          '03': ('03_Weights4Rct', 1),
+          '04': ('04_SMoConcDependencies', 1),
+          '05': ('05_CompIncidDependencies', 1)}
 
 # --- Input: Constants --------------------------------------------------------
 dS_Cp = GC.DS_CP

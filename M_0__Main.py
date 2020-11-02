@@ -8,6 +8,7 @@ import Core.F_00__GenFunctions as GF
 from Control.A_00__GenInput import dictInpG
 from Core.C_00__GenConstants import S_D_OBJINP
 from Core.I_01__InpData import InputData
+from Core.I_02__InpFrames import InputFrames
 from Core.O_99__System import System
 
 # ### MAIN ####################################################################
@@ -18,14 +19,16 @@ inDG = InputData(dictInpG)
 inDG.addObjTps(S_D_OBJINP)
 print('Added object types.')
 # -----------------------------------------------------------------------------
-cSystem = System(inDG)
-if cSystem.dIG['doEvoT']:
-    cSystem.evolveOverTime(inDG, doPlots = cSystem.dIG['doPlots'])
-if cSystem.dIG['doPlots']:
-    cSystem.plotResEvo(sFRes = cSystem.dITp['sF_SysEvo'], overWr = False)
-    # cSystem.plotResEvo(sFRes = 'SysEvo__T100__Sc050__0p1_50', overWr = False)
-cSystem.printNCompObjSys()
-# cSystem.printAllCompObjSys()
+cInpFrame = InputFrames(inDG)
+print(cInpFrame.dSCp7)
+# cSystem = System(inDG)
+# if cSystem.dIG['doEvoT']:
+#     cSystem.evolveOverTime(inDG, doPlots = cSystem.dIG['doPlots'])
+# if cSystem.dIG['doPlots']:
+#     cSystem.plotResEvo(sFRes = cSystem.dITp['sF_SysEvo'], overWr = False)
+#     # cSystem.plotResEvo(sFRes = 'SysEvo__T100__Sc050__0p1_50', overWr = False)
+# cSystem.printNCompObjSys()
+# # cSystem.printAllCompObjSys()
 
 # -----------------------------------------------------------------------------
 

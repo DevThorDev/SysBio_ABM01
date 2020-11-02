@@ -72,7 +72,16 @@ B_DO_DEPYL = 'DePyl'
 B_IS_PYL = 'P+'
 B_NOT_PYL = 'P-'
 
-# --- constants related to components (short form) ----------------------------
+# --- constants related to input frames ---------------------------------------
+S_COMPDESC = 'ComponentDescription'
+S_COMPVAR = 'ComponentVariable'
+S_COMPSTR = 'ComponentString'
+S_NUM = 'Number'
+
+# --- constants related to components (short and long form) -------------------
+S_SHORT = 'SHORT'
+S_LONG = 'LONG'
+
 S_CP_L_SHORT = 'L--'
 S_CP_S_SHORT = 'S--'
 S_CP_K_SHORT = 'K--'
@@ -84,9 +93,9 @@ S_CP_LKT_SHORT = 'LKT'
 S_CP_L_LONG = 'Cp_L_NRT2p1'
 S_CP_S_LONG = 'Cp_S_NAR2p1'
 S_CP_K_LONG = 'Cp_K_HPCAL1'
-S_CP_LSI_LONG = 'Cp_NRT2p1_NAR2p1_Int'
+S_CP_LSI_LONG = 'Cp_NRT2p1_NAR2p1_Inter'
 S_CP_LST_LONG = 'Cp_NRT2p1_NAR2p1_Trans'
-S_CP_LKI_LONG = 'Cp_NRT2p1_HPCAL1_Int'
+S_CP_LKI_LONG = 'Cp_NRT2p1_HPCAL1_Inter'
 S_CP_LKT_LONG = 'Cp_NRT2p1_HPCAL1_Trans'
 
 DS_CP_7 = {S_CP_L_SHORT: S_CP_L_LONG, S_CP_S_SHORT: S_CP_S_LONG,
@@ -100,10 +109,10 @@ S_CP_L01 = 'L--01--'
 S_CP_L10 = 'L--10--'
 S_CP_L11 = 'L--11--'
 S_CP_S__ = 'S------'
-S_CP_K00 = 'K--00--'
-S_CP_K01 = 'K--01--'
-S_CP_K10 = 'K--10--'
-S_CP_K11 = 'K--11--'
+S_CP_K00 = 'K----00'
+S_CP_K01 = 'K----01'
+S_CP_K10 = 'K----10'
+S_CP_K11 = 'K----11'
 S_CP_LSI01 = 'LSI01--'
 S_CP_LST00 = 'LST00--'
 S_CP_LST10 = 'LST10--'
@@ -137,17 +146,37 @@ DS_CP = {S_CP_L_LONG: [S_CP_L00, S_CP_L01, S_CP_L10, S_CP_L11],
                          S_CP_LKT1010, S_CP_LKT1011, S_CP_LKT1100,
                          S_CP_LKT1101, S_CP_LKT1110, S_CP_LKT1111]}
 
+TS_RCT_L00_S = ('L--00--+S------_LST00--')
+TS_RCT_L01_S = ('L--01--+S------_LSI01--')
+TS_RCT_L10_S = ('L--10--+S------_LST10--')
+TS_RCT_L11_S = ('L--11--+S------_LST11--')
+
+TS_RCT_L00_K00 = ('L--00--+K----00_LKT0000')
+TS_RCT_L00_K01 = ('L--00--+K----01_LKT0001')
+TS_RCT_L00_K10 = ('L--00--+K----10_LKT0010')
+TS_RCT_L00_K11 = ('L--00--+K----11_LKT0011')
+TS_RCT_L01_K00 = ('L--01--+K----00_LKT0100')
+TS_RCT_L01_K01 = ('L--01--+K----01_LKT0101')
+TS_RCT_L01_K10 = ('L--01--+K----10_LKT0110')
+TS_RCT_L01_K11 = ('L--01--+K----11_LKT0111')
+TS_RCT_L10_K00 = ('L--10--+K----00_LKT1000')
+TS_RCT_L10_K01 = ('L--10--+K----01_LKI1001')
+TS_RCT_L10_K10 = ('L--10--+K----10_LKT1010')
+TS_RCT_L10_K11 = ('L--10--+K----11_LKT1011')
+TS_RCT_L11_K00 = ('L--11--+K----00_LKT1100')
+TS_RCT_L11_K01 = ('L--11--+K----01_LKT1101')
+TS_RCT_L11_K10 = ('L--11--+K----10_LKT1110')
+TS_RCT_L11_K11 = ('L--11--+K----11_LKT1111')
+
 TS_RCT_L00 = ('L--00--_L--01--', 'L--00--_L--10--')
-TS_RCT_L01 = ('L--01--_L--00--', 'L--01--_L--11--', 'L--01--+S------_LSI01--')
-TS_RCT_L10 = ('L--10--_L--00--', 'L--10--_L--11--', 'L--10--+K--01--_LKI1001')
+TS_RCT_L01 = ('L--01--_L--00--', 'L--01--_L--11--')
+TS_RCT_L10 = ('L--10--_L--00--', 'L--10--_L--11--')
 TS_RCT_L11 = ('L--11--_L--01--', 'L--11--_L--10--')
 
-TS_RCT_S__ = ('L--01--+S------_LSI01--')
-
-TS_RCT_K00 = ('K--00--_K--01--', 'K--00--_K--10--')
-TS_RCT_K01 = ('K--01--_K--00--', 'K--01--_K--11--', 'L--10--+K--01--_LKI1001')
-TS_RCT_K10 = ('K--10--_K--00--', 'K--10--_K--11--')
-TS_RCT_K11 = ('K--11--_K--01--', 'K--11--_K--10--')
+TS_RCT_K00 = ('K----00_K----01', 'K----00_K----10')
+TS_RCT_K01 = ('K----01_K----00', 'K----01_K----11')
+TS_RCT_K10 = ('K----10_K----00', 'K----10_K----11')
+TS_RCT_K11 = ('K----11_K----01', 'K----11_K----10')
 
 TS_RCT_LSI01 = ('LSI01--_LST00--', 'LSI01--_LST11--',
                 'LSI01--_L--01--+S------')
@@ -159,45 +188,43 @@ TS_RCT_LST11 = ('LST11--_LSI01--', 'LST11--_LST10--',
                 'LST11--_L--11--+S------')
 
 TS_RCT_LKI1001 = ('LKI1001_LKT0001', 'LKI1001_LKT1000', 'LKI1001_LKT1011',
-                  'LKI1001_LKT1101', 'LKI1001_L--10--+K--01--')
+                  'LKI1001_LKT1101', 'LKI1001_L--10--+K----01')
 TS_RCT_LKT0000 = ('LKT0000_LKT0001', 'LKT0000_LKT0010', 'LKT0000_LKT0100',
-                  'LKT0000_LKT1000', 'LKT0000_L--00--+K--00--')
+                  'LKT0000_LKT1000', 'LKT0000_L--00--+K----00')
 TS_RCT_LKT0001 = ('LKT0001_LKT0000', 'LKT0001_LKT0011', 'LKT0001_LKT0101',
-                  'LKT0001_LKI1001', 'LKT0001_L--00--+K--01--')
+                  'LKT0001_LKI1001', 'LKT0001_L--00--+K----01')
 TS_RCT_LKT0010 = ('LKT0010_LKT0000', 'LKT0010_LKT0011', 'LKT0010_LKT0110',
-                  'LKT0010_LKT1010', 'LKT0010_L--00--+K--10--')
+                  'LKT0010_LKT1010', 'LKT0010_L--00--+K----10')
 TS_RCT_LKT0011 = ('LKT0011_LKT0001', 'LKT0011_LKT0010', 'LKT0011_LKT0111',
-                  'LKT0011_LKT1011', 'LKT0011_L--00--+K--11--')
+                  'LKT0011_LKT1011', 'LKT0011_L--00--+K----11')
 TS_RCT_LKT0100 = ('LKT0100_LKT0000', 'LKT0100_LKT0101', 'LKT0100_LKT0110',
-                  'LKT0100_LKT1100', 'LKT0100_L--01--+K--00--')
+                  'LKT0100_LKT1100', 'LKT0100_L--01--+K----00')
 TS_RCT_LKT0101 = ('LKT0101_LKT0001', 'LKT0101_LKT0100', 'LKT0101_LKT0111',
-                  'LKT0101_LKT1101', 'LKT0101_L--01--+K--01--')
+                  'LKT0101_LKT1101', 'LKT0101_L--01--+K----01')
 TS_RCT_LKT0110 = ('LKT0110_LKT0010', 'LKT0110_LKT0100', 'LKT0110_LKT0111',
-                  'LKT0110_LKT1110', 'LKT0110_L--01--+K--10--',
-                  'LKT0110_LSI01--+K--10--')
+                  'LKT0110_LKT1110', 'LKT0110_L--01--+K----10',
+                  'LKT0110_LSI01--+K----10')
 TS_RCT_LKT0111 = ('LKT0111_LKT0011', 'LKT0111_LKT0101', 'LKT0111_LKT0110',
-                  'LKT0111_LKT1111', 'LKT0111_L--01--+K--11--')
+                  'LKT0111_LKT1111', 'LKT0111_L--01--+K----11')
 TS_RCT_LKT1000 = ('LKT1000_LKT0000', 'LKT1000_LKI1001', 'LKT1000_LKT1010',
-                  'LKT1000_LKT1100', 'LKT1000_L--10--+K--00--')
+                  'LKT1000_LKT1100', 'LKT1000_L--10--+K----00')
 TS_RCT_LKT1010 = ('LKT1010_LKT0010', 'LKT1010_LKT1000', 'LKT1010_LKT1011',
-                  'LKT1010_LKT1110', 'LKT1010_L--10--+K--10--')
+                  'LKT1010_LKT1110', 'LKT1010_L--10--+K----10')
 TS_RCT_LKT1011 = ('LKT1011_LKT0011', 'LKT1011_LKI1001', 'LKT1011_LKT1010',
-                  'LKT1011_LKT1111', 'LKT1011_L--10--+K--11--')
+                  'LKT1011_LKT1111', 'LKT1011_L--10--+K----11')
 TS_RCT_LKT1100 = ('LKT1100_LKT0100', 'LKT1100_LKT1000', 'LKT1100_LKT1101',
-                  'LKT1100_LKT1110', 'LKT1100_L--11--+K--00--')
+                  'LKT1100_LKT1110', 'LKT1100_L--11--+K----00')
 TS_RCT_LKT1101 = ('LKT1101_LKT0101', 'LKT1101_LKI1001', 'LKT1101_LKT1100',
-                  'LKT1101_LKT1111', 'LKT1101_L--11--+K--01--')
+                  'LKT1101_LKT1111', 'LKT1101_L--11--+K----01')
 TS_RCT_LKT1110 = ('LKT1110_LKT0110', 'LKT1110_LKT1010', 'LKT1110_LKT1100',
-                  'LKT1110_LKT1111', 'LKT1110_L--11--+K--10--')
+                  'LKT1110_LKT1111', 'LKT1110_L--11--+K----10')
 TS_RCT_LKT1111 = ('LKT1111_LKT0111', 'LKT1111_LKT1011', 'LKT1111_LKT1101',
-                  'LKT1111_LKT1110', 'LKT1111_L--11--+K--11--')
+                  'LKT1111_LKT1110', 'LKT1111_L--11--+K----11')
 
 DS_RCT = {S_CP_L00: TS_RCT_L00,
           S_CP_L01: TS_RCT_L01,
           S_CP_L10: TS_RCT_L10,
           S_CP_L11: TS_RCT_L11,
-
-          S_CP_S__: TS_RCT_S__,
 
           S_CP_K00: TS_RCT_K00,
           S_CP_K01: TS_RCT_K01,
