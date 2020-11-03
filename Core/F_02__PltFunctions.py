@@ -81,7 +81,7 @@ def plotEvoFig(dIPlt, dfrR, pF, sHdCX, dSHdCY, sLblY):
                      yLbl = sLblY, nmCX = sHdCX, pltAxXY = dIPlt['pltAxXY'])
     plt.close()
 
-def plotEvo(dIPlt, dResEvo, dPF, tDat, sHdCX = GC.S_TIME, overWr = True):
+def plotEvo(dIPlt, dResEvo, dPF, dSCp, tDat, sHdCX = GC.S_TIME, overWr = True):
     for pF, tKDCp in dPF.items():
         if (not os.path.isfile(pF) or overWr) and len(tDat[0]) > 0:
             lSHdCY, sLblY = tDat
@@ -89,7 +89,8 @@ def plotEvo(dIPlt, dResEvo, dPF, tDat, sHdCX = GC.S_TIME, overWr = True):
             if tKDCp is None:
                 dSHdCY =  {sHd: [sHd] for sHd in lSHdCY}
             else:
-                dfrR, dSHdCY = SF.preProcMeanSum(dfrR, sHdCX, lSHdCY, tKDCp)
+                dfrR, dSHdCY = SF.preProcMeanSum(dfrR, sHdCX, lSHdCY, tKDCp,
+                                                 dSCp = dSCp)
             plotEvoFig(dIPlt, dfrR, pF, sHdCX, dSHdCY, sLblY)
 
 ###############################################################################

@@ -28,16 +28,17 @@ sPInD = os.path.join('..', '..', '11_SysBio01_ABM01', '20_InputData')
 sPRes = os.path.join('..', '..', '11_SysBio01_ABM01', '40_ModelResults')
 sPPlt = os.path.join('..', '..', '11_SysBio01_ABM01', '50_ModelPlots')
 
-dSFInD = {'00': ('00_Strings', 1),
-          '01': ('01_InitialSysComponents', 1),
-          '02': ('02_Conc', 0),
-          '03': ('03_Weights4Rct', 1),
-          '04': ('04_SMoConcDependencies', 1),
-          '05': ('05_CompIncidDependencies', 1)}
+dSFInD = {GC.S_00: (GC.S_00 + GC.S_USC + 'Strings', 1),
+          GC.S_01: (GC.S_01 + GC.S_USC + 'InitialSysComponents', 1),
+          GC.S_02: (GC.S_02 + GC.S_USC + 'Conc', 0),
+          GC.S_03: (GC.S_03 + GC.S_USC + 'Weights4Rct', 1),
+          GC.S_04: (GC.S_04 + GC.S_USC + 'SMoConcDependencies', 1),
+          GC.S_05: (GC.S_05 + GC.S_USC + 'CompIncidDependencies', 1),
+          GC.S_06: (GC.S_06 + GC.S_USC + 'Reactions', 1)}
 
 # --- Input: Constants --------------------------------------------------------
 # dS_Cp = GC.DS_CP
-dS_Rct = GC.DS_RCT
+# dS_Rct = GC.DS_RCT
 
 # --- create input dictionary -------------------------------------------------
 dictInpG = {# --- Input: Debug Info
@@ -61,6 +62,7 @@ dictInpG = {# --- Input: Debug Info
             'dSFInD': dSFInD,
             # --- Input: Constants
             # 'dS_Cp': dS_Cp,
-            'dS_Rct': dS_Rct}
+            # 'dS_Rct': dS_Rct
+            }
 
 ###############################################################################

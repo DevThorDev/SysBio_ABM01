@@ -20,7 +20,7 @@ def setPylDPy(dIdx, sComp, lKAs, lPAs, dSitesPyl = GC.DS_SITES_PYL):
     return sPylDePyl, cAse
 
 # --- Functions (O_99__System) ------------------------------------------------
-def prepDict4Sel(d4Sel, d4Leg, lSLY, dCp):
+def prepDict4Sel(d4Sel, d4Leg, lSLY, dCp, dSCp):
     for sCol in lSLY:
         for sSimple, lSimple in dCp.items():
             if len(sCol) >= 2:
@@ -29,19 +29,19 @@ def prepDict4Sel(d4Sel, d4Leg, lSLY, dCp):
                     GF.addToDictL(d4Leg, sSimple, GC.S_COM_BL.join(lSimple),
                                   lUnique = True)
                 else:
-                    if ((sCol[0] not in GC.DS_CP_7) or
+                    if ((sCol[0] not in dSCp) or
                         (not (set(sCol[1:]) <= GC.SET_01_))):
                         if sCol not in d4Sel:
                             GF.addToDictL(d4Sel, sCol, sCol, lUnique = True)
                             GF.addToDictL(d4Leg, sCol, sCol, lUnique = True)
 
-def preProcMeanSum(pdDfr, sLX, lSLY, tKDCp):
+def preProcMeanSum(pdDfr, sLX, lSLY, tKDCp, dSCp):
     d4Sel, d4Leg, mdDfr = {}, {}, pd.DataFrame()
     sOp, dCp = tKDCp
-    prepDict4Sel(d4Sel, d4Leg, lSLY, dCp)
+    prepDict4Sel(d4Sel, d4Leg, lSLY, dCp, dSCp = dSCp)
     mdDfr.loc[:, sLX] = pdDfr.loc[:, sLX]
     for sK in d4Sel:
-        if sK in GC.DS_CP_7:
+        if sK in dSCp:
             if sOp == GC.S_MEAN:
                 mdDfr.loc[:, sK] = pdDfr.loc[:, d4Sel[sK]].T.mean()
             elif sOp == GC.S_SUM:

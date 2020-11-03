@@ -15,6 +15,8 @@ class InputFrames:
             self.dDfrIn[sK] = GF.readCSV(sP, iCol = iC)
         self.getDSCp7()
         self.getDSCpTp()
+        self.getIniSysCpObj()
+        self.getDRct()
 
     def getDSCp7(self, sK = GC.S_00):
         self.dSCp7, lTK, lTV = {}, [], []
@@ -37,20 +39,50 @@ class InputFrames:
             print('ERROR: Key', sK, 'not in DataFrames dictionary!')
 
     def getDSCpTp(self, sK1 = GC.S_00, sK2 = GC.S_01):
-        self.dSCpTp = {}
+        self.dSCpTp, self.lSCpShort, self.lSCpLong = {}, [], []
         if sK1 in self.dDfrIn and sK2 in self.dDfrIn:
+            assert (GC.S_COMPSTR in self.dDfrIn[sK1].columns and
+                    GC.S_COMPSTR in self.dDfrIn[sK2].columns)
             for sL in self.dDfrIn[sK1].index:
+                sCp = self.dDfrIn[sK1].at[sL, GC.S_COMPSTR]
                 if sL.endswith(GC.S_LONG):
+                    self.lSCpLong.append(sCp)
                     sInd = sL.strip(GC.S_LONG).strip(GC.S_USC)
                     for sCpV in self.dDfrIn[sK2].index:
                         if len(sCpV) > len(sInd) and sCpV[:len(sInd)] == sInd:
                             if sCpV[len(sInd)] in GC.SET_01_:
-                                cK = self.dDfrIn[sK1].at[sL, GC.S_COMPSTR]
+                                cK = sCp
                                 cV = self.dDfrIn[sK2].at[sCpV, GC.S_COMPSTR]
                                 GF.addToDictL(self.dSCpTp, cK, cV)
+                elif sL.endswith(GC.S_SHORT):
+                    self.lSCpShort.append(sCp)
         else:
             print('ERROR: Key', sK1, 'or key', sK2, 'not in DataFrames',
                   'dictionary!')
+
+    def getIniSysCpObj(self, sK = GC.S_01):
+        self.dNCpObj = {}
+        if sK in self.dDfrIn:
+            assert (GC.S_COMPSTR in self.dDfrIn[sK].columns and
+                    GC.S_NUM in self.dDfrIn[sK].columns)
+            for sI in self.dDfrIn[sK].index:
+                cK = self.dDfrIn[sK].at[sI, GC.S_COMPSTR]
+                cV = self.dDfrIn[sK].at[sI, GC.S_NUM]
+                self.dNCpObj[cK] = cV
+        else:
+            print('ERROR: Key', sK, 'not in DataFrames dictionary!')
+
+    def getDRct(self, sK = GC.S_06):
+        self.dRct = {}
+        if sK in self.dDfrIn:
+            assert (GC.S_RCTSTR in self.dDfrIn[sK].columns and
+                    GC.S_WT in self.dDfrIn[sK].columns)
+            for sI in self.dDfrIn[sK].index:
+                cK = self.dDfrIn[sK].at[sI, GC.S_RCTSTR]
+                cV = self.dDfrIn[sK].at[sI, GC.S_WT]
+                self.dRct[cK] = cV
+        else:
+            print('ERROR: Key', sK, 'not in DataFrames dictionary!')
 
     def __str__(self):
         sIn = ('*'*24 + ' "InputFrames" type ' + '*'*24 +

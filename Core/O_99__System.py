@@ -12,10 +12,11 @@ from Core.O_90__Component import Component
 
 # +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 class System(Base):
-    def __init__(self, inpDat, lCpObj = [], iTp = 99):
+    def __init__(self, inpDat, inpFr, lCpObj = [], iTp = 99):
         super().__init__(inpDat, iTp)
         self.idO = 'Sys'
         self.descO = 'System'
+        self.inFr = inpFr
         self.lCpO = lCpObj
         self.dCncSMo = TF.createDCnc(self.dITp)
         self.addCpObj(inpDat)
@@ -23,13 +24,14 @@ class System(Base):
         # print('Initiated "System" object.')
 
     def addCpObj(self, inpDat, refreshCpO = False):
-        dNCpO = self.dITp['dNCpObj']
+        # dNCpO = self.dITp['dNCpObj']
+        dNCpO = self.inFr.dNCpObj
         if refreshCpO:
             self.lCpO = []
             dNCpO = self.dNCpO
         for sCp, nCp in dNCpO.items():
             for cCp in range(nCp):
-                self.lCpO.append(Component(inpDat, sCp))
+                self.lCpO.append(Component(inpDat, self.inFr, sCp))
 
     def getDictsCpObj(self):
         self.dNCpO, self.dCpO = {}, {}
@@ -65,12 +67,12 @@ class System(Base):
             assert len(cK) == 2 and len(cT) == 3
             dPPltF = TF.getDPFPltEvo(self.dIG, self.dITp, cK, dMS = cT[2])
             if self.dResEvo is not None:
-                PF.plotEvo(dParPlt, self.dResEvo, dPPltF, tDat = cT[:2],
-                           overWr = overWr)
+                PF.plotEvo(dParPlt, self.dResEvo, dPPltF, self.inFr.dSCp7,
+                           tDat = cT[:2], overWr = overWr)
 
     def evolveOverTime(self, inpDat, doPlots = True):
         self.dResEvo, self.dNCpO = TF.evolveGillespie(self.dIG, self.dITp,
-                                                      self.dCncSMo)
+                                                      self.inFr, self.dCncSMo)
         self.addCpObj(inpDat, refreshCpO = True)
         self.getDictsCpObj()
         # self.printCncSMo()

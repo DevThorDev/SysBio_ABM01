@@ -51,7 +51,7 @@ class InputData:
                         print('Object with type index', iTp, 'not imported.')
                         print('Name of module:', nmMod)
                         assert False
-        GF.seedRNG(self.dI['Mode'])
+        # GF.seedRNG(self.dI['Mode'])
 
     def yieldOneVal(self, cKey):
         retVal = None

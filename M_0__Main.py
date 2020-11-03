@@ -19,10 +19,13 @@ inDG = InputData(dictInpG)
 inDG.addObjTps(S_D_OBJINP)
 print('Added object types.')
 # -----------------------------------------------------------------------------
-cInpFrame = InputFrames(inDG)
-print(cInpFrame.dSCp7)
-print(cInpFrame.dSCpTp)
-# cSystem = System(inDG)
+cInpFrames = InputFrames(inDG)
+# print(cInpFrames.dSCp7)
+# print(cInpFrames.dSCpTp)
+# print(cInpFrames.dNCpObj)
+print(cInpFrames.dRct)
+
+# cSystem = System(inDG, cInpFrames)
 # if cSystem.dIG['doEvoT']:
 #     cSystem.evolveOverTime(inDG, doPlots = cSystem.dIG['doPlots'])
 # if cSystem.dIG['doPlots']:

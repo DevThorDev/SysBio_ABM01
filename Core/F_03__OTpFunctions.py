@@ -89,23 +89,27 @@ def changeConcSMo(dITp, dO, dCncSMo, cID = None, dspI = False):
         dCncSMo[sSMo] += cncCh*dO['tDlt']/dITp['nCpObj']*dITp['concChgScale']
         dCncSMo[sSMo] = GF.implMinMax(dCncSMo[sSMo], dMin[sSMo], dMax[sSMo])
 
-def updateDictH(dITp, dO, dCncSMo, dspI = False):
-    dRRC, dCncCh, dRUp = dITp['dRRC'], dITp['dConcChg'], {}
+def updateDictH(dITp, inpFr, dO, dCncSMo, dspI = False):
+    dCncCh, dRUp = dITp['dConcChg'], {}     # adapt dConcChg
     sMoN, sMoP = GC.ID_NO3_1M, GC.ID_H2PO4_1M
     # update the reaction rate constants according to the current [NO3-]
-    for tS, tRRC in dRRC.items():
-        assert len(tS) == len(tRRC)
-        for k, s in enumerate(tS):
-            p = GF.calcPSigmoidal(dCncSMo[sMoN], dCncCh[tS][sMoN][k])
-            dRUp[s] = tRRC[k]*p
-            # recalculate dH, which contains the h_i (i = 1,... len(dH))
-            dO['dH'][s] = dRUp[s]*dO['dN'][s.split(GC.S_USC)[0]]
+    # for tS, tRRC in inpFr.dRct.items():
+    #     assert len(tS) == len(tRRC)
+    #     for k, s in enumerate(tS):
+    #         p = GF.calcPSigmoidal(dCncSMo[sMoN], dCncCh[tS][sMoN][k])
+    #         dRUp[s] = tRRC[k]*p
+    for sRct, wtRct in inpFr.dRct.items():
+        # p = GF.calcPSigmoidal(dCncSMo[sMoN], dCncCh[tS][sMoN][k])  # adapt dConcChg
+        p = 0.5     # TODO: change
+        dRUp[sRct] = wtRct*p
+        # recalculate dH, which contains the h_i (i = 1,... len(dH))
+        dO['dH'][sRct] = dRUp[sRct]*dO['dN'][sRct.split(GC.S_USC)[0]]
     # (?) update the reaction rate constants according to the current [H2PO4-]
     if dspI:
         pass
 
-def reCalcReactHazards(dITp, dO, dCncSMo, dspI = False):
-    updateDictH(dITp, dO, dCncSMo, dspI = dspI)
+def reCalcReactHazards(dITp, inpFr, dO, dCncSMo, dspI = False):
+    updateDictH(dITp, inpFr, dO, dCncSMo, dspI = dspI)
     # h, the sum of the h_i, is the overall reaction hazard
     dO['h'] = sum(dO['dH'].values())
     # sort dH in ascending order for numerical stability
@@ -147,7 +151,7 @@ def updateDictOut(dITp, dO, dCnc, t):
     for s in dO['dN']:
         dO['dRes'][s].append(dO['dN'][s])
 
-def evolveGillespie(dIG, dITp, dCncSMo):
+def evolveGillespie(dIG, dITp, inpFr, dCncSMo):
     t, T, tDelta, cTSt = dIG['tStart'], dIG['tMax'], 0, 0
     dO = iniDictOut(dITp, dCncSMo, t, tDelta)
     while t < T and cTSt <= dIG['maxTS']:
@@ -157,7 +161,7 @@ def evolveGillespie(dIG, dITp, dCncSMo):
         # change the concentrations of the small molecules
         changeConcSMo(dITp, dO, dCncSMo, dspI = dspCnd)
         # adapt the re-calc reaction hazards function to current system
-        reCalcReactHazards(dITp, dO, dCncSMo, dspI = dspCnd)
+        reCalcReactHazards(dITp, inpFr, dO, dCncSMo, dspI = dspCnd)
         # do next event and update time with tToNext
         t += nextEvent(dITp, dO, T, cTSt)
         # update the data storage matrix

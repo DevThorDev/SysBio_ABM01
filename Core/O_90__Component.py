@@ -116,39 +116,41 @@ class ComponentBase(Base):
                 # if Dephosphorylation(inpDat, cO, cAs, sSpS).doDePyl():
                 #     print('Dephosphorylation at site', sSpS, 'happened!')
 
-    def getConcSMo(self, cID = None):
-        lConc = []
-        for cSMo in self.lSMo:
-            if cID is None or cSMo.idO == cID:
-                lConc.append(cSMo.cCnc)
-        return lConc
+    # def getConcSMo(self, cID = None):
+    #     lConc = []
+    #     for cSMo in self.lSMo:
+    #         if cID is None or cSMo.idO == cID:
+    #             lConc.append(cSMo.cCnc)
+    #     return lConc
 
-    def changeConcSMo(self, t, cID = None):
-        for cSMo in self.lSMo:
-            if cID is None or cSMo.idO == cID:
-                cSMo.changeConc(t, self.idO)
-                assert cSMo.idO in self.dCnc
-                self.dCnc[cSMo.idO][0] = cSMo.cCnc
-        lCEl = [t, self.lSMo[0].cCnc, self.lSMo[1].cCnc, self.idO]
-        GF.appendToDictL(self.dCncEvo, lCEl)
+    # def changeConcSMo(self, t, cID = None):
+    #     for cSMo in self.lSMo:
+    #         if cID is None or cSMo.idO == cID:
+    #             cSMo.changeConc(t, self.idO)
+    #             assert cSMo.idO in self.dCnc
+    #             self.dCnc[cSMo.idO][0] = cSMo.cCnc
+    #     lCEl = [t, self.lSMo[0].cCnc, self.lSMo[1].cCnc, self.idO]
+    #     GF.appendToDictL(self.dCncEvo, lCEl)
 
 class Component(ComponentBase):
-    def __init__(self, inpDat, sComp, iTp = 90):
+    def __init__(self, inpDat, inpFr, sComp, iTp = 90):
+        self.inFr = inpFr
+        assert len(self.inFr.lSCpLong) >= 7
         self.sCp = sComp
         self.createdOComp(inpDat)
-        if sComp in inpDat.dI['dS_Cp'][GC.S_CP_L_LONG]:
-            pass
-        elif sComp in inpDat.dI['dS_Cp'][GC.S_CP_S_LONG]:
-            pass
-        elif sComp in inpDat.dI['dS_Cp'][GC.S_CP_K_LONG]:
-            pass
-        elif sComp in inpDat.dI['dS_Cp'][GC.S_CP_LSI_LONG]:
+        if sComp in self.inFr.dSCpTp[self.inFr.lSCpLong[0]]:
+            self.ini_Cp_L(inpDat, sComp, iTp = iTp)
+        elif sComp in self.inFr.dSCpTp[self.inFr.lSCpLong[1]]:
+            self.ini_Cp_S(inpDat, sComp, iTp = iTp)
+        elif sComp in self.inFr.dSCpTp[self.inFr.lSCpLong[2]]:
+            self.ini_Cp_K(inpDat, sComp, iTp = iTp)
+        elif sComp in self.inFr.dSCpTp[self.inFr.lSCpLong[3]]:
             self.ini_Cp_LSI(inpDat, sComp, iTp = iTp)
-        elif sComp in inpDat.dI['dS_Cp'][GC.S_CP_LST_LONG]:
+        elif sComp in self.inFr.dSCpTp[self.inFr.lSCpLong[4]]:
             self.ini_Cp_LST(inpDat, sComp, iTp = iTp)
-        elif sComp in inpDat.dI['dS_Cp'][GC.S_CP_LKI_LONG]:
+        elif sComp in self.inFr.dSCpTp[self.inFr.lSCpLong[5]]:
             self.ini_Cp_LKI(inpDat, sComp, iTp = iTp)
-        elif sComp in inpDat.dI['dS_Cp'][GC.S_CP_LKT_LONG]:
+        elif sComp in self.inFr.dSCpTp[self.inFr.lSCpLong[6]]:
             self.ini_Cp_LKT(inpDat, sComp, iTp = iTp)
         else:
             self.idO = 'Cp'
@@ -176,12 +178,38 @@ class Component(ComponentBase):
                      GC.SPC_SPR_A: NAR2p1,
                      GC.SPC_L_SMO: [NO3_1m, H2PO4_1m]}
 
+    def ini_Cp_L(self, inpDat, sCp, iTp = 90):
+        llOI = []
+        lOO = [self.dOCp[GC.SPC_LPR_A], self.dOCp[GC.SPC_SPR_A],
+               self.dOCp[GC.SPC_KAS_A], self.dOCp[GC.SPC_KAS_X]]
+        super().__init__(inpDat, self.dOCp, llOI, lOO, iTp = iTp)
+        self.idO = self.inFr.lSCpLong[0]
+        self.descO = 'Component NRT2.1'
+        self.adaptPSites(inpDat, self.dOCp[GC.SPC_LPR_A], sCp)
+
+    def ini_Cp_S(self, inpDat, sCp, iTp = 90):
+        llOI = []
+        lOO = [self.dOCp[GC.SPC_LPR_A], self.dOCp[GC.SPC_SPR_A],
+               self.dOCp[GC.SPC_KAS_A], self.dOCp[GC.SPC_KAS_X]]
+        super().__init__(inpDat, self.dOCp, llOI, lOO, iTp = iTp)
+        self.idO = self.inFr.lSCpLong[1]
+        self.descO = 'Component NAR2.1'
+
+    def ini_Cp_K(self, inpDat, sCp, iTp = 90):
+        llOI = []
+        lOO = [self.dOCp[GC.SPC_LPR_A], self.dOCp[GC.SPC_SPR_A],
+               self.dOCp[GC.SPC_KAS_A], self.dOCp[GC.SPC_KAS_X]]
+        super().__init__(inpDat, self.dOCp, llOI, lOO, iTp = iTp)
+        self.idO = self.inFr.lSCpLong[2]
+        self.descO = 'Component HPCAL1'
+        self.adaptPSites(inpDat, self.dOCp[GC.SPC_KAS_A], sCp)
+
     def ini_Cp_LSI(self, inpDat, sCp, iTp = 90):
         llOI = [[self.dOCp[GC.SPC_SPR_A], self.dOCp[GC.SPC_LPR_A]]]
         lOO = [self.dOCp[GC.SPC_KAS_A], self.dOCp[GC.SPC_KAS_X]]
         super().__init__(inpDat, self.dOCp, llOI, lOO, iTp = iTp)
-        self.idO = GC.S_CP_LSI_LONG
-        self.descO = 'Component NRT2p1-NAR2p1 interaction'
+        self.idO = self.inFr.lSCpLong[3]
+        self.descO = 'Component NRT2.1-NAR2.1 interaction'
         self.adaptPSites(inpDat, self.dOCp[GC.SPC_KAS_A], sCp)
         self.adaptPSites(inpDat, self.dOCp[GC.SPC_LPR_A], sCp)
 
@@ -189,8 +217,8 @@ class Component(ComponentBase):
         llOI = [[self.dOCp[GC.SPC_SPR_A], self.dOCp[GC.SPC_LPR_A]]]
         lOO = [self.dOCp[GC.SPC_KAS_A], self.dOCp[GC.SPC_KAS_X]]
         super().__init__(inpDat, self.dOCp, llOI, lOO, iTp = iTp)
-        self.idO = GC.S_CP_LST_LONG
-        self.descO = 'Component NRT2p1-NAR2p1 transition'
+        self.idO = self.inFr.lSCpLong[4]
+        self.descO = 'Component NRT2.1-NAR2.1 transition'
         self.adaptPSites(inpDat, self.dOCp[GC.SPC_KAS_A], sCp)
         self.adaptPSites(inpDat, self.dOCp[GC.SPC_LPR_A], sCp)
 
@@ -198,8 +226,8 @@ class Component(ComponentBase):
         llOI = [[self.dOCp[GC.SPC_KAS_A], self.dOCp[GC.SPC_LPR_A]]]
         lOO = [self.dOCp[GC.SPC_SPR_A], self.dOCp[GC.SPC_KAS_X]]
         super().__init__(inpDat, self.dOCp, llOI, lOO, iTp = iTp)
-        self.idO = GC.S_CP_LKI_LONG
-        self.descO = 'Component NRT2p1-HPCAL1 interaction'
+        self.idO = self.inFr.lSCpLong[5]
+        self.descO = 'Component NRT2.1-HPCAL1 interaction'
         self.adaptPSites(inpDat, self.dOCp[GC.SPC_KAS_A], sCp)
         self.adaptPSites(inpDat, self.dOCp[GC.SPC_LPR_A], sCp)
 
@@ -208,8 +236,8 @@ class Component(ComponentBase):
                 [self.dOCp[GC.SPC_KAS_X], self.dOCp[GC.SPC_LPR_A]]]
         lOO = [self.dOCp[GC.SPC_SPR_A]]
         super().__init__(inpDat, self.dOCp, llOI, lOO, iTp = iTp)
-        self.idO = GC.S_CP_LKT_LONG
-        self.descO = 'Component NRT2p1-HPCAL1 transition'
+        self.idO = self.inFr.lSCpLong[6]
+        self.descO = 'Component NRT2.1-HPCAL1 transition'
         self.adaptPSites(inpDat, self.dOCp[GC.SPC_KAS_A], sCp)
         self.adaptPSites(inpDat, self.dOCp[GC.SPC_LPR_A], sCp)
 
@@ -218,7 +246,7 @@ class Component(ComponentBase):
 
     # def to_Cp_LSI(self, inpDat, sCpN):
     #     self.idO = GC.S_CP_LSI_LONG
-    #     self.descO = 'Component NRT2p1-NAR2p1 interaction'
+    #     self.descO = 'Component NRT2.1-NAR2.1 interaction'
     #     llOInt = [[self.lOO[0], self.llOI[0][1]]]
     #     lOOth = [self.llOI[0][0], self.llOI[1][0]]
     #     self.llOI, self.lOO = llOInt, lOOth
@@ -231,12 +259,12 @@ class Component(ComponentBase):
 
     # def to_Cp_LST(self, inpDat, sCpN):
     #     self.idO = GC.S_CP_LST_LONG
-    #     self.descO = 'Component NRT2p1-NAR2p1 transition'
+    #     self.descO = 'Component NRT2.1-NAR2.1 transition'
     #     print('Changed state to ' + self.idO + ' (' + self.descO + ').')
 
     # def to_Cp_LKI(self, inpDat, sCpN):
     #     self.idO = GC.S_CP_LKI_LONG
-    #     self.descO = 'Component NRT2p1-HPCAL1 interaction'
+    #     self.descO = 'Component NRT2.1-HPCAL1 interaction'
     #     self.lOO[0], self.llOI[0][0] = self.llOI[0][0], self.lOO[0]
     #     dCps = {GC.S_SPS_KAS1_S839: (GC.B_DO_DEPYL, self.lPAs0[0]),
     #             GC.S_SPS_KAS1_S870: (GC.B_DO_PYL, self.lKAs0[1])}
@@ -248,7 +276,7 @@ class Component(ComponentBase):
 
     # def to_Cp_LKT(self, inpDat, sCpN):
     #     self.idO = GC.S_CP_LKT_LONG
-    #     self.descO = 'Component NRT2p1-HPCAL1 transition'
+    #     self.descO = 'Component NRT2.1-HPCAL1 transition'
     #     self.llOI.append([self.lOO[1], self.llOI[0][1]])
     #     self.lOO = self.lOO[:1]
     #     dCps = {GC.S_SPS_KAS1_S839: (GC.B_DO_PYL, self.lKAs0[0])}

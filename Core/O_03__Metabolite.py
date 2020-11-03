@@ -39,17 +39,17 @@ class SmallMolecule(Metabolite):
         self.thrLowCnc = self.dITp[GC.S_THR_LOW_CONC]
         self.thrHighCnc = self.dITp[GC.S_THR_HIGH_CONC]
 
-    def changeConc(self, t, idCp):
-        cCnc_t, cCncChCp = self.cCnc, 0
-        if self.sCncCh == GC.S_NO:
-            cCnc_t = self.cCnc
-        elif self.sCncCh == GC.S_CH_SIN:
-            cCnc_t += TF.doSinChange(t, self.perCncCh, self.amplCncCh)
-        if idCp in [GC.S_CP_LSI_LONG, GC.S_CP_LST_LONG]:
-            cCncChCp = self.cCnc*self.dITp['propIncCpLS']
-        elif idCp in [GC.S_CP_LKI_LONG, GC.S_CP_LKT_LONG]:
-            cCncChCp = -self.cCnc*self.dITp['propDecCpLK']
-        self.cCnc = max(0, cCnc_t + cCncChCp)
+    # def changeConc(self, t, idCp):
+    #     cCnc_t, cCncChCp = self.cCnc, 0
+    #     if self.sCncCh == GC.S_NO:
+    #         cCnc_t = self.cCnc
+    #     elif self.sCncCh == GC.S_CH_SIN:
+    #         cCnc_t += TF.doSinChange(t, self.perCncCh, self.amplCncCh)
+    #     if idCp in [GC.S_CP_LSI_LONG, GC.S_CP_LST_LONG]:
+    #         cCncChCp = self.cCnc*self.dITp['propIncCpLS']
+    #     elif idCp in [GC.S_CP_LKI_LONG, GC.S_CP_LKT_LONG]:
+    #         cCncChCp = -self.cCnc*self.dITp['propDecCpLK']
+    #     self.cCnc = max(0, cCnc_t + cCncChCp)
 
 class SMo_NO3_1m(SmallMolecule):
     def __init__(self, inpDat, iTp = 501, dStat = {}):
