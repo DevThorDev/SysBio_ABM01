@@ -157,7 +157,6 @@ dRRC = {}
 #                             w_Dis_LK_L_K*w_LKT_L_K)}
 
 # dictionary of initial, min. and max. concentrations of small molecules
-dConcSMo = {}
 # dConcSMo = {'Ini': {GC.ID_NO3_1M: {'cTp': 'uniform',
 #                                    'dPar': {'min': 9., 'max': 11.}},
 #                     GC.ID_H2PO4_1M: {'cTp': 'uniform',
@@ -414,33 +413,31 @@ colLn_CpCnc = None                      # line colour of plot
 pltAxXY_CpCnc = (True, True)            # plot x- and/or y-axis
 
 # dict. of concentration or component strings to be plotted, incl. y-label
-# key: (start string of plot, number of plot)
-# value: (list of components to be plotted, y-label of plot, dictionary of ops)
-d_Int_vs_Tra = {cK: {GC.S_CP_LSI_SHORT: [GC.S_CP_LSI_SHORT, GC.S_CP_LKI_SHORT],
-                     GC.S_CP_LST_SHORT: [GC.S_CP_LST_SHORT, GC.S_CP_LKT_SHORT]}
+# key: (start string of plot, number or string of plot)
+# value: (list of components to be considered, y-label of plot, dictionary L)
+# dictionary L: key: operation; value: {legend entry: list of components}
+lSCpAll = ['L--00--', 'L--01--', 'L--10--', 'L--11--', 'S------', 'K----00',
+           'K----01', 'K----10', 'K----11', 'LSI01--', 'LST00--', 'LST10--',
+           'LST11--', 'LKI1001', 'LKT0000', 'LKT0001', 'LKT0010', 'LKT0011',
+           'LKT0100', 'LKT0101', 'LKT0110', 'LKT0111', 'LKT1000', 'LKT1010',
+           'LKT1011', 'LKT1100', 'LKT1101', 'LKT1110', 'LKT1111']
+d_Int_vs_Tra = {cK: {'LSI': ['LSI', 'LKI'], 'LST': ['LST', 'LKT']}
                 for cK in [GC.S_MEAN, GC.S_SUM]}
-d_S_vs_K = {cK: {GC.S_CP_LSI_SHORT: [GC.S_CP_LSI_SHORT, GC.S_CP_LST_SHORT],
-            GC.S_CP_LKI_SHORT: [GC.S_CP_LKI_SHORT, GC.S_CP_LKT_SHORT]}
+d_S_vs_K = {cK: {'LSI': ['LSI', 'LST'], 'LKI': ['LKI', 'LKT']}
             for cK in [GC.S_MEAN, GC.S_SUM]}
-d_4_Int_Tra = {cK: {GC.S_CP_LSI_SHORT: [GC.S_CP_LSI_SHORT],
-                    GC.S_CP_LST_SHORT: [GC.S_CP_LST_SHORT],
-                GC.S_CP_LKI_SHORT: [GC.S_CP_LKI_SHORT],
-                GC.S_CP_LKT_SHORT: [GC.S_CP_LKT_SHORT]}
-               for cK in [GC.S_MEAN, GC.S_SUM]}
-dlSY = {(sPlt_SSC, 'Int_vs_Tra'): (list(GC.DS_RCT) + [GC.ID_NO3_1M],
-                                   yLbl_CpCnc, d_Int_vs_Tra),
-        (sPlt_SSC, 'S_vs_K'): (list(GC.DS_RCT) + [GC.ID_NO3_1M], yLbl_CpCnc,
+d_4_Int_Tra = {cK: {'LSI': ['LSI'], 'LST': ['LST'], 'LKI': ['LKI'],
+                    'LKT': ['LKT']} for cK in [GC.S_MEAN, GC.S_SUM]}
+dlSY = {(sPlt_SSC, 'Int_vs_Tra'): (lSCpAll + [GC.ID_NO3_1M], yLbl_CpCnc,
+                                   d_Int_vs_Tra),
+        (sPlt_SSC, 'S_vs_K'): (lSCpAll + [GC.ID_NO3_1M], yLbl_CpCnc,
                                d_S_vs_K),
-        (sPlt_SSC, '4_Int_Tra'): (list(GC.DS_RCT) + [GC.ID_NO3_1M], yLbl_CpCnc,
+        (sPlt_SSC, '4_Int_Tra'): (lSCpAll + [GC.ID_NO3_1M], yLbl_CpCnc,
                                   d_4_Int_Tra),
         # (sPlt_SSC, 'SelSpec4'): ([GC.TS_RCT_LSI01, GC.TS_RCT_LST10,
         #                           GC.TS_RCT_LKI1001, GC.TS_RCT_LKT0110,
         #                           GC.ID_NO3_1M], yLbl_CpCnc, None),
-        (sPlt_SCp, 1): (list(GC.DS_RCT)[:8], yLbl_Cp, None),
-        (sPlt_SCp, 2): (list(GC.DS_RCT)[8:16], yLbl_Cp, None),
-        (sPlt_SCp, 3): (list(GC.DS_RCT)[16:24], yLbl_Cp, None),
-        (sPlt_SCp, 4): (list(GC.DS_RCT)[24:], yLbl_Cp, None),
-        (sPlt_SCp, None): (list(GC.DS_RCT), yLbl_Cp, d_4_Int_Tra),
+        (sPlt_SCp, 1): (lSCpAll[:9], yLbl_Cp, None),
+        (sPlt_SCp, None): (lSCpAll, yLbl_Cp, d_4_Int_Tra),
         (sPlt_SCn, None): ([GC.ID_NO3_1M, GC.ID_H2PO4_1M], yLbl_Cnc, None)}
 
 # --- path, directory and file names ------------------------------------------
@@ -460,7 +457,6 @@ dIO = {# --- general
        # 'dNCpObj': dNCpObj,
        # 'nCpObj': sum(dNCpObj.values()),
        'dRRC': dRRC,
-       'dConcSMo': dConcSMo,
        'dConcChg': dConcChg,
        'concChgScale': concChgScale,
        # --- path, directory and file names

@@ -64,9 +64,14 @@ def complLSpec(inpDt, lOAll, sTp = 'KAs', sD = 'Pyl'):
     return sorted(lID)
 
 # --- Functions (O_99__System) ------------------------------------------------
-def createDCnc(dITp):
-    dCI = dITp['dConcSMo']['Ini']
-    return {s: GF.drawFromDist(dCI[s]['cTp'], dCI[s]['dPar']) for s in dCI}
+def createDCnc(inpFr):
+    cDfr, dCncIni = inpFr.dDfrIn[GC.S_02], {}
+    for sSMo in cDfr.index:
+        cTp = cDfr.at[sSMo, GC.S_INI_CNC_DISTR]
+        dPar = {cDfr.at[sSMo, GC.S_STR_PAR_1]: cDfr.at[sSMo, GC.S_VAL_PAR_1],
+                cDfr.at[sSMo, GC.S_STR_PAR_2]: cDfr.at[sSMo, GC.S_VAL_PAR_2]}
+        dCncIni[sSMo] = GF.drawFromDist(cTp, dPar)
+    return dCncIni
 
 def iniDictOut(dITp, dCnc, t = 0., tDlt = 0.):
     dO = {'dN': {}, 'dH': {}, 'h': 0., 'tDlt': tDlt, 'dRes': {GC.S_TIME: [t]}}
@@ -77,17 +82,18 @@ def iniDictOut(dITp, dCnc, t = 0., tDlt = 0.):
         dO['dN'][s] = k
     return dO
 
-def changeConcSMo(dITp, dO, dCncSMo, cID = None, dspI = False):
+def changeConcSMo(dITp, inpFr, dO, dCncSMo, cID = None, dspI = False):
     if dspI:
         pass
-    dMin, dMax = dITp['dConcSMo']['Min'], dITp['dConcSMo']['Max']
+    cDfr = inpFr.dDfrIn[GC.S_02]
     for sSMo in dCncSMo:
+        cncMn, cncMx = cDfr.at[sSMo, GC.S_CNC_MIN], cDfr.at[sSMo, GC.S_CNC_MAX]
         cncCh = 0.
         for s in dO['dN']:
             assert s in dITp['dConcChg'][sSMo]
             cncCh += dITp['dConcChg'][sSMo][s]['absChg']*dO['dN'][s]
         dCncSMo[sSMo] += cncCh*dO['tDlt']/dITp['nCpObj']*dITp['concChgScale']
-        dCncSMo[sSMo] = GF.implMinMax(dCncSMo[sSMo], dMin[sSMo], dMax[sSMo])
+        dCncSMo[sSMo] = GF.implMinMax(dCncSMo[sSMo], cncMn, cncMx)
 
 def updateDictH(dITp, inpFr, dO, dCncSMo, dspI = False):
     dCncCh, dRUp = dITp['dConcChg'], {}     # adapt dConcChg
@@ -105,7 +111,7 @@ def updateDictH(dITp, inpFr, dO, dCncSMo, dspI = False):
         # recalculate dH, which contains the h_i (i = 1,... len(dH))
         dO['dH'][sRct] = dRUp[sRct]*dO['dN'][sRct.split(GC.S_USC)[0]]
     # (?) update the reaction rate constants according to the current [H2PO4-]
-    if dspI:
+    if dspI:# for displaying information
         pass
 
 def reCalcReactHazards(dITp, inpFr, dO, dCncSMo, dspI = False):
@@ -159,7 +165,7 @@ def evolveGillespie(dIG, dITp, inpFr, dCncSMo):
         if dspCnd:
             print('Reached time step', cTSt, 'at time', round(t, GC.R04))
         # change the concentrations of the small molecules
-        changeConcSMo(dITp, dO, dCncSMo, dspI = dspCnd)
+        changeConcSMo(dITp, inpFr, dO, dCncSMo, dspI = dspCnd)
         # adapt the re-calc reaction hazards function to current system
         reCalcReactHazards(dITp, inpFr, dO, dCncSMo, dspI = dspCnd)
         # do next event and update time with tToNext

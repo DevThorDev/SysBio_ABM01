@@ -3,7 +3,7 @@
 # --- O_03__Metabolite.py -----------------------------------------------------
 ###############################################################################
 import Core.C_00__GenConstants as GC
-import Core.F_03__OTpFunctions as TF
+# import Core.F_03__OTpFunctions as TF
 
 from Core.O_01__Molecule import Molecule
 

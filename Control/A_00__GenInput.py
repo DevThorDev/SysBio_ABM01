@@ -36,11 +36,6 @@ dSFInD = {GC.S_00: (GC.S_00 + GC.S_USC + 'Strings', 1),
           GC.S_05: (GC.S_05 + GC.S_USC + 'CompIncidDependencies', 1),
           GC.S_06: (GC.S_06 + GC.S_USC + 'Reactions', 1)}
 
-# --- Input: Constants --------------------------------------------------------
-# dS_Cp = GC.DS_CP
-# dS_Rct = GC.DS_RCT
-
-# --- create input dictionary -------------------------------------------------
 dictInpG = {# --- Input: Debug Info
             'lvlDbg': levelDebugOut,
             # --- Input: Flow control
@@ -59,10 +54,6 @@ dictInpG = {# --- Input: Debug Info
             'sPInD': sPInD,
             'sPRes': sPRes,
             'sPPlt': sPPlt,
-            'dSFInD': dSFInD,
-            # --- Input: Constants
-            # 'dS_Cp': dS_Cp,
-            # 'dS_Rct': dS_Rct
-            }
+            'dSFInD': dSFInD}
 
 ###############################################################################

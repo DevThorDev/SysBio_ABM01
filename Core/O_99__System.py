@@ -18,7 +18,7 @@ class System(Base):
         self.descO = 'System'
         self.inFr = inpFr
         self.lCpO = lCpObj
-        self.dCncSMo = TF.createDCnc(self.dITp)
+        self.dCncSMo = TF.createDCnc(self.inFr)
         self.addCpObj(inpDat)
         self.getDictsCpObj()
         # print('Initiated "System" object.')
