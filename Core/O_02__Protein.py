@@ -26,8 +26,8 @@ class LargeProtein(Protein):
         # print('Initiated "LargeProtein" object.')
 
 class Protein_NRT2p1(LargeProtein):
-    def __init__(self, inpDat, iTp = 201, dStat = {'S21': GC.B_IS_PYL,
-                                                   'S28': GC.B_NOT_PYL}):
+    def __init__(self, inpDat, iTp = 201, dStat = {'S21': GC.S_IS_PYL,
+                                                   'S28': GC.S_NOT_PYL}):
         super().__init__(inpDat, iTp, dStat)
         self.idO = GC.ID_LPR_NRT2P1
         self.descO = 'Large protein NRT2.1'
@@ -64,8 +64,8 @@ class Kinase(Enzyme):
         # print('Initiated "Kinase" object.')
 
 class Kinase_HPCAL1(Kinase):
-    def __init__(self, inpDat, iTp = 101, dStat = {'S839': GC.B_NOT_PYL,
-                                                   'S870': GC.B_IS_PYL}):
+    def __init__(self, inpDat, iTp = 101, dStat = {'S839': GC.S_NOT_PYL,
+                                                   'S870': GC.S_IS_PYL}):
         super().__init__(inpDat, iTp, dStat)
         self.idO = GC.ID_KAS_HPCAL1
         self.descO = 'Kinase HPCAL1'

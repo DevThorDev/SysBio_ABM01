@@ -107,11 +107,11 @@ class ComponentBase(Base):
     def adaptPSites(self, inpDat, cO, sCp):
         for sSpS, dI in GC.DS_SPS[cO.idO].items():
             sPylDPy, cAs = SF.setPylDPy(dI, sCp, self.lKAs, self.lPAs)
-            if sPylDPy == GC.B_DO_PYL:
+            if sPylDPy == GC.S_DO_PYL:
                 _ = Phosphorylation(inpDat, cO, cAs, sSpS).doPyl()
                 # if Phosphorylation(inpDat, cO, cAs, sSpS).doPyl():
                 #     print('Phosphorylation at site', sSpS, 'happened!')
-            elif sPylDPy == GC.B_DO_DEPYL:
+            elif sPylDPy == GC.S_DO_DEPYL:
                 _ = Dephosphorylation(inpDat, cO, cAs, sSpS).doDePyl()
                 # if Dephosphorylation(inpDat, cO, cAs, sSpS).doDePyl():
                 #     print('Dephosphorylation at site', sSpS, 'happened!')
@@ -250,10 +250,10 @@ class Component(ComponentBase):
     #     llOInt = [[self.lOO[0], self.llOI[0][1]]]
     #     lOOth = [self.llOI[0][0], self.llOI[1][0]]
     #     self.llOI, self.lOO = llOInt, lOOth
-    #     dCps = {GC.S_SPS_KAS1_S870: (GC.B_DO_DEPYL, self.lPAs0[1])}
+    #     dCps = {GC.S_SPS_KAS1_S870: (GC.S_DO_DEPYL, self.lPAs0[1])}
     #     self.adaptPSites(inpDat, self.lOO[0]
-    #     dCps = {GC.S_SPS_LPR1_S21: (GC.B_DO_DEPYL, self.lPAs0[2]),
-    #             GC.S_SPS_LPR1_S28: (GC.B_DO_PYL, self.lOO[1])}
+    #     dCps = {GC.S_SPS_LPR1_S21: (GC.S_DO_DEPYL, self.lPAs0[2]),
+    #             GC.S_SPS_LPR1_S28: (GC.S_DO_PYL, self.lOO[1])}
     #     self.adaptPSites(inpDat, self.llOI[0][1]
     #     print('Changed state to ' + self.idO + ' (' + self.descO + ').')
 
@@ -266,11 +266,11 @@ class Component(ComponentBase):
     #     self.idO = GC.S_CP_LKI_LONG
     #     self.descO = 'Component NRT2.1-HPCAL1 interaction'
     #     self.lOO[0], self.llOI[0][0] = self.llOI[0][0], self.lOO[0]
-    #     dCps = {GC.S_SPS_KAS1_S839: (GC.B_DO_DEPYL, self.lPAs0[0]),
-    #             GC.S_SPS_KAS1_S870: (GC.B_DO_PYL, self.lKAs0[1])}
+    #     dCps = {GC.S_SPS_KAS1_S839: (GC.S_DO_DEPYL, self.lPAs0[0]),
+    #             GC.S_SPS_KAS1_S870: (GC.S_DO_PYL, self.lKAs0[1])}
     #     self.adaptPSites(inpDat, self.llOI[0][0]
-    #     dCps = {GC.S_SPS_LPR1_S21: (GC.B_DO_PYL, self.lKAs0[2]),
-    #             GC.S_SPS_LPR1_S28: (GC.B_DO_DEPYL, self.lPAs0[3])}
+    #     dCps = {GC.S_SPS_LPR1_S21: (GC.S_DO_PYL, self.lKAs0[2]),
+    #             GC.S_SPS_LPR1_S28: (GC.S_DO_DEPYL, self.lPAs0[3])}
     #     self.adaptPSites(inpDat, self.llOI[0][1]
     #     print('Changed state to ' + self.idO + ' (' + self.descO + ').')
 
@@ -279,7 +279,7 @@ class Component(ComponentBase):
     #     self.descO = 'Component NRT2.1-HPCAL1 transition'
     #     self.llOI.append([self.lOO[1], self.llOI[0][1]])
     #     self.lOO = self.lOO[:1]
-    #     dCps = {GC.S_SPS_KAS1_S839: (GC.B_DO_PYL, self.lKAs0[0])}
+    #     dCps = {GC.S_SPS_KAS1_S839: (GC.S_DO_PYL, self.lKAs0[0])}
     #     self.adaptPSites(inpDat, self.llOI[0][0]
     #     print('Changed state to ' + self.idO + ' (' + self.descO + ').')
 

@@ -2,7 +2,6 @@
 Code updates remaining:
 --------------------------------------------------------------------------------
 * changes in conc. SMo: write back to SMo objects
-* dNCpObj of (of System dITp) --> InpFrames.dNCpObj
 * dConcChg of (of System dITp) --> InpFrames....
 * calcPSigmoidal (to re-activate)
 --------------------------------------------------------------------------------
@@ -15,5 +14,6 @@ Code updates done:
 * replace TS_RCT_...
 * eliminate S_CP_..._SHORT from System dITp and Constants file
 * dConcSMo of (of System dITp) --> InpFrames....
+* dNCpObj of (of System dITp) --> InpFrames.dNCpObj
 
 --------------------------------------------------------------------------------

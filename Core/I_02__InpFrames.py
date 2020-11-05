@@ -50,7 +50,7 @@ class InputFrames:
                     sInd = sL.strip(GC.S_LONG).strip(GC.S_USC)
                     for sCpV in self.dDfrIn[sK2].index:
                         if len(sCpV) > len(sInd) and sCpV[:len(sInd)] == sInd:
-                            if sCpV[len(sInd)] in GC.SET_01_:
+                            if sCpV[len(sInd)] in GC.SET_01_USC:
                                 cK = sCp
                                 cV = self.dDfrIn[sK2].at[sCpV, GC.S_COMPSTR]
                                 GF.addToDictL(self.dSCpTp, cK, cV)

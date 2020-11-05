@@ -45,11 +45,11 @@ def doSiteChange(cO, sSpS, sAse, doDePyl = False):
     opDone = False
     assert sSpS in cO.dSpS
     cSpS = cO.dSpS[sSpS]
-    if not doDePyl and cSpS.sSPTM == GC.B_NOT_PYL and sAse in cSpS.lPyl:
-        cSpS.sSPTM = GC.B_IS_PYL
+    if not doDePyl and cSpS.sSPTM == GC.S_NOT_PYL and sAse in cSpS.lPyl:
+        cSpS.sSPTM = GC.S_IS_PYL
         opDone = True
-    elif doDePyl and cSpS.sSPTM == GC.B_IS_PYL and sAse in cSpS.lDePyl:
-        cSpS.sSPTM = GC.B_NOT_PYL
+    elif doDePyl and cSpS.sSPTM == GC.S_IS_PYL and sAse in cSpS.lDePyl:
+        cSpS.sSPTM = GC.S_NOT_PYL
         opDone = True
     return opDone
 
@@ -73,11 +73,11 @@ def createDCnc(inpFr):
         dCncIni[sSMo] = GF.drawFromDist(cTp, dPar)
     return dCncIni
 
-def iniDictOut(dITp, dCnc, t = 0., tDlt = 0.):
+def iniDictOut(dITp, inpFr, dCnc, t = 0., tDlt = 0.):
     dO = {'dN': {}, 'dH': {}, 'h': 0., 'tDlt': tDlt, 'dRes': {GC.S_TIME: [t]}}
     for s, cCnc in dCnc.items():
         dO['dRes'][s] = [cCnc]
-    for s, k in dITp['dNCpObj'].items():
+    for s, k in inpFr.dNCpObj.items():
         dO['dRes'][s] = [k]
         dO['dN'][s] = k
     return dO
@@ -159,7 +159,7 @@ def updateDictOut(dITp, dO, dCnc, t):
 
 def evolveGillespie(dIG, dITp, inpFr, dCncSMo):
     t, T, tDelta, cTSt = dIG['tStart'], dIG['tMax'], 0, 0
-    dO = iniDictOut(dITp, dCncSMo, t, tDelta)
+    dO = iniDictOut(dITp, inpFr, dCncSMo, t, tDelta)
     while t < T and cTSt <= dIG['maxTS']:
         dspCnd = (cTSt >= dIG['minDispTS'] and cTSt%dIG['modDispTS'] == 0)
         if dspCnd:

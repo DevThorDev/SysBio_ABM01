@@ -67,6 +67,7 @@ S_SPS_LPRA_S21 = 'S21'
 S_SPS_LPRA_S28 = 'S28'
 S_SPS_KASA_S839 = 'S839'
 S_SPS_KASA_S870 = 'S870'
+L_S_SPS = [S_SPS_LPRA_S21, S_SPS_LPRA_S28, S_SPS_KASA_S839, S_SPS_KASA_S870]
 
 DS_SPS_LPR_NRT2P1 = {S_SPS_LPRA_S21: {'iSP': 3, 'iLAse': 2},
                      S_SPS_LPRA_S28: {'iSP': 4, 'iLAse': 3}}
@@ -76,10 +77,37 @@ DS_SPS = {ID_LPR_NRT2P1: DS_SPS_LPR_NRT2P1,
           ID_KAS_HPCAL1: DS_SPS_KAS_HPCAL1}
 
 # --- constants related to interactions ---------------------------------------
-B_DO_PYL = 'Pyl'
-B_DO_DEPYL = 'DePyl'
-B_IS_PYL = 'P+'
-B_NOT_PYL = 'P-'
+S_L = 'L'
+S_S = 'S'
+S_K = 'K'
+S_I = 'INTER'
+S_T = 'TRANS'
+L_S_LSK = [S_L, S_S, S_K]
+L_S_IT = [S_I, S_T]
+
+S_DO_PYL = 'Pyl'
+S_DO_DEPYL = 'DePyl'
+L_DO_PYL_DEPYL = [S_DO_PYL, S_DO_DEPYL]
+
+S_IS_PYL = 'P+'
+S_NOT_PYL = 'P-'
+L_PYL_OR_NOT = [S_IS_PYL, S_NOT_PYL]
+
+S_FRM_L_S_LSI = 'LpS_LSI'
+S_FRM_L_S_LST = 'LpS_LST'
+S_FRM_L_K_LKI = 'LpK_LKI'
+S_FRM_L_K_LKT = 'LpK_LKT'
+L_S_FRM = [S_FRM_L_S_LSI, S_FRM_L_S_LST, S_FRM_L_K_LKI, S_FRM_L_K_LKT]
+
+S_DIS_LSI_L_S = 'LSI_LpS'
+S_DIS_LST_L_S = 'LST_LpS'
+S_DIS_LKI_L_K = 'LKI_LpK'
+S_DIS_LKT_L_K = 'LKT_LpK'
+L_S_DIS = [S_DIS_LSI_L_S, S_DIS_LST_L_S, S_DIS_LKI_L_K, S_DIS_LKT_L_K]
+
+S_LST_LKI = 'LST_LKI'
+S_LKT_LSI = 'LKT_LSI'
+L_S_IPC = [S_LST_LKI, S_LKT_LSI]
 
 # --- constants related to input frames ---------------------------------------
 S_COMPDESC = 'ComponentDescription'
@@ -112,13 +140,21 @@ S_WT = 'Weight'
 S_SHORT = 'SHORT'
 S_LONG = 'LONG'
 
-S_CP_L_SHORT = 'L--'
-S_CP_S_SHORT = 'S--'
-S_CP_K_SHORT = 'K--'
-S_CP_LSI_SHORT = 'LSI'
-S_CP_LST_SHORT = 'LST'
-S_CP_LKI_SHORT = 'LKI'
-S_CP_LKT_SHORT = 'LKT'
+# --- constants related to reactions ------------------------------------------
+S_RCT_11 = '11'
+S_RCT_12 = '12'
+S_RCT_21 = '21'
+S_RCT_22 = '22'
+LEN_S_RCT = 7
+I_S_RCT_ST_01 = 3
+
+# S_CP_L_SHORT = 'L--'
+# S_CP_S_SHORT = 'S--'
+# S_CP_K_SHORT = 'K--'
+# S_CP_LSI_SHORT = 'LSI'
+# S_CP_LST_SHORT = 'LST'
+# S_CP_LKI_SHORT = 'LKI'
+# S_CP_LKT_SHORT = 'LKT'
 
 # S_CP_L_LONG = 'Cp_L_NRT2p1'
 # S_CP_S_LONG = 'Cp_S_NAR2p1'
@@ -261,13 +297,13 @@ S_CP_LKT_SHORT = 'LKT'
 #           S_CP_LKT1101: TS_RCT_LKT1101,
 #           S_CP_LKT1110: TS_RCT_LKT1110,
 #           S_CP_LKT1111: TS_RCT_LKT1111}
-DS_RCT = {}
 
 SET_01 = {'0', '1'}
-SET_01_ = {'0', '1', '_'}
+SET_01_USC = {'0', '1', '_'}
+SET_01_DASH = {'0', '1', '-'}
 
 # --- constants related to phosphorylations and dephosphorylations of sites ---
-DS_SITES_PYL = {'0': B_DO_DEPYL, '1': B_DO_PYL}
+DS_SITES_PYL = {'0': S_DO_DEPYL, '1': S_DO_PYL}
 
 # --- constants related to model output ---------------------------------------
 S_TS = 'TimeStep'

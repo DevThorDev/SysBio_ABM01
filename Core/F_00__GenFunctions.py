@@ -109,6 +109,70 @@ def getSRct(dH):
             break
     return list(dH)[rIdx]
 
+def sRct11(lSLHS, lSRHS):
+    sLHS, sRHS, lSKeys, dRctTp = lSLHS[0], lSRHS[0], GC.L_S_SPS, {}
+    assert len(sLHS) == GC.LEN_S_RCT and len(sLHS) == len(sRHS)
+    for k, chLHS in enumerate(sLHS[GC.I_S_RCT_ST_01:]):
+        chRHS = sRHS[k + GC.I_S_RCT_ST_01]
+        assert chLHS in GC.SET_01_DASH and chRHS in GC.SET_01_DASH
+        if chLHS in GC.SET_01 and chRHS in GC.SET_01:
+            if chLHS != chRHS:
+                if chLHS == '0' and chRHS == '1':
+                    dRctTp[lSKeys[k]] = GC.L_DO_PYL_DEPYL[0]    # do Pyl
+                else:                           # chLHS == '1' and chRHS == '0'
+                    dRctTp[lSKeys[k]] = GC.L_DO_PYL_DEPYL[1]    # do DePyl
+    return GC.S_RCT_11, dRctTp
+
+def sRct21(lSLHS, lSRHS):
+    ((sLHS1, sLHS2), sRHS) = (lSLHS, lSRHS[0])
+    dRctTp, sK, s01LHS, s01RHS = {}, None, '', ''
+    assert (len(sLHS1) == GC.LEN_S_RCT and len(sLHS1) == len(sLHS2) and
+            len(sLHS1) == len(sRHS))
+    assert (sLHS1[0] in GC.L_S_LSK and sLHS2[0] in GC.L_S_LSK and
+            sRHS[0] in GC.L_S_LSK and sRHS[1] in GC.L_S_LSK)
+    assert sRHS[0] == sLHS1[0] and sRHS[1] == sLHS2[0]
+    assert sRHS[2] in GC.L_S_IT
+    if sRHS[0] == GC.S_L and sRHS[1] == GC.S_S and sRHS[2] == GC.S_I:
+        sK = GC.S_FRM_L_S_LSI
+    elif sRHS[0] == GC.S_L and sRHS[1] == GC.S_S and sRHS[2] == GC.S_T:
+        sK = GC.S_FRM_L_S_LST
+    elif sRHS[0] == GC.S_L and sRHS[1] == GC.S_K and sRHS[2] == GC.S_I:
+        sK = GC.S_FRM_L_K_LKI
+    elif sRHS[0] == GC.S_L and sRHS[1] == GC.S_K and sRHS[2] == GC.S_T:
+        sK = GC.S_FRM_L_K_LKT
+    for k, chRHS in enumerate(sRHS[GC.I_S_RCT_ST_01:]):
+        if sLHS1[k] in GC.SET_01 and sLHS2[k] not in GC.SET_01:
+            s01LHS += sLHS1[k]
+        elif sLHS2[k] in GC.SET_01 and sLHS1[k] not in GC.SET_01:
+            s01LHS += sLHS2[k]
+        elif sLHS1[k] in GC.SET_01 and sLHS2[k] in GC.SET_01:
+            print('ERROR: Position', k + GC.I_S_RCT_ST_01, ': LHS string 1 is',
+                  sLHS1[k], 'while LHS string 2 is', sLHS2[k])
+        if chRHS in GC.SET_01:
+            s01RHS += chRHS
+    if sK is not None and s01LHS == s01RHS:
+        dRctTp[sK] = s01LHS
+    else:
+        print('ERROR: Key is', sK, 'while LHS 01-string is', s01LHS, 'but RHS',
+              '01-string is', s01RHS)
+    return GC.S_RCT_21, dRctTp
+
+def analyseSRct(sRct = 'L--10--+K----01_LKI1001'):
+    lSSplRct = partStr(sRct)
+    assert len(lSSplRct) == 2       # a valid reaction
+    if len(lSSplRct[0]) == 1 and len(lSSplRct[1]) == 1:
+        return sRct11(lSSplRct[0],lSSplRct[1])
+    elif len(lSSplRct[0]) == 2 and len(lSSplRct[1]) == 1:
+        pass
+    elif len(lSSplRct[0]) == 1 and len(lSSplRct[1]) == 2:
+        pass
+    elif len(lSSplRct[0]) == 2 and len(lSSplRct[1]) == 2:
+        pass
+    else:
+        print('Reaction type with more than two reactants or products not',
+              'implemented. Number of reactants is', len(lSSplRct[0]),
+              'while number of products is', len(lSSplRct[1]))
+
 def updateDITpDIPlt(dITpC, dITpU, lKSpc = [GC.S_D_PLT]):
     for cKSpc in lKSpc:
         if cKSpc in dITpC and cKSpc in dITpU:
