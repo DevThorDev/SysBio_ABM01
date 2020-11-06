@@ -23,7 +23,9 @@ cInpFrames = InputFrames(inDG)
 # print(cInpFrames.dSCp7)
 # print(cInpFrames.dSCpTp)
 # print(cInpFrames.dNCpObj)
-print(cInpFrames.dRct)
+print(cInpFrames.dConcChg)
+print(cInpFrames.dChgConcDep)
+# print(cInpFrames.dRct)
 
 # cSystem = System(inDG, cInpFrames)
 # if cSystem.dIG['doEvoT']:

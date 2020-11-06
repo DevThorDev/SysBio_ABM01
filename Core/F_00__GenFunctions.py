@@ -72,6 +72,12 @@ def addToDictL(cD, cK, cE, lUnique = False):
     else:
         cD[cK] = [cE]
 
+def addToDictD(cD, cKO, cKI, cEI):
+    if cKO in cD:
+        cD[cKO][cKI] = cEI
+    else:
+        cD[cKO] = {cKI: cEI}
+
 def appendToDictL(cD, lE):
     assert len(lE) == len(cD)
     for i, cK in enumerate(cD):

@@ -85,18 +85,18 @@ def iniDictOut(dITp, inpFr, dCnc, t = 0., tDlt = 0.):
 def changeConcSMo(dITp, inpFr, dO, dCncSMo, cID = None, dspI = False):
     if dspI:
         pass
-    cDfr = inpFr.dDfrIn[GC.S_02]
+    cDfr, nCpO = inpFr.dDfrIn[GC.S_02], inpFr.nCpObj
     for sSMo in dCncSMo:
         cncMn, cncMx = cDfr.at[sSMo, GC.S_CNC_MIN], cDfr.at[sSMo, GC.S_CNC_MAX]
         cncCh = 0.
         for s in dO['dN']:
-            assert s in dITp['dConcChg'][sSMo]
-            cncCh += dITp['dConcChg'][sSMo][s]['absChg']*dO['dN'][s]
-        dCncSMo[sSMo] += cncCh*dO['tDlt']/dITp['nCpObj']*dITp['concChgScale']
+            assert s in inpFr.dConcChg[sSMo]
+            cncCh += inpFr.dConcChg[sSMo][s]*dO['dN'][s]
+        dCncSMo[sSMo] += cncCh*dO['tDlt']/nCpO*dITp['concChgScale']
         dCncSMo[sSMo] = GF.implMinMax(dCncSMo[sSMo], cncMn, cncMx)
 
 def updateDictH(dITp, inpFr, dO, dCncSMo, dspI = False):
-    dCncCh, dRUp = dITp['dConcChg'], {}     # adapt dConcChg
+    dChgCD, dRUp = inpFr.dChgConcDep, {}
     sMoN, sMoP = GC.ID_NO3_1M, GC.ID_H2PO4_1M
     # update the reaction rate constants according to the current [NO3-]
     # for tS, tRRC in inpFr.dRct.items():
@@ -105,8 +105,7 @@ def updateDictH(dITp, inpFr, dO, dCncSMo, dspI = False):
     #         p = GF.calcPSigmoidal(dCncSMo[sMoN], dCncCh[tS][sMoN][k])
     #         dRUp[s] = tRRC[k]*p
     for sRct, wtRct in inpFr.dRct.items():
-        # p = GF.calcPSigmoidal(dCncSMo[sMoN], dCncCh[tS][sMoN][k])  # adapt dConcChg
-        p = 0.5     # TODO: change
+        p = GF.calcPSigmoidal(dCncSMo[sMoN], dCncCh[tS][sMoN][k])
         dRUp[sRct] = wtRct*p
         # recalculate dH, which contains the h_i (i = 1,... len(dH))
         dO['dH'][sRct] = dRUp[sRct]*dO['dN'][sRct.split(GC.S_USC)[0]]

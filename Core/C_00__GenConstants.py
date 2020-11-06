@@ -34,6 +34,10 @@ ID_PAS_1, ID_PAS_2, ID_PAS_3, ID_PAS_4 = 'PAs1', 'PAs2', 'PAs3', 'PAs4'
 ID_NO3_1M = 'NO3_1m'
 ID_H2PO4_1M = 'H2PO4_1m'
 
+S_N = 'N'
+S_P = 'P'
+L_S_1DIG_SMO = [S_N, S_P]
+
 L_ID_MOL = ['Mol']
 L_ID_PRO = ['Pro']
 L_ID_LPR = ['LPr', ID_LPR_NRT2P1]
@@ -133,6 +137,7 @@ S_PAR_PMAX = 'ProbMax'
 S_PAR_B = 'B'
 S_PAR_C = 'C'
 S_PAR_D = 'D'
+L_S_PAR_TAB05 = [S_PAR_PMIN, S_PAR_PMIN, S_PAR_B, S_PAR_C, S_PAR_D]
 S_RCTDESC = 'ReactionDescription'
 S_RCTVAR = 'ReactionVariable'
 S_RCTSTR = 'ReactionString'
