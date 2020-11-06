@@ -80,8 +80,8 @@ DS_SPS = {ID_LPR_NRT2P1: DS_SPS_LPR_NRT2P1,
 S_L = 'L'
 S_S = 'S'
 S_K = 'K'
-S_I = 'INTER'
-S_T = 'TRANS'
+S_I = 'I'
+S_T = 'T'
 L_S_LSK = [S_L, S_S, S_K]
 L_S_IT = [S_I, S_T]
 
@@ -105,9 +105,11 @@ S_DIS_LKI_L_K = 'LKI_LpK'
 S_DIS_LKT_L_K = 'LKT_LpK'
 L_S_DIS = [S_DIS_LSI_L_S, S_DIS_LST_L_S, S_DIS_LKI_L_K, S_DIS_LKT_L_K]
 
-S_LST_LKI = 'LST_LKI'
-S_LKT_LSI = 'LKT_LSI'
-L_S_IPC = [S_LST_LKI, S_LKT_LSI]
+S_IPC_LSI_LKT = 'LSI_LKT'
+S_IPC_LST_LKI = 'LST_LKI '
+S_IPC_LKI_LST = 'LKI_LST'
+S_IPC_LKT_LSI = 'LKT_LSI'
+L_S_IPC = [S_IPC_LSI_LKT, S_IPC_LST_LKI, S_IPC_LKI_LST, S_IPC_LKT_LSI]
 
 # --- constants related to input frames ---------------------------------------
 S_COMPDESC = 'ComponentDescription'
@@ -146,7 +148,7 @@ S_RCT_12 = '12'
 S_RCT_21 = '21'
 S_RCT_22 = '22'
 LEN_S_RCT = 7
-I_S_RCT_ST_01 = 3
+I_S_RCT_01 = 3
 
 # S_CP_L_SHORT = 'L--'
 # S_CP_S_SHORT = 'S--'

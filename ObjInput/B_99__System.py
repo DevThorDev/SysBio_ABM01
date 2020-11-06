@@ -84,7 +84,6 @@ MassC = 2                           # nanograms
 # w_LKT_LSI = 0.1
 
 # dictionary of basic reaction rate weights
-dRRC = {}
 # dRRC = {GC.TS_RCT_L00:(w_Pyl_S28*w_L_L, w_Pyl_S21*w_L_L),
 #         GC.TS_RCT_L01:(w_DPy_S28*w_L_L, w_Pyl_S21*w_L_L,
 #                        w_Frm_L_S_LS*w_L_S_LSI),
@@ -320,7 +319,6 @@ dRRC = {}
 # tDPar_LKT1111_P = (dPar_Dummy, dPar_Dummy, dPar_Dummy, dPar_Dummy)
 
 # GC.ID_NO3_1M, GC.ID_H2PO4_1M: max. changes per unit time
-dConcChg = {}
 # dConcChg = {GC.ID_NO3_1M: {GC.TS_RCT_LKI1001: dPar_N_LKI1001,
 #                            GC.TS_RCT_LKT0000: dPar_N_LKT0000,
 #                            GC.TS_RCT_LKT0001: dPar_N_LKT0001,
@@ -433,9 +431,6 @@ dlSY = {(sPlt_SSC, 'Int_vs_Tra'): (lSCpAll + [GC.ID_NO3_1M], yLbl_CpCnc,
                                d_S_vs_K),
         (sPlt_SSC, '4_Int_Tra'): (lSCpAll + [GC.ID_NO3_1M], yLbl_CpCnc,
                                   d_4_Int_Tra),
-        # (sPlt_SSC, 'SelSpec4'): ([GC.TS_RCT_LSI01, GC.TS_RCT_LST10,
-        #                           GC.TS_RCT_LKI1001, GC.TS_RCT_LKT0110,
-        #                           GC.ID_NO3_1M], yLbl_CpCnc, None),
         (sPlt_SCp, 1): (lSCpAll[:9], yLbl_Cp, None),
         (sPlt_SCp, None): (lSCpAll, yLbl_Cp, d_4_Int_Tra),
         (sPlt_SCn, None): ([GC.ID_NO3_1M, GC.ID_H2PO4_1M], yLbl_Cnc, None)}
@@ -454,10 +449,6 @@ dIO = {# --- general
        'VolC': VolC,
        'MassC': MassC,
        # --- data containing components, reactions and conc. change info
-       # 'dNCpObj': dNCpObj,
-       # 'nCpObj': sum(dNCpObj.values()),
-       'dRRC': dRRC,
-       'dConcChg': dConcChg,
        'concChgScale': concChgScale,
        # --- path, directory and file names
        'sD_Sys': sD_Sys,
