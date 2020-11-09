@@ -52,7 +52,7 @@ class SmallMolecule(Metabolite):
     #     self.cCnc = max(0, cCnc_t + cCncChCp)
 
 class SMo_NO3_1m(SmallMolecule):
-    def __init__(self, inpDat, iTp = 501, dStat = {}):
+    def __init__(self, inpDat, iTp = 61, dStat = {}):
         super().__init__(inpDat, iTp, dStat)
         self.idO = GC.ID_NO3_1M
         self.descO = 'Small molecule NO3-'
@@ -60,7 +60,7 @@ class SMo_NO3_1m(SmallMolecule):
         # print('Initiated "SMo_NO3_1m" object.')
 
 class SMo_H2PO4_1m(SmallMolecule):
-    def __init__(self, inpDat, iTp = 502, dStat = {}):
+    def __init__(self, inpDat, iTp = 62, dStat = {}):
         super().__init__(inpDat, iTp, dStat)
         self.idO = GC.ID_H2PO4_1M
         self.descO = 'Small molecule H2PO4-'

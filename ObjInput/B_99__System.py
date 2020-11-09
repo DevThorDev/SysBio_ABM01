@@ -386,7 +386,9 @@ MassC = 2                           # nanograms
 #             GC.TS_RCT_LKT1111: {GC.ID_NO3_1M: tDPar_LKT1111_N,
 #                                 GC.ID_H2PO4_1M: tDPar_LKT1111_P}}
 
-concChgScale = 1.    # scale of concentration change def. in dConcChg
+wtRctDirect = False # True: reaction weights directly from the reaction tbl.
+                    # False: calculate reaction weights from single events
+concChgScale = 1.   # scale of concentration change def. in dConcChg
 
 # --- graphics parameters: component numbers and molecule conc. plot ----------
 sPlt_SSC = '01_SelCpConc'               # name of sel. comps and conc. plot
@@ -449,6 +451,7 @@ dIO = {# --- general
        'VolC': VolC,
        'MassC': MassC,
        # --- data containing components, reactions and conc. change info
+       'wtRctDirect': wtRctDirect,
        'concChgScale': concChgScale,
        # --- path, directory and file names
        'sD_Sys': sD_Sys,

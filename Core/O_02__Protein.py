@@ -26,8 +26,8 @@ class LargeProtein(Protein):
         # print('Initiated "LargeProtein" object.')
 
 class Protein_NRT2p1(LargeProtein):
-    def __init__(self, inpDat, iTp = 201, dStat = {'S21': GC.S_IS_PYL,
-                                                   'S28': GC.S_NOT_PYL}):
+    def __init__(self, inpDat, iTp = 21, dStat = {'S21': GC.S_IS_PYL,
+                                                  'S28': GC.S_NOT_PYL}):
         super().__init__(inpDat, iTp, dStat)
         self.idO = GC.ID_LPR_NRT2P1
         self.descO = 'Large protein NRT2.1'
@@ -42,7 +42,7 @@ class SmallProtein(Protein):
         # print('Initiated "SmallProtein" object.')
 
 class Protein_NAR2p1(SmallProtein):
-    def __init__(self, inpDat, iTp = 301, dStat = {}):
+    def __init__(self, inpDat, iTp = 31, dStat = {}):
         super().__init__(inpDat, iTp, dStat)
         self.idO = GC.ID_SPR_NAR2P1
         self.descO = 'Small protein NAR2.1'
@@ -64,8 +64,8 @@ class Kinase(Enzyme):
         # print('Initiated "Kinase" object.')
 
 class Kinase_HPCAL1(Kinase):
-    def __init__(self, inpDat, iTp = 101, dStat = {'S839': GC.S_NOT_PYL,
-                                                   'S870': GC.S_IS_PYL}):
+    def __init__(self, inpDat, iTp = 41, dStat = {'S839': GC.S_NOT_PYL,
+                                                  'S870': GC.S_IS_PYL}):
         super().__init__(inpDat, iTp, dStat)
         self.idO = GC.ID_KAS_HPCAL1
         self.descO = 'Kinase HPCAL1'
@@ -73,7 +73,7 @@ class Kinase_HPCAL1(Kinase):
         # print('Initiated "Kinase_HPCAL1" object.')
 
 class Kinase_X(Kinase):
-    def __init__(self, inpDat, iTp = 102, dStat = {}):
+    def __init__(self, inpDat, iTp = 44, dStat = {}):
         super().__init__(inpDat, iTp, dStat)
         self.idO = GC.ID_KAS_X
         self.descO = 'Kinase X'
@@ -81,7 +81,7 @@ class Kinase_X(Kinase):
         # print('Initiated "Kinase_X" object.')
 
 class Kinase0(Kinase):
-    def __init__(self, inpDat, cID, iTp = 110, dStat = {}):
+    def __init__(self, inpDat, cID, iTp = 45, dStat = {}):
         super().__init__(inpDat, iTp, dStat)
         self.idO = cID
         self.descO = 'Kinase 0'
@@ -96,7 +96,7 @@ class Phosphatase(Enzyme):
         # print('Initiated "Phosphatase" object.')
 
 class Phosphatase0(Phosphatase):
-    def __init__(self, inpDat, cID, iTp = 150, dStat = {}):
+    def __init__(self, inpDat, cID, iTp = 55, dStat = {}):
         super().__init__(inpDat, iTp, dStat)
         self.idO = cID
         self.descO = 'Phosphatase 0'

@@ -16,9 +16,9 @@ class InputFrames:
         self.getDSCp7()
         self.getDSCpTp()
         self.getIniSysCpObj()
-        self.getDConcChg()
-        self.getDChgConcDep()
         self.getDRct()
+        self.getDChgConcDep()
+        self.getDConcChg()
 
     def getDSCp7(self, sK = GC.S_00):
         self.dSCp7, lTK, lTV = {}, [], []
@@ -75,23 +75,22 @@ class InputFrames:
         else:
             print('ERROR: Key', sK, 'not in DataFrames dictionary!')
 
-    def getDConcChg(self, sK = GC.S_04):
-        self.dConcChg = {}
+    def getDRct(self, sK = GC.S_04):
+        self.dRct = {}
         if sK in self.dDfrIn:
-            assert GC.S_VAL_ABS_CH in self.dDfrIn[sK].columns
+            assert (GC.S_RCTSTR in self.dDfrIn[sK].columns and
+                    GC.S_WT in self.dDfrIn[sK].columns)
             for sI in self.dDfrIn[sK].index:
-                assert sI[0] in GC.L_S_1DIG_SMO
-                cKM = GC.L_ID_SMO_USED[GC.L_S_1DIG_SMO.index(sI[0])]
-                cV = self.dDfrIn[sK].at[sI, GC.S_VAL_ABS_CH]
-                GF.addToDictD(self.dConcChg, cKM, sI[(1 + 1):], cV)
+                cK = self.dDfrIn[sK].at[sI, GC.S_RCTSTR]
+                cV = self.dDfrIn[sK].at[sI, GC.S_WT]
+                self.dRct[cK] = cV
         else:
             print('ERROR: Key', sK, 'not in DataFrames dictionary!')
 
     def getDChgConcDep(self, sK = GC.S_05):
         self.dChgConcDep = {}
         if sK in self.dDfrIn:
-            for sHdCol in [GC.S_PAR_PMIN, GC.S_PAR_PMAX, GC.S_PAR_B,
-                           GC.S_PAR_C, GC.S_PAR_D]:
+            for sHdCol in GC.L_S_PAR_TAB05:
                 assert sHdCol in self.dDfrIn[sK].columns
             for sI in self.dDfrIn[sK].index:
                 assert sI[0] in GC.L_S_1DIG_SMO
@@ -101,15 +100,15 @@ class InputFrames:
         else:
             print('ERROR: Key', sK, 'not in DataFrames dictionary!')
 
-    def getDRct(self, sK = GC.S_06):
-        self.dRct = {}
+    def getDConcChg(self, sK = GC.S_06):
+        self.dConcChg = {}
         if sK in self.dDfrIn:
-            assert (GC.S_RCTSTR in self.dDfrIn[sK].columns and
-                    GC.S_WT in self.dDfrIn[sK].columns)
+            assert GC.S_VAL_ABS_CH in self.dDfrIn[sK].columns
             for sI in self.dDfrIn[sK].index:
-                cK = self.dDfrIn[sK].at[sI, GC.S_RCTSTR]
-                cV = self.dDfrIn[sK].at[sI, GC.S_WT]
-                self.dRct[cK] = cV
+                assert sI[0] in GC.L_S_1DIG_SMO
+                cKM = GC.L_ID_SMO_USED[GC.L_S_1DIG_SMO.index(sI[0])]
+                cV = self.dDfrIn[sK].at[sI, GC.S_VAL_ABS_CH]
+                GF.addToDictD(self.dConcChg, cKM, sI[(1 + 1):], cV)
         else:
             print('ERROR: Key', sK, 'not in DataFrames dictionary!')
 

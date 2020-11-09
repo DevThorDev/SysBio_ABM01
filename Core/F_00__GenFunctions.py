@@ -87,10 +87,9 @@ def implMinMax(x, lowB = 0, upB = 1):
     return min(max(x, lowB), upB)
 
 def calcPSigmoidal(x, dPar):
-    pMin, pMax = dPar['prMin'], dPar['prMax']
     B, C, D = dPar['B'], dPar['C'], dPar['D']
     fCh = (B*(B + C)/C*(1/(B + C*np.exp(-D*x)) - 1/(B + C)))
-    return pMin + (pMax - pMin)*fCh
+    return dPar['ProbMin'] + (dPar['ProbMax'] - dPar['ProbMin'])*fCh
 
 def drawFromDist(sDist, dPar, nVal = None):
     if sDist == 'uniform':
@@ -120,20 +119,26 @@ def sRct11(lSLHS, lSRHS):
     # check if it is a valid reaction string
     assert len(sLHS) == GC.LEN_S_RCT and len(sLHS) == len(sRHS)
     # find the appropriate key and value, and add the pair to the dict.
+    sKTp = (sLHS[:GC.I_S_RCT_01].strip(GC.S_DASH) + GC.S_USC +
+            sRHS[:GC.I_S_RCT_01].strip(GC.S_DASH))
     for k, chLHS in enumerate(sLHS[GC.I_S_RCT_01:]):
         chRHS = sRHS[k + GC.I_S_RCT_01]
         assert chLHS in GC.SET_01_DASH and chRHS in GC.SET_01_DASH
         if chLHS in GC.SET_01 and chRHS in GC.SET_01:
             if chLHS != chRHS:
-                if chLHS == '0' and chRHS == '1':
-                    dRctTp[lSKeys[k]] = GC.L_DO_PYL_DEPYL[0]    # do Pyl
-                else:                           # chLHS == '1' and chRHS == '0'
-                    dRctTp[lSKeys[k]] = GC.L_DO_PYL_DEPYL[1]    # do DePyl
+                if chLHS == '0' and chRHS == '1':   # phosphorylation
+                    sKP = GC.S_DO_PYL + GC.S_USC + lSKeys[k]
+                    dRctTp[sKP] = GC.S_DO_PYL
+                else:                               # dephosphorylation
+                    sKP = GC.S_DO_DPY + GC.S_USC + lSKeys[k]
+                    dRctTp[sKP] = GC.S_DO_DPY
+                dRctTp[sKTp] = sKP
+                break       # only one (de)phosphorylation per event
     return GC.S_RCT_11, dRctTp
 
 def sRct21(lSLHS, lSRHS):
     ((sLHS1, sLHS2), sRHS) = (lSLHS, lSRHS[0])
-    dRctTp, sK, s01LHS, s01RHS = {}, None, '', ''
+    dRctTp, sK, s01LHS, s01RHS = {}, GC.S_DO_FRM + GC.S_USC, '', ''
     # check if it is a valid reaction string
     assert (len(sLHS1) == GC.LEN_S_RCT and len(sLHS1) == len(sLHS2) and
             len(sLHS1) == len(sRHS))
@@ -143,13 +148,13 @@ def sRct21(lSLHS, lSRHS):
     assert sRHS[2] in GC.L_S_IT
     # find the appropriate key
     if sRHS[0] == GC.S_L and sRHS[1] == GC.S_S and sRHS[2] == GC.S_I:
-        sK = GC.S_FRM_L_S_LSI
+        sK += GC.S_FRM_L_S_LSI
     elif sRHS[0] == GC.S_L and sRHS[1] == GC.S_S and sRHS[2] == GC.S_T:
-        sK = GC.S_FRM_L_S_LST
+        sK += GC.S_FRM_L_S_LST
     elif sRHS[0] == GC.S_L and sRHS[1] == GC.S_K and sRHS[2] == GC.S_I:
-        sK = GC.S_FRM_L_K_LKI
+        sK += GC.S_FRM_L_K_LKI
     elif sRHS[0] == GC.S_L and sRHS[1] == GC.S_K and sRHS[2] == GC.S_T:
-        sK = GC.S_FRM_L_K_LKT
+        sK += GC.S_FRM_L_K_LKT
     # find and check the appropriate value
     for k, chRHS in enumerate(sRHS[GC.I_S_RCT_01:]):
         chLHS1, chLHS2 = sLHS1[k + GC.I_S_RCT_01], sLHS2[k + GC.I_S_RCT_01]
@@ -165,7 +170,7 @@ def sRct21(lSLHS, lSRHS):
         if chRHS in GC.SET_01:
             s01RHS += chRHS
     # if OK, add the pair to the dict.
-    if sK is not None and s01LHS == s01RHS:
+    if len(sK) > len(GC.S_DO_FRM + GC.S_USC) and s01LHS == s01RHS:
         dRctTp[sK] = s01LHS
     else:
         print('ERROR: Key is', sK, 'while LHS 01-string is', s01LHS, 'but RHS',
@@ -174,7 +179,7 @@ def sRct21(lSLHS, lSRHS):
 
 def sRct12(lSLHS, lSRHS):
     (sLHS, (sRHS1, sRHS2)) = (lSLHS[0], lSRHS)
-    dRctTp, sK, s01LHS, s01RHS = {}, None, '', ''
+    dRctTp, sK, s01LHS, s01RHS = {}, GC.S_DO_DIS + GC.S_USC, '', ''
     # check if it is a valid reaction string
     assert (len(sLHS) == GC.LEN_S_RCT and len(sLHS) == len(sRHS1) and
             len(sLHS) == len(sRHS2))
@@ -184,13 +189,13 @@ def sRct12(lSLHS, lSRHS):
     assert sLHS[2] in GC.L_S_IT
     # find the appropriate key
     if sLHS[0] == GC.S_L and sLHS[1] == GC.S_S and sLHS[2] == GC.S_I:
-        sK = GC.S_DIS_LSI_L_S
+        sK += GC.S_DIS_LSI_L_S
     elif sLHS[0] == GC.S_L and sLHS[1] == GC.S_S and sLHS[2] == GC.S_T:
-        sK = GC.S_DIS_LST_L_S
+        sK += GC.S_DIS_LST_L_S
     elif sLHS[0] == GC.S_L and sLHS[1] == GC.S_K and sLHS[2] == GC.S_I:
-        sK = GC.S_DIS_LKI_L_K
+        sK += GC.S_DIS_LKI_L_K
     elif sLHS[0] == GC.S_L and sLHS[1] == GC.S_K and sLHS[2] == GC.S_T:
-        sK = GC.S_DIS_LKT_L_K
+        sK += GC.S_DIS_LKT_L_K
     # find and check the appropriate value
     for k, chLHS in enumerate(sLHS[GC.I_S_RCT_01:]):
         chRHS1, chRHS2 = sRHS1[k + GC.I_S_RCT_01], sRHS2[k + GC.I_S_RCT_01]
@@ -206,7 +211,7 @@ def sRct12(lSLHS, lSRHS):
         if chLHS in GC.SET_01:
             s01LHS += chLHS
     # if OK, add the pair to the dict.
-    if sK is not None and s01LHS == s01RHS:
+    if len(sK) > len(GC.S_DO_DIS + GC.S_USC) and s01LHS == s01RHS:
         dRctTp[sK] = s01LHS
     else:
         print('ERROR: Key is', sK, 'while LHS 01-string is', s01LHS, 'but RHS',
@@ -215,7 +220,7 @@ def sRct12(lSLHS, lSRHS):
 
 def sRct22(lSLHS, lSRHS):
     ((sLHS1, sLHS2), (sRHS1, sRHS2)) = (lSLHS, lSRHS)
-    dRctTp, sK, s01LHS, s01RHS = {}, None, '', ''
+    dRctTp, sK, s01LHS, s01RHS = {}, GC.S_DO_IPC + GC.S_USC, '', ''
     # check if it is a valid reaction string
     assert (len(sLHS1) == GC.LEN_S_RCT and len(sLHS1) == len(sLHS2) and
             len(sLHS1) == len(sRHS1) and len(sLHS1) == len(sRHS2))
@@ -228,16 +233,16 @@ def sRct22(lSLHS, lSRHS):
     # find the appropriate key
     if (sLHS1[0] == GC.S_L and sLHS1[1] == GC.S_S and sLHS1[2] == GC.S_I and
         sRHS1[0] == GC.S_L and sRHS1[1] == GC.S_K and sRHS1[2] == GC.S_T):
-        sK = GC.S_IPC_LSI_LKT
+        sK += GC.S_IPC_LSI_LKT
     elif (sLHS1[0] == GC.S_L and sLHS1[1] == GC.S_S and sLHS1[2] == GC.S_T and
           sRHS1[0] == GC.S_L and sRHS1[1] == GC.S_K and sRHS1[2] == GC.S_I):
-        sK = GC.S_IPC_LST_LKI
+        sK += GC.S_IPC_LST_LKI
     elif (sLHS1[0] == GC.S_L and sLHS1[1] == GC.S_K and sLHS1[2] == GC.S_I and
           sRHS1[0] == GC.S_L and sRHS1[1] == GC.S_S and sRHS1[2] == GC.S_T):
-        sK = GC.S_IPC_LKI_LST
+        sK += GC.S_IPC_LKI_LST
     elif (sLHS1[0] == GC.S_L and sLHS1[1] == GC.S_K and sLHS1[2] == GC.S_T and
           sRHS1[0] == GC.S_L and sRHS1[1] == GC.S_S and sRHS1[2] == GC.S_I):
-        sK = GC.S_IPC_LKT_LSI
+        sK += GC.S_IPC_LKT_LSI
     # find and check the appropriate value
     for k, _ in enumerate(sLHS1[GC.I_S_RCT_01:]):
         chLHS1, chLHS2 = sLHS1[k + GC.I_S_RCT_01], sLHS2[k + GC.I_S_RCT_01]
@@ -259,14 +264,14 @@ def sRct22(lSLHS, lSRHS):
             print('ERROR: Position', k + GC.I_S_RCT_01, ': RHS string 1 is',
                   chRHS1, 'while RHS string 2 is', chRHS2)
     # if OK, add the pair to the dict.
-    if sK is not None and s01LHS == s01RHS:
+    if len(sK) > len(GC.S_DO_IPC + GC.S_USC) and s01LHS == s01RHS:
         dRctTp[sK] = s01LHS
     else:
         print('ERROR: Key is', sK, 'while LHS 01-string is', s01LHS, 'but RHS',
               '01-string is', s01RHS)
     return GC.S_RCT_22, dRctTp
 
-def analyseSRct(sRct = 'L--10--+K----01_LKI1001'):
+def analyseSRct(sRct):
     lSSplRct = partStr(sRct)
     assert len(lSSplRct) == 2       # required for a valid reaction
     if len(lSSplRct[0]) == 1 and len(lSSplRct[1]) == 1:
@@ -299,7 +304,7 @@ def updateDITpDIPlt(dITpC, dITpU, lKSpc = [GC.S_D_PLT]):
     dITpC.update(dITpURed)
 
 def printElapsedTimeSim(stT, cT, sPre = 'Time'):
-    # calculate and display elapsed time 
+    # calculate and display elapsed time
     elT = round(cT - stT, GC.R04)
     print(sPre, 'elapsed:', elT, 'seconds, this is', round(elT/60, GC.R04),
           'minutes or', round(elT/3600, GC.R04), 'hours or',

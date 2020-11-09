@@ -10,12 +10,20 @@ import Core.F_00__GenFunctions as GF
 # --- Functions (O_90__Component) ---------------------------------------------
 def setPylDPy(dIdx, sComp, lKAs, lPAs, dSitesPyl = GC.DS_SITES_PYL):
     assert len(sComp) == 3 + 4
-    assert set(sComp[3:]) <= GC.SET_01_USC
+    # TEMP - BEGIN
+    if not (set(sComp[3:]) <= GC.SET_01_DASH):
+        print('sComp =', sComp, '- Set (first 3) =', set(sComp[3:]))
+    # TEMP - END
+    assert set(sComp[3:]) <= GC.SET_01_DASH
     assert dIdx['iSP'] >= 3 and dIdx['iSP'] < len(sComp)
+    # # TEMP - BEGIN
+    # print('dIdx =', dIdx, '- of iSP:', dIdx['iSP'])
+    # print('dSitesPyl =', dSitesPyl, '- sComp =', sComp)
+    # # TEMP - END
     sPylDePyl, cAse = dSitesPyl[sComp[dIdx['iSP']]], None
     if sPylDePyl == GC.S_DO_PYL:
         cAse = lKAs[dIdx['iLAse']]
-    elif sPylDePyl == GC.S_DO_DEPYL:
+    elif sPylDePyl == GC.S_DO_DPY:
         cAse = lPAs[dIdx['iLAse']]
     return sPylDePyl, cAse
 

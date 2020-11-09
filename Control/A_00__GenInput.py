@@ -32,9 +32,9 @@ dSFInD = {GC.S_00: (GC.S_00 + GC.S_USC + 'Strings', 1),
           GC.S_01: (GC.S_01 + GC.S_USC + 'InitialSysComponents', 1),
           GC.S_02: (GC.S_02 + GC.S_USC + 'Conc', 0),
           GC.S_03: (GC.S_03 + GC.S_USC + 'Weights4Rct', 1),
-          GC.S_04: (GC.S_04 + GC.S_USC + 'SMoConcDependencies', 1),
+          GC.S_04: (GC.S_04 + GC.S_USC + 'Reactions', 1),
           GC.S_05: (GC.S_05 + GC.S_USC + 'CompIncidDependencies', 1),
-          GC.S_06: (GC.S_06 + GC.S_USC + 'Reactions', 1)}
+          GC.S_06: (GC.S_06 + GC.S_USC + 'SMoConcDependencies', 1)}
 
 dictInpG = {# --- Input: Debug Info
             'lvlDbg': levelDebugOut,

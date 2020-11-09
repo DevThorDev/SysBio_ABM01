@@ -10,14 +10,31 @@ S_EXT_CSV = 'csv'
 S_EXT_PY = 'py'
 S_EXT_PDF = 'pdf'
 
-# --- constants related to input data -----------------------------------------
-S_00 = '00'
-S_01 = '01'
-S_02 = '02'
-S_03 = '03'
-S_04 = '04'
-S_05 = '05'
-S_06 = '06'
+# --- string constants --------------------------------------------------------
+S_0 = '0'
+S_1 = '1'
+S_2 = '2'
+S_3 = '3'
+S_4 = '4'
+S_5 = '5'
+S_6 = '6'
+S_00 = S_0 + S_0
+S_01 = S_0 + S_1
+S_02 = S_0 + S_2
+S_03 = S_0 + S_3
+S_04 = S_0 + S_4
+S_05 = S_0 + S_5
+S_06 = S_0 + S_6
+
+SEP_STD = ';'
+S_USC = '_'
+S_DASH = '-'
+S_PLUS = '+'
+S_COM_BL = ', '
+
+SET_01 = {S_0, S_1}
+SET_01_USC = {S_0, S_1, S_USC}
+SET_01_DASH = {S_0, S_1, S_DASH}
 
 # --- constants related to molecule objects -----------------------------------
 SPC_LPR_A = 'LPr_A'
@@ -90,8 +107,11 @@ L_S_LSK = [S_L, S_S, S_K]
 L_S_IT = [S_I, S_T]
 
 S_DO_PYL = 'Pyl'
-S_DO_DEPYL = 'DePyl'
-L_DO_PYL_DEPYL = [S_DO_PYL, S_DO_DEPYL]
+S_DO_DPY = 'DPy'
+S_DO_FRM = 'Frm'
+S_DO_DIS = 'Dis'
+S_DO_IPC = 'IPC'
+L_RCT_TYPE = [S_DO_PYL, S_DO_DPY, S_DO_FRM, S_DO_DIS, S_DO_IPC]
 
 S_IS_PYL = 'P+'
 S_NOT_PYL = 'P-'
@@ -137,7 +157,7 @@ S_PAR_PMAX = 'ProbMax'
 S_PAR_B = 'B'
 S_PAR_C = 'C'
 S_PAR_D = 'D'
-L_S_PAR_TAB05 = [S_PAR_PMIN, S_PAR_PMIN, S_PAR_B, S_PAR_C, S_PAR_D]
+L_S_PAR_TAB05 = [S_PAR_PMIN, S_PAR_PMAX, S_PAR_B, S_PAR_C, S_PAR_D]
 S_RCTDESC = 'ReactionDescription'
 S_RCTVAR = 'ReactionVariable'
 S_RCTSTR = 'ReactionString'
@@ -148,10 +168,10 @@ S_SHORT = 'SHORT'
 S_LONG = 'LONG'
 
 # --- constants related to reactions ------------------------------------------
-S_RCT_11 = '11'
-S_RCT_12 = '12'
-S_RCT_21 = '21'
-S_RCT_22 = '22'
+S_RCT_11 = S_1 + S_1
+S_RCT_12 = S_1 + S_2
+S_RCT_21 = S_2 + S_1
+S_RCT_22 = S_2 + S_2
 LEN_S_RCT = 7
 I_S_RCT_01 = 3
 
@@ -305,12 +325,8 @@ I_S_RCT_01 = 3
 #           S_CP_LKT1110: TS_RCT_LKT1110,
 #           S_CP_LKT1111: TS_RCT_LKT1111}
 
-SET_01 = {'0', '1'}
-SET_01_USC = {'0', '1', '_'}
-SET_01_DASH = {'0', '1', '-'}
-
 # --- constants related to phosphorylations and dephosphorylations of sites ---
-DS_SITES_PYL = {'0': S_DO_DEPYL, '1': S_DO_PYL}
+DS_SITES_PYL = {S_0: S_DO_DPY, S_1: S_DO_PYL}
 
 # --- constants related to model output ---------------------------------------
 S_TS = 'TimeStep'
@@ -328,10 +344,7 @@ S_CP_CNC = 'A_CpConc'
 # --- other constants ---------------------------------------------------------
 M_DETER = 'Deterministic'
 M_STOCH = 'Stochastic'
-SEP_STD = ';'
-S_USC = '_'
-S_PLUS = '+'
-S_COM_BL = ', '
+
 R04 = 4
 
 ###############################################################################

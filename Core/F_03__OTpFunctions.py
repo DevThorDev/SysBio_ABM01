@@ -90,25 +90,48 @@ def changeConcSMo(dITp, inpFr, dO, dCncSMo, cID = None, dspI = False):
         cncMn, cncMx = cDfr.at[sSMo, GC.S_CNC_MIN], cDfr.at[sSMo, GC.S_CNC_MAX]
         cncCh = 0.
         for s in dO['dN']:
-            assert s in inpFr.dConcChg[sSMo]
-            cncCh += inpFr.dConcChg[sSMo][s]*dO['dN'][s]
+            # # TEMP - BEGIN
+            # if s not in inpFr.dConcChg[sSMo]:
+            #     print('s =', s, '- sSMo =', sSMo)
+            #     print('inpFr.dConcChg:\n', inpFr.dConcChg)
+            # # TEMP - END
+            ss = s.replace(GC.S_DASH, '')
+            assert ss in inpFr.dConcChg[sSMo]
+            cncCh += inpFr.dConcChg[sSMo][ss]*dO['dN'][s]
         dCncSMo[sSMo] += cncCh*dO['tDlt']/nCpO*dITp['concChgScale']
         dCncSMo[sSMo] = GF.implMinMax(dCncSMo[sSMo], cncMn, cncMx)
 
+def calcRctWeight(inpFr, dRctTp):
+    wRct = 1.
+    assert GC.S_VAL in inpFr.dDfrIn[GC.S_03].columns    # TODO: remove
+    if GC.S_VAL in inpFr.dDfrIn[GC.S_03].columns:
+        for sK in dRctTp:
+            wRct *= inpFr.dDfrIn[GC.S_03].at[sK, GC.S_VAL]
+    return wRct
+
 def updateDictH(dITp, inpFr, dO, dCncSMo, dspI = False):
-    dChgCD, dRUp = inpFr.dChgConcDep, {}
-    sMoN, sMoP = GC.ID_NO3_1M, GC.ID_H2PO4_1M
+    dRUp, sSMoN, p = {}, GC.ID_NO3_1M, 0.5      # 0.5: a dummy value
     # update the reaction rate constants according to the current [NO3-]
-    # for tS, tRRC in inpFr.dRct.items():
-    #     assert len(tS) == len(tRRC)
-    #     for k, s in enumerate(tS):
-    #         p = GF.calcPSigmoidal(dCncSMo[sMoN], dCncCh[tS][sMoN][k])
-    #         dRUp[s] = tRRC[k]*p
     for sRct, wtRct in inpFr.dRct.items():
-        p = GF.calcPSigmoidal(dCncSMo[sMoN], dCncCh[tS][sMoN][k])
+        sRctType, dRctType = GF.analyseSRct(sRct)
+        if not dITp['wtRctDirect']:
+            wtRct = calcRctWeight(inpFr, dRctType)
+        # NO3- dependency of incidences of each component
+        for sK in dRctType:
+            if sK in inpFr.dChgConcDep:
+                dParPSig = inpFr.dChgConcDep[sSMoN][sK]
+                p = GF.calcPSigmoidal(dCncSMo[sSMoN], dParPSig)
         dRUp[sRct] = wtRct*p
         # recalculate dH, which contains the h_i (i = 1,... len(dH))
-        dO['dH'][sRct] = dRUp[sRct]*dO['dN'][sRct.split(GC.S_USC)[0]]
+        # TEMP - BEGIN
+        print('Keys of dH:', list(dO['dH']))
+        print('Keys of dN:', list(dO['dN']))
+        # TEMP - END
+        dO['dH'][sRct] = dRUp[sRct]
+        if sRctType in [GC.S_RCT_21, GC.S_RCT_22]:
+            dO['dH'][sRct] *= dITp['VolC']
+        for sCpLHS in GF.partStr(sRct)[0]:
+            dO['dH'][sRct] *= dO['dN'][sCpLHS]
     # (?) update the reaction rate constants according to the current [H2PO4-]
     if dspI:# for displaying information
         pass
