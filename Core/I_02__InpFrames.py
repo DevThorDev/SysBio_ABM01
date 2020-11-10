@@ -23,7 +23,7 @@ class InputFrames:
     def getDSCp7(self, sK = GC.S_00):
         self.dSCp7, lTK, lTV = {}, [], []
         if sK in self.dDfrIn:
-            assert GC.S_COMPSTR in self.dDfrIn[sK].columns
+            assert GC.S_CPSTR in self.dDfrIn[sK].columns
             for sI in self.dDfrIn[sK].index:
                 sLeft = GC.S_USC.join(sI.split(GC.S_USC)[:-1])
                 if sI.endswith(GC.S_SHORT):
@@ -33,31 +33,32 @@ class InputFrames:
             for tK in lTK:
                 for tV in lTV:
                     if tK[0] == tV[0]:
-                        cK = self.dDfrIn[sK].at[tK[1], GC.S_COMPSTR]
-                        cV = self.dDfrIn[sK].at[tV[1], GC.S_COMPSTR]
+                        cK = self.dDfrIn[sK].at[tK[1], GC.S_CPSTR]
+                        cV = self.dDfrIn[sK].at[tV[1], GC.S_CPSTR]
                         self.dSCp7[cK] = cV
                         break
         else:
             print('ERROR: Key', sK, 'not in DataFrames dictionary!')
 
     def getDSCpTp(self, sK1 = GC.S_00, sK2 = GC.S_01):
-        self.dSCpTp, self.lSCpShort, self.lSCpLong = {}, [], []
+        self.dSCpTpL, self.dSCpTpS, self.lSCpTpL, self.lSCpTpS = {}, {}, [], []
         if sK1 in self.dDfrIn and sK2 in self.dDfrIn:
-            assert (GC.S_COMPSTR in self.dDfrIn[sK1].columns and
-                    GC.S_COMPSTR in self.dDfrIn[sK2].columns)
+            assert (GC.S_CPSTR in self.dDfrIn[sK1].columns and
+                    GC.S_CPSTR in self.dDfrIn[sK2].columns)
             for sL in self.dDfrIn[sK1].index:
-                sCp = self.dDfrIn[sK1].at[sL, GC.S_COMPSTR]
-                if sL.endswith(GC.S_LONG):
-                    self.lSCpLong.append(sCp)
-                    sInd = sL.strip(GC.S_LONG).strip(GC.S_USC)
+                sCp = self.dDfrIn[sK1].at[sL, GC.S_CPSTR]
+                if sL.endswith(GC.S_LONG) or sL.endswith(GC.S_SHORT):
+                    if sL.endswith(GC.S_LONG):
+                        cS, dS, lS = GC.S_LONG, self.dSCpTpL, self.lSCpTpL
+                    else:
+                        cS, dS, lS = GC.S_SHORT, self.dSCpTpS, self.lSCpTpS
+                    lS.append(sCp)
+                    sInd = sL.replace(cS, '').strip(GC.S_USC)
                     for sCpV in self.dDfrIn[sK2].index:
-                        if len(sCpV) > len(sInd) and sCpV[:len(sInd)] == sInd:
+                        if len(sCpV) > len(sInd) and sCpV.startswith(sInd):
                             if sCpV[len(sInd)] in GC.SET_01_USC:
-                                cK = sCp
-                                cV = self.dDfrIn[sK2].at[sCpV, GC.S_COMPSTR]
-                                GF.addToDictL(self.dSCpTp, cK, cV)
-                elif sL.endswith(GC.S_SHORT):
-                    self.lSCpShort.append(sCp)
+                                cV = self.dDfrIn[sK2].at[sCpV, GC.S_CPSTR]
+                                GF.addToDictL(dS, sCp, cV)
         else:
             print('ERROR: Key', sK1, 'or key', sK2, 'not in DataFrames',
                   'dictionary!')
@@ -65,10 +66,10 @@ class InputFrames:
     def getIniSysCpObj(self, sK = GC.S_01):
         self.dNCpObj, self.nCpObj = {}, 0
         if sK in self.dDfrIn:
-            assert (GC.S_COMPSTR in self.dDfrIn[sK].columns and
+            assert (GC.S_CPSTR in self.dDfrIn[sK].columns and
                     GC.S_NUM in self.dDfrIn[sK].columns)
             for sI in self.dDfrIn[sK].index:
-                cK = self.dDfrIn[sK].at[sI, GC.S_COMPSTR]
+                cK = self.dDfrIn[sK].at[sI, GC.S_CPSTR]
                 cV = self.dDfrIn[sK].at[sI, GC.S_NUM]
                 self.dNCpObj[cK] = cV
             self.nCpObj = sum(self.dNCpObj.values())

@@ -66,10 +66,12 @@ def complLSpec(inpDt, lOAll, sTp = 'KAs', sD = 'Pyl'):
 # --- Functions (O_99__System) ------------------------------------------------
 def createDCnc(inpFr):
     cDfr, dCncIni = inpFr.dDfrIn[GC.S_02], {}
+    lSIni, lVIni = GC.L_S_STR_PAR_INI, GC.L_S_VAL_PAR_INI
+    assert lSIni == lVIni
     for sSMo in cDfr.index:
         cTp = cDfr.at[sSMo, GC.S_INI_CNC_DISTR]
-        dPar = {cDfr.at[sSMo, GC.S_STR_PAR_1]: cDfr.at[sSMo, GC.S_VAL_PAR_1],
-                cDfr.at[sSMo, GC.S_STR_PAR_2]: cDfr.at[sSMo, GC.S_VAL_PAR_2]}
+        dPar = {cDfr.at[sSMo, lSIni[k]]: cDfr.at[sSMo, lVIni[k]] for
+                k in range(len(lSIni))}
         dCncIni[sSMo] = GF.drawFromDist(cTp, dPar)
     return dCncIni
 
@@ -90,11 +92,6 @@ def changeConcSMo(dITp, inpFr, dO, dCncSMo, cID = None, dspI = False):
         cncMn, cncMx = cDfr.at[sSMo, GC.S_CNC_MIN], cDfr.at[sSMo, GC.S_CNC_MAX]
         cncCh = 0.
         for s in dO['dN']:
-            # # TEMP - BEGIN
-            # if s not in inpFr.dConcChg[sSMo]:
-            #     print('s =', s, '- sSMo =', sSMo)
-            #     print('inpFr.dConcChg:\n', inpFr.dConcChg)
-            # # TEMP - END
             ss = s.replace(GC.S_DASH, '')
             assert ss in inpFr.dConcChg[sSMo]
             cncCh += inpFr.dConcChg[sSMo][ss]*dO['dN'][s]
@@ -123,10 +120,6 @@ def updateDictH(dITp, inpFr, dO, dCncSMo, dspI = False):
                 p = GF.calcPSigmoidal(dCncSMo[sSMoN], dParPSig)
         dRUp[sRct] = wtRct*p
         # recalculate dH, which contains the h_i (i = 1,... len(dH))
-        # TEMP - BEGIN
-        print('Keys of dH:', list(dO['dH']))
-        print('Keys of dN:', list(dO['dN']))
-        # TEMP - END
         dO['dH'][sRct] = dRUp[sRct]
         if sRctType in [GC.S_RCT_21, GC.S_RCT_22]:
             dO['dH'][sRct] *= dITp['VolC']

@@ -17,7 +17,8 @@ dInfSpS = {}
 concIni = 5                             # initial concentration of NO3-
 
 # --- changes over time in deterministic mode ---------------------------------
-mdConcCh = GC.S_NO                      # conc. change mode (S_NO, S_CH_SIN)
+mdConcCh = GC.S_CH_SIN                  # conc. change mode
+                                        # options: S_NO, S_CH_SIN, S_CH_STEPS
 perConcCh = 100                         # conc. change period (time steps)
 amplConcCh = 4                          # conc. change amplitude
 thrLowConc = 4                          # threshold for "low" concentration

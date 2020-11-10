@@ -10,16 +10,8 @@ import Core.F_00__GenFunctions as GF
 # --- Functions (O_90__Component) ---------------------------------------------
 def setPylDPy(dIdx, sComp, lKAs, lPAs, dSitesPyl = GC.DS_SITES_PYL):
     assert len(sComp) == 3 + 4
-    # TEMP - BEGIN
-    if not (set(sComp[3:]) <= GC.SET_01_DASH):
-        print('sComp =', sComp, '- Set (first 3) =', set(sComp[3:]))
-    # TEMP - END
     assert set(sComp[3:]) <= GC.SET_01_DASH
     assert dIdx['iSP'] >= 3 and dIdx['iSP'] < len(sComp)
-    # # TEMP - BEGIN
-    # print('dIdx =', dIdx, '- of iSP:', dIdx['iSP'])
-    # print('dSitesPyl =', dSitesPyl, '- sComp =', sComp)
-    # # TEMP - END
     sPylDePyl, cAse = dSitesPyl[sComp[dIdx['iSP']]], None
     if sPylDePyl == GC.S_DO_PYL:
         cAse = lKAs[dIdx['iLAse']]
@@ -29,19 +21,22 @@ def setPylDPy(dIdx, sComp, lKAs, lPAs, dSitesPyl = GC.DS_SITES_PYL):
 
 # --- Functions (O_99__System) ------------------------------------------------
 def prepDict4Sel(d4Sel, d4Leg, lSLY, dCp, dSCp):
-    for sCol in lSLY:
-        for sSimple, lSimple in dCp.items():
-            if len(sCol) >= 2:
-                if sCol[0] in lSimple and set(sCol[1:]) <= GC.SET_01_USC:
-                    GF.addToDictL(d4Sel, sSimple, sCol, lUnique = True)
-                    GF.addToDictL(d4Leg, sSimple, GC.S_COM_BL.join(lSimple),
-                                  lUnique = True)
-                else:
-                    if ((sCol[0] not in dSCp) or
-                        (not (set(sCol[1:]) <= GC.SET_01_USC))):
-                        if sCol not in d4Sel:
-                            GF.addToDictL(d4Sel, sCol, sCol, lUnique = True)
-                            GF.addToDictL(d4Leg, sCol, sCol, lUnique = True)
+    for sHdC in lSLY:
+        for sLg, lCp in dCp.items():
+            if (len(sHdC) == GC.LEN_S_CP and
+                set(sHdC[GC.I_S_CP_SEP:]) <= GC.SET_01_DASH):
+                # this column header IS a component string
+                for sCp in lCp:
+                    if sHdC.startswith(sCp):
+                        GF.addToDictL(d4Sel, sLg, sHdC, lUnique = True)
+                        GF.addToDictL(d4Leg, sLg, GC.S_COM_BL.join(lCp),
+                                      lUnique = True)
+                        break
+            else:
+                # this column header IS NOT a component string
+                if sHdC not in d4Sel:
+                    GF.addToDictL(d4Sel, sHdC, sHdC, lUnique = True)
+                    GF.addToDictL(d4Leg, sHdC, sHdC, lUnique = True)
 
 def preProcMeanSum(pdDfr, sLX, lSLY, tKDCp, dSCp):
     d4Sel, d4Leg, mdDfr = {}, {}, pd.DataFrame()

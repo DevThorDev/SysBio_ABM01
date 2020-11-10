@@ -21,18 +21,22 @@ print('Added object types.')
 # -----------------------------------------------------------------------------
 cInpFrames = InputFrames(inDG)
 # print(cInpFrames.dSCp7)
-# print(cInpFrames.dSCpTp)
+# print(cInpFrames.dSCpTpS)
+# print(cInpFrames.dSCpTpL)
 # print(cInpFrames.dNCpObj)
-print(cInpFrames.dConcChg)
-print(cInpFrames.dChgConcDep)
 # print(cInpFrames.dRct)
+# print(cInpFrames.dChgConcDep)
+# print(cInpFrames.dConcChg)
+# for cKO in cInpFrames.dConcChg:
+#     print(list(cInpFrames.dConcChg[cKO]))
 
 cSystem = System(inDG, cInpFrames)
 if cSystem.dIG['doEvoT']:
     cSystem.evolveOverTime(inDG, doPlots = cSystem.dIG['doPlots'])
-# if cSystem.dIG['doPlots']:
-#     cSystem.plotResEvo(sFRes = cSystem.dITp['sF_SysEvo'], overWr = False)
+if cSystem.dIG['doPlots']:
+    cSystem.plotResEvo(sFRes = cSystem.dITp['sF_SysEvo'], overWr = False)
 cSystem.printNCompObjSys()
+
 # cSystem.printAllCompObjSys()
 
 # -----------------------------------------------------------------------------

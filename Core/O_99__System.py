@@ -24,7 +24,6 @@ class System(Base):
         # print('Initiated "System" object.')
 
     def addCpObj(self, inpDat, refreshCpO = False):
-        # dNCpO = self.dITp['dNCpObj']
         dNCpO = self.inFr.dNCpObj
         if refreshCpO:
             self.lCpO = []
@@ -48,7 +47,7 @@ class System(Base):
         print('*'*16, 'Counts of comp. objects contained in System:', '*'*18)
         for sCp, ctCpO in self.dNCpO.items():
             print(sCp + ':', ctCpO)
-        print('- Total:', self.dITp['nCpObj'], '/', sum(self.dNCpO.values()))
+        print('- Total:', sum(self.dNCpO.values()))
         print('*'*80)
 
     def printAllCompObjSys(self):

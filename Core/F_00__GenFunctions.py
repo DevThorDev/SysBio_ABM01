@@ -117,12 +117,12 @@ def getSRct(dH):
 def sRct11(lSLHS, lSRHS):
     sLHS, sRHS, lSKeys, dRctTp = lSLHS[0], lSRHS[0], GC.L_S_SPS, {}
     # check if it is a valid reaction string
-    assert len(sLHS) == GC.LEN_S_RCT and len(sLHS) == len(sRHS)
+    assert len(sLHS) == GC.LEN_S_CP and len(sLHS) == len(sRHS)
     # find the appropriate key and value, and add the pair to the dict.
-    sKTp = (sLHS[:GC.I_S_RCT_01].strip(GC.S_DASH) + GC.S_USC +
-            sRHS[:GC.I_S_RCT_01].strip(GC.S_DASH))
-    for k, chLHS in enumerate(sLHS[GC.I_S_RCT_01:]):
-        chRHS = sRHS[k + GC.I_S_RCT_01]
+    sKTp = (sLHS[:GC.I_S_CP_SEP].strip(GC.S_DASH) + GC.S_USC +
+            sRHS[:GC.I_S_CP_SEP].strip(GC.S_DASH))
+    for k, chLHS in enumerate(sLHS[GC.I_S_CP_SEP:]):
+        chRHS = sRHS[k + GC.I_S_CP_SEP]
         assert chLHS in GC.SET_01_DASH and chRHS in GC.SET_01_DASH
         if chLHS in GC.SET_01 and chRHS in GC.SET_01:
             if chLHS != chRHS:
@@ -140,7 +140,7 @@ def sRct21(lSLHS, lSRHS):
     ((sLHS1, sLHS2), sRHS) = (lSLHS, lSRHS[0])
     dRctTp, sK, s01LHS, s01RHS = {}, GC.S_DO_FRM + GC.S_USC, '', ''
     # check if it is a valid reaction string
-    assert (len(sLHS1) == GC.LEN_S_RCT and len(sLHS1) == len(sLHS2) and
+    assert (len(sLHS1) == GC.LEN_S_CP and len(sLHS1) == len(sLHS2) and
             len(sLHS1) == len(sRHS))
     assert (sLHS1[0] in GC.L_S_LSK and sLHS2[0] in GC.L_S_LSK and
             sRHS[0] in GC.L_S_LSK and sRHS[1] in GC.L_S_LSK)
@@ -156,8 +156,8 @@ def sRct21(lSLHS, lSRHS):
     elif sRHS[0] == GC.S_L and sRHS[1] == GC.S_K and sRHS[2] == GC.S_T:
         sK += GC.S_FRM_L_K_LKT
     # find and check the appropriate value
-    for k, chRHS in enumerate(sRHS[GC.I_S_RCT_01:]):
-        chLHS1, chLHS2 = sLHS1[k + GC.I_S_RCT_01], sLHS2[k + GC.I_S_RCT_01]
+    for k, chRHS in enumerate(sRHS[GC.I_S_CP_SEP:]):
+        chLHS1, chLHS2 = sLHS1[k + GC.I_S_CP_SEP], sLHS2[k + GC.I_S_CP_SEP]
         assert (chLHS1 in GC.SET_01_DASH and chLHS2 in GC.SET_01_DASH and
                 chRHS in GC.SET_01_DASH)
         if chLHS1 in GC.SET_01 and chLHS2 not in GC.SET_01:
@@ -165,7 +165,7 @@ def sRct21(lSLHS, lSRHS):
         elif chLHS2 in GC.SET_01 and chLHS1 not in GC.SET_01:
             s01LHS += chLHS2
         elif chLHS1 in GC.SET_01 and chLHS2 in GC.SET_01:
-            print('ERROR: Position', k + GC.I_S_RCT_01, ': LHS string 1 is',
+            print('ERROR: Position', k + GC.I_S_CP_SEP, ': LHS string 1 is',
                   chLHS1, 'while LHS string 2 is', chLHS2)
         if chRHS in GC.SET_01:
             s01RHS += chRHS
@@ -181,7 +181,7 @@ def sRct12(lSLHS, lSRHS):
     (sLHS, (sRHS1, sRHS2)) = (lSLHS[0], lSRHS)
     dRctTp, sK, s01LHS, s01RHS = {}, GC.S_DO_DIS + GC.S_USC, '', ''
     # check if it is a valid reaction string
-    assert (len(sLHS) == GC.LEN_S_RCT and len(sLHS) == len(sRHS1) and
+    assert (len(sLHS) == GC.LEN_S_CP and len(sLHS) == len(sRHS1) and
             len(sLHS) == len(sRHS2))
     assert (sLHS[0] in GC.L_S_LSK and sLHS[1] in GC.L_S_LSK
             and sRHS1[0] in GC.L_S_LSK and sRHS2[0] in GC.L_S_LSK)
@@ -197,8 +197,8 @@ def sRct12(lSLHS, lSRHS):
     elif sLHS[0] == GC.S_L and sLHS[1] == GC.S_K and sLHS[2] == GC.S_T:
         sK += GC.S_DIS_LKT_L_K
     # find and check the appropriate value
-    for k, chLHS in enumerate(sLHS[GC.I_S_RCT_01:]):
-        chRHS1, chRHS2 = sRHS1[k + GC.I_S_RCT_01], sRHS2[k + GC.I_S_RCT_01]
+    for k, chLHS in enumerate(sLHS[GC.I_S_CP_SEP:]):
+        chRHS1, chRHS2 = sRHS1[k + GC.I_S_CP_SEP], sRHS2[k + GC.I_S_CP_SEP]
         assert (chLHS in GC.SET_01_DASH and chRHS1 in GC.SET_01_DASH and
                 chRHS2 in GC.SET_01_DASH)
         if chRHS1 in GC.SET_01 and chRHS2 not in GC.SET_01:
@@ -206,7 +206,7 @@ def sRct12(lSLHS, lSRHS):
         elif chRHS2 in GC.SET_01 and chRHS1 not in GC.SET_01:
             s01RHS += chRHS2
         elif chRHS1 in GC.SET_01 and chRHS2 in GC.SET_01:
-            print('ERROR: Position', k + GC.I_S_RCT_01, ': RHS string 1 is',
+            print('ERROR: Position', k + GC.I_S_CP_SEP, ': RHS string 1 is',
                   chRHS1, 'while RHS string 2 is', chRHS2)
         if chLHS in GC.SET_01:
             s01LHS += chLHS
@@ -222,7 +222,7 @@ def sRct22(lSLHS, lSRHS):
     ((sLHS1, sLHS2), (sRHS1, sRHS2)) = (lSLHS, lSRHS)
     dRctTp, sK, s01LHS, s01RHS = {}, GC.S_DO_IPC + GC.S_USC, '', ''
     # check if it is a valid reaction string
-    assert (len(sLHS1) == GC.LEN_S_RCT and len(sLHS1) == len(sLHS2) and
+    assert (len(sLHS1) == GC.LEN_S_CP and len(sLHS1) == len(sLHS2) and
             len(sLHS1) == len(sRHS1) and len(sLHS1) == len(sRHS2))
     assert (sLHS1[0] in GC.L_S_LSK and sLHS1[1] in GC.L_S_LSK and
             sLHS2[0] in GC.L_S_LSK and sRHS1[0] in GC.L_S_LSK and
@@ -244,9 +244,9 @@ def sRct22(lSLHS, lSRHS):
           sRHS1[0] == GC.S_L and sRHS1[1] == GC.S_S and sRHS1[2] == GC.S_I):
         sK += GC.S_IPC_LKT_LSI
     # find and check the appropriate value
-    for k, _ in enumerate(sLHS1[GC.I_S_RCT_01:]):
-        chLHS1, chLHS2 = sLHS1[k + GC.I_S_RCT_01], sLHS2[k + GC.I_S_RCT_01]
-        chRHS1, chRHS2 = sRHS1[k + GC.I_S_RCT_01], sRHS2[k + GC.I_S_RCT_01]
+    for k, _ in enumerate(sLHS1[GC.I_S_CP_SEP:]):
+        chLHS1, chLHS2 = sLHS1[k + GC.I_S_CP_SEP], sLHS2[k + GC.I_S_CP_SEP]
+        chRHS1, chRHS2 = sRHS1[k + GC.I_S_CP_SEP], sRHS2[k + GC.I_S_CP_SEP]
         assert (chLHS1 in GC.SET_01_DASH and chLHS2 in GC.SET_01_DASH and
                 chRHS1 in GC.SET_01_DASH and chRHS2 in GC.SET_01_DASH)
         if chLHS1 in GC.SET_01 and chLHS2 not in GC.SET_01:
@@ -254,14 +254,14 @@ def sRct22(lSLHS, lSRHS):
         elif chLHS2 in GC.SET_01 and chLHS1 not in GC.SET_01:
             s01LHS += chLHS2
         elif chLHS1 in GC.SET_01 and chLHS2 in GC.SET_01:
-            print('ERROR: Position', k + GC.I_S_RCT_01, ': LHS string 1 is',
+            print('ERROR: Position', k + GC.I_S_CP_SEP, ': LHS string 1 is',
                   chLHS1, 'while LHS string 2 is', chLHS2)
         if chRHS1 in GC.SET_01 and chRHS2 not in GC.SET_01:
             s01RHS += chRHS1
         elif chRHS2 in GC.SET_01 and chRHS1 not in GC.SET_01:
             s01RHS += chRHS2
         elif chRHS1 in GC.SET_01 and chRHS2 in GC.SET_01:
-            print('ERROR: Position', k + GC.I_S_RCT_01, ': RHS string 1 is',
+            print('ERROR: Position', k + GC.I_S_CP_SEP, ': RHS string 1 is',
                   chRHS1, 'while RHS string 2 is', chRHS2)
     # if OK, add the pair to the dict.
     if len(sK) > len(GC.S_DO_IPC + GC.S_USC) and s01LHS == s01RHS:

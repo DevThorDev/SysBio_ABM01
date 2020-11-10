@@ -32,7 +32,7 @@ class ComponentBase(Base):
         self.dCncEvo = {GC.S_TIME: [self.dIG['tStart']],
                         GC.S_CONC_NO3_1M: [self.lSMo[0].cCnc],
                         GC.S_CONC_H2PO4_1M: [self.lSMo[1].cCnc],
-                        GC.S_COMP: [self.idO]}
+                        GC.S_CP: [self.idO]}
         # print('Initiated "ComponentBase" object.')
 
     def complementLO(self, inpDat, dOComp):
@@ -106,11 +106,6 @@ class ComponentBase(Base):
 
     def adaptPSites(self, inpDat, cO, sCp):
         for sSpS, dI in GC.DS_SPS[cO.idO].items():
-            # # TEMP - BEGIN
-            # print('ID of current object =', cO.idO)
-            # print('sSpS =', sSpS)
-            # print('dI =', dI)
-            # # TEMP - END
             sPylDPy, cAs = SF.setPylDPy(dI, sCp, self.lKAs, self.lPAs)
             if sPylDPy == GC.S_DO_PYL:
                 _ = Phosphorylation(inpDat, cO, cAs, sSpS).doPyl()
@@ -140,22 +135,22 @@ class ComponentBase(Base):
 class Component(ComponentBase):
     def __init__(self, inpDat, inpFr, sComp, iTp = 90):
         self.inFr = inpFr
-        assert len(self.inFr.lSCpLong) >= 7
+        assert len(self.inFr.lSCpTpL) >= 7
         self.sCp = sComp
         self.createdOComp(inpDat)
-        if sComp in self.inFr.dSCpTp[self.inFr.lSCpLong[0]]:
+        if sComp in self.inFr.dSCpTpL[self.inFr.lSCpTpL[0]]:
             self.ini_Cp_L(inpDat, sComp, iTp = iTp)
-        elif sComp in self.inFr.dSCpTp[self.inFr.lSCpLong[1]]:
+        elif sComp in self.inFr.dSCpTpL[self.inFr.lSCpTpL[1]]:
             self.ini_Cp_S(inpDat, sComp, iTp = iTp)
-        elif sComp in self.inFr.dSCpTp[self.inFr.lSCpLong[2]]:
+        elif sComp in self.inFr.dSCpTpL[self.inFr.lSCpTpL[2]]:
             self.ini_Cp_K(inpDat, sComp, iTp = iTp)
-        elif sComp in self.inFr.dSCpTp[self.inFr.lSCpLong[3]]:
+        elif sComp in self.inFr.dSCpTpL[self.inFr.lSCpTpL[3]]:
             self.ini_Cp_LSI(inpDat, sComp, iTp = iTp)
-        elif sComp in self.inFr.dSCpTp[self.inFr.lSCpLong[4]]:
+        elif sComp in self.inFr.dSCpTpL[self.inFr.lSCpTpL[4]]:
             self.ini_Cp_LST(inpDat, sComp, iTp = iTp)
-        elif sComp in self.inFr.dSCpTp[self.inFr.lSCpLong[5]]:
+        elif sComp in self.inFr.dSCpTpL[self.inFr.lSCpTpL[5]]:
             self.ini_Cp_LKI(inpDat, sComp, iTp = iTp)
-        elif sComp in self.inFr.dSCpTp[self.inFr.lSCpLong[6]]:
+        elif sComp in self.inFr.dSCpTpL[self.inFr.lSCpTpL[6]]:
             self.ini_Cp_LKT(inpDat, sComp, iTp = iTp)
         else:
             self.idO = 'Cp'
@@ -188,7 +183,7 @@ class Component(ComponentBase):
         lOO = [self.dOCp[GC.SPC_LPR_A], self.dOCp[GC.SPC_SPR_A],
                self.dOCp[GC.SPC_KAS_A], self.dOCp[GC.SPC_KAS_X]]
         super().__init__(inpDat, self.dOCp, llOI, lOO, iTp = iTp)
-        self.idO = self.inFr.lSCpLong[0]
+        self.idO = self.inFr.lSCpTpL[0]
         self.descO = 'Component NRT2.1'
         self.adaptPSites(inpDat, self.dOCp[GC.SPC_LPR_A], sCp)
 
@@ -197,7 +192,7 @@ class Component(ComponentBase):
         lOO = [self.dOCp[GC.SPC_LPR_A], self.dOCp[GC.SPC_SPR_A],
                self.dOCp[GC.SPC_KAS_A], self.dOCp[GC.SPC_KAS_X]]
         super().__init__(inpDat, self.dOCp, llOI, lOO, iTp = iTp)
-        self.idO = self.inFr.lSCpLong[1]
+        self.idO = self.inFr.lSCpTpL[1]
         self.descO = 'Component NAR2.1'
 
     def ini_Cp_K(self, inpDat, sCp, iTp = 90):
@@ -205,7 +200,7 @@ class Component(ComponentBase):
         lOO = [self.dOCp[GC.SPC_LPR_A], self.dOCp[GC.SPC_SPR_A],
                self.dOCp[GC.SPC_KAS_A], self.dOCp[GC.SPC_KAS_X]]
         super().__init__(inpDat, self.dOCp, llOI, lOO, iTp = iTp)
-        self.idO = self.inFr.lSCpLong[2]
+        self.idO = self.inFr.lSCpTpL[2]
         self.descO = 'Component HPCAL1'
         self.adaptPSites(inpDat, self.dOCp[GC.SPC_KAS_A], sCp)
 
@@ -213,7 +208,7 @@ class Component(ComponentBase):
         llOI = [[self.dOCp[GC.SPC_SPR_A], self.dOCp[GC.SPC_LPR_A]]]
         lOO = [self.dOCp[GC.SPC_KAS_A], self.dOCp[GC.SPC_KAS_X]]
         super().__init__(inpDat, self.dOCp, llOI, lOO, iTp = iTp)
-        self.idO = self.inFr.lSCpLong[3]
+        self.idO = self.inFr.lSCpTpL[3]
         self.descO = 'Component NRT2.1-NAR2.1 interaction'
         self.adaptPSites(inpDat, self.dOCp[GC.SPC_LPR_A], sCp)
 
@@ -221,7 +216,7 @@ class Component(ComponentBase):
         llOI = [[self.dOCp[GC.SPC_SPR_A], self.dOCp[GC.SPC_LPR_A]]]
         lOO = [self.dOCp[GC.SPC_KAS_A], self.dOCp[GC.SPC_KAS_X]]
         super().__init__(inpDat, self.dOCp, llOI, lOO, iTp = iTp)
-        self.idO = self.inFr.lSCpLong[4]
+        self.idO = self.inFr.lSCpTpL[4]
         self.descO = 'Component NRT2.1-NAR2.1 transition'
         self.adaptPSites(inpDat, self.dOCp[GC.SPC_LPR_A], sCp)
 
@@ -229,7 +224,7 @@ class Component(ComponentBase):
         llOI = [[self.dOCp[GC.SPC_KAS_A], self.dOCp[GC.SPC_LPR_A]]]
         lOO = [self.dOCp[GC.SPC_SPR_A], self.dOCp[GC.SPC_KAS_X]]
         super().__init__(inpDat, self.dOCp, llOI, lOO, iTp = iTp)
-        self.idO = self.inFr.lSCpLong[5]
+        self.idO = self.inFr.lSCpTpL[5]
         self.descO = 'Component NRT2.1-HPCAL1 interaction'
         self.adaptPSites(inpDat, self.dOCp[GC.SPC_LPR_A], sCp)
         self.adaptPSites(inpDat, self.dOCp[GC.SPC_KAS_A], sCp)
@@ -239,7 +234,7 @@ class Component(ComponentBase):
                 [self.dOCp[GC.SPC_KAS_X], self.dOCp[GC.SPC_LPR_A]]]
         lOO = [self.dOCp[GC.SPC_SPR_A]]
         super().__init__(inpDat, self.dOCp, llOI, lOO, iTp = iTp)
-        self.idO = self.inFr.lSCpLong[6]
+        self.idO = self.inFr.lSCpTpL[6]
         self.descO = 'Component NRT2.1-HPCAL1 transition'
         self.adaptPSites(inpDat, self.dOCp[GC.SPC_LPR_A], sCp)
         self.adaptPSites(inpDat, self.dOCp[GC.SPC_KAS_A], sCp)
