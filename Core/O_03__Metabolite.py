@@ -33,9 +33,9 @@ class SmallMolecule(Metabolite):
     def setIniConc(self):
         self.cCnc = self.dITp[GC.S_CONC_INI]
         self.stCnc = self.dITp[GC.S_CONC_INI]
-        self.sCncCh = self.dITp[GC.S_MD_CONC_CH]
-        self.perCncCh = self.dITp[GC.S_PER_CONC_CH]
-        self.amplCncCh = self.dITp[GC.S_AMPL_CONC_CH]
+        self.sCncCh = self.dITp[GC.S_MODE_CHG]
+        self.perCncCh = self.dITp[GC.S_PERIOD_CHG]
+        self.amplCncCh = self.dITp[GC.S_AMPL_CHG]
         self.thrLowCnc = self.dITp[GC.S_THR_LOW_CONC]
         self.thrHighCnc = self.dITp[GC.S_THR_HIGH_CONC]
 

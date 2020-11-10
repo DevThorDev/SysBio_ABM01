@@ -41,9 +41,9 @@ dIO = {# --- general
        # --- initial state
        GC.S_CONC_INI: concIni,
        # --- changes over time in deterministic mode
-       GC.S_MD_CONC_CH: mdConcCh,
-       GC.S_PER_CONC_CH: perConcCh,
-       GC.S_AMPL_CONC_CH: amplConcCh,
+       GC.S_MODE_CHG: mdConcCh,
+       GC.S_PERIOD_CHG: perConcCh,
+       GC.S_AMPL_CHG: amplConcCh,
        GC.S_THR_LOW_CONC: thrLowConc,
        GC.S_THR_HIGH_CONC: thrHighConc,
        GC.S_PROP_INC_CP_LS: propIncCpLS,

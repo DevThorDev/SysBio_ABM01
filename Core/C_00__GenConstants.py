@@ -71,9 +71,9 @@ L_ID_PYL = ['Pyl']
 L_ID_DEPYL = ['DePyl']
 
 S_CONC_INI = 'concIni'
-S_MD_CONC_CH = 'mdConcCh'
-S_PER_CONC_CH = 'perConcCh'
-S_AMPL_CONC_CH = 'amplConcCh'
+S_MODE_CHG = 'ConcChgMode'
+S_PERIOD_CHG = 'periodChg'
+S_AMPL_CHG = 'amplitudeChg'
 S_THR_LOW_CONC = 'thrLowConc'
 S_THR_HIGH_CONC = 'thrHighConc'
 
@@ -151,6 +151,19 @@ S_VAL_PAR_2_INI = 'ValPar2_Ini'
 L_S_VAL_PAR_INI = [S_VAL_PAR_1_INI, S_VAL_PAR_2_INI]
 S_CNC_MIN = 'ConcMin'
 S_CNC_MAX = 'ConcMax'
+S_CONC_CHG_MODE = 'ConcChgMode'
+S_STR_PAR_1_TCHG = 'StrPar1_TChg'
+S_STR_PAR_2_TCHG = 'StrPar2_TChg'
+S_STR_PAR_3_TCHG = 'StrPar3_TChg'
+S_STR_PAR_4_TCHG = 'StrPar4_TChg'
+L_S_STR_PAR_TCHG = [S_STR_PAR_1_TCHG, S_STR_PAR_2_TCHG, S_STR_PAR_3_TCHG,
+                    S_STR_PAR_4_TCHG]
+S_VAL_PAR_1_TCHG = 'ValPar1_TChg'
+S_VAL_PAR_2_TCHG = 'ValPar2_TChg'
+S_VAL_PAR_3_TCHG = 'ValPar3_TChg'
+S_VAL_PAR_4_TCHG = 'ValPar4_TChg'
+L_S_VAL_PAR_TCHG = [S_VAL_PAR_1_TCHG, S_VAL_PAR_2_TCHG, S_VAL_PAR_3_TCHG,
+                    S_VAL_PAR_4_TCHG]
 S_VAL = 'Value'
 S_VAL_ABS_CH = 'ValueAbsoluteChange'
 S_PAR_DESC = 'ParameterDescription'

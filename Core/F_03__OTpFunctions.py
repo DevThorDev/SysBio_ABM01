@@ -37,8 +37,15 @@ def getDITp(dIG, iTp, lITpU):
     return dITp
 
 # --- Functions (O_03__Metabolite) --------------------------------------------
-def doSinChange(x, cPer, cAmpl):
-    return cAmpl*np.sin(x*2*np.pi/cPer)
+def doSinChange(cDfr, cI, x):
+    lSTChg, lVTChg = GC.L_S_STR_PAR_TCHG, GC.L_S_VAL_PAR_TCHG
+    dPar = {cDfr.at[cI, lSTChg[k]]: cDfr.at[cI, lVTChg[k]] for
+            k in range(len(lSTChg))}
+    if GC.S_PERIOD_CHG in dPar and GC.S_AMPL_CHG in dPar:
+        cPeriod, cAmplit = dPar[GC.S_PERIOD_CHG], dPar[GC.S_AMPL_CHG]
+        return cAmplit*np.sin(x*2*np.pi/cPeriod)
+    else:
+        return 0.0
 
 # --- Functions (O_80__Interaction) -------------------------------------------
 def doSiteChange(cO, sSpS, sAse, doDePyl = False):
@@ -67,7 +74,7 @@ def complLSpec(inpDt, lOAll, sTp = 'KAs', sD = 'Pyl'):
 def createDCnc(inpFr):
     cDfr, dCncIni = inpFr.dDfrIn[GC.S_02], {}
     lSIni, lVIni = GC.L_S_STR_PAR_INI, GC.L_S_VAL_PAR_INI
-    assert lSIni == lVIni
+    assert len(lSIni) == len(lVIni)
     for sSMo in cDfr.index:
         cTp = cDfr.at[sSMo, GC.S_INI_CNC_DISTR]
         dPar = {cDfr.at[sSMo, lSIni[k]]: cDfr.at[sSMo, lVIni[k]] for
@@ -75,7 +82,7 @@ def createDCnc(inpFr):
         dCncIni[sSMo] = GF.drawFromDist(cTp, dPar)
     return dCncIni
 
-def iniDictOut(dITp, inpFr, dCnc, t = 0., tDlt = 0.):
+def iniDictOut(inpFr, dCnc, t = 0., tDlt = 0.):
     dO = {'dN': {}, 'dH': {}, 'h': 0., 'tDlt': tDlt, 'dRes': {GC.S_TIME: [t]}}
     for s, cCnc in dCnc.items():
         dO['dRes'][s] = [cCnc]
@@ -84,7 +91,7 @@ def iniDictOut(dITp, inpFr, dCnc, t = 0., tDlt = 0.):
         dO['dN'][s] = k
     return dO
 
-def changeConcSMo(dITp, inpFr, dO, dCncSMo, cID = None, dspI = False):
+def changeConcSMo(dITp, inpFr, dO, dCncSMo, t, cID = None, dspI = False):
     if dspI:
         pass
     cDfr, nCpO = inpFr.dDfrIn[GC.S_02], inpFr.nCpObj
@@ -95,12 +102,16 @@ def changeConcSMo(dITp, inpFr, dO, dCncSMo, cID = None, dspI = False):
             ss = s.replace(GC.S_DASH, '')
             assert ss in inpFr.dConcChg[sSMo]
             cncCh += inpFr.dConcChg[sSMo][ss]*dO['dN'][s]
+        # component-distribution-dependent conc. change
         dCncSMo[sSMo] += cncCh*dO['tDlt']/nCpO*dITp['concChgScale']
+        # externally forced conc. change
+        assert sSMo in cDfr.index and GC.S_CONC_CHG_MODE in cDfr.columns
+        if cDfr.at[sSMo, GC.S_CONC_CHG_MODE] == GC.S_CH_SIN:
+            dCncSMo[sSMo] += doSinChange(cDfr, sSMo, t)
         dCncSMo[sSMo] = GF.implMinMax(dCncSMo[sSMo], cncMn, cncMx)
 
 def calcRctWeight(inpFr, dRctTp):
     wRct = 1.
-    assert GC.S_VAL in inpFr.dDfrIn[GC.S_03].columns    # TODO: remove
     if GC.S_VAL in inpFr.dDfrIn[GC.S_03].columns:
         for sK in dRctTp:
             wRct *= inpFr.dDfrIn[GC.S_03].at[sK, GC.S_VAL]
@@ -153,7 +164,7 @@ def eventReactionSys(dO):
             elif k == 1:            # right-hand side of the reaction equation
                 dO['dN'][sCmp] += 1
 
-def nextEvent(dITp, dO, T, cTS):
+def nextEvent(dO, T, cTS):
     if dO['h'] > 0:    # otherwise the while-loop ends, see the other case
         # draw the time to the next event from exponential(lambd = 1./h)
         dO['tDlt'] = GF.drawFromDist('exponential', dPar = {'h': dO['h']})
@@ -165,7 +176,7 @@ def nextEvent(dITp, dO, T, cTS):
         dO['tDlt'] = T - dO['dRes'][GC.S_TIME][cTS]
     return dO['tDlt']
 
-def updateDictOut(dITp, dO, dCnc, t):
+def updateDictOut(dO, dCnc, t):
     dO['dRes'][GC.S_TIME].append(t)
     for s, cCnc in dCnc.items():
         dO['dRes'][s].append(cCnc)
@@ -174,20 +185,20 @@ def updateDictOut(dITp, dO, dCnc, t):
 
 def evolveGillespie(dIG, dITp, inpFr, dCncSMo):
     t, T, tDelta, cTSt = dIG['tStart'], dIG['tMax'], 0, 0
-    dO = iniDictOut(dITp, inpFr, dCncSMo, t, tDelta)
+    dO = iniDictOut(inpFr, dCncSMo, t, tDelta)
     while t < T and cTSt <= dIG['maxTS']:
         dspCnd = (cTSt >= dIG['minDispTS'] and cTSt%dIG['modDispTS'] == 0)
         if dspCnd:
             print('Reached time step', cTSt, 'at time', round(t, GC.R04))
         # change the concentrations of the small molecules
-        changeConcSMo(dITp, inpFr, dO, dCncSMo, dspI = dspCnd)
+        changeConcSMo(dITp, inpFr, dO, dCncSMo, t, dspI = dspCnd)
         # adapt the re-calc reaction hazards function to current system
         reCalcReactHazards(dITp, inpFr, dO, dCncSMo, dspI = dspCnd)
         # do next event and update time with tToNext
-        t += nextEvent(dITp, dO, T, cTSt)
+        t += nextEvent(dO, T, cTSt)
         # update the data storage matrix
         if t < T:
-            updateDictOut(dITp, dO, dCncSMo, t)
+            updateDictOut(dO, dCncSMo, t)
         cTSt += 1
     return dO['dRes'], dO['dN']
 
