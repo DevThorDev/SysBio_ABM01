@@ -37,10 +37,7 @@ def getDITp(dIG, iTp, lITpU):
     return dITp
 
 # --- Functions (O_03__Metabolite) --------------------------------------------
-def doSinChange(cDfr, cI, x):
-    lSTChg, lVTChg = GC.L_S_STR_PAR_TCHG, GC.L_S_VAL_PAR_TCHG
-    dPar = {cDfr.at[cI, lSTChg[k]]: cDfr.at[cI, lVTChg[k]] for
-            k in range(len(lSTChg))}
+def doSinChange(x, dPar):
     if GC.S_PERIOD_CHG in dPar and GC.S_AMPL_CHG in dPar:
         cPeriod, cAmplit = dPar[GC.S_PERIOD_CHG], dPar[GC.S_AMPL_CHG]
         return cAmplit*np.sin(x*2*np.pi/cPeriod)
@@ -65,50 +62,57 @@ def complLSpec(inpDt, lOAll, sTp = 'KAs', sD = 'Pyl'):
     lID = []
     for cO in lOAll:
         for cSpS in cO.dITp['dInfSpS']:
-            for idTp in GF.getLFromLIt(cO.dITp['dInfSpS'][cSpS][sD]):
+            for idTp in cO.dITp['dInfSpS'][cSpS][sD]:
                 if idTp not in lID:
                     lID.append(idTp)
     return sorted(lID)
 
 # --- Functions (O_99__System) ------------------------------------------------
 def createDCnc(inpFr):
-    cDfr, dCncIni = inpFr.dDfrIn[GC.S_02], {}
-    lSIni, lVIni = GC.L_S_STR_PAR_INI, GC.L_S_VAL_PAR_INI
-    assert len(lSIni) == len(lVIni)
-    for sSMo in cDfr.index:
-        cTp = cDfr.at[sSMo, GC.S_INI_CNC_DISTR]
-        dPar = {cDfr.at[sSMo, lSIni[k]]: cDfr.at[sSMo, lVIni[k]] for
-                k in range(len(lSIni))}
+    dCncIni = {}
+    for sSMo, dIni in inpFr.dParCnc.items():
+        cTp, dPar = dIni[GC.S_INI_CNC_DISTR]
         dCncIni[sSMo] = GF.drawFromDist(cTp, dPar)
     return dCncIni
 
 def iniDictOut(inpFr, dCnc, t = 0., tDlt = 0.):
-    dO = {'dN': {}, 'dH': {}, 'h': 0., 'tDlt': tDlt, 'dRes': {GC.S_TIME: [t]}}
+    dO = {'dN': {}, 'dH': {}, 'h': 0., 'tDlt': tDlt, 'dCncIni': {},
+          'dCncChgInt': {}, 'dRes': {GC.S_TIME: [t]}}
     for s, cCnc in dCnc.items():
         dO['dRes'][s] = [cCnc]
+        dO['dCncIni'][s] = cCnc
+        dO['dCncChgInt'][s] = 0.
     for s, k in inpFr.dNCpObj.items():
         dO['dRes'][s] = [k]
         dO['dN'][s] = k
     return dO
 
-def changeConcSMo(dITp, inpFr, dO, dCncSMo, t, cID = None, dspI = False):
-    if dspI:
-        pass
-    cDfr, nCpO = inpFr.dDfrIn[GC.S_02], inpFr.nCpObj
+def changeCncSMo(dITp, inpFr, dO, dCncSMo, t, cID = None):
     for sSMo in dCncSMo:
-        cncMn, cncMx = cDfr.at[sSMo, GC.S_CNC_MIN], cDfr.at[sSMo, GC.S_CNC_MAX]
-        cncCh = 0.
+        assert sSMo in inpFr.dParCnc
+        cD, cncChg, cncChgExt = inpFr.dParCnc[sSMo], 0., 0.
+        cncMn, cncMx = cD[GC.S_CNC_MIN], cD[GC.S_CNC_MAX]
         for s in dO['dN']:
             ss = s.replace(GC.S_DASH, '')
-            assert ss in inpFr.dConcChg[sSMo]
-            cncCh += inpFr.dConcChg[sSMo][ss]*dO['dN'][s]
-        # component-distribution-dependent conc. change
-        dCncSMo[sSMo] += cncCh*dO['tDlt']/nCpO*dITp['concChgScale']
+            assert ss in inpFr.dCncChg[sSMo]
+            cncChg += inpFr.dCncChg[sSMo][ss]*dO['dN'][s]
+        # component-distribution-dependent (internal) conc. change
+        cncChgInt = cncChg*dO['tDlt']/inpFr.nCpObj*dITp['cncChgScale']
+        dO['dCncChgInt'][sSMo] += cncChgInt
         # externally forced conc. change
-        assert sSMo in cDfr.index and GC.S_CONC_CHG_MODE in cDfr.columns
-        if cDfr.at[sSMo, GC.S_CONC_CHG_MODE] == GC.S_CH_SIN:
-            dCncSMo[sSMo] += doSinChange(cDfr, sSMo, t)
+        cTp, dPar = cD[GC.S_CNC_CHG_MODE]
+        if cTp == GC.S_CH_SIN:
+            cncChgExt = doSinChange(t, dPar)
+        elif cTp == GC.S_CH_STEP:
+            pass
+        # print('Time', t, '- cncChgInt:', round(cncChgInt, 4), '- cncChgExt:',
+        #       round(cncChgExt, 4), '- dO[dCncChgInt][', sSMo, ']:',
+        #       round(dO['dCncChgInt'][sSMo], 4))
+        dCncSMo[sSMo] = dO['dCncIni'][sSMo]
+        dCncSMo[sSMo] += dO['dCncChgInt'][sSMo] + cncChgExt
         dCncSMo[sSMo] = GF.implMinMax(dCncSMo[sSMo], cncMn, cncMx)
+        # dCncSMo[sSMo], delta = GF.implMinMax(dCncSMo[sSMo], cncMn, cncMx)
+        # dO['dCncChgInt'][sSMo] += delta
 
 def calcRctWeight(inpFr, dRctTp):
     wRct = 1.
@@ -117,7 +121,7 @@ def calcRctWeight(inpFr, dRctTp):
             wRct *= inpFr.dDfrIn[GC.S_03].at[sK, GC.S_VAL]
     return wRct
 
-def updateDictH(dITp, inpFr, dO, dCncSMo, dspI = False):
+def updateDictH(dITp, inpFr, dO, dCncSMo):
     dRUp, sSMoN, p = {}, GC.ID_NO3_1M, 0.5      # 0.5: a dummy value
     # update the reaction rate constants according to the current [NO3-]
     for sRct, wtRct in inpFr.dRct.items():
@@ -126,8 +130,8 @@ def updateDictH(dITp, inpFr, dO, dCncSMo, dspI = False):
             wtRct = calcRctWeight(inpFr, dRctType)
         # NO3- dependency of incidences of each component
         for sK in dRctType:
-            if sK in inpFr.dChgConcDep:
-                dParPSig = inpFr.dChgConcDep[sSMoN][sK]
+            if sK in inpFr.dChgCncDep:
+                dParPSig = inpFr.dChgCncDep[sSMoN][sK]
                 p = GF.calcPSigmoidal(dCncSMo[sSMoN], dParPSig)
         dRUp[sRct] = wtRct*p
         # recalculate dH, which contains the h_i (i = 1,... len(dH))
@@ -137,18 +141,14 @@ def updateDictH(dITp, inpFr, dO, dCncSMo, dspI = False):
         for sCpLHS in GF.partStr(sRct)[0]:
             dO['dH'][sRct] *= dO['dN'][sCpLHS]
     # (?) update the reaction rate constants according to the current [H2PO4-]
-    if dspI:# for displaying information
-        pass
 
-def reCalcReactHazards(dITp, inpFr, dO, dCncSMo, dspI = False):
-    updateDictH(dITp, inpFr, dO, dCncSMo, dspI = dspI)
+def reCalcReactHazards(dITp, inpFr, dO, dCncSMo):
+    updateDictH(dITp, inpFr, dO, dCncSMo)
     # h, the sum of the h_i, is the overall reaction hazard
     dO['h'] = sum(dO['dH'].values())
     # sort dH in ascending order for numerical stability
     dO['dH'] = {cK: cV/dO['h'] for cK, cV in
                 sorted(dO['dH'].items(), key = itemgetter(1))}
-    if dspI:
-        pass
 
 def eventReactionSys(dO):
     # get the string consisting of the LHS and RHS of the reaction
@@ -187,13 +187,10 @@ def evolveGillespie(dIG, dITp, inpFr, dCncSMo):
     t, T, tDelta, cTSt = dIG['tStart'], dIG['tMax'], 0, 0
     dO = iniDictOut(inpFr, dCncSMo, t, tDelta)
     while t < T and cTSt <= dIG['maxTS']:
-        dspCnd = (cTSt >= dIG['minDispTS'] and cTSt%dIG['modDispTS'] == 0)
-        if dspCnd:
-            print('Reached time step', cTSt, 'at time', round(t, GC.R04))
         # change the concentrations of the small molecules
-        changeConcSMo(dITp, inpFr, dO, dCncSMo, t, dspI = dspCnd)
+        changeCncSMo(dITp, inpFr, dO, dCncSMo, t)
         # adapt the re-calc reaction hazards function to current system
-        reCalcReactHazards(dITp, inpFr, dO, dCncSMo, dspI = dspCnd)
+        reCalcReactHazards(dITp, inpFr, dO, dCncSMo)
         # do next event and update time with tToNext
         t += nextEvent(dO, T, cTSt)
         # update the data storage matrix

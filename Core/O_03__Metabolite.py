@@ -27,19 +27,13 @@ class SmallMolecule(Metabolite):
         super().__init__(inpDat, iTp, dStat)
         self.idO = 'SMo'
         self.descO = 'Small molecule'
-        self.setIniConc()
+        self.setConc()
         # print('Initiated "SmallMolecule" object.')
 
-    def setIniConc(self):
-        self.cCnc = self.dITp[GC.S_CONC_INI]
-        self.stCnc = self.dITp[GC.S_CONC_INI]
-        self.sCncCh = self.dITp[GC.S_MODE_CHG]
-        self.perCncCh = self.dITp[GC.S_PERIOD_CHG]
-        self.amplCncCh = self.dITp[GC.S_AMPL_CHG]
-        self.thrLowCnc = self.dITp[GC.S_THR_LOW_CONC]
-        self.thrHighCnc = self.dITp[GC.S_THR_HIGH_CONC]
+    def setConc(self):
+        self.cCnc = 0.0     # TODO: set to current conc.
 
-    # def changeConc(self, t, idCp):
+    # def changeCnc(self, t, idCp):
     #     cCnc_t, cCncChCp = self.cCnc, 0
     #     if self.sCncCh == GC.S_NO:
     #         cCnc_t = self.cCnc
@@ -56,7 +50,7 @@ class SMo_NO3_1m(SmallMolecule):
         super().__init__(inpDat, iTp, dStat)
         self.idO = GC.ID_NO3_1M
         self.descO = 'Small molecule NO3-'
-        self.createDSpecSites(self.dITp['dInfSpS'])
+        self.createDSpecSites()
         # print('Initiated "SMo_NO3_1m" object.')
 
 class SMo_H2PO4_1m(SmallMolecule):
@@ -64,7 +58,7 @@ class SMo_H2PO4_1m(SmallMolecule):
         super().__init__(inpDat, iTp, dStat)
         self.idO = GC.ID_H2PO4_1M
         self.descO = 'Small molecule H2PO4-'
-        self.createDSpecSites(self.dITp['dInfSpS'])
+        self.createDSpecSites()
         # print('Initiated "SMo_H2PO4_1m" object.')
 
 ###############################################################################

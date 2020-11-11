@@ -16,15 +16,17 @@ class InputFrames:
         self.getDSCp7()
         self.getDSCpTp()
         self.getIniSysCpObj()
+        self.getDParCnc()
         self.getDRct()
-        self.getDChgConcDep()
-        self.getDConcChg()
+        self.getDChgCncDep()
+        self.getDCncChg()
 
     def getDSCp7(self, sK = GC.S_00):
         self.dSCp7, lTK, lTV = {}, [], []
         if sK in self.dDfrIn:
-            assert GC.S_CPSTR in self.dDfrIn[sK].columns
-            for sI in self.dDfrIn[sK].index:
+            cDfr = self.dDfrIn[sK]
+            assert GC.S_CPSTR in cDfr.columns
+            for sI in cDfr.index:
                 sLeft = GC.S_USC.join(sI.split(GC.S_USC)[:-1])
                 if sI.endswith(GC.S_SHORT):
                     lTK.append((sLeft, sI))
@@ -33,8 +35,8 @@ class InputFrames:
             for tK in lTK:
                 for tV in lTV:
                     if tK[0] == tV[0]:
-                        cK = self.dDfrIn[sK].at[tK[1], GC.S_CPSTR]
-                        cV = self.dDfrIn[sK].at[tV[1], GC.S_CPSTR]
+                        cK = cDfr.at[tK[1], GC.S_CPSTR]
+                        cV = cDfr.at[tV[1], GC.S_CPSTR]
                         self.dSCp7[cK] = cV
                         break
         else:
@@ -42,9 +44,9 @@ class InputFrames:
 
     def getDSCpTp(self, sK1 = GC.S_00, sK2 = GC.S_01):
         self.dSCpTpL, self.dSCpTpS, self.lSCpTpL, self.lSCpTpS = {}, {}, [], []
+        colDfrK1, colDfrK2 = self.dDfrIn[sK1].columns, self.dDfrIn[sK2].columns
         if sK1 in self.dDfrIn and sK2 in self.dDfrIn:
-            assert (GC.S_CPSTR in self.dDfrIn[sK1].columns and
-                    GC.S_CPSTR in self.dDfrIn[sK2].columns)
+            assert GC.S_CPSTR in colDfrK1 and GC.S_CPSTR in colDfrK2
             for sL in self.dDfrIn[sK1].index:
                 sCp = self.dDfrIn[sK1].at[sL, GC.S_CPSTR]
                 if sL.endswith(GC.S_LONG) or sL.endswith(GC.S_SHORT):
@@ -66,50 +68,75 @@ class InputFrames:
     def getIniSysCpObj(self, sK = GC.S_01):
         self.dNCpObj, self.nCpObj = {}, 0
         if sK in self.dDfrIn:
-            assert (GC.S_CPSTR in self.dDfrIn[sK].columns and
-                    GC.S_NUM in self.dDfrIn[sK].columns)
-            for sI in self.dDfrIn[sK].index:
-                cK = self.dDfrIn[sK].at[sI, GC.S_CPSTR]
-                cV = self.dDfrIn[sK].at[sI, GC.S_NUM]
+            cDfr = self.dDfrIn[sK]
+            assert GC.S_CPSTR in cDfr.columns and GC.S_NUM in cDfr.columns
+            for sI in cDfr.index:
+                cK = cDfr.at[sI, GC.S_CPSTR]
+                cV = cDfr.at[sI, GC.S_NUM]
                 self.dNCpObj[cK] = cV
             self.nCpObj = sum(self.dNCpObj.values())
         else:
             print('ERROR: Key', sK, 'not in DataFrames dictionary!')
 
+    def getDParCnc(self, sK = GC.S_02):
+        self.dParCnc, sICD, sCCM = {}, GC.S_INI_CNC_DISTR, GC.S_CNC_CHG_MODE
+        lSIni, lVIni = GC.L_S_STR_PAR_INI, GC.L_S_VAL_PAR_INI
+        lSTChg, lVTChg = GC.L_S_STR_PAR_TCHG, GC.L_S_VAL_PAR_TCHG
+        if sK in self.dDfrIn:
+            cDfr = self.dDfrIn[sK]
+            for x in ([GC.S_CNC_MIN, GC.S_CNC_MAX, sICD, sCCM] +
+                      GC.L_S_STR_PAR_INI + GC.L_S_VAL_PAR_INI +
+                      GC.L_S_STR_PAR_TCHG + GC.L_S_VAL_PAR_TCHG):
+                assert x in cDfr.columns
+            assert len(GC.L_S_STR_PAR_INI) == len(GC.L_S_VAL_PAR_INI)
+            assert len(GC.L_S_STR_PAR_TCHG) == len(GC.L_S_VAL_PAR_TCHG)
+            for sSMo in cDfr.index:
+                cMdI = cDfr.at[sSMo, sICD]
+                dPaI = {cDfr.at[sSMo, lSIni[k]]: cDfr.at[sSMo, lVIni[k]] for
+                        k in range(len(lSIni))}
+                cMdT = cDfr.at[sSMo, sCCM]
+                dPaT = {cDfr.at[sSMo, lSTChg[k]]: cDfr.at[sSMo, lVTChg[k]] for
+                        k in range(len(lSTChg))}
+                self.dParCnc[sSMo] = {sICD: (cMdI, dPaI), sCCM: (cMdT, dPaT)}
+                self.dParCnc[sSMo][GC.S_CNC_MIN] = cDfr.at[sSMo, GC.S_CNC_MIN]
+                self.dParCnc[sSMo][GC.S_CNC_MAX] = cDfr.at[sSMo, GC.S_CNC_MAX]
+
     def getDRct(self, sK = GC.S_04):
         self.dRct = {}
         if sK in self.dDfrIn:
-            assert (GC.S_RCTSTR in self.dDfrIn[sK].columns and
-                    GC.S_WT in self.dDfrIn[sK].columns)
-            for sI in self.dDfrIn[sK].index:
-                cK = self.dDfrIn[sK].at[sI, GC.S_RCTSTR]
-                cV = self.dDfrIn[sK].at[sI, GC.S_WT]
+            cDfr = self.dDfrIn[sK]
+            assert GC.S_RCTSTR in cDfr.columns and GC.S_WT in cDfr.columns
+            for sI in cDfr.index:
+                cK = cDfr.at[sI, GC.S_RCTSTR]
+                cV = cDfr.at[sI, GC.S_WT]
                 self.dRct[cK] = cV
         else:
             print('ERROR: Key', sK, 'not in DataFrames dictionary!')
 
-    def getDChgConcDep(self, sK = GC.S_05):
-        self.dChgConcDep = {}
+    def getDChgCncDep(self, sK = GC.S_05):
+        self.dChgCncDep = {}
         if sK in self.dDfrIn:
+            cDfr = self.dDfrIn[sK]
             for sHdCol in GC.L_S_PAR_TAB05:
-                assert sHdCol in self.dDfrIn[sK].columns
-            for sI in self.dDfrIn[sK].index:
+                assert sHdCol in cDfr.columns
+            for sI in cDfr.index:
                 assert sI[0] in GC.L_S_1DIG_SMO
                 cKM = GC.L_ID_SMO_USED[GC.L_S_1DIG_SMO.index(sI[0])]
-                dV = {s: self.dDfrIn[sK].at[sI, s] for s in GC.L_S_PAR_TAB05}
-                GF.addToDictD(self.dChgConcDep, cKM, sI[(1 + 1):], dV)
+                dV = {s: cDfr.at[sI, s] for s in GC.L_S_PAR_TAB05}
+                GF.addToDictD(self.dChgCncDep, cKM, sI[(1 + 1):], dV)
         else:
             print('ERROR: Key', sK, 'not in DataFrames dictionary!')
 
-    def getDConcChg(self, sK = GC.S_06):
-        self.dConcChg = {}
+    def getDCncChg(self, sK = GC.S_06):
+        self.dCncChg = {}
         if sK in self.dDfrIn:
-            assert GC.S_VAL_ABS_CH in self.dDfrIn[sK].columns
-            for sI in self.dDfrIn[sK].index:
+            cDfr = self.dDfrIn[sK]
+            assert GC.S_VAL_ABS_CH in cDfr.columns
+            for sI in cDfr.index:
                 assert sI[0] in GC.L_S_1DIG_SMO
                 cKM = GC.L_ID_SMO_USED[GC.L_S_1DIG_SMO.index(sI[0])]
-                cV = self.dDfrIn[sK].at[sI, GC.S_VAL_ABS_CH]
-                GF.addToDictD(self.dConcChg, cKM, sI[(1 + 1):], cV)
+                cV = cDfr.at[sI, GC.S_VAL_ABS_CH]
+                GF.addToDictD(self.dCncChg, cKM, sI[(1 + 1):], cV)
         else:
             print('ERROR: Key', sK, 'not in DataFrames dictionary!')
 
@@ -132,16 +159,17 @@ class InputFrames:
 
     def getViaIdx(self, sK, iL = 0, iC = 0):
         if sK in self.dDfrIn:
-            if iL < self.dDfrIn[sK].shape[0]:
-                if iC < self.dDfrIn[sK].shape[1]:
-                    return self.dDfrIn[sK].iloc[iL, iC]
+            cDfr = self.dDfrIn[sK]
+            if iL < cDfr.shape[0]:
+                if iC < cDfr.shape[1]:
+                    return cDfr.iloc[iL, iC]
                 else:
                     print('ERROR: Column index is', iC, '>=',
-                          self.dDfrIn[sK].shape[1], '(number of columns).')
+                          cDfr.shape[1], '(number of columns).')
                     return None
             else:
                 print('ERROR: Line index is', iL, '>=',
-                      self.dDfrIn[sK].shape[0], '(number of lines).')
+                      cDfr.shape[0], '(number of lines).')
                 return None
         else:
             print('ERROR: Key', sK, 'not in DataFrames dictionary!')
@@ -149,16 +177,17 @@ class InputFrames:
 
     def getViaLbl(self, sK, sL, sC):
         if sK in self.dDfrIn:
-            if sL in self.dDfrIn[sK].index:
-                if sC in self.dDfrIn[sK].columns:
-                    return self.dDfrIn[sK].loc[sL, sC]
+            cDfr = self.dDfrIn[sK]
+            if sL in cDfr.index:
+                if sC in cDfr.columns:
+                    return cDfr.loc[sL, sC]
                 else:
                     print('ERROR: Column label', sC, 'not in columns',
-                          list (self.dDfrIn[sK].columns))
+                          list (cDfr.columns))
                     return None
             else:
                 print('ERROR: Line label', sL, 'not in lines',
-                      list (self.dDfrIn[sK].index))
+                      list (cDfr.index))
                 return None
         else:
             print('ERROR: Key', sK, 'not in DataFrames dictionary!')

@@ -1,7 +1,7 @@
 --------------------------------------------------------------------------------
 Code updates remaining:
 --------------------------------------------------------------------------------
-* changes in conc. SMo: write back to SMo objects
+* changes in conc. SMo: write back to SMo objects (sMo.cCnc) - Metabolite - small molecule - setConc
 --------------------------------------------------------------------------------
 
 --------------------------------------------------------------------------------
@@ -15,5 +15,7 @@ Code updates done:
 * dNCpObj of (of System dITp) --> InpFrames.dNCpObj
 * dConcChg of (of System dITp) --> InpFrames....
 * calcPSigmoidal (to re-activate)
+* remove dParP of dInfSpS of dITp, and adapt complLSpec
+* create dPar for InpFrames['02'] data
 
 --------------------------------------------------------------------------------

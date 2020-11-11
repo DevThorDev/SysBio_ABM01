@@ -31,7 +31,7 @@ class Protein_NRT2p1(LargeProtein):
         super().__init__(inpDat, iTp, dStat)
         self.idO = GC.ID_LPR_NRT2P1
         self.descO = 'Large protein NRT2.1'
-        self.createDSpecSites(self.dITp['dInfSpS'])
+        self.createDSpecSites()
         # print('Initiated "Protein_NRT2p1" object.')
 
 class SmallProtein(Protein):
@@ -46,7 +46,7 @@ class Protein_NAR2p1(SmallProtein):
         super().__init__(inpDat, iTp, dStat)
         self.idO = GC.ID_SPR_NAR2P1
         self.descO = 'Small protein NAR2.1'
-        self.createDSpecSites(self.dITp['dInfSpS'])
+        self.createDSpecSites()
         # print('Initiated "Protein_NAR2p1" object.')
 
 class Enzyme(Protein):
@@ -69,7 +69,7 @@ class Kinase_HPCAL1(Kinase):
         super().__init__(inpDat, iTp, dStat)
         self.idO = GC.ID_KAS_HPCAL1
         self.descO = 'Kinase HPCAL1'
-        self.createDSpecSites(self.dITp['dInfSpS'])
+        self.createDSpecSites()
         # print('Initiated "Kinase_HPCAL1" object.')
 
 class Kinase_X(Kinase):
@@ -77,7 +77,7 @@ class Kinase_X(Kinase):
         super().__init__(inpDat, iTp, dStat)
         self.idO = GC.ID_KAS_X
         self.descO = 'Kinase X'
-        self.createDSpecSites(self.dITp['dInfSpS'])
+        self.createDSpecSites()
         # print('Initiated "Kinase_X" object.')
 
 class Kinase0(Kinase):
@@ -85,7 +85,7 @@ class Kinase0(Kinase):
         super().__init__(inpDat, iTp, dStat)
         self.idO = cID
         self.descO = 'Kinase 0'
-        self.createDSpecSites(self.dITp['dInfSpS'])
+        self.createDSpecSites()
         # print('Initiated "Kinase0" object.')
 
 class Phosphatase(Enzyme):
@@ -100,7 +100,7 @@ class Phosphatase0(Phosphatase):
         super().__init__(inpDat, iTp, dStat)
         self.idO = cID
         self.descO = 'Phosphatase 0'
-        self.createDSpecSites(self.dITp['dInfSpS'])
+        self.createDSpecSites()
         # print('Initiated "Phosphatase0" object.')
 
 ###############################################################################

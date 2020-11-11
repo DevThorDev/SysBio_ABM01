@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ###############################################################################
-# --- B_501__NO3_1m.py --------------------------------------------------------
+# --- B_61__NO3_1m.py ---------------------------------------------------------
 ###############################################################################
 import Core.C_00__GenConstants as GC
 
@@ -12,20 +12,6 @@ strCL = 'NO3_1m'
 
 # --- dictionary of parameters for special sites ------------------------------
 dInfSpS = {}
-
-# --- initial state -----------------------------------------------------------
-concIni = 5                             # initial concentration of NO3-
-
-# --- changes over time in deterministic mode ---------------------------------
-mdConcCh = GC.S_CH_SIN                  # conc. change mode
-                                        # options: S_NO, S_CH_SIN, S_CH_STEPS
-perConcCh = 100                         # conc. change period (time steps)
-amplConcCh = 4                          # conc. change amplitude
-thrLowConc = 4                          # threshold for "low" concentration
-thrHighConc = 7                         # threshold for "high" concentration
-
-propIncCpLS = 0.04                      # prop. increase in states LSI, LST
-propDecCpLK = 0.03                      # prop. decrease in states LKI, LKT
 
 # --- graphics parameters molecule concentrations plot ------------------------
 sPlt_Conc = 'Conc'                  # name of plot and key of input dict
@@ -39,16 +25,6 @@ dIO = {# --- general
        'strCL': strCL,
        # --- dictionary of parameters for special sites
        'dInfSpS': dInfSpS,
-       # --- initial state
-       GC.S_CONC_INI: concIni,
-       # --- changes over time in deterministic mode
-       GC.S_MODE_CHG: mdConcCh,
-       GC.S_PERIOD_CHG: perConcCh,
-       GC.S_AMPL_CHG: amplConcCh,
-       GC.S_THR_LOW_CONC: thrLowConc,
-       GC.S_THR_HIGH_CONC: thrHighConc,
-       GC.S_PROP_INC_CP_LS: propIncCpLS,
-       GC.S_PROP_DEC_CP_LK: propDecCpLK,
        # --- graphics parameters molecule concentrations plot
        GC.S_D_PLT: {sPlt_Conc: {'yLbl': yLbl_Conc}}}
 ###############################################################################

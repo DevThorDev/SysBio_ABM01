@@ -72,7 +72,7 @@ def iniComponent(inpDG, ddVOvwr = {}, iV = 0):
     # Return the current state ------------------------------------------------
     return cCp
 
-def changeComponentConcDep(inpDG, cCp):
+def changeComponentCncDep(inpDG, cCp):
     if cCp.dCnc[GC.ID_NO3_1M][0] > cCp.dCnc[GC.ID_NO3_1M][2]:
         if cCp.idO == GC.S_CP_LSI_LONG:
             cCp.to_Cp_LST(inpDG)
@@ -99,9 +99,9 @@ def evolveTS(inpDG, lCpO, curTS, nCpO = 1, ddVOvwr = {}):
     print('--- Current time step:', curTS)
     for iCpO in range(nCpO):
         print('- Component', iCpO + 1)
-        lCpO[iCpO].changeConcSMo(curTS)
+        lCpO[iCpO].changeCncSMo(curTS)
         lCpO[iCpO].printDCnc(prID = GC.ID_NO3_1M)
-        changeComponentConcDep(inpDG, lCpO[iCpO])
+        changeComponentCncDep(inpDG, lCpO[iCpO])
 
 def evolve_TimeSteps(inpDG, nObj = 1, ddVOvwr = {}):
     lCpO = evolveIni(inpDG, nObj, ddVOvwr)

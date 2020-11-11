@@ -24,11 +24,12 @@ cInpFrames = InputFrames(inDG)
 # print(cInpFrames.dSCpTpS)
 # print(cInpFrames.dSCpTpL)
 # print(cInpFrames.dNCpObj)
+# print(cInpFrames.dParCnc)
 # print(cInpFrames.dRct)
-# print(cInpFrames.dChgConcDep)
-# print(cInpFrames.dConcChg)
-# for cKO in cInpFrames.dConcChg:
-#     print(list(cInpFrames.dConcChg[cKO]))
+# print(cInpFrames.dChgCncDep)
+# print(cInpFrames.dCncChg)
+# for cKO in cInpFrames.dCncChg:
+#     print(list(cInpFrames.dCncChg[cKO]))
 
 cSystem = System(inDG, cInpFrames)
 if cSystem.dIG['doEvoT']:

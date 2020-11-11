@@ -30,15 +30,14 @@ class ComponentBase(Base):
         self.complementLO(inpDat, dOComp)
         self.prTrans = 0
         self.dCncEvo = {GC.S_TIME: [self.dIG['tStart']],
-                        GC.S_CONC_NO3_1M: [self.lSMo[0].cCnc],
-                        GC.S_CONC_H2PO4_1M: [self.lSMo[1].cCnc],
+                        GC.S_CNC_NO3_1M: [self.lSMo[0].cCnc],
+                        GC.S_CNC_H2PO4_1M: [self.lSMo[1].cCnc],
                         GC.S_CP: [self.idO]}
         # print('Initiated "ComponentBase" object.')
 
     def complementLO(self, inpDat, dOComp):
         self.lSMo = dOComp[GC.SPC_L_SMO]
-        self.dCnc = {cO.idO: [cO.cCnc, cO.dITp['thrLowConc'],
-                              cO.dITp['thrHighConc']] for cO in self.lSMo}
+        self.dCnc = {cO.idO: cO.cCnc for cO in self.lSMo}
         lOSy = GF.lItToUniqueList(self.llOI) + self.lOO + self.lSMo
         lID = TF.complLSpec(inpDat, lOSy, sTp = 'KAs', sD = 'Pyl')
         self.lKAs0 = [Kinase0(inpDat, cID = ID) for ID in lID if ID not in
@@ -81,12 +80,8 @@ class ComponentBase(Base):
     def printDCnc(self, prID = None, prFull = False):
         if prFull:
             print('Dictionary of small molecule concentrations:')
-        for cID, (cCnc, thrLow, thrHigh) in self.dCnc.items():
-            if prFull and (prID is None or cID == prID):
-                print(cID + ': Current conc. ' + str(round(cCnc, GC.R04)) +
-                      '; "low" thr. ' + str(round(thrLow, GC.R04)) +
-                      '; "high" thr. ' + str(round(thrHigh, GC.R04)))
-            elif not prFull and (prID is None or cID == prID):
+        for cID, cCnc in self.dCnc.items():
+            if prID is None or cID == prID:
                 print(cID + ': Current conc. ' + str(round(cCnc, GC.R04)))
 
     # def savePlotDCncEvo(self, kCp = 0, llIPlot = None, iSMo = 0):
@@ -116,17 +111,17 @@ class ComponentBase(Base):
                 # if Dephosphorylation(inpDat, cO, cAs, sSpS).doDePyl():
                 #     print('Dephosphorylation at site', sSpS, 'happened!')
 
-    # def getConcSMo(self, cID = None):
-    #     lConc = []
+    # def getCncSMo(self, cID = None):
+    #     lCnc = []
     #     for cSMo in self.lSMo:
     #         if cID is None or cSMo.idO == cID:
-    #             lConc.append(cSMo.cCnc)
-    #     return lConc
+    #             lCnc.append(cSMo.cCnc)
+    #     return lCnc
 
-    # def changeConcSMo(self, t, cID = None):
+    # def changeCncSMo(self, t, cID = None):
     #     for cSMo in self.lSMo:
     #         if cID is None or cSMo.idO == cID:
-    #             cSMo.changeConc(t, self.idO)
+    #             cSMo.changeCnc(t, self.idO)
     #             assert cSMo.idO in self.dCnc
     #             self.dCnc[cSMo.idO][0] = cSMo.cCnc
     #     lCEl = [t, self.lSMo[0].cCnc, self.lSMo[1].cCnc, self.idO]

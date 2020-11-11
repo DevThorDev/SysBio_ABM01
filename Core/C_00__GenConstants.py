@@ -70,18 +70,19 @@ L_ID_INT = ['Int']
 L_ID_PYL = ['Pyl']
 L_ID_DEPYL = ['DePyl']
 
-S_CONC_INI = 'concIni'
+S_CNC_INI = 'concIni'
 S_MODE_CHG = 'ConcChgMode'
 S_PERIOD_CHG = 'periodChg'
 S_AMPL_CHG = 'amplitudeChg'
-S_THR_LOW_CONC = 'thrLowConc'
-S_THR_HIGH_CONC = 'thrHighConc'
+S_THR_LOW_CNC = 'thrLowConc'
+S_THR_HIGH_CNC = 'thrHighConc'
 
 S_PROP_INC_CP_LS = 'propIncCpLS'
 S_PROP_DEC_CP_LK = 'propDecCpLK'
 
 S_NO = 'no'
 S_CH_SIN = 'sin'
+S_CH_STEP = 'step'
 
 # --- constants related to specific sites -------------------------------------
 S_SPS_LPRA_S21 = 'S21'
@@ -151,7 +152,7 @@ S_VAL_PAR_2_INI = 'ValPar2_Ini'
 L_S_VAL_PAR_INI = [S_VAL_PAR_1_INI, S_VAL_PAR_2_INI]
 S_CNC_MIN = 'ConcMin'
 S_CNC_MAX = 'ConcMax'
-S_CONC_CHG_MODE = 'ConcChgMode'
+S_CNC_CHG_MODE = 'ConcChgMode'
 S_STR_PAR_1_TCHG = 'StrPar1_TChg'
 S_STR_PAR_2_TCHG = 'StrPar2_TChg'
 S_STR_PAR_3_TCHG = 'StrPar3_TChg'
@@ -195,8 +196,8 @@ I_S_CP_SEP = 3
 S_TS = 'TimeStep'
 S_TIME = 'Time'
 S_CP = 'Comp'
-S_CONC_NO3_1M = 'Conc_NO3-'
-S_CONC_H2PO4_1M = 'Conc_H2PO4-'
+S_CNC_NO3_1M = 'Conc_NO3-'
+S_CNC_H2PO4_1M = 'Conc_H2PO4-'
 S_MEAN = 'Mean'
 S_SUM = 'Sum'
 

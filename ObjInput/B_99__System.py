@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ###############################################################################
-# --- B_099__System.py --------------------------------------------------------
+# --- B_99__System.py ---------------------------------------------------------
 ###############################################################################
 import Core.C_00__GenConstants as GC
 
@@ -18,7 +18,7 @@ MassC = 2                           # nanograms
 # --- data containing components, reactions and conc. change info -------------
 wtRctDirect = False # True: reaction weights directly from the reaction tbl.
                     # False: calculate reaction weights from single events
-concChgScale = 1.   # scale of concentration change def. in dConcChg
+cncChgScale = 1000.    # scale of (internal) concentration change
 
 # --- graphics parameters: component numbers and molecule conc. plot ----------
 sPlt_SSC = '01_SelCpConc'               # name of sel. comps and conc. plot
@@ -87,7 +87,7 @@ dIO = {# --- general
        'MassC': MassC,
        # --- data containing components, reactions and conc. change info
        'wtRctDirect': wtRctDirect,
-       'concChgScale': concChgScale,
+       'cncChgScale': cncChgScale,
        # --- path, directory and file names
        'sD_Sys': sD_Sys,
        'sF_SysEvo': sF_SysEvo,
