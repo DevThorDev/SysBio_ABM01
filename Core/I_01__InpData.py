@@ -7,7 +7,6 @@ import os, pprint
 from importlib import import_module
 
 import Core.C_00__GenConstants as GC
-import Core.F_00__GenFunctions as GF
 
 # +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 class InputData:
@@ -51,7 +50,6 @@ class InputData:
                         print('Object with type index', iTp, 'not imported.')
                         print('Name of module:', nmMod)
                         assert False
-        # GF.seedRNG(self.dI['Mode'])
 
     def yieldOneVal(self, cKey):
         retVal = None

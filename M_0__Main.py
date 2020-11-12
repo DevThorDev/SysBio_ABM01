@@ -26,6 +26,7 @@ cInpFrames = InputFrames(inDG)
 # print(cInpFrames.dNCpObj)
 # print(cInpFrames.dParCnc)
 # print(cInpFrames.dRct)
+# print(cInpFrames.dTpRct)
 # print(cInpFrames.dChgCncDep)
 # print(cInpFrames.dCncChg)
 # for cKO in cInpFrames.dCncChg:

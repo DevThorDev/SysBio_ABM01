@@ -101,17 +101,21 @@ class InputFrames:
                 self.dParCnc[sSMo][GC.S_CNC_MIN] = cDfr.at[sSMo, GC.S_CNC_MIN]
                 self.dParCnc[sSMo][GC.S_CNC_MAX] = cDfr.at[sSMo, GC.S_CNC_MAX]
 
-    def getDRct(self, sK = GC.S_04):
-        self.dRct = {}
-        if sK in self.dDfrIn:
-            cDfr = self.dDfrIn[sK]
+    def getDRct(self, sK1 = GC.S_03, sK2 = GC.S_04):
+        self.dRct, self.dTpRct = {}, {}
+        if sK2 in self.dDfrIn:
+            cDfr = self.dDfrIn[sK2]
             assert GC.S_RCTSTR in cDfr.columns and GC.S_WT in cDfr.columns
             for sI in cDfr.index:
-                cK = cDfr.at[sI, GC.S_RCTSTR]
-                cV = cDfr.at[sI, GC.S_WT]
-                self.dRct[cK] = cV
+                sRct = cDfr.at[sI, GC.S_RCTSTR]
+                wtRct = cDfr.at[sI, GC.S_WT]
+                sRctType, dRctType = GF.analyseSRct(sRct)
+                if wtRct < 0:
+                    wtRct = GF.calcRctWeight(self.dDfrIn[sK1], dRctType)
+                self.dRct[sRct] = wtRct
+                self.dTpRct[sRct] = (sRctType, dRctType)
         else:
-            print('ERROR: Key', sK, 'not in DataFrames dictionary!')
+            print('ERROR: Key', sK2, 'not in DataFrames dictionary!')
 
     def getDChgCncDep(self, sK = GC.S_05):
         self.dChgCncDep = {}

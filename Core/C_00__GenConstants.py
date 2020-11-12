@@ -192,6 +192,8 @@ S_RCT_22 = S_2 + S_2
 LEN_S_CP = 7
 I_S_CP_SEP = 3
 
+P_DUMMY = 0.5
+
 # --- constants related to model output ---------------------------------------
 S_TS = 'TimeStep'
 S_TIME = 'Time'

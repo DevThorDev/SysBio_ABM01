@@ -287,6 +287,13 @@ def analyseSRct(sRct):
               'implemented. Number of reactants is', len(lSSplRct[0]),
               'while number of products is', len(lSSplRct[1]))
 
+def calcRctWeight(cDfr, dRctTp):
+    wRct = 1.
+    if GC.S_VAL in cDfr.columns:
+        for sK in dRctTp:
+            wRct *= cDfr.at[sK, GC.S_VAL]
+    return wRct
+
 def updateDITpDIPlt(dITpC, dITpU, lKSpc = [GC.S_D_PLT]):
     for cKSpc in lKSpc:
         if cKSpc in dITpC and cKSpc in dITpU:

@@ -92,13 +92,21 @@ def changeCncSMo(dITp, inpFr, dO, dCncSMo, t, cID = None):
         assert sSMo in inpFr.dParCnc
         cD, cncChg, cncChgExt = inpFr.dParCnc[sSMo], 0., 0.
         cncMn, cncMx = cD[GC.S_CNC_MIN], cD[GC.S_CNC_MAX]
-        for s in dO['dN']:
+        for s, nO in dO['dN'].items():
             ss = s.replace(GC.S_DASH, '')
             assert ss in inpFr.dCncChg[sSMo]
-            cncChg += inpFr.dCncChg[sSMo][ss]*dO['dN'][s]
+            cncChg += inpFr.dCncChg[sSMo][ss]*nO
+            # if inpFr.dCncChg[sSMo][ss] != 0:
+            #     print('Changed conc. of', sSMo, 'by amount of',
+            #           inpFr.dCncChg[sSMo][ss]*nO, 'which is the product of',
+            #           inpFr.dCncChg[sSMo][ss], 'for', ss, 'and', nO,
+            #           'for', s, '.')
         # component-distribution-dependent (internal) conc. change
-        cncChgInt = cncChg*dO['tDlt']/inpFr.nCpObj*dITp['cncChgScale']
+        nCpO = sum(dO['dN'].values())
+        cncChgInt = cncChg*dO['tDlt']/nCpO*dITp['cncChgScale']
         dO['dCncChgInt'][sSMo] += cncChgInt
+        # print('TEMP - cncChg =', cncChg, '- tDlt =', dO['tDlt'],
+        #       '- num. of comp. obj. =', nCpO, '--> cncChgInt =', cncChgInt)
         # externally forced conc. change
         cTp, dPar = cD[GC.S_CNC_CHG_MODE]
         if cTp == GC.S_CH_SIN:
@@ -114,26 +122,22 @@ def changeCncSMo(dITp, inpFr, dO, dCncSMo, t, cID = None):
         # dCncSMo[sSMo], delta = GF.implMinMax(dCncSMo[sSMo], cncMn, cncMx)
         # dO['dCncChgInt'][sSMo] += delta
 
-def calcRctWeight(inpFr, dRctTp):
-    wRct = 1.
-    if GC.S_VAL in inpFr.dDfrIn[GC.S_03].columns:
-        for sK in dRctTp:
-            wRct *= inpFr.dDfrIn[GC.S_03].at[sK, GC.S_VAL]
-    return wRct
-
 def updateDictH(dITp, inpFr, dO, dCncSMo):
-    dRUp, sSMoN, p = {}, GC.ID_NO3_1M, 0.5      # 0.5: a dummy value
+    dRUp, sSMoN, p = {}, GC.ID_NO3_1M, GC.P_DUMMY
     # update the reaction rate constants according to the current [NO3-]
     for sRct, wtRct in inpFr.dRct.items():
-        sRctType, dRctType = GF.analyseSRct(sRct)
-        if not dITp['wtRctDirect']:
-            wtRct = calcRctWeight(inpFr, dRctType)
         # NO3- dependency of incidences of each component
+        sRctType, dRctType = inpFr.dTpRct[sRct]
+        # print('TEMP - sRctType =', sRctType, '- dRctType =', dRctType)
         for sK in dRctType:
-            if sK in inpFr.dChgCncDep:
+            # print('TEMP - sK =', sK)
+            if sK in inpFr.dChgCncDep[sSMoN]:
                 dParPSig = inpFr.dChgCncDep[sSMoN][sK]
                 p = GF.calcPSigmoidal(dCncSMo[sSMoN], dParPSig)
+                # print('TEMP - sK =', sK, '- dParPSig =', dParPSig, '- p =', p)
+                break
         dRUp[sRct] = wtRct*p
+        # print('TEMP - wtRct =', wtRct, '- p =', p, '--> dRUp[', sRct, '] =', dRUp[sRct])
         # recalculate dH, which contains the h_i (i = 1,... len(dH))
         dO['dH'][sRct] = dRUp[sRct]
         if sRctType in [GC.S_RCT_21, GC.S_RCT_22]:
@@ -180,13 +184,15 @@ def updateDictOut(dO, dCnc, t):
     dO['dRes'][GC.S_TIME].append(t)
     for s, cCnc in dCnc.items():
         dO['dRes'][s].append(cCnc)
-    for s in dO['dN']:
-        dO['dRes'][s].append(dO['dN'][s])
+    for s, nO in dO['dN'].items():
+        dO['dRes'][s].append(nO)
 
 def evolveGillespie(dIG, dITp, inpFr, dCncSMo):
     t, T, tDelta, cTSt = dIG['tStart'], dIG['tMax'], 0, 0
     dO = iniDictOut(inpFr, dCncSMo, t, tDelta)
     while t < T and cTSt <= dIG['maxTS']:
+        if cTSt >= dIG['minDispTS'] and cTSt%dIG['modDispTS'] == 0:
+            print('Reached time step', cTSt, 'at time', round(t, GC.R04))
         # change the concentrations of the small molecules
         changeCncSMo(dITp, inpFr, dO, dCncSMo, t)
         # adapt the re-calc reaction hazards function to current system
