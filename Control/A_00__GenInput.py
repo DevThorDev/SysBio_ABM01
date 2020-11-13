@@ -12,11 +12,12 @@ levelDebugOut = 2   # level of debug output (0: no debug output)
 # --- Input: Flow control -----------------------------------------------------
 doEvoT = True
 doPlots = True
-tStart = 0
-tMax = 10.
-maxTS = 10000000
+tStart = 0                  # 0
+tMax = 50.                  # 10.
+maxTS = 10000000            # 10000000
 minDispTS = 0
-modDispTS = 10000
+modDispTS = 10000           # 10000
+assert tMax >= tStart and maxTS > 0
 
 # --- Input: General ----------------------------------------------------------
 nDigObj = 2         # number of digits reserved for all input objects
@@ -34,7 +35,8 @@ dSFInD = {GC.S_00: (GC.S_00 + GC.S_USC + 'Strings', 1),
           GC.S_03: (GC.S_03 + GC.S_USC + 'Weights4Rct', 1),
           GC.S_04: (GC.S_04 + GC.S_USC + 'Reactions', 1),
           GC.S_05: (GC.S_05 + GC.S_USC + 'CompIncidDependencies', 1),
-          GC.S_06: (GC.S_06 + GC.S_USC + 'SMoConcDependencies', 1)}
+          GC.S_06: (GC.S_06 + GC.S_USC + 'SMoConcDependencies', 1),
+          GC.S_07: (GC.S_07 + GC.S_USC + 'OtherInputValues', 1)}
 
 dictInpG = {# --- Input: Debug Info
             'lvlDbg': levelDebugOut,

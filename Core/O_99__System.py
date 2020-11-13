@@ -9,6 +9,7 @@ import Core.F_03__OTpFunctions as TF
 
 from Core.O_00__Base import Base
 from Core.O_90__Component import Component
+from Core.O_03__Metabolite import SMo_NO3_1m, SMo_H2PO4_1m
 
 # +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 class System(Base):
@@ -19,29 +20,38 @@ class System(Base):
         self.inFr = inpFr
         self.lCpO = lCpObj
         self.dCncSMo = TF.createDCnc(self.inFr)
-        self.addCpObj(inpDat)
-        self.getDictsCpObj()
+        self.updateObjDicts(inpDat)
         # print('Initiated "System" object.')
 
-    def addCpObj(self, inpDat, refreshCpO = False):
+    def updateObjDicts(self, inpDat, refresh = False):
+        self.addCpObj(inpDat, refresh = refresh)
+        self.getDictCpObj(refresh = refresh)
+        self.getDictSMoObj(inpDat)
+
+    def addCpObj(self, inpDat, refresh = False):
         dNCpO = self.inFr.dNCpObj
-        if refreshCpO:
+        if refresh:
             self.lCpO = []
             dNCpO = self.dNCpO
         for sCp, nCp in dNCpO.items():
             for cCp in range(nCp):
                 self.lCpO.append(Component(inpDat, self.inFr, sCp))
 
-    def getDictsCpObj(self):
-        self.dNCpO, self.dCpO = {}, {}
+    def getDictCpObj(self, refresh = False):
+        self.dCpO = {}
+        if not refresh:
+            self.dNCpO = {}
         for cCpO in self.lCpO:
-            GF.addToDictCt(self.dNCpO, cCpO.idO)
             GF.addToDictL(self.dCpO, cCpO.idO, cCpO)
+            if not refresh:
+                GF.addToDictCt(self.dNCpO, cCpO.idO)
 
-    def printCncSMo(self):
-        print('--- Concentrations of small molecules in system', self.idO)
-        for s, cCnc in self.dCncSMo.items():
-            print(s + ':\t' + str(cCnc))
+    def getDictSMoObj(self, inpDat):
+        NO3_1m = SMo_NO3_1m(inpDat)
+        H2PO4_1m = SMo_H2PO4_1m(inpDat)
+        self.dSMo = {NO3_1m.idO: NO3_1m, H2PO4_1m.idO: H2PO4_1m}
+        for sSMo, cSMoO in self.dSMo.items():
+            cSMoO.setConc(self.dCncSMo[sSMo])
 
     def printNCompObjSys(self):
         print('*'*16, 'Counts of comp. objects contained in System:', '*'*18)
@@ -58,22 +68,42 @@ class System(Base):
                 cCpO.printComponentDetails()
         print('*'*80)
 
+    def printSMo(self):
+        print('-'*8, 'Small molecules in system:', '-'*8)
+        for k, (sSMo, cSMoO) in enumerate(self.dSMo.items()):
+            print('-'*3, 'Small molecule', k + 1, '(with ID', sSMo + '):')
+            print(cSMoO)
+
+    def printCncSMo(self):
+        print('--- Concentrations of small molecules in system', self.idO)
+        for s, cCnc in self.dCncSMo.items():
+            print(s + ':\t' + str(round(cCnc, GC.R04)))
+
+    def printFinalSimuTime(self):
+        if len(self.dResEvo[GC.S_TIME]) > 0:
+            print('-'*8, 'Simulation time elapsed after',
+                  len(self.dResEvo[GC.S_TIME]), 'time steps:',
+                  round(self.dResEvo[GC.S_TIME][-1], GC.R04), '-'*8)
+        else:
+            print('-'*8, 'Simulation has not even started!', '-'*8)
+
     def plotResEvo(self, sFRes = None, overWr = True):
         dParPlt = self.dITp[GC.S_D_PLT][GC.S_CP_CNC]
         if sFRes is not None:
-            self.dResEvo = TF.getPFResEvo(self.dIG, self.dITp, sFRs = sFRes)
+            self.dfrResEvo = TF.getPFResEvo(self.dIG, self.dITp, sFRs = sFRes)
+        else:
+            self.dfrResEvo = GF.iniPdDfr(self.dResEvo)
         for cK, cT in dParPlt['dlSY'].items():
             assert len(cK) == 2 and len(cT) == 3
             dPPltF = TF.getDPFPltEvo(self.dIG, self.dITp, cK, dMS = cT[2])
-            if self.dResEvo is not None:
-                PF.plotEvo(dParPlt, self.dResEvo, dPPltF, self.inFr.dSCp7,
+            if self.dResEvo is not None and self.dfrResEvo is not None:
+                PF.plotEvo(dParPlt, self.dfrResEvo, dPPltF, self.inFr.dSCp7,
                            tDat = cT[:2], overWr = overWr)
 
     def evolveOverTime(self, inpDat, doPlots = True):
-        self.dResEvo, self.dNCpO = TF.evolveGillespie(self.dIG, self.dITp,
-                                                      self.inFr, self.dCncSMo)
-        self.addCpObj(inpDat, refreshCpO = True)
-        self.getDictsCpObj()
+        self.dResEvo, self.dNCpO = TF.evolveGillespie(self.dIG,  self.inFr,
+                                                      self.dCncSMo)
+        self.updateObjDicts(inpDat, refresh = True)
         # self.printCncSMo()
         # self.printNCompObjSys()
         # self.printAllCompObjSys()
@@ -81,55 +111,5 @@ class System(Base):
         self.pFResEvo = TF.saveAsPdDfr(self.dIG, dR, sD, sF, overWr = True)
         if doPlots:
             self.plotResEvo()
-
-# # +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-# class System(Base):
-#     def __init__(self, inpDat, lOSys = [], iTp = 99):
-#         super().__init__(inpDat, iTp)
-#         self.idO = 'Sys'
-#         self.descO = 'System'
-#         self.lOS = lOSys
-#         self.lMol = [cO for cO in self.lOS if cO.idO in GC.L_ID_MOL]
-#         self.lPro = [cO for cO in self.lOS if cO.idO in GC.L_ID_PRO]
-#         self.lEnz = [cO for cO in self.lOS if cO.idO in GC.L_ID_ENZ]
-#         self.lKAs = [cO for cO in self.lOS if cO.idO in GC.L_ID_KAS]
-#         self.lPAs = [cO for cO in self.lOS if cO.idO in GC.L_ID_PAS]
-#         self.lLPr = [cO for cO in self.lOS if cO.idO in GC.L_ID_LPR]
-#         self.lSPr = [cO for cO in self.lOS if cO.idO in GC.L_ID_SPR]
-#         self.lMet = [cO for cO in self.lOS if cO.idO in GC.L_ID_MET]
-#         self.lLMo = [cO for cO in self.lOS if cO.idO in GC.L_ID_LMO]
-#         self.lSMo = [cO for cO in self.lOS if cO.idO in GC.L_ID_SMO]
-#         self.lInt = [cO for cO in self.lOS if cO.idO in GC.L_ID_INT]
-#         self.lPyl = [cO for cO in self.lOS if cO.idO in GC.L_ID_PYL]
-#         self.lDePyl = [cO for cO in self.lOS if cO.idO in GC.L_ID_DEPYL]
-#         self.dCmp = {'Molecules': self.lMol,
-#                      'Proteins': self.lPro,
-#                      'Enzymes': self.lEnz,
-#                      'Kinases': self.lKAs,
-#                      'Phosphatases': self.lPAs,
-#                      'LargeProteins': self.lLPr,
-#                      'SmallProteins': self.lSPr,
-#                      'Metabolites': self.lMet,
-#                      'LargeMolecules': self.lLMo,
-#                      'SmallMolecules': self.lSMo,
-#                      'Interactions': self.lInt,
-#                      'Phosphorylations': self.lPyl,
-#                      'Dephosphorylations': self.lDePyl}
-#         print('Initiated "System" object.')
-
-#     def printSystem(self):
-#         print('+'*16, 'System consists of:', '+'*43)
-#         for s, lCmp in self.dCmp.items():
-#             if len(lCmp) > 0:
-#                 TF.printSysComp(s, lCmp)
-#         print('+'*80)
-
-#     def printSystemDetails(self):
-#         self.printSystem()
-#         for cO in self.lKAs + self.lPAs + self.lLPr + self.lSPr:
-#             cO.printSpecSites()
-
-#     def setToComp(self, inpDat, lOIntCp, lPAsCp = []):
-#         pass
 
 ###############################################################################

@@ -1,7 +1,6 @@
 --------------------------------------------------------------------------------
 Code updates remaining:
 --------------------------------------------------------------------------------
-* changes in conc. SMo: write back to SMo objects (sMo.cCnc) - Metabolite - small molecule - setConc
 --------------------------------------------------------------------------------
 
 --------------------------------------------------------------------------------
@@ -17,5 +16,9 @@ Code updates done:
 * calcPSigmoidal (to re-activate)
 * remove dParP of dInfSpS of dITp, and adapt complLSpec
 * create dPar for InpFrames['02'] data
+* eliminate ddVOvwr
+* remove dCncEvo, dCnc from O_90__Component
+* remove lSMo from O_90__Component (incl. dOCp/dOComp)
+* changes in conc. SMo: write back to SMo objects (sMo.cCnc) - Metabolite - small molecule - setConc
 
 --------------------------------------------------------------------------------

@@ -20,6 +20,7 @@ class InputFrames:
         self.getDRct()
         self.getDChgCncDep()
         self.getDCncChg()
+        self.getDOthInpV()
 
     def getDSCp7(self, sK = GC.S_00):
         self.dSCp7, lTK, lTV = {}, [], []
@@ -143,6 +144,14 @@ class InputFrames:
                 GF.addToDictD(self.dCncChg, cKM, sI[(1 + 1):], cV)
         else:
             print('ERROR: Key', sK, 'not in DataFrames dictionary!')
+
+    def getDOthInpV(self, sK = GC.S_07):
+        self.dOthInpV = {}
+        if sK in self.dDfrIn:
+            cDfr = self.dDfrIn[sK]
+            assert GC.S_VAL in cDfr.columns
+            for sI in cDfr.index:
+                self.dOthInpV[sI] = cDfr.at[sI, GC.S_VAL]
 
     def __str__(self):
         sIn = ('*'*24 + ' "InputFrames" type ' + '*'*24 +

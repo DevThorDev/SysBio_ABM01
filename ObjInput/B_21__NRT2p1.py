@@ -13,10 +13,10 @@ strCL = 'NRT2p1'
 # --- dictionary of parameters for special sites ------------------------------
 dInfSpS = {'S21': {'Stat': GC.S_NOT_PYL,
                    'Pyl': [GC.ID_KAS_3],
-                   'DePyl': [GC.ID_PAS_3]},
+                   'DPy': [GC.ID_PAS_3]},
            'S28': {'Stat': GC.S_NOT_PYL,
                    'Pyl': [GC.ID_KAS_X],
-                   'DePyl': [GC.ID_PAS_4]}}
+                   'DPy': [GC.ID_PAS_4]}}
 
 # --- create input dictionary -------------------------------------------------
 dIO = {# --- general
@@ -26,4 +26,5 @@ dIO = {# --- general
        'strCL': strCL,
        # --- dictionary of parameters for special sites
        'dInfSpS': dInfSpS}
+
 ###############################################################################

@@ -25,7 +25,7 @@ class Interaction(Base):
         print('Interaction partners:')
         for cT in lTIP:
             print('\t' + str(cT))
-    
+
 # +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 class Phosphorylation(Interaction):
     def __init__(self, inpDat, cOB, cAse, sSpSite, iTp = 80):
@@ -35,7 +35,7 @@ class Phosphorylation(Interaction):
         self.sSpS = sSpSite
         self.idAse = self.lOI[1].idO                        # 2nd obj. of list
         # print('Initiated "Phosphorylation" object.')
-        
+
     def doPyl(self, iLO = 0):
         # check if first interaction partner has site to be phosphorylated
         return TF.doSiteChange(self.lOI[iLO], self.sSpS, self.idAse)
@@ -44,12 +44,12 @@ class Phosphorylation(Interaction):
 class Dephosphorylation(Interaction):
     def __init__(self, inpDat, cOB, cAse, sSpSite, iTp = 80):
         super().__init__(inpDat, [cOB, cAse], iTp = iTp)    # order in list!
-        self.idO = 'DePyl'
+        self.idO = 'DPy'
         self.descO = 'Dephosphorylation'
         self.sSpS = sSpSite
         self.idAse = self.lOI[1].idO                        # 2nd obj. of list
         # print('Initiated "Dephosphorylation" object.')
-        
+
     def doDePyl(self, iLO = 0):
         # check if first interaction partner has site to be dephosphorylated
         return TF.doSiteChange(self.lOI[iLO], self.sSpS, self.idAse,

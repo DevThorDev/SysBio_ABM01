@@ -52,7 +52,7 @@ def doSiteChange(cO, sSpS, sAse, doDePyl = False):
     if not doDePyl and cSpS.sSPTM == GC.S_NOT_PYL and sAse in cSpS.lPyl:
         cSpS.sSPTM = GC.S_IS_PYL
         opDone = True
-    elif doDePyl and cSpS.sSPTM == GC.S_IS_PYL and sAse in cSpS.lDePyl:
+    elif doDePyl and cSpS.sSPTM == GC.S_IS_PYL and sAse in cSpS.lDPy:
         cSpS.sSPTM = GC.S_NOT_PYL
         opDone = True
     return opDone
@@ -87,7 +87,7 @@ def iniDictOut(inpFr, dCnc, t = 0., tDlt = 0.):
         dO['dN'][s] = k
     return dO
 
-def changeCncSMo(dITp, inpFr, dO, dCncSMo, t, cID = None):
+def changeCncSMo(inpFr, dO, dCncSMo, t, cID = None):
     for sSMo in dCncSMo:
         assert sSMo in inpFr.dParCnc
         cD, cncChg, cncChgExt = inpFr.dParCnc[sSMo], 0., 0.
@@ -96,58 +96,42 @@ def changeCncSMo(dITp, inpFr, dO, dCncSMo, t, cID = None):
             ss = s.replace(GC.S_DASH, '')
             assert ss in inpFr.dCncChg[sSMo]
             cncChg += inpFr.dCncChg[sSMo][ss]*nO
-            # if inpFr.dCncChg[sSMo][ss] != 0:
-            #     print('Changed conc. of', sSMo, 'by amount of',
-            #           inpFr.dCncChg[sSMo][ss]*nO, 'which is the product of',
-            #           inpFr.dCncChg[sSMo][ss], 'for', ss, 'and', nO,
-            #           'for', s, '.')
         # component-distribution-dependent (internal) conc. change
         nCpO = sum(dO['dN'].values())
-        cncChgInt = cncChg*dO['tDlt']/nCpO*dITp['cncChgScale']
+        cncChgInt = cncChg*dO['tDlt']/nCpO*inpFr.dOthInpV['cncChgScale']
         dO['dCncChgInt'][sSMo] += cncChgInt
-        # print('TEMP - cncChg =', cncChg, '- tDlt =', dO['tDlt'],
-        #       '- num. of comp. obj. =', nCpO, '--> cncChgInt =', cncChgInt)
         # externally forced conc. change
         cTp, dPar = cD[GC.S_CNC_CHG_MODE]
         if cTp == GC.S_CH_SIN:
             cncChgExt = doSinChange(t, dPar)
         elif cTp == GC.S_CH_STEP:
             pass
-        # print('Time', t, '- cncChgInt:', round(cncChgInt, 4), '- cncChgExt:',
-        #       round(cncChgExt, 4), '- dO[dCncChgInt][', sSMo, ']:',
-        #       round(dO['dCncChgInt'][sSMo], 4))
         dCncSMo[sSMo] = dO['dCncIni'][sSMo]
         dCncSMo[sSMo] += dO['dCncChgInt'][sSMo] + cncChgExt
         dCncSMo[sSMo] = GF.implMinMax(dCncSMo[sSMo], cncMn, cncMx)
-        # dCncSMo[sSMo], delta = GF.implMinMax(dCncSMo[sSMo], cncMn, cncMx)
-        # dO['dCncChgInt'][sSMo] += delta
 
-def updateDictH(dITp, inpFr, dO, dCncSMo):
+def updateDictH(inpFr, dO, dCncSMo):
     dRUp, sSMoN, p = {}, GC.ID_NO3_1M, GC.P_DUMMY
     # update the reaction rate constants according to the current [NO3-]
     for sRct, wtRct in inpFr.dRct.items():
         # NO3- dependency of incidences of each component
         sRctType, dRctType = inpFr.dTpRct[sRct]
-        # print('TEMP - sRctType =', sRctType, '- dRctType =', dRctType)
         for sK in dRctType:
-            # print('TEMP - sK =', sK)
             if sK in inpFr.dChgCncDep[sSMoN]:
                 dParPSig = inpFr.dChgCncDep[sSMoN][sK]
                 p = GF.calcPSigmoidal(dCncSMo[sSMoN], dParPSig)
-                # print('TEMP - sK =', sK, '- dParPSig =', dParPSig, '- p =', p)
                 break
         dRUp[sRct] = wtRct*p
-        # print('TEMP - wtRct =', wtRct, '- p =', p, '--> dRUp[', sRct, '] =', dRUp[sRct])
         # recalculate dH, which contains the h_i (i = 1,... len(dH))
         dO['dH'][sRct] = dRUp[sRct]
-        if sRctType in [GC.S_RCT_21, GC.S_RCT_22]:
-            dO['dH'][sRct] *= dITp['VolC']
         for sCpLHS in GF.partStr(sRct)[0]:
             dO['dH'][sRct] *= dO['dN'][sCpLHS]
+        if sRctType in [GC.S_RCT_21, GC.S_RCT_22]:
+            dO['dH'][sRct] /= inpFr.dOthInpV['VolC']
     # (?) update the reaction rate constants according to the current [H2PO4-]
 
-def reCalcReactHazards(dITp, inpFr, dO, dCncSMo):
-    updateDictH(dITp, inpFr, dO, dCncSMo)
+def reCalcReactHazards(inpFr, dO, dCncSMo):
+    updateDictH(inpFr, dO, dCncSMo)
     # h, the sum of the h_i, is the overall reaction hazard
     dO['h'] = sum(dO['dH'].values())
     # sort dH in ascending order for numerical stability
@@ -187,22 +171,23 @@ def updateDictOut(dO, dCnc, t):
     for s, nO in dO['dN'].items():
         dO['dRes'][s].append(nO)
 
-def evolveGillespie(dIG, dITp, inpFr, dCncSMo):
+def evolveGillespie(dIG, inpFr, dCncSMo):
+    # initialisation
     t, T, tDelta, cTSt = dIG['tStart'], dIG['tMax'], 0, 0
     dO = iniDictOut(inpFr, dCncSMo, t, tDelta)
-    while t < T and cTSt <= dIG['maxTS']:
+    reCalcReactHazards(inpFr, dO, dCncSMo)
+    while t < T and cTSt < dIG['maxTS']:
+        cTSt += 1
         if cTSt >= dIG['minDispTS'] and cTSt%dIG['modDispTS'] == 0:
             print('Reached time step', cTSt, 'at time', round(t, GC.R04))
-        # change the concentrations of the small molecules
-        changeCncSMo(dITp, inpFr, dO, dCncSMo, t)
-        # adapt the re-calc reaction hazards function to current system
-        reCalcReactHazards(dITp, inpFr, dO, dCncSMo)
         # do next event and update time with tToNext
         t += nextEvent(dO, T, cTSt)
+        # change the concentrations of the small molecules
+        changeCncSMo(inpFr, dO, dCncSMo, t)
+        # adapt the re-calc reaction hazards function to current system
+        reCalcReactHazards(inpFr, dO, dCncSMo)
         # update the data storage matrix
-        if t < T:
-            updateDictOut(dO, dCncSMo, t)
-        cTSt += 1
+        updateDictOut(dO, dCncSMo, t)
     return dO['dRes'], dO['dN']
 
 def getPFResEvo(dIG, dITp, sFRs):

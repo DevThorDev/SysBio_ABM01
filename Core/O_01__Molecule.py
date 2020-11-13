@@ -43,7 +43,7 @@ class SpecSite:
         self.idSpS = sIDSpS                         # ID string of site
         self.sSPTM = dISpS[self.idSpS]['Stat']      # status of PTM ('P-',...)
         self.lPyl = dISpS[self.idSpS]['Pyl']        # list Pyl
-        self.lDePyl = dISpS[self.idSpS]['DePyl']    # list DePyl
+        self.lDPy = dISpS[self.idSpS]['DPy']        # list DPy
         self.idMol = idMol                          # ID of molecule
         self.descMol = descMol                      # description of molecule
 
@@ -51,7 +51,7 @@ class SpecSite:
         sIn = ('- Special site ' +  self.idSpS + ' of molecule ' + self.idMol +
                ' (' + self.descMol + ') with PTM ' + str(self.sSPTM) +
                ' has phosphorylation agents ' + str(self.lPyl) +
-               ' and dephosphorylation agents ' + str(self.lDePyl) + '.')
+               ' and dephosphorylation agents ' + str(self.lDPy) + '.')
         return sIn
 
 ###############################################################################

@@ -18,6 +18,7 @@ S_3 = '3'
 S_4 = '4'
 S_5 = '5'
 S_6 = '6'
+S_7 = '7'
 S_00 = S_0 + S_0
 S_01 = S_0 + S_1
 S_02 = S_0 + S_2
@@ -25,6 +26,7 @@ S_03 = S_0 + S_3
 S_04 = S_0 + S_4
 S_05 = S_0 + S_5
 S_06 = S_0 + S_6
+S_07 = S_0 + S_7
 
 SEP_STD = ';'
 S_USC = '_'
@@ -68,7 +70,7 @@ L_ID_SMO = ['SMo', ID_NO3_1M, ID_H2PO4_1M]
 L_ID_SMO_USED = [ID_NO3_1M, ID_H2PO4_1M]
 L_ID_INT = ['Int']
 L_ID_PYL = ['Pyl']
-L_ID_DEPYL = ['DePyl']
+L_ID_DPY = ['DPy']
 
 S_CNC_INI = 'concIni'
 S_MODE_CHG = 'ConcChgMode'
@@ -91,8 +93,8 @@ S_SPS_KASA_S839 = 'S839'
 S_SPS_KASA_S870 = 'S870'
 L_S_SPS = [S_SPS_LPRA_S21, S_SPS_LPRA_S28, S_SPS_KASA_S839, S_SPS_KASA_S870]
 
-DS_SPS_LPR_NRT2P1 = {S_SPS_LPRA_S21: {'iSP': 3, 'iLAse': 2},
-                     S_SPS_LPRA_S28: {'iSP': 4, 'iLAse': 3}}
+DS_SPS_LPR_NRT2P1 = {S_SPS_LPRA_S21: {'iSP': 3, 'iLAse': -2},
+                     S_SPS_LPRA_S28: {'iSP': 4, 'iLAse': -1}}
 DS_SPS_KAS_HPCAL1 = {S_SPS_KASA_S839: {'iSP': 5, 'iLAse': 0},
                      S_SPS_KASA_S870: {'iSP': 6, 'iLAse': 1}}
 DS_SPS = {ID_LPR_NRT2P1: DS_SPS_LPR_NRT2P1,
@@ -179,6 +181,8 @@ S_RCTDESC = 'ReactionDescription'
 S_RCTVAR = 'ReactionVariable'
 S_RCTSTR = 'ReactionString'
 S_WT = 'Weight'
+S_VARDESC = 'VariableDescription'
+S_VAR = 'Variable'
 
 # --- constants related to components (short and long form) -------------------
 S_SHORT = 'SHORT'

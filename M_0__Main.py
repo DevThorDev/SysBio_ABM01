@@ -31,6 +31,7 @@ cInpFrames = InputFrames(inDG)
 # print(cInpFrames.dCncChg)
 # for cKO in cInpFrames.dCncChg:
 #     print(list(cInpFrames.dCncChg[cKO]))
+# print(cInpFrames.dOthInpV)
 
 cSystem = System(inDG, cInpFrames)
 if cSystem.dIG['doEvoT']:
@@ -38,8 +39,11 @@ if cSystem.dIG['doEvoT']:
 if cSystem.dIG['doPlots']:
     cSystem.plotResEvo(sFRes = cSystem.dITp['sF_SysEvo'], overWr = False)
 cSystem.printNCompObjSys()
-
 # cSystem.printAllCompObjSys()
+cSystem.printSMo()
+# cSystem.printCncSMo()
+
+cSystem.printFinalSimuTime()
 
 # -----------------------------------------------------------------------------
 

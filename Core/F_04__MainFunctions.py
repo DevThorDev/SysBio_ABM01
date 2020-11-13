@@ -4,8 +4,10 @@
 ###############################################################################
 import Core.C_00__GenConstants as GC
 
-from Core.O_02__Protein import (Kinase_HPCAL1, Kinase_X, Kinase0,
-                                Phosphatase0, Protein_NRT2p1, Protein_NAR2p1)
+from Core.O_02__Protein import (Kinase_HPCAL1, Kinase_X, Protein_NRT2p1,
+                                Protein_NAR2p1)
+# from Core.O_02__Protein import (Kinase_HPCAL1, Kinase_X, Kinase0,
+#                                 Phosphatase0, Protein_NRT2p1, Protein_NAR2p1)
 from Core.O_03__Metabolite import SMo_NO3_1m, SMo_H2PO4_1m
 # from Core.O_80__Interaction import Phosphorylation, Dephosphorylation
 from Core.O_90__Component import Component

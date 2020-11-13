@@ -10,14 +10,6 @@ strNSpec = 'System'
 strCS = 'Sys'
 strCL = 'System'
 
-# --- plant cell data ---------------------------------------------------------
-# VolC = 10000                        # volume (microns^3)
-VolC = 10                        # volume (arbitrary_length_unit^3)
-MassC = 2                           # nanograms
-
-# --- data containing components, reactions and conc. change info -------------
-cncChgScale = 1.    # scale of (internal) concentration change
-
 # --- graphics parameters: component numbers and molecule conc. plot ----------
 sPlt_SSC = '01_SelCpConc'               # name of sel. comps and conc. plot
 sPlt_SCp = '02_SelCp'                   # name of sel. comps plot
@@ -80,11 +72,6 @@ dIO = {# --- general
        'strNSpec': strNSpec,
        'strCS': strCS,
        'strCL': strCL,
-       # --- plant cell data
-       'VolC': VolC,
-       'MassC': MassC,
-       # --- data containing components, reactions and conc. change info
-       'cncChgScale': cncChgScale,
        # --- path, directory and file names
        'sD_Sys': sD_Sys,
        'sF_SysEvo': sF_SysEvo,

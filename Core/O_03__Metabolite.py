@@ -3,7 +3,6 @@
 # --- O_03__Metabolite.py -----------------------------------------------------
 ###############################################################################
 import Core.C_00__GenConstants as GC
-# import Core.F_03__OTpFunctions as TF
 
 from Core.O_01__Molecule import Molecule
 
@@ -14,6 +13,14 @@ class Metabolite(Molecule):
         self.idO = 'Met'
         self.descO = 'Metabolite'
         # print('Initiated "Metabolite" object.')
+
+    def setConc(self, cConc = 0.0):
+        self.cCnc = cConc
+
+    def __str__(self):
+        sIn = ('-- Metabolite ' + self.idO + ' (' + self.descO + ') has a co' +
+               'ncentration of ' + str(round(self.cCnc, GC.R04)) + ' mMol/L.')
+        return sIn
 
 class LargeMolecule(Metabolite):
     def __init__(self, inpDat, iTp, dStat = {}):
@@ -27,23 +34,7 @@ class SmallMolecule(Metabolite):
         super().__init__(inpDat, iTp, dStat)
         self.idO = 'SMo'
         self.descO = 'Small molecule'
-        self.setConc()
         # print('Initiated "SmallMolecule" object.')
-
-    def setConc(self):
-        self.cCnc = 0.0     # TODO: set to current conc.
-
-    # def changeCnc(self, t, idCp):
-    #     cCnc_t, cCncChCp = self.cCnc, 0
-    #     if self.sCncCh == GC.S_NO:
-    #         cCnc_t = self.cCnc
-    #     elif self.sCncCh == GC.S_CH_SIN:
-    #         cCnc_t += TF.doSinChange(t, self.perCncCh, self.amplCncCh)
-    #     if idCp in [GC.S_CP_LSI_LONG, GC.S_CP_LST_LONG]:
-    #         cCncChCp = self.cCnc*self.dITp['propIncCpLS']
-    #     elif idCp in [GC.S_CP_LKI_LONG, GC.S_CP_LKT_LONG]:
-    #         cCncChCp = -self.cCnc*self.dITp['propDecCpLK']
-    #     self.cCnc = max(0, cCnc_t + cCncChCp)
 
 class SMo_NO3_1m(SmallMolecule):
     def __init__(self, inpDat, iTp = 61, dStat = {}):
