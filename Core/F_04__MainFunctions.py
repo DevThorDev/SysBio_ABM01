@@ -4,10 +4,9 @@
 ###############################################################################
 import Core.C_00__GenConstants as GC
 
-from Core.O_02__Protein import (Kinase_HPCAL1, Kinase_X, Protein_NRT2p1,
-                                Protein_NAR2p1)
-# from Core.O_02__Protein import (Kinase_HPCAL1, Kinase_X, Kinase0,
-#                                 Phosphatase0, Protein_NRT2p1, Protein_NAR2p1)
+from Core.O_02__Protein import (KinaseHPCAL1, KinaseX, KinaseY, Phosphatase1,
+                                Phosphatase2, Phosphatase3, Phosphatase4,
+                                Protein_NRT2p1, Protein_NAR2p1)
 from Core.O_03__Metabolite import SMo_NO3_1m, SMo_H2PO4_1m
 # from Core.O_80__Interaction import Phosphorylation, Dephosphorylation
 from Core.O_90__Component import Component
@@ -15,17 +14,15 @@ from Core.O_90__Component import Component
 
 # --- Functions (initialisation) ----------------------------------------------
 # def iniSystem(inpDG):
-#     # Kinases KAsHPCAL1, KAsX, KAs1, KAs2, KAs3 -------------------------------
-#     KAsHPCAL1 = Kinase_HPCAL1(inpDG)
-#     KAsX = Kinase_X(inpDG)
-#     KAs1 = Kinase0(inpDG, cID = GC.ID_KAS_1)
-#     KAs2 = Kinase0(inpDG, cID = GC.ID_KAS_2)
-#     KAs3 = Kinase0(inpDG, cID = GC.ID_KAS_3)
+#     # Kinases KAsHPCAL1, KAsX, KAsY -------------------------------------------
+#     KAsHPCAL1 = KinaseHPCAL1(inpDG)
+#     KAsX = KinaseX(inpDG)
+#     KAsY = KinaseY(inpDG)
 #     # Phosphatases 1 - 4 ------------------------------------------------------
-#     PAs1 = Phosphatase0(inpDG, cID = GC.ID_PAS_1)
-#     PAs2 = Phosphatase0(inpDG, cID = GC.ID_PAS_2)
-#     PAs3 = Phosphatase0(inpDG, cID = GC.ID_PAS_3)
-#     PAs4 = Phosphatase0(inpDG, cID = GC.ID_PAS_4)
+#     PAs1 = Phosphatase1(inpDG)
+#     PAs2 = Phosphatase2(inpDG)
+#     PAs3 = Phosphatase3(inpDG)
+#     PAs4 = Phosphatase4(inpDG)
 #     # Large protein NRT2.1 ----------------------------------------------------
 #     NRT2p1 = Protein_NRT2p1(inpDG)
 #     # Small protein NAR2.1 ----------------------------------------------------
@@ -43,15 +40,21 @@ from Core.O_90__Component import Component
 #     DePyl03 = Dephosphorylation(inpDG, NRT2p1, PAs3, 'S21')
 #     DePyl04 = Dephosphorylation(inpDG, NRT2p1, PAs4, 'S28')
 #     # List of system components -----------------------------------------------
-#     lSysCmp = [KAsHPCAL1, KAsX, KAs1, KAs2, KAs3, PAs1, PAs2, PAs3, PAs4,
+#     lSysCmp = [KAsHPCAL1, KAsX, KAsY, PAs1, PAs2, PAs3, PAs4,
 #                NRT2p1, NAR2p1, NO3_1m, H2PO4_1m, Pyl01, Pyl02, Pyl03, Pyl04,
 #                DePyl01, DePyl02, DePyl03, DePyl04]
 #     return System(inpDG, lOSys = lSysCmp)
 
 def iniComponent(inpDG, ddVOvwr = {}, iV = 0):
-    # Kinases KAsHPCAL1, KAsX -------------------------------------------------
-    KAsHPCAL1 = Kinase_HPCAL1(inpDG)
-    KAsX = Kinase_X(inpDG)
+    # Kinases KAsHPCAL1, KAsX, KAsY -------------------------------------------
+    KAsHPCAL1 = KinaseHPCAL1(inpDG)
+    KAsX = KinaseX(inpDG)
+    KAsY = KinaseY(inpDG)
+    # Phosphatases PAs1, PAs2, PAs3, PAs4  ------------------------------------
+    PAs1 = Phosphatase1(inpDG)
+    PAs2 = Phosphatase2(inpDG)
+    PAs3 = Phosphatase3(inpDG)
+    PAs4 = Phosphatase4(inpDG)
     # Large protein NRT2.1 ----------------------------------------------------
     NRT2p1 = Protein_NRT2p1(inpDG)
     # Small protein NAR2.1 ----------------------------------------------------
@@ -63,11 +66,16 @@ def iniComponent(inpDG, ddVOvwr = {}, iV = 0):
     NO3_1m.overwInpV(ddVOvwr, iV)
     H2PO4_1m.overwInpV(ddVOvwr, iV)
     # Create initial state ----------------------------------------------------
-    dOCp = {GC.SPC_KAS_A: KAsHPCAL1,
-            GC.SPC_KAS_X: KAsX,
-            GC.SPC_LPR_A: NRT2p1,
-            GC.SPC_SPR_A: NAR2p1,
-            GC.SPC_L_SMO: [NO3_1m, H2PO4_1m]}
+    dOCp = {GC.ID_KAS_HPCAL1: KAsHPCAL1,
+            GC.ID_KAS_X: KAsX,
+            GC.ID_KAS_Y: KAsY,
+            GC.ID_PAS_1: PAs1,
+            GC.ID_PAS_2: PAs2,
+            GC.ID_PAS_3: PAs3,
+            GC.ID_PAS_4: PAs4,
+            GC.ID_LPR_NRT2P1: NRT2p1,
+            GC.ID_SPR_NAR2P1: NAR2p1,
+            'lSMo': [NO3_1m, H2PO4_1m]}
     cCp = Component(inpDG, dOComp = dOCp)
     # Create system from state ------------------------------------------------
     # return cCp, cCp.createSystem(inpDG)

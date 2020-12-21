@@ -34,21 +34,16 @@ S_DASH = '-'
 S_PLUS = '+'
 S_COM_BL = ', '
 
+# --- sets --------------------------------------------------------------------
 SET_01 = {S_0, S_1}
 SET_01_USC = {S_0, S_1, S_USC}
 SET_01_DASH = {S_0, S_1, S_DASH}
 
 # --- constants related to molecule objects -----------------------------------
-SPC_LPR_A = 'LPr_A'
-SPC_SPR_A = 'SPr_A'
-SPC_KAS_A = 'KAs_A'
-SPC_KAS_X = 'KAs_X'
-SPC_L_SMO = 'lSMo'
 
-ID_LPR_NRT2P1 = 'LPr_NRT2p1'
-ID_SPR_NAR2P1 = 'SPr_NAR2p1'
-ID_KAS_HPCAL1, ID_KAS_X = 'KAs_HPCAL1', 'KAs_X'
-ID_KAS_1, ID_KAS_2, ID_KAS_3 = 'KAs1', 'KAs2', 'KAs3'
+ID_LPR_NRT2P1 = 'LPrNRT2p1'
+ID_SPR_NAR2P1 = 'SPrNAR2p1'
+ID_KAS_HPCAL1, ID_KAS_X, ID_KAS_Y = 'KAsHPCAL1', 'KAsX', 'KAsY'
 ID_PAS_1, ID_PAS_2, ID_PAS_3, ID_PAS_4 = 'PAs1', 'PAs2', 'PAs3', 'PAs4'
 ID_NO3_1M = 'NO3_1m'
 ID_H2PO4_1M = 'H2PO4_1m'
@@ -57,20 +52,38 @@ S_N = 'N'
 S_P = 'P'
 L_S_1DIG_SMO = [S_N, S_P]
 
-L_ID_MOL = ['Mol']
-L_ID_PRO = ['Pro']
-L_ID_LPR = ['LPr', ID_LPR_NRT2P1]
-L_ID_SPR = ['SPr', ID_SPR_NAR2P1]
-L_ID_ENZ = ['Enz']
-L_ID_KAS = ['KAs', ID_KAS_HPCAL1, ID_KAS_X, ID_KAS_1, ID_KAS_2, ID_KAS_3]
-L_ID_PAS = ['PAs', ID_PAS_1, ID_PAS_2, ID_PAS_3, ID_PAS_4]
-L_ID_MET = ['Met']
-L_ID_LMO = ['LMo']
-L_ID_SMO = ['SMo', ID_NO3_1M, ID_H2PO4_1M]
+ID_BAS = 'Base'
+ID_CPB = 'CpBase'
+ID_CPN = 'Cp'
+ID_SYS = 'Sys'
+ID_MOL = 'Mol'
+ID_PRO = 'Pro'
+ID_LPR = 'LPr'
+ID_SPR = 'SPr'
+ID_ENZ = 'Enz'
+ID_KAS = 'KAs'
+ID_PAS = 'PAs'
+ID_MET = 'Met'
+ID_LMO = 'LMo'
+ID_SMO = 'SMo'
+ID_INT = 'Int'
+ID_PYL = 'Pyl'
+ID_DPY = 'DPy'
+
+L_ID_MOL = [ID_MOL]
+L_ID_PRO = [ID_PRO]
+L_ID_LPR = [ID_LPR, ID_LPR_NRT2P1]
+L_ID_SPR = [ID_SPR, ID_SPR_NAR2P1]
+L_ID_ENZ = [ID_ENZ]
+L_ID_KAS = [ID_KAS, ID_KAS_HPCAL1, ID_KAS_X, ID_KAS_Y]
+L_ID_PAS = [ID_PAS, ID_PAS_1, ID_PAS_2, ID_PAS_3, ID_PAS_4]
+L_ID_MET = [ID_MET]
+L_ID_LMO = [ID_LMO]
+L_ID_SMO = [ID_SMO, ID_NO3_1M, ID_H2PO4_1M]
 L_ID_SMO_USED = [ID_NO3_1M, ID_H2PO4_1M]
-L_ID_INT = ['Int']
-L_ID_PYL = ['Pyl']
-L_ID_DPY = ['DPy']
+L_ID_INT = [ID_INT]
+L_ID_PYL = [ID_PYL]
+L_ID_DPY = [ID_DPY]
 
 S_CNC_INI = 'concIni'
 S_MODE_CHG = 'ConcChgMode'
@@ -93,10 +106,14 @@ S_SPS_KASA_S839 = 'S839'
 S_SPS_KASA_S870 = 'S870'
 L_S_SPS = [S_SPS_LPRA_S21, S_SPS_LPRA_S28, S_SPS_KASA_S839, S_SPS_KASA_S870]
 
-DS_SPS_LPR_NRT2P1 = {S_SPS_LPRA_S21: {'iSP': 3, 'iLAse': -2},
-                     S_SPS_LPRA_S28: {'iSP': 4, 'iLAse': -1}}
-DS_SPS_KAS_HPCAL1 = {S_SPS_KASA_S839: {'iSP': 5, 'iLAse': 0},
-                     S_SPS_KASA_S870: {'iSP': 6, 'iLAse': 1}}
+DS_SPS_LPR_NRT2P1 = {S_SPS_LPRA_S21: {'iSP': 3, ID_KAS: ID_KAS_HPCAL1,
+                                      ID_PAS: ID_PAS_3},
+                     S_SPS_LPRA_S28: {'iSP': 4, ID_KAS: ID_KAS_X,
+                                      ID_PAS: ID_PAS_4}}
+DS_SPS_KAS_HPCAL1 = {S_SPS_KASA_S839: {'iSP': 5, ID_KAS: ID_KAS_Y,
+                                       ID_PAS: ID_PAS_1},
+                     S_SPS_KASA_S870: {'iSP': 6, ID_KAS: ID_KAS_HPCAL1,
+                                       ID_PAS: ID_PAS_2}}
 DS_SPS = {ID_LPR_NRT2P1: DS_SPS_LPR_NRT2P1,
           ID_KAS_HPCAL1: DS_SPS_KAS_HPCAL1}
 
@@ -115,7 +132,7 @@ S_DO_FRM = 'Frm'
 S_DO_DIS = 'Dis'
 S_DO_IPC = 'IPC'
 L_RCT_TYPE = [S_DO_PYL, S_DO_DPY, S_DO_FRM, S_DO_DIS, S_DO_IPC]
-DS_SITES_PYL = {S_0: S_DO_DPY, S_1: S_DO_PYL}
+DS_SITES_PYL = {S_0: (S_DO_DPY, ID_PAS), S_1: (S_DO_PYL, ID_KAS)}
 
 S_IS_PYL = 'P+'
 S_NOT_PYL = 'P-'

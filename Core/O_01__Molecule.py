@@ -2,13 +2,15 @@
 ###############################################################################
 # --- O_01__Molecule.py -------------------------------------------------------
 ###############################################################################
+import Core.C_00__GenConstants as GC
+
 from Core.O_00__Base import Base
 
 # +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 class Molecule(Base):
     def __init__(self, inpDat, iTp, lITpU = [0, 1]):
         super().__init__(inpDat, iTp, lITpU = lITpU)
-        self.idO = 'Mol'
+        self.idO = GC.ID_MOL
         self.descO = 'Molecule'
         # print('Initiated "Molecule" object.')
 

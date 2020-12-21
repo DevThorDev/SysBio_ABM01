@@ -15,7 +15,7 @@ from Core.O_03__Metabolite import SMo_NO3_1m, SMo_H2PO4_1m
 class System(Base):
     def __init__(self, inpDat, inpFr, lCpObj = [], iTp = 99):
         super().__init__(inpDat, iTp)
-        self.idO = 'Sys'
+        self.idO = GC.ID_SYS
         self.descO = 'System'
         self.inFr = inpFr
         self.lCpO = lCpObj

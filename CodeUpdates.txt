@@ -1,0 +1,24 @@
+--------------------------------------------------------------------------------
+Code updates remaining:
+--------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+Code updates done:
+--------------------------------------------------------------------------------
+* dRRC (of System dITp) --> InpFrames.dRct
+* replace DS_RCT
+* replace TS_RCT_...
+* eliminate S_CP_..._SHORT from System dITp and Constants file
+* dConcSMo of (of System dITp) --> InpFrames....
+* dNCpObj of (of System dITp) --> InpFrames.dNCpObj
+* dConcChg of (of System dITp) --> InpFrames....
+* calcPSigmoidal (to re-activate)
+* remove dParP of dInfSpS of dITp, and adapt complLSpec
+* create dPar for InpFrames['02'] data
+* eliminate ddVOvwr
+* remove dCncEvo, dCnc from O_90__Component
+* remove lSMo from O_90__Component (incl. dOCp/dOComp)
+* changes in conc. SMo: write back to SMo objects (sMo.cCnc) - Metabolite - small molecule - setConc
+
+--------------------------------------------------------------------------------

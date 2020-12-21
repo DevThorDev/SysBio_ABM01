@@ -7,7 +7,7 @@ import Core.C_00__GenConstants as GC
 # --- general -----------------------------------------------------------------
 strOType = 'Molecule'
 strNSpec = 'Molecule Base'
-strCS = 'Mol'
+strCS = GC.ID_MOL
 strCL = 'Molecule Base'
 
 # --- names of directories and files ------------------------------------------

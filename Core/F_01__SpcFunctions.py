@@ -8,16 +8,11 @@ import Core.C_00__GenConstants as GC
 import Core.F_00__GenFunctions as GF
 
 # --- Functions (O_90__Component) ---------------------------------------------
-def setPylDPy(dIdx, sComp, lKAs, lPAs, dSitesPyl = GC.DS_SITES_PYL):
+def setPylDPy(dIdx, sComp, dSitesPyl = GC.DS_SITES_PYL):
     assert len(sComp) == 3 + 4
     assert set(sComp[3:]) <= GC.SET_01_DASH
     assert dIdx['iSP'] >= 3 and dIdx['iSP'] < len(sComp)
-    sPylDePyl, cAse = dSitesPyl[sComp[dIdx['iSP']]], None
-    if sPylDePyl == GC.S_DO_PYL:
-        cAse = lKAs[dIdx['iLAse']]
-    elif sPylDePyl == GC.S_DO_DPY:
-        cAse = lPAs[dIdx['iLAse']]
-    return sPylDePyl, cAse
+    return dSitesPyl[sComp[dIdx['iSP']]]
 
 # --- Functions (O_99__System) ------------------------------------------------
 def prepDict4Sel(d4Sel, d4Leg, lSLY, dCp, dSCp):

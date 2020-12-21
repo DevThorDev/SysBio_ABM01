@@ -12,7 +12,7 @@ strCL = 'NRT2p1'
 
 # --- dictionary of parameters for special sites ------------------------------
 dInfSpS = {'S21': {'Stat': GC.S_NOT_PYL,
-                   'Pyl': [GC.ID_KAS_3],
+                   'Pyl': [GC.ID_KAS_HPCAL1],
                    'DPy': [GC.ID_PAS_3]},
            'S28': {'Stat': GC.S_NOT_PYL,
                    'Pyl': [GC.ID_KAS_X],

@@ -2,6 +2,7 @@
 ###############################################################################
 # --- O_80__Interaction.py ----------------------------------------------------
 ###############################################################################
+import Core.C_00__GenConstants as GC
 import Core.F_03__OTpFunctions as TF
 
 from Core.O_00__Base import Base
@@ -11,7 +12,7 @@ class Interaction(Base):
     def __init__(self, inpDat, lOInt = [], iTp = 80):
         super().__init__(inpDat, iTp)
         assert len(lOInt) >= 2
-        self.idO = 'Int'
+        self.idO = GC.ID_INT
         self.descO = 'Interaction'
         self.lOI = lOInt
         # print('Initiated "Interaction" object.')
@@ -30,7 +31,7 @@ class Interaction(Base):
 class Phosphorylation(Interaction):
     def __init__(self, inpDat, cOB, cAse, sSpSite, iTp = 80):
         super().__init__(inpDat, [cOB, cAse], iTp = iTp)    # order in list!
-        self.idO = 'Pyl'
+        self.idO = GC.ID_PYL
         self.descO = 'Phosphorylation'
         self.sSpS = sSpSite
         self.idAse = self.lOI[1].idO                        # 2nd obj. of list
@@ -44,7 +45,7 @@ class Phosphorylation(Interaction):
 class Dephosphorylation(Interaction):
     def __init__(self, inpDat, cOB, cAse, sSpSite, iTp = 80):
         super().__init__(inpDat, [cOB, cAse], iTp = iTp)    # order in list!
-        self.idO = 'DPy'
+        self.idO = GC.ID_DPY
         self.descO = 'Dephosphorylation'
         self.sSpS = sSpSite
         self.idAse = self.lOI[1].idO                        # 2nd obj. of list

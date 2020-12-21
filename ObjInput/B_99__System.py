@@ -7,7 +7,7 @@ import Core.C_00__GenConstants as GC
 # --- general -----------------------------------------------------------------
 strOType = 'System'
 strNSpec = 'System'
-strCS = 'Sys'
+strCS = GC.ID_SYS
 strCL = 'System'
 
 # --- graphics parameters: component numbers and molecule conc. plot ----------

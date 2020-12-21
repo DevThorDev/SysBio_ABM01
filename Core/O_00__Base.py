@@ -10,7 +10,7 @@ import Core.F_03__OTpFunctions as TF
 # +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 class Base:
     def __init__(self, inpDat, iTp = 0, lITpU = [0]):
-        self.idO = 'Base'
+        self.idO = GC.ID_BAS
         self.descO = 'Base class'
         self.dIG = inpDat.dI
         self.dITp = TF.getDITp(self.dIG, iTp, lITpU)

@@ -10,7 +10,7 @@ from Core.O_01__Molecule import Molecule
 class Metabolite(Molecule):
     def __init__(self, inpDat, iTp, dStat = {}):
         super().__init__(inpDat, iTp)
-        self.idO = 'Met'
+        self.idO = GC.ID_MET
         self.descO = 'Metabolite'
         # print('Initiated "Metabolite" object.')
 
@@ -25,14 +25,14 @@ class Metabolite(Molecule):
 class LargeMolecule(Metabolite):
     def __init__(self, inpDat, iTp, dStat = {}):
         super().__init__(inpDat, iTp, dStat)
-        self.idO = 'LMo'
+        self.idO = GC.ID_LMO
         self.descO = 'Large molecule'
         # print('Initiated "LargeMolecule" object.')
 
 class SmallMolecule(Metabolite):
     def __init__(self, inpDat, iTp, dStat = {}):
         super().__init__(inpDat, iTp, dStat)
-        self.idO = 'SMo'
+        self.idO = GC.ID_SMO
         self.descO = 'Small molecule'
         # print('Initiated "SmallMolecule" object.')
 

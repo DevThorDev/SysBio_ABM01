@@ -12,10 +12,10 @@ strCL = 'HPCAL1'
 
 # --- dictionary of parameters for special sites ------------------------------
 dInfSpS = {'S839': {'Stat': GC.S_NOT_PYL,
-                    'Pyl': [GC.ID_KAS_1],
+                    'Pyl': [GC.ID_KAS_Y],
                     'DPy': [GC.ID_PAS_1]},
            'S870': {'Stat': GC.S_NOT_PYL,
-                    'Pyl': [GC.ID_KAS_2],
+                    'Pyl': [GC.ID_KAS_HPCAL1],
                     'DPy': [GC.ID_PAS_2]}}
 
 # --- create input dictionary -------------------------------------------------

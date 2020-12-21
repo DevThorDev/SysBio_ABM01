@@ -58,11 +58,11 @@ def doSiteChange(cO, sSpS, sAse, doDePyl = False):
     return opDone
 
 # --- Functions (O_90_Component) ----------------------------------------------
-def complLSpec(inpDt, lOAll, sTp = 'KAs', sD = 'Pyl'):
+def complLSpec(inpDt, lOAll, sPylDPy = 'Pyl'):
     lID = []
     for cO in lOAll:
         for cSpS in cO.dITp['dInfSpS']:
-            for idTp in cO.dITp['dInfSpS'][cSpS][sD]:
+            for idTp in cO.dITp['dInfSpS'][cSpS][sPylDPy]:
                 if idTp not in lID:
                     lID.append(idTp)
     return sorted(lID)
