@@ -161,11 +161,13 @@ L_S_DIS = [S_DIS_LSI_L_S, S_DIS_LSJ_L_S, S_DIS_LST_L_S,
 S_IPC_LSI_LKT = 'LSI_LKT'
 S_IPC_LSJ_LKT = 'LSJ_LKT'
 S_IPC_LST_LKI = 'LST_LKI'
+S_IPC_LST_LKJ = 'LST_LKJ'
 S_IPC_LKI_LST = 'LKI_LST'
 S_IPC_LKJ_LST = 'LKJ_LST'
 S_IPC_LKT_LSI = 'LKT_LSI'
-L_S_IPC = [S_IPC_LSI_LKT, S_IPC_LSJ_LKT, S_IPC_LST_LKI,
-           S_IPC_LKI_LST, S_IPC_LKJ_LST, S_IPC_LKT_LSI]
+S_IPC_LKT_LSJ = 'LKT_LSJ'
+L_S_IPC = [S_IPC_LSI_LKT, S_IPC_LSJ_LKT, S_IPC_LST_LKI, S_IPC_LST_LKJ,
+           S_IPC_LKI_LST, S_IPC_LKJ_LST, S_IPC_LKT_LSI, S_IPC_LKT_LSJ]
 
 # --- constants related to input frames ---------------------------------------
 S_CPDESC = 'ComponentDescription'

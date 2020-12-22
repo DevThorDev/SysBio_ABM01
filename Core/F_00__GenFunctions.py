@@ -150,10 +150,14 @@ def sRct21(lSLHS, lSRHS):
     # find the appropriate key
     if sRHS[0] == GC.S_L and sRHS[1] == GC.S_S and sRHS[2] == GC.S_I:
         sK += GC.S_FRM_L_S_LSI
+    elif sRHS[0] == GC.S_L and sRHS[1] == GC.S_S and sRHS[2] == GC.S_J:
+        sK += GC.S_FRM_L_S_LSJ
     elif sRHS[0] == GC.S_L and sRHS[1] == GC.S_S and sRHS[2] == GC.S_T:
         sK += GC.S_FRM_L_S_LST
     elif sRHS[0] == GC.S_L and sRHS[1] == GC.S_K and sRHS[2] == GC.S_I:
         sK += GC.S_FRM_L_K_LKI
+    elif sRHS[0] == GC.S_L and sRHS[1] == GC.S_K and sRHS[2] == GC.S_J:
+        sK += GC.S_FRM_L_K_LKJ
     elif sRHS[0] == GC.S_L and sRHS[1] == GC.S_K and sRHS[2] == GC.S_T:
         sK += GC.S_FRM_L_K_LKT
     # find and check the appropriate value
@@ -191,10 +195,14 @@ def sRct12(lSLHS, lSRHS):
     # find the appropriate key
     if sLHS[0] == GC.S_L and sLHS[1] == GC.S_S and sLHS[2] == GC.S_I:
         sK += GC.S_DIS_LSI_L_S
+    elif sLHS[0] == GC.S_L and sLHS[1] == GC.S_S and sLHS[2] == GC.S_J:
+        sK += GC.S_DIS_LSJ_L_S
     elif sLHS[0] == GC.S_L and sLHS[1] == GC.S_S and sLHS[2] == GC.S_T:
         sK += GC.S_DIS_LST_L_S
     elif sLHS[0] == GC.S_L and sLHS[1] == GC.S_K and sLHS[2] == GC.S_I:
         sK += GC.S_DIS_LKI_L_K
+    elif sLHS[0] == GC.S_L and sLHS[1] == GC.S_K and sLHS[2] == GC.S_J:
+        sK += GC.S_DIS_LKJ_L_K
     elif sLHS[0] == GC.S_L and sLHS[1] == GC.S_K and sLHS[2] == GC.S_T:
         sK += GC.S_DIS_LKT_L_K
     # find and check the appropriate value
@@ -235,15 +243,27 @@ def sRct22(lSLHS, lSRHS):
     if (sLHS1[0] == GC.S_L and sLHS1[1] == GC.S_S and sLHS1[2] == GC.S_I and
         sRHS1[0] == GC.S_L and sRHS1[1] == GC.S_K and sRHS1[2] == GC.S_T):
         sK += GC.S_IPC_LSI_LKT
+    elif (sLHS1[0] == GC.S_L and sLHS1[1] == GC.S_S and sLHS1[2] == GC.S_J and
+          sRHS1[0] == GC.S_L and sRHS1[1] == GC.S_K and sRHS1[2] == GC.S_T):
+        sK += GC.S_IPC_LSJ_LKT
     elif (sLHS1[0] == GC.S_L and sLHS1[1] == GC.S_S and sLHS1[2] == GC.S_T and
           sRHS1[0] == GC.S_L and sRHS1[1] == GC.S_K and sRHS1[2] == GC.S_I):
         sK += GC.S_IPC_LST_LKI
+    elif (sLHS1[0] == GC.S_L and sLHS1[1] == GC.S_S and sLHS1[2] == GC.S_T and
+          sRHS1[0] == GC.S_L and sRHS1[1] == GC.S_K and sRHS1[2] == GC.S_J):
+        sK += GC.S_IPC_LST_LKJ
     elif (sLHS1[0] == GC.S_L and sLHS1[1] == GC.S_K and sLHS1[2] == GC.S_I and
           sRHS1[0] == GC.S_L and sRHS1[1] == GC.S_S and sRHS1[2] == GC.S_T):
         sK += GC.S_IPC_LKI_LST
+    elif (sLHS1[0] == GC.S_L and sLHS1[1] == GC.S_K and sLHS1[2] == GC.S_J and
+          sRHS1[0] == GC.S_L and sRHS1[1] == GC.S_S and sRHS1[2] == GC.S_T):
+        sK += GC.S_IPC_LKJ_LST
     elif (sLHS1[0] == GC.S_L and sLHS1[1] == GC.S_K and sLHS1[2] == GC.S_T and
           sRHS1[0] == GC.S_L and sRHS1[1] == GC.S_S and sRHS1[2] == GC.S_I):
         sK += GC.S_IPC_LKT_LSI
+    elif (sLHS1[0] == GC.S_L and sLHS1[1] == GC.S_K and sLHS1[2] == GC.S_T and
+          sRHS1[0] == GC.S_L and sRHS1[1] == GC.S_S and sRHS1[2] == GC.S_J):
+        sK += GC.S_IPC_LKT_LSJ
     # find and check the appropriate value
     for k, _ in enumerate(sLHS1[GC.I_S_CP_SEP:]):
         chLHS1, chLHS2 = sLHS1[k + GC.I_S_CP_SEP], sLHS2[k + GC.I_S_CP_SEP]
