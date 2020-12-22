@@ -37,19 +37,22 @@ pltAxXY_CpCnc = (True, True)            # plot x- and/or y-axis
 # value: (list of components to be considered, y-label of plot, dictionary L)
 # dictionary L: key: operation; value: {legend entry: list of components}
 lSCpAll = ['L--00--', 'L--01--', 'L--10--', 'L--11--', 'S------', 'K----00',
-           'K----01', 'K----10', 'K----11', 'LSI01--', 'LST00--', 'LST10--',
-           'LST11--', 'LKI1001', 'LKT0000', 'LKT0001', 'LKT0010', 'LKT0011',
-           'LKT0100', 'LKT0101', 'LKT0110', 'LKT0111', 'LKT1000', 'LKT1010',
+           'K----01', 'K----10', 'K----11', 'LST00--', 'LSI01--', 'LST10--',
+           'LSJ11--', 'LKT0000', 'LKJ0001', 'LKT0010', 'LKT0011', 'LKT0100',
+           'LKT0101', 'LKT0110', 'LKT0111', 'LKT1000', 'LKI1001', 'LKT1010',
            'LKT1011', 'LKT1100', 'LKT1101', 'LKT1110', 'LKT1111']
 d_7_Groups = {cK: {'L--': ['L--'], 'S--': ['S--'], 'K--': ['K--'],
-                   'LSI': ['LSI'], 'LST': ['LST'], 'LKI': ['LKI'],
-                   'LKT': ['LKT']} for cK in [GC.S_MEAN, GC.S_SUM]}
-d_Int_vs_Tra = {cK: {'LSI': ['LSI', 'LKI'], 'LST': ['LST', 'LKT']}
+                   'LSI': ['LSI'], 'LSJ': ['LSJ'], 'LST': ['LST'],
+                   'LKI': ['LKI'], 'LKJ': ['LKJ'], 'LKT': ['LKT']}
+              for cK in [GC.S_MEAN, GC.S_SUM]}
+d_Int_vs_Tra = {cK: {'LSI': ['LSI', 'LSJ', 'LKI', 'LKJ'],
+                     'LST': ['LST', 'LKT']}
                 for cK in [GC.S_MEAN, GC.S_SUM]}
-d_S_vs_K = {cK: {'LSI': ['LSI', 'LST'], 'LKI': ['LKI', 'LKT']}
+d_S_vs_K = {cK: {'LSI': ['LSI', 'LSJ', 'LST'], 'LKI': ['LKI', 'LKJ', 'LKT']}
             for cK in [GC.S_MEAN, GC.S_SUM]}
-d_4_Int_Tra = {cK: {'LSI': ['LSI'], 'LST': ['LST'], 'LKI': ['LKI'],
-                    'LKT': ['LKT']} for cK in [GC.S_MEAN, GC.S_SUM]}
+d_4_Int_Tra = {cK: {'LSI': ['LSI'], 'LSJ': ['LSJ'], 'LST': ['LST'],
+                    'LKI': ['LKI'], 'LKJ': ['LKJ'], 'LKT': ['LKT']}
+               for cK in [GC.S_MEAN, GC.S_SUM]}
 dlSY = {(sPlt_SSC, 'A__7_Main_Groups'): (lSCpAll + [GC.ID_NO3_1M], yLbl_CpCnc,
                                          d_7_Groups),
         (sPlt_SSC, 'B__4_Complexes'): (lSCpAll + [GC.ID_NO3_1M], yLbl_CpCnc,

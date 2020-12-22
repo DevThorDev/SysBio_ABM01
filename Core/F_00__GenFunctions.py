@@ -146,7 +146,7 @@ def sRct21(lSLHS, lSRHS):
     assert (sLHS1[0] in GC.L_S_LSK and sLHS2[0] in GC.L_S_LSK and
             sRHS[0] in GC.L_S_LSK and sRHS[1] in GC.L_S_LSK)
     assert sRHS[0] == sLHS1[0] and sRHS[1] == sLHS2[0]
-    assert sRHS[2] in GC.L_S_IT
+    assert sRHS[2] in GC.L_S_IJT
     # find the appropriate key
     if sRHS[0] == GC.S_L and sRHS[1] == GC.S_S and sRHS[2] == GC.S_I:
         sK += GC.S_FRM_L_S_LSI
@@ -187,7 +187,7 @@ def sRct12(lSLHS, lSRHS):
     assert (sLHS[0] in GC.L_S_LSK and sLHS[1] in GC.L_S_LSK
             and sRHS1[0] in GC.L_S_LSK and sRHS2[0] in GC.L_S_LSK)
     assert sLHS[0] == sRHS1[0] and sLHS[1] == sRHS2[0]
-    assert sLHS[2] in GC.L_S_IT
+    assert sLHS[2] in GC.L_S_IJT
     # find the appropriate key
     if sLHS[0] == GC.S_L and sLHS[1] == GC.S_S and sLHS[2] == GC.S_I:
         sK += GC.S_DIS_LSI_L_S
@@ -230,7 +230,7 @@ def sRct22(lSLHS, lSRHS):
             sRHS1[1] in GC.L_S_LSK and sRHS2[0] in GC.L_S_LSK)
     assert (sLHS1[0] == sRHS1[0] and sLHS1[1] == sRHS2[0] and
             sLHS2[0] == sRHS1[1])
-    assert sLHS1[2] in GC.L_S_IT and sRHS1[2] in GC.L_S_IT
+    assert sLHS1[2] in GC.L_S_IJT and sRHS1[2] in GC.L_S_IJT
     # find the appropriate key
     if (sLHS1[0] == GC.S_L and sLHS1[1] == GC.S_S and sLHS1[2] == GC.S_I and
         sRHS1[0] == GC.S_L and sRHS1[1] == GC.S_K and sRHS1[2] == GC.S_T):

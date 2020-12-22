@@ -68,7 +68,7 @@ class ComponentBase(Base):
 class Component(ComponentBase):
     def __init__(self, inpDat, inpFr, sComp, iTp = 90):
         self.inFr = inpFr
-        assert len(self.inFr.lSCpTpL) >= 7
+        assert len(self.inFr.lSCpTpL) >= 9
         self.sCp = sComp
         self.createDOComp(inpDat)
         if sComp in self.inFr.dSCpTpL[self.inFr.lSCpTpL[0]]:
@@ -80,10 +80,14 @@ class Component(ComponentBase):
         elif sComp in self.inFr.dSCpTpL[self.inFr.lSCpTpL[3]]:
             self.ini_Cp_LSI(inpDat, sComp, iTp = iTp)
         elif sComp in self.inFr.dSCpTpL[self.inFr.lSCpTpL[4]]:
-            self.ini_Cp_LST(inpDat, sComp, iTp = iTp)
+            self.ini_Cp_LSJ(inpDat, sComp, iTp = iTp)
         elif sComp in self.inFr.dSCpTpL[self.inFr.lSCpTpL[5]]:
-            self.ini_Cp_LKI(inpDat, sComp, iTp = iTp)
+            self.ini_Cp_LST(inpDat, sComp, iTp = iTp)
         elif sComp in self.inFr.dSCpTpL[self.inFr.lSCpTpL[6]]:
+            self.ini_Cp_LKI(inpDat, sComp, iTp = iTp)
+        elif sComp in self.inFr.dSCpTpL[self.inFr.lSCpTpL[7]]:
+            self.ini_Cp_LKJ(inpDat, sComp, iTp = iTp)
+        elif sComp in self.inFr.dSCpTpL[self.inFr.lSCpTpL[8]]:
             self.ini_Cp_LKT(inpDat, sComp, iTp = iTp)
         else:
             self.idO = GC.ID_CPN
@@ -143,14 +147,22 @@ class Component(ComponentBase):
         lOO = [self.dOCp[GC.ID_KAS_X]]
         super().__init__(inpDat, self.dOCp, llOI, lOO, iTp = iTp)
         self.idO = self.inFr.lSCpTpL[3]
-        self.descO = 'Component NRT2.1-NAR2.1 interaction'
+        self.descO = 'Component NRT2.1-NAR2.1 strong interaction'
+        self.adaptPSites(inpDat, self.dOCp[GC.ID_LPR_NRT2P1], sCp)
+
+    def ini_Cp_LSJ(self, inpDat, sCp, iTp = 90):
+        llOI = [[self.dOCp[GC.ID_SPR_NAR2P1], self.dOCp[GC.ID_LPR_NRT2P1]]]
+        lOO = [self.dOCp[GC.ID_KAS_X]]
+        super().__init__(inpDat, self.dOCp, llOI, lOO, iTp = iTp)
+        self.idO = self.inFr.lSCpTpL[4]
+        self.descO = 'Component NRT2.1-NAR2.1 weak interaction'
         self.adaptPSites(inpDat, self.dOCp[GC.ID_LPR_NRT2P1], sCp)
 
     def ini_Cp_LST(self, inpDat, sCp, iTp = 90):
         llOI = [[self.dOCp[GC.ID_SPR_NAR2P1], self.dOCp[GC.ID_LPR_NRT2P1]]]
         lOO = [self.dOCp[GC.ID_KAS_X]]
         super().__init__(inpDat, self.dOCp, llOI, lOO, iTp = iTp)
-        self.idO = self.inFr.lSCpTpL[4]
+        self.idO = self.inFr.lSCpTpL[5]
         self.descO = 'Component NRT2.1-NAR2.1 transition'
         self.adaptPSites(inpDat, self.dOCp[GC.ID_LPR_NRT2P1], sCp)
 
@@ -159,8 +171,18 @@ class Component(ComponentBase):
                 [self.dOCp[GC.ID_KAS_X], self.dOCp[GC.ID_LPR_NRT2P1]]]
         lOO = []
         super().__init__(inpDat, self.dOCp, llOI, lOO, iTp = iTp)
-        self.idO = self.inFr.lSCpTpL[5]
-        self.descO = 'Component NRT2.1-HPCAL1 interaction'
+        self.idO = self.inFr.lSCpTpL[6]
+        self.descO = 'Component NRT2.1-HPCAL1 strong interaction'
+        self.adaptPSites(inpDat, self.dOCp[GC.ID_LPR_NRT2P1], sCp)
+        self.adaptPSites(inpDat, self.dOCp[GC.ID_KAS_HPCAL1], sCp)
+
+    def ini_Cp_LKJ(self, inpDat, sCp, iTp = 90):
+        llOI = [[self.dOCp[GC.ID_KAS_HPCAL1], self.dOCp[GC.ID_LPR_NRT2P1]],
+                [self.dOCp[GC.ID_KAS_X], self.dOCp[GC.ID_LPR_NRT2P1]]]
+        lOO = []
+        super().__init__(inpDat, self.dOCp, llOI, lOO, iTp = iTp)
+        self.idO = self.inFr.lSCpTpL[7]
+        self.descO = 'Component NRT2.1-HPCAL1 weak interaction'
         self.adaptPSites(inpDat, self.dOCp[GC.ID_LPR_NRT2P1], sCp)
         self.adaptPSites(inpDat, self.dOCp[GC.ID_KAS_HPCAL1], sCp)
 
@@ -169,7 +191,7 @@ class Component(ComponentBase):
                 [self.dOCp[GC.ID_KAS_X], self.dOCp[GC.ID_LPR_NRT2P1]]]
         lOO = []
         super().__init__(inpDat, self.dOCp, llOI, lOO, iTp = iTp)
-        self.idO = self.inFr.lSCpTpL[6]
+        self.idO = self.inFr.lSCpTpL[8]
         self.descO = 'Component NRT2.1-HPCAL1 transition'
         self.adaptPSites(inpDat, self.dOCp[GC.ID_LPR_NRT2P1], sCp)
         self.adaptPSites(inpDat, self.dOCp[GC.ID_KAS_HPCAL1], sCp)

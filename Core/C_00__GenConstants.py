@@ -125,7 +125,7 @@ S_I = 'I'
 S_J = 'J'
 S_T = 'T'
 L_S_LSK = [S_L, S_S, S_K]
-L_S_IT = [S_I, S_T]
+L_S_IJT = [S_I, S_J, S_T]
 
 S_STAT = 'Stat'
 S_DO_PYL = ID_PYL
@@ -141,22 +141,31 @@ S_NOT_PYL = 'P-'
 L_PYL_OR_NOT = [S_IS_PYL, S_NOT_PYL]
 
 S_FRM_L_S_LSI = 'LpS_LSI'
+S_FRM_L_S_LSJ = 'LpS_LSJ'
 S_FRM_L_S_LST = 'LpS_LST'
 S_FRM_L_K_LKI = 'LpK_LKI'
+S_FRM_L_K_LKJ = 'LpK_LKJ'
 S_FRM_L_K_LKT = 'LpK_LKT'
-L_S_FRM = [S_FRM_L_S_LSI, S_FRM_L_S_LST, S_FRM_L_K_LKI, S_FRM_L_K_LKT]
+L_S_FRM = [S_FRM_L_S_LSI, S_FRM_L_S_LSJ, S_FRM_L_S_LST,
+           S_FRM_L_K_LKI, S_FRM_L_K_LKJ, S_FRM_L_K_LKT]
 
 S_DIS_LSI_L_S = 'LSI_LpS'
+S_DIS_LSJ_L_S = 'LSJ_LpS'
 S_DIS_LST_L_S = 'LST_LpS'
 S_DIS_LKI_L_K = 'LKI_LpK'
+S_DIS_LKJ_L_K = 'LKJ_LpK'
 S_DIS_LKT_L_K = 'LKT_LpK'
-L_S_DIS = [S_DIS_LSI_L_S, S_DIS_LST_L_S, S_DIS_LKI_L_K, S_DIS_LKT_L_K]
+L_S_DIS = [S_DIS_LSI_L_S, S_DIS_LSJ_L_S, S_DIS_LST_L_S,
+           S_DIS_LKI_L_K, S_DIS_LKJ_L_K, S_DIS_LKT_L_K]
 
 S_IPC_LSI_LKT = 'LSI_LKT'
+S_IPC_LSJ_LKT = 'LSJ_LKT'
 S_IPC_LST_LKI = 'LST_LKI'
 S_IPC_LKI_LST = 'LKI_LST'
+S_IPC_LKJ_LST = 'LKJ_LST'
 S_IPC_LKT_LSI = 'LKT_LSI'
-L_S_IPC = [S_IPC_LSI_LKT, S_IPC_LST_LKI, S_IPC_LKI_LST, S_IPC_LKT_LSI]
+L_S_IPC = [S_IPC_LSI_LKT, S_IPC_LSJ_LKT, S_IPC_LST_LKI,
+           S_IPC_LKI_LST, S_IPC_LKJ_LST, S_IPC_LKT_LSI]
 
 # --- constants related to input frames ---------------------------------------
 S_CPDESC = 'ComponentDescription'
