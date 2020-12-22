@@ -54,24 +54,26 @@ class System(Base):
             cSMoO.setConc(self.dCncSMo[sSMo])
 
     def printNCompObjSys(self):
-        print('*'*16, 'Counts of comp. objects contained in System:', '*'*18)
+        print(GC.S_STAR*16, 'Counts of comp. objects contained in System:',
+              GC.S_STAR*18)
         for sCp, ctCpO in self.dNCpO.items():
             print(sCp + ':', ctCpO)
         print('- Total:', sum(self.dNCpO.values()))
-        print('*'*80)
+        print(GC.S_STAR*80)
 
     def printAllCompObjSys(self):
-        print('*'*16, 'Details of comp. objects contained in System:', '*'*17)
+        print(GC.S_STAR*16, 'Details of comp. objects contained in System:',
+              GC.S_STAR*17)
         for sCp, lCpO in self.dCpO.items():
             print('~'*20, 'Components with ID', sCp, '~'*20)
             for cCpO in lCpO:
                 cCpO.printComponentDetails()
-        print('*'*80)
+        print(GC.S_STAR*80)
 
     def printSMo(self):
-        print('-'*8, 'Small molecules in system:', '-'*8)
+        print(GC.S_DASH*8, 'Small molecules in system:', GC.S_DASH*8)
         for k, (sSMo, cSMoO) in enumerate(self.dSMo.items()):
-            print('-'*3, 'Small molecule', k + 1, '(with ID', sSMo + '):')
+            print(GC.S_DASH*3, 'Small molecule', k + 1, '(ID', sSMo + '):')
             print(cSMoO)
 
     def printCncSMo(self):
@@ -81,11 +83,11 @@ class System(Base):
 
     def printFinalSimuTime(self):
         if len(self.dResEvo[GC.S_TIME]) > 0:
-            print('-'*8, 'Simulation time elapsed after',
+            print(GC.S_DASH*8, 'Simulation time elapsed after',
                   len(self.dResEvo[GC.S_TIME]), 'time steps:',
-                  round(self.dResEvo[GC.S_TIME][-1], GC.R04), '-'*8)
+                  round(self.dResEvo[GC.S_TIME][-1], GC.R04), GC.S_DASH*8)
         else:
-            print('-'*8, 'Simulation has not even started!', '-'*8)
+            print(GC.S_DASH*8, 'Simulation has not even started!', GC.S_DASH*8)
 
     def plotResEvo(self, sFRes = None, overWr = True):
         dParPlt = self.dITp[GC.S_D_PLT][GC.S_CP_CNC]

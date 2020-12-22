@@ -31,14 +31,14 @@ from Core.O_90__Component import Component
 #     NO3_1m = SMo_NO3_1m(inpDG)
 #     H2PO4_1m = SMo_H2PO4_1m(inpDG)
 #     # Interactions: phosphorylation and dephosphorylation ---------------------
-#     Pyl01 = Phosphorylation(inpDG, KAsHPCAL1, PAs1, 'S839')
-#     Pyl02 = Phosphorylation(inpDG, KAsHPCAL1, PAs2, 'S870')
-#     Pyl03 = Phosphorylation(inpDG, NRT2p1, PAs3, 'S21')
-#     Pyl04 = Phosphorylation(inpDG, NRT2p1, PAs4, 'S28')
-#     DePyl01 = Dephosphorylation(inpDG, KAsHPCAL1, PAs1, 'S839')
-#     DePyl02 = Dephosphorylation(inpDG, KAsHPCAL1, PAs2, 'S870')
-#     DePyl03 = Dephosphorylation(inpDG, NRT2p1, PAs3, 'S21')
-#     DePyl04 = Dephosphorylation(inpDG, NRT2p1, PAs4, 'S28')
+#     Pyl01 = Phosphorylation(inpDG, KAsHPCAL1, PAs1, GC.S_SPS_KASA_S839)
+#     Pyl02 = Phosphorylation(inpDG, KAsHPCAL1, PAs2, GC.S_SPS_KASA_S870)
+#     Pyl03 = Phosphorylation(inpDG, NRT2p1, PAs3, GC.S_SPS_LPRA_S21)
+#     Pyl04 = Phosphorylation(inpDG, NRT2p1, PAs4, GC.S_SPS_LPRA_S28)
+#     DePyl01 = Dephosphorylation(inpDG, KAsHPCAL1, PAs1, GC.S_SPS_KASA_S839)
+#     DePyl02 = Dephosphorylation(inpDG, KAsHPCAL1, PAs2, GC.S_SPS_KASA_S870)
+#     DePyl03 = Dephosphorylation(inpDG, NRT2p1, PAs3, GC.S_SPS_LPRA_S21)
+#     DePyl04 = Dephosphorylation(inpDG, NRT2p1, PAs4, GC.S_SPS_LPRA_S28)
 #     # List of system components -----------------------------------------------
 #     lSysCmp = [KAsHPCAL1, KAsX, KAsY, PAs1, PAs2, PAs3, PAs4,
 #                NRT2p1, NAR2p1, NO3_1m, H2PO4_1m, Pyl01, Pyl02, Pyl03, Pyl04,

@@ -13,7 +13,7 @@ import Core.C_00__GenConstants as GC
 # --- Functions (Python core) -------------------------------------------------
 def startSimu():
     startTime = time.time()
-    print('+'*50 + ' START', time.ctime(startTime), '+'*30)
+    print(GC.S_PLUS*50 + ' START', time.ctime(startTime), GC.S_PLUS*30)
     print('Systems Biology Framework')
     return startTime
 
@@ -87,9 +87,10 @@ def implMinMax(x, lowB = 0, upB = 1):
     return min(max(x, lowB), upB)
 
 def calcPSigmoidal(x, dPar):
-    B, C, D = dPar['B'], dPar['C'], dPar['D']
+    B, C, D = dPar[GC.S_PAR_B], dPar[GC.S_PAR_C], dPar[GC.S_PAR_D]
     fCh = (B*(B + C)/C*(1/(B + C*np.exp(-D*x)) - 1/(B + C)))
-    return dPar['ProbMin'] + (dPar['ProbMax'] - dPar['ProbMin'])*fCh
+    prMin, prMax = dPar[GC.S_PAR_PMIN], dPar[GC.S_PAR_PMAX]
+    return prMin + (prMax - prMin)*fCh
 
 def drawFromDist(sDist, dPar, nVal = None):
     if sDist == 'uniform':
@@ -126,10 +127,10 @@ def sRct11(lSLHS, lSRHS):
         assert chLHS in GC.SET_01_DASH and chRHS in GC.SET_01_DASH
         if chLHS in GC.SET_01 and chRHS in GC.SET_01:
             if chLHS != chRHS:
-                if chLHS == '0' and chRHS == '1':   # phosphorylation
+                if chLHS == GC.S_0 and chRHS == GC.S_1: # phosphorylation
                     sKP = GC.S_DO_PYL + GC.S_USC + lSKeys[k]
                     dRctTp[sKP] = GC.S_DO_PYL
-                else:                               # dephosphorylation
+                else:                                   # dephosphorylation
                     sKP = GC.S_DO_DPY + GC.S_USC + lSKeys[k]
                     dRctTp[sKP] = GC.S_DO_DPY
                 dRctTp[sKTp] = sKP
@@ -310,7 +311,7 @@ def updateDITpDIPlt(dITpC, dITpU, lKSpc = [GC.S_D_PLT]):
     dITpURed = {cK: cV for cK, cV in dITpU.items() if cK not in lKSpc}
     dITpC.update(dITpURed)
 
-def printElapsedTimeSim(stT, cT, sPre = 'Time'):
+def printElapsedTimeSim(stT, cT, sPre = GC.S_TIME):
     # calculate and display elapsed time
     elT = round(cT - stT, GC.R04)
     print(sPre, 'elapsed:', elT, 'seconds, this is', round(elT/60, GC.R04),
@@ -318,15 +319,15 @@ def printElapsedTimeSim(stT, cT, sPre = 'Time'):
           round(elT/(3600*24), GC.R04), 'days.')
 
 def showElapsedTime(startTime):
-    print('-'*80)
-    printElapsedTimeSim(startTime, time.time(), 'Time')
-    print('+'*3 + ' Current time:', time.ctime(time.time()), '+'*3)
-    print('-'*80)
+    print(GC.S_DASH*80)
+    printElapsedTimeSim(startTime, time.time(), GC.S_TIME)
+    print(GC.S_PLUS*3 + ' Current time:', time.ctime(time.time()), GC.S_PLUS*3)
+    print(GC.S_DASH*80)
 
 def endSimu(startTime):
-    print('-'*80)
+    print(GC.S_DASH*80)
     printElapsedTimeSim(startTime, time.time(), 'Total time')
-    print('*'*20 + ' DONE', time.ctime(time.time()), '*'*20)
+    print(GC.S_STAR*20 + ' DONE', time.ctime(time.time()), GC.S_STAR*20)
 
 # --- Functions (Pandas) ------------------------------------------------------
 def readCSV(pF, sepD = GC.SEP_STD, iCol = None, dDtype = None):

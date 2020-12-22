@@ -28,7 +28,7 @@ class Base:
         return (self.idO, self.descO)
 
     def printDType(self):
-        print('-'*20, 'Type dictionary:', '-'*20)
+        print(GC.S_DASH*20, 'Type dictionary:', GC.S_DASH*20)
         pprint.pprint(self.dITp)
 
     def overwInpV(self, dDOvw = {}, i = 0):

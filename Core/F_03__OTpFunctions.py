@@ -58,7 +58,7 @@ def doSiteChange(cO, sSpS, sAse, doDePyl = False):
     return opDone
 
 # --- Functions (O_90_Component) ----------------------------------------------
-def complLSpec(inpDt, lOAll, sPylDPy = 'Pyl'):
+def complLSpec(inpDt, lOAll, sPylDPy = GC.S_DO_PYL):
     lID = []
     for cO in lOAll:
         for cSpS in cO.dITp['dInfSpS']:

@@ -154,20 +154,23 @@ class InputFrames:
                 self.dOthInpV[sI] = cDfr.at[sI, GC.S_VAL]
 
     def __str__(self):
-        sIn = ('*'*24 + ' "InputFrames" type ' + '*'*24 +
+        sIn = (GC.S_STAR*24 + ' "InputFrames" type ' + GC.S_STAR*24 +
                '\nDictionary of input DataFrames:\n' + str(self.dDfrIn))
         return sIn
 
     def printInputFrame(self, sK):
         if sK in self.dDfrIn:
-            print('-'*8, 'Input DataFrame with key', sK + ':', '-'*8)
+            print(GC.S_DASH*8, 'Input DataFrame with key', sK + ':',
+                  GC.S_DASH*8)
             print(self.dDfrIn[sK])
         else:
-            print('-'*8, 'Key', sK, 'not in DataFrames dictionary!', '-'*8)
+            print(GC.S_DASH*8, 'Key', sK, 'not in DataFrames dictionary!',
+                  GC.S_DASH*8)
 
     def printInputFrames(self):
         for (k, (sK, cDfrIn)) in enumerate(self.dDfrIn.items()):
-            print('-'*8, 'Input DataFrame', k, 'with key', sK + ':', '-'*8)
+            print(GC.S_DASH*8, 'Input DataFrame', k, 'with key', sK + ':',
+                  GC.S_DASH*8)
             print(cDfrIn)
 
     def getViaIdx(self, sK, iL = 0, iC = 0):

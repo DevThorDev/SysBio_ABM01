@@ -26,9 +26,9 @@ class InputData:
                 print('Length of keys and values lists:', nKeys, '!=', nVals)
                 assert False
         self.dI = dInp
-    
+
     def __str__(self):
-        sIn = ('*'*24 + ' "InputData" type ' + '*'*24 +
+        sIn = (GC.S_STAR*24 + ' "InputData" type ' + GC.S_STAR*24 +
                '\nInput dictionary:\n' + str(self.dI))
         return sIn
 
@@ -59,20 +59,20 @@ class InputData:
             print('ERROR: Key', cKey, 'not in input dictionary.')
             assert False
         return retVal
-    
+
     def yieldValList(self, lKeys):
         retList = [None]*len(lKeys)
         for cIdx, cKey in enumerate(lKeys):
             retList[cIdx] = self.yieldOneVal(cKey)
         return retList
-    
+
     def yieldDict(self, lKeys):
         retDict = {}
         for cKey in lKeys:
             retDict[cKey] = self.yieldOneVal(cKey)
         return retDict
-    
+
     def printInputData(self):
-        pprint.pprint(self.dI) 
+        pprint.pprint(self.dI)
 
 ###############################################################################

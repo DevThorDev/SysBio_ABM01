@@ -8,7 +8,7 @@ import Core.C_00__GenConstants as GC
 strOType = 'Small molecule'
 strNSpec = 'Nitrate'
 strCS = 'NO3-'
-strCL = 'NO3_1m'
+strCL = GC.ID_NO3_1M
 
 # --- dictionary of parameters for special sites ------------------------------
 dInfSpS = {}

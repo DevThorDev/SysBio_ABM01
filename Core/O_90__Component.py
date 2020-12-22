@@ -21,7 +21,7 @@ class ComponentBase(Base):
         self.idO = GC.ID_CPB
         self.descO = 'ComponentBase'
         if not hasattr(self, 'sCp'):
-            self.sCp = '_'*7
+            self.sCp = GC.S_USC*7
         if not hasattr(self, 'dOCp'):
             self.dOCp = dOComp
         self.llOI = llOInt

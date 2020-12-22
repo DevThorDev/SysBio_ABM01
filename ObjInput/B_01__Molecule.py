@@ -12,7 +12,7 @@ strCL = 'Molecule Base'
 
 # --- names of directories and files ------------------------------------------
 sD_SMo = '80_SMo'
-sF_SMo = 'SMo'
+sF_SMo = GC.ID_SMO
 
 # --- graphics parameters molecule concentrations plot ------------------------
 sPlt_Conc = 'Conc'     # name of the plot and key of the input dict

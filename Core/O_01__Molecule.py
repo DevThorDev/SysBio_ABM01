@@ -43,9 +43,9 @@ class Molecule(Base):
 class SpecSite:
     def __init__(self, dISpS, sIDSpS, idMol, descMol):
         self.idSpS = sIDSpS                         # ID string of site
-        self.sSPTM = dISpS[self.idSpS]['Stat']      # status of PTM ('P-',...)
-        self.lPyl = dISpS[self.idSpS]['Pyl']        # list Pyl
-        self.lDPy = dISpS[self.idSpS]['DPy']        # list DPy
+        self.sSPTM = dISpS[self.idSpS][GC.S_STAT]   # status of PTM ('P-',...)
+        self.lPyl = dISpS[self.idSpS][GC.S_DO_PYL]  # list Pyl
+        self.lDPy = dISpS[self.idSpS][GC.S_DO_DPY]  # list DPy
         self.idMol = idMol                          # ID of molecule
         self.descMol = descMol                      # description of molecule
 

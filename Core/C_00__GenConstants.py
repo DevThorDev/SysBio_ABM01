@@ -32,6 +32,7 @@ SEP_STD = ';'
 S_USC = '_'
 S_DASH = '-'
 S_PLUS = '+'
+S_STAR = '*'
 S_COM_BL = ', '
 
 # --- sets --------------------------------------------------------------------
@@ -86,7 +87,6 @@ L_ID_PYL = [ID_PYL]
 L_ID_DPY = [ID_DPY]
 
 S_CNC_INI = 'concIni'
-S_MODE_CHG = 'ConcChgMode'
 S_PERIOD_CHG = 'periodChg'
 S_AMPL_CHG = 'amplitudeChg'
 S_THR_LOW_CNC = 'thrLowConc'
@@ -122,12 +122,14 @@ S_L = 'L'
 S_S = 'S'
 S_K = 'K'
 S_I = 'I'
+S_J = 'J'
 S_T = 'T'
 L_S_LSK = [S_L, S_S, S_K]
 L_S_IT = [S_I, S_T]
 
-S_DO_PYL = 'Pyl'
-S_DO_DPY = 'DPy'
+S_STAT = 'Stat'
+S_DO_PYL = ID_PYL
+S_DO_DPY = ID_DPY
 S_DO_FRM = 'Frm'
 S_DO_DIS = 'Dis'
 S_DO_IPC = 'IPC'
