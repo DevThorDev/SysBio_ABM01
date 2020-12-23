@@ -8,7 +8,7 @@ import Core.C_00__GenConstants as GC
 strOType = 'Molecule'
 strNSpec = 'Molecule Base'
 strCS = GC.ID_MOL
-strCL = strNSpec
+strCL = GC.S_CL_MOLEC
 
 # --- names of directories and files ------------------------------------------
 sD_SMo = '80_SMo'

@@ -8,7 +8,7 @@ import Core.C_00__GenConstants as GC
 strOType = 'System'
 strNSpec = 'System with all components and small molecules'
 strCS = GC.ID_SYS
-strCL = GC.ID_SYS
+strCL = GC.S_CL_SYSTEM
 
 # --- graphics parameters: component numbers and molecule conc. plot ----------
 sPlt_SSC = '01_SelCpConc'               # name of sel. comps and conc. plot
@@ -36,12 +36,14 @@ pltAxXY_CpCnc = (True, True)            # plot x- and/or y-axis
 # key: (start string of plot, number or string of plot)
 # value: (list of components to be considered, y-label of plot, dictionary L)
 # dictionary L: key: operation; value: {legend entry: list of components}
-lSCpAll = ['L--00--', 'L--01--', 'L--10--', 'L--11--', 'S------', 'K----00',
-           'K----01', 'K----10', 'K----11', 'LST00--', 'LSI01--', 'LST10--',
-           'LSJ11--', 'LKT0000', 'LKJ0001', 'LKT0010', 'LKT0011', 'LKT0100',
-           'LKT0101', 'LKT0110', 'LKT0111', 'LKT1000', 'LKI1001', 'LKT1010',
-           'LKT1011', 'LKT1100', 'LKT1101', 'LKT1110', 'LKT1111']
-d_7_Groups = {cK: {'L--': ['L--'], 'S--': ['S--'], 'K--': ['K--'],
+lSCpAll = ['L--00--', 'L--01--', 'L--10--', 'L--11--',
+           'S------', 'K----00', 'K----01', 'K----10', 'K----11',
+           'X------', 'Y------', 'A------', 'B------', 'C------', 'D------',
+           'LST00--', 'LSI01--', 'LST10--', 'LSJ11--',
+           'LKT0000', 'LKJ0001', 'LKT0010', 'LKT0011', 'LKT0100', 'LKT0101',
+           'LKT0110', 'LKT0111', 'LKT1000', 'LKI1001', 'LKT1010', 'LKT1011',
+           'LKT1100', 'LKT1101', 'LKT1110', 'LKT1111']
+d_9_Groups = {cK: {'L--': ['L--'], 'S--': ['S--'], 'K--': ['K--'],
                    'LSI': ['LSI'], 'LSJ': ['LSJ'], 'LST': ['LST'],
                    'LKI': ['LKI'], 'LKJ': ['LKJ'], 'LKT': ['LKT']}
               for cK in [GC.S_MEAN, GC.S_SUM]}
@@ -53,16 +55,16 @@ d_S_vs_K = {cK: {'LSI': ['LSI', 'LSJ', 'LST'], 'LKI': ['LKI', 'LKJ', 'LKT']}
 d_4_Int_Tra = {cK: {'LSI': ['LSI'], 'LSJ': ['LSJ'], 'LST': ['LST'],
                     'LKI': ['LKI'], 'LKJ': ['LKJ'], 'LKT': ['LKT']}
                for cK in [GC.S_MEAN, GC.S_SUM]}
-dlSY = {(sPlt_SSC, 'A__7_Main_Groups'): (lSCpAll + [GC.ID_NO3_1M], yLbl_CpCnc,
-                                         d_7_Groups),
-        (sPlt_SSC, 'B__4_Complexes'): (lSCpAll + [GC.ID_NO3_1M], yLbl_CpCnc,
-                                       d_4_Int_Tra),
+dlSY = {(sPlt_SSC, 'A__9_Main_Groups'): (lSCpAll + [GC.ID_NO3_1M], yLbl_CpCnc,
+                                         d_9_Groups),
+        (sPlt_SSC, 'B__Complexes'): (lSCpAll + [GC.ID_NO3_1M], yLbl_CpCnc,
+                                     d_4_Int_Tra),
         (sPlt_SSC, 'C__Int_vs_Tra'): (lSCpAll + [GC.ID_NO3_1M], yLbl_CpCnc,
                                       d_Int_vs_Tra),
         (sPlt_SSC, 'D__LS-_vs_LK-'): (lSCpAll + [GC.ID_NO3_1M], yLbl_CpCnc,
                                       d_S_vs_K),
         (sPlt_SCp, 1): (lSCpAll[:9], yLbl_Cp, None),
-        (sPlt_SCp, None): (lSCpAll, yLbl_Cp, d_7_Groups),
+        (sPlt_SCp, None): (lSCpAll, yLbl_Cp, d_9_Groups),
         (sPlt_SCn, None): ([GC.ID_NO3_1M, GC.ID_H2PO4_1M], yLbl_Cnc, None)}
 
 # --- path, directory and file names ------------------------------------------

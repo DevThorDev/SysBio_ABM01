@@ -148,17 +148,17 @@ def sRct21(lSLHS, lSRHS):
     assert sRHS[0] == sLHS1[0] and sRHS[1] == sLHS2[0]
     assert sRHS[2] in GC.L_S_IJT
     # find the appropriate key
-    if sRHS[0] == GC.S_L and sRHS[1] == GC.S_S and sRHS[2] == GC.S_I:
+    if sRHS[:3] == GC.S_LSI:
         sK += GC.S_FRM_L_S_LSI
-    elif sRHS[0] == GC.S_L and sRHS[1] == GC.S_S and sRHS[2] == GC.S_J:
+    elif sRHS[:3] == GC.S_LSJ:
         sK += GC.S_FRM_L_S_LSJ
-    elif sRHS[0] == GC.S_L and sRHS[1] == GC.S_S and sRHS[2] == GC.S_T:
+    elif sRHS[:3] == GC.S_LST:
         sK += GC.S_FRM_L_S_LST
-    elif sRHS[0] == GC.S_L and sRHS[1] == GC.S_K and sRHS[2] == GC.S_I:
+    elif sRHS[:3] == GC.S_LKI:
         sK += GC.S_FRM_L_K_LKI
-    elif sRHS[0] == GC.S_L and sRHS[1] == GC.S_K and sRHS[2] == GC.S_J:
+    elif sRHS[:3] == GC.S_LKJ:
         sK += GC.S_FRM_L_K_LKJ
-    elif sRHS[0] == GC.S_L and sRHS[1] == GC.S_K and sRHS[2] == GC.S_T:
+    elif sRHS[:3] == GC.S_LKT:
         sK += GC.S_FRM_L_K_LKT
     # find and check the appropriate value
     for k, chRHS in enumerate(sRHS[GC.I_S_CP_SEP:]):
@@ -193,17 +193,17 @@ def sRct12(lSLHS, lSRHS):
     assert sLHS[0] == sRHS1[0] and sLHS[1] == sRHS2[0]
     assert sLHS[2] in GC.L_S_IJT
     # find the appropriate key
-    if sLHS[0] == GC.S_L and sLHS[1] == GC.S_S and sLHS[2] == GC.S_I:
+    if sLHS[:3] == GC.S_LSI:
         sK += GC.S_DIS_LSI_L_S
-    elif sLHS[0] == GC.S_L and sLHS[1] == GC.S_S and sLHS[2] == GC.S_J:
+    elif sLHS[:3] == GC.S_LSJ:
         sK += GC.S_DIS_LSJ_L_S
-    elif sLHS[0] == GC.S_L and sLHS[1] == GC.S_S and sLHS[2] == GC.S_T:
+    elif sLHS[:3] == GC.S_LST:
         sK += GC.S_DIS_LST_L_S
-    elif sLHS[0] == GC.S_L and sLHS[1] == GC.S_K and sLHS[2] == GC.S_I:
+    elif sLHS[:3] == GC.S_LKI:
         sK += GC.S_DIS_LKI_L_K
-    elif sLHS[0] == GC.S_L and sLHS[1] == GC.S_K and sLHS[2] == GC.S_J:
+    elif sLHS[:3] == GC.S_LKJ:
         sK += GC.S_DIS_LKJ_L_K
-    elif sLHS[0] == GC.S_L and sLHS[1] == GC.S_K and sLHS[2] == GC.S_T:
+    elif sLHS[:3] == GC.S_LKT:
         sK += GC.S_DIS_LKT_L_K
     # find and check the appropriate value
     for k, chLHS in enumerate(sLHS[GC.I_S_CP_SEP:]):
@@ -240,29 +240,21 @@ def sRct22(lSLHS, lSRHS):
             sLHS2[0] == sRHS1[1])
     assert sLHS1[2] in GC.L_S_IJT and sRHS1[2] in GC.L_S_IJT
     # find the appropriate key
-    if (sLHS1[0] == GC.S_L and sLHS1[1] == GC.S_S and sLHS1[2] == GC.S_I and
-        sRHS1[0] == GC.S_L and sRHS1[1] == GC.S_K and sRHS1[2] == GC.S_T):
+    if sLHS1[:3] == GC.S_LSI and sRHS1[:3] == GC.S_LKT:
         sK += GC.S_IPC_LSI_LKT
-    elif (sLHS1[0] == GC.S_L and sLHS1[1] == GC.S_S and sLHS1[2] == GC.S_J and
-          sRHS1[0] == GC.S_L and sRHS1[1] == GC.S_K and sRHS1[2] == GC.S_T):
+    elif sLHS1[:3] == GC.S_LSJ and sRHS1[:3] == GC.S_LKT:
         sK += GC.S_IPC_LSJ_LKT
-    elif (sLHS1[0] == GC.S_L and sLHS1[1] == GC.S_S and sLHS1[2] == GC.S_T and
-          sRHS1[0] == GC.S_L and sRHS1[1] == GC.S_K and sRHS1[2] == GC.S_I):
+    elif sLHS1[:3] == GC.S_LST and sRHS1[:3] == GC.S_LKI:
         sK += GC.S_IPC_LST_LKI
-    elif (sLHS1[0] == GC.S_L and sLHS1[1] == GC.S_S and sLHS1[2] == GC.S_T and
-          sRHS1[0] == GC.S_L and sRHS1[1] == GC.S_K and sRHS1[2] == GC.S_J):
+    elif sLHS1[:3] == GC.S_LST and sRHS1[:3] == GC.S_LKJ:
         sK += GC.S_IPC_LST_LKJ
-    elif (sLHS1[0] == GC.S_L and sLHS1[1] == GC.S_K and sLHS1[2] == GC.S_I and
-          sRHS1[0] == GC.S_L and sRHS1[1] == GC.S_S and sRHS1[2] == GC.S_T):
+    elif sLHS1[:3] == GC.S_LKI and sRHS1[:3] == GC.S_LST:
         sK += GC.S_IPC_LKI_LST
-    elif (sLHS1[0] == GC.S_L and sLHS1[1] == GC.S_K and sLHS1[2] == GC.S_J and
-          sRHS1[0] == GC.S_L and sRHS1[1] == GC.S_S and sRHS1[2] == GC.S_T):
+    elif sLHS1[:3] == GC.S_LKJ and sRHS1[:3] == GC.S_LST:
         sK += GC.S_IPC_LKJ_LST
-    elif (sLHS1[0] == GC.S_L and sLHS1[1] == GC.S_K and sLHS1[2] == GC.S_T and
-          sRHS1[0] == GC.S_L and sRHS1[1] == GC.S_S and sRHS1[2] == GC.S_I):
+    elif sLHS1[:3] == GC.S_LKT and sRHS1[:3] == GC.S_LSI:
         sK += GC.S_IPC_LKT_LSI
-    elif (sLHS1[0] == GC.S_L and sLHS1[1] == GC.S_K and sLHS1[2] == GC.S_T and
-          sRHS1[0] == GC.S_L and sRHS1[1] == GC.S_S and sRHS1[2] == GC.S_J):
+    elif sLHS1[:3] == GC.S_LKT and sRHS1[:3] == GC.S_LSJ:
         sK += GC.S_IPC_LKT_LSJ
     # find and check the appropriate value
     for k, _ in enumerate(sLHS1[GC.I_S_CP_SEP:]):
@@ -294,19 +286,27 @@ def sRct22(lSLHS, lSRHS):
 
 def analyseSRct(sRct):
     lSSplRct = partStr(sRct)
-    assert len(lSSplRct) == 2       # required for a valid reaction
+    assert len(lSSplRct) == 2       # required for a valid reaction: LHS, RHS
+    # 1st-order reactions with single product (Rct11)
+    # TODO: first reaction type: phosphorylation with appropriate kinase
+    #       (~KAsK, ~KAsX, ~KAsY)
+    # TODO: second reaction type: dephosphorylation with appropriate phosphatase
+    #       (~PAsA, ~PAsB, ~PAsC, ~PAsD)
     if len(lSSplRct[0]) == 1 and len(lSSplRct[1]) == 1:
         return sRct11(lSSplRct[0], lSSplRct[1])
+    # 2nd-order reactions with single product (Rct21)
     elif len(lSSplRct[0]) == 2 and len(lSSplRct[1]) == 1:
         return sRct21(lSSplRct[0], lSSplRct[1])
+    # 1st-order reactions with two products (Rct12)
     elif len(lSSplRct[0]) == 1 and len(lSSplRct[1]) == 2:
         return sRct12(lSSplRct[0], lSSplRct[1])
+    # 2nd-order reactions with two products (Rct22)
     elif len(lSSplRct[0]) == 2 and len(lSSplRct[1]) == 2:
         return sRct22(lSSplRct[0], lSSplRct[1])
     else:
         print('Reaction type with more than two reactants or products not',
               'implemented. Number of reactants is', len(lSSplRct[0]),
-              'while number of products is', len(lSSplRct[1]))
+              'while number of products is', len(lSSplRct[1]), '.')
 
 def calcRctWeight(cDfr, dRctTp):
     wRct = 1.

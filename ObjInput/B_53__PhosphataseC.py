@@ -8,7 +8,7 @@ import Core.C_00__GenConstants as GC
 strOType = 'Phosphatase'
 strNSpec = 'Phosphatase C'
 strCS = GC.S_C
-strCL = GC.ID_PAS_C
+strCL = GC.S_CL_PAS_C
 
 # --- dictionary of parameters for special sites ------------------------------
 dInfSpS = {}

@@ -8,7 +8,7 @@ import Core.C_00__GenConstants as GC
 strOType = 'Base'
 strNSpec = 'BaseClass'
 strCS = GC.ID_BAS
-strCL = strNSpec
+strCL = GC.S_CL_BASE
 
 # --- create input dictionary -------------------------------------------------
 dIO = {# --- general

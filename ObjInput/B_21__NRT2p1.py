@@ -8,7 +8,7 @@ import Core.C_00__GenConstants as GC
 strOType = 'Large protein'
 strNSpec = 'Large protein NRT2.1'
 strCS = GC.S_L
-strCL = GC.ID_LPR_NRT2P1
+strCL = GC.S_CL_LPR_NRT2P1
 
 # --- dictionary of parameters for special sites ------------------------------
 dInfSpS = {GC.S_SPS_LPR_L_S21: {GC.S_STAT: GC.S_NOT_PYL,

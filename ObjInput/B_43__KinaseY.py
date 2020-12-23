@@ -8,7 +8,7 @@ import Core.C_00__GenConstants as GC
 strOType = 'Kinase'
 strNSpec = 'Kinase Y'
 strCS = GC.S_Y
-strCL = GC.ID_KAS_Y
+strCL = GC.S_CL_KAS_Y
 
 # --- dictionary of parameters for special sites ------------------------------
 dInfSpS = {}

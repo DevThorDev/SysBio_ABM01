@@ -13,7 +13,7 @@ levelDebugOut = 2   # level of debug output (0: no debug output)
 doEvoT = True
 doPlots = True
 tStart = 0                  # 0
-tMax = 1.                  # 10.
+tMax = 10.                  # 10.
 maxTS = 10000000            # 10000000
 minDispTS = 0
 modDispTS = 10000           # 10000
@@ -33,7 +33,7 @@ dSFInD = {GC.S_00: (GC.S_00 + GC.S_USC + 'Strings', 1),
           GC.S_01: (GC.S_01 + GC.S_USC + 'InitialSysComp', 1),
           GC.S_02: (GC.S_02 + GC.S_USC + 'ConcSMo', 0),
           GC.S_03: (GC.S_03 + GC.S_USC + 'WeightsReactionTypes', 1),
-          GC.S_04: (GC.S_04 + GC.S_USC + 'WeightsReactions', 1),
+          GC.S_04: (GC.S_04 + GC.S_USC + 'WeightsReactions', 2),
           GC.S_05: (GC.S_05 + GC.S_USC + 'CompDependOnSMoConc', 1),
           GC.S_06: (GC.S_06 + GC.S_USC + 'SMoConcDependOnComp', 1),
           GC.S_07: (GC.S_07 + GC.S_USC + 'OtherInputValues', 1)}

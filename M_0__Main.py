@@ -28,9 +28,9 @@ cInpFrames = InputFrames(inDG)
 # print(cInpFrames.dRct)
 # print(cInpFrames.dTpRct)
 # print(cInpFrames.dChgCncDep)
-# print(cInpFrames.dCncChg)
-# for cKO in cInpFrames.dCncChg:
-#     print(list(cInpFrames.dCncChg[cKO]))
+# print(cInpFrames.dCncChgSMo)
+# for cKO in cInpFrames.dCncChgSMo:
+#     print(list(cInpFrames.dCncChgSMo[cKO]))
 # print(cInpFrames.dOthInpV)
 
 cSystem = System(inDG, cInpFrames)

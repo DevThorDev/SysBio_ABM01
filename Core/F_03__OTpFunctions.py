@@ -90,15 +90,15 @@ def iniDictOut(inpFr, dCnc, t = 0., tDlt = 0.):
 def changeCncSMo(inpFr, dO, dCncSMo, t, cID = None):
     for sSMo in dCncSMo:
         assert sSMo in inpFr.dParCnc
-        cD, cncChg, cncChgExt = inpFr.dParCnc[sSMo], 0., 0.
+        cD, cncChgSMo, cncChgExt = inpFr.dParCnc[sSMo], 0., 0.
         cncMn, cncMx = cD[GC.S_CNC_MIN], cD[GC.S_CNC_MAX]
         for s, nO in dO['dN'].items():
             ss = s.replace(GC.S_DASH, '')
-            assert ss in inpFr.dCncChg[sSMo]
-            cncChg += inpFr.dCncChg[sSMo][ss]*nO
+            assert ss in inpFr.dCncChgSMo[sSMo]
+            cncChgSMo += inpFr.dCncChgSMo[sSMo][ss]*nO
         # component-distribution-dependent (internal) conc. change
         nCpO = sum(dO['dN'].values())
-        cncChgInt = cncChg*dO['tDlt']/nCpO*inpFr.dOthInpV['cncChgScale']
+        cncChgInt = cncChgSMo*dO['tDlt']/nCpO*inpFr.dOthInpV['cncChgScale']
         dO['dCncChgInt'][sSMo] += cncChgInt
         # externally forced conc. change
         cTp, dPar = cD[GC.S_CNC_CHG_MODE]

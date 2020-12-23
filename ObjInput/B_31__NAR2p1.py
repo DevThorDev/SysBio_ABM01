@@ -8,7 +8,7 @@ import Core.C_00__GenConstants as GC
 strOType = 'Small protein'
 strNSpec = 'Small protein NAR2.1'
 strCS = GC.S_S
-strCL = GC.ID_SPR_NAR2P1
+strCL = GC.S_CL_SPR_NAR2P1
 
 # --- dictionary of parameters for special sites ------------------------------
 dInfSpS = {}

@@ -31,6 +31,7 @@ S_07 = S_0 + S_7
 SEP_STD = ';'
 S_USC = '_'
 S_DASH = '-'
+S_WAVE = '~'
 S_PLUS = '+'
 S_STAR = '*'
 S_COM_BL = ', '
@@ -42,12 +43,26 @@ SET_01_DASH = {S_0, S_1, S_DASH}
 
 # --- constants related to molecule objects -----------------------------------
 
+ID_BAS = 'Base'
 ID_LPR_NRT2P1 = 'LPrNRT2p1'
 ID_SPR_NAR2P1 = 'SPrNAR2p1'
 ID_KAS_K, ID_KAS_X, ID_KAS_Y = 'KAsK', 'KAsX', 'KAsY'
 ID_PAS_A, ID_PAS_B, ID_PAS_C, ID_PAS_D = 'PAsA', 'PAsB', 'PAsC', 'PAsD'
 ID_NO3_1M = 'NO3_1m'
 ID_H2PO4_1M = 'H2PO4_1m'
+
+S_CL_BASE = ID_BAS
+S_CL_MOLEC = 'Molecule'
+S_CL_LPR_NRT2P1 = 'NRT2.1'
+S_CL_SPR_NAR2P1 = 'NAR2.1'
+S_CL_KAS_K, S_CL_KAS_X, S_CL_KAS_Y = 'HPCAL1', ID_KAS_X, ID_KAS_Y
+S_CL_PAS_A, S_CL_PAS_B, S_CL_PAS_C, S_CL_PAS_D = (ID_PAS_A, ID_PAS_B,
+                                                  ID_PAS_C, ID_PAS_D)
+S_CL_NO3_1M = 'NO3-'
+S_CL_H2PO4_1M = 'H2PO4-'
+S_CL_INTERACTION = 'Interaction'
+S_CL_COMPONENT = 'SystemComponent'
+S_CL_SYSTEM = 'System'
 
 S_A = 'A'   # for phosphatase A
 S_B = 'B'   # for phosphatase B
@@ -64,7 +79,13 @@ S_T = 'T'   # for transition state
 S_X = 'X'   # for kinase X
 S_Y = 'Y'   # for kinase Y
 
-ID_BAS = 'Base'
+S_LSI = S_L + S_S + S_I
+S_LSJ = S_L + S_S + S_J
+S_LST = S_L + S_S + S_T
+S_LKI = S_L + S_K + S_I
+S_LKJ = S_L + S_K + S_J
+S_LKT = S_L + S_K + S_T
+
 ID_CPB = 'CpBase'
 ID_CPN = 'Cp'
 ID_SYS = 'Sys'

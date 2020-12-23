@@ -19,7 +19,7 @@ class InputFrames:
         self.getDParCnc()
         self.getDRct()
         self.getDChgCncDep()
-        self.getDCncChg()
+        self.getDCncChgSMo()
         self.getDOthInpV()
 
     def getDSCp7(self, sK = GC.S_00):
@@ -132,8 +132,8 @@ class InputFrames:
         else:
             print('ERROR: Key', sK, 'not in DataFrames dictionary!')
 
-    def getDCncChg(self, sK = GC.S_06):
-        self.dCncChg = {}
+    def getDCncChgSMo(self, sK = GC.S_06):
+        self.dCncChgSMo = {}
         if sK in self.dDfrIn:
             cDfr = self.dDfrIn[sK]
             assert GC.S_VAL_ABS_CH in cDfr.columns
@@ -141,7 +141,7 @@ class InputFrames:
                 assert sI[0] in GC.L_S_SMO
                 cKM = GC.L_ID_SMO_USED[GC.L_S_SMO.index(sI[0])]
                 cV = cDfr.at[sI, GC.S_VAL_ABS_CH]
-                GF.addToDictD(self.dCncChg, cKM, sI[(1 + 1):], cV)
+                GF.addToDictD(self.dCncChgSMo, cKM, sI[(1 + 1):], cV)
         else:
             print('ERROR: Key', sK, 'not in DataFrames dictionary!')
 

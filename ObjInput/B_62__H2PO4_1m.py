@@ -8,7 +8,7 @@ import Core.C_00__GenConstants as GC
 strOType = 'Small molecule'
 strNSpec = 'Small molecule dihydrogenphosphate'
 strCS = GC.S_P
-strCL = GC.ID_H2PO4_1M
+strCL = GC.S_CL_H2PO4_1M
 
 # --- dictionary of parameters for special sites ------------------------------
 dInfSpS = {}

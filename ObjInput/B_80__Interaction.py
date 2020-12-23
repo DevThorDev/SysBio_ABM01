@@ -8,7 +8,7 @@ import Core.C_00__GenConstants as GC
 strOType = 'Interaction'
 strNSpec = 'Interaction (phosphorylation, dephosphorylation)'
 strCS = GC.ID_INT
-strCL = GC.ID_INT
+strCL = GC.S_CL_INTERACTION
 
 # --- create input dictionary -------------------------------------------------
 dIO = {# --- general
