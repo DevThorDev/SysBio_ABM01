@@ -8,14 +8,14 @@ import Core.C_00__GenConstants as GC
 strOType = 'Molecule'
 strNSpec = 'Molecule Base'
 strCS = GC.ID_MOL
-strCL = 'Molecule Base'
+strCL = strNSpec
 
 # --- names of directories and files ------------------------------------------
 sD_SMo = '80_SMo'
 sF_SMo = GC.ID_SMO
 
 # --- graphics parameters molecule concentrations plot ------------------------
-sPlt_Conc = 'Conc'     # name of the plot and key of the input dict
+sPlt_Conc = 'Conc'      # name of the plot and key of the input dict
 title_Conc = None       # title of plot
 xLbl_Conc = 'Time step' # x-label of plot
 yLbl_Conc = 'Concentration [mMol]'    # y-label of plot

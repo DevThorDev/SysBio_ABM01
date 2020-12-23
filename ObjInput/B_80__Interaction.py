@@ -2,12 +2,13 @@
 ###############################################################################
 # --- B_80__Interaction.py ----------------------------------------------------
 ###############################################################################
+import Core.C_00__GenConstants as GC
 
 # --- general -----------------------------------------------------------------
 strOType = 'Interaction'
-strNSpec = 'Interaction'
-strCS = 'Inter'
-strCL = 'Interaction'
+strNSpec = 'Interaction (phosphorylation, dephosphorylation)'
+strCS = GC.ID_INT
+strCL = GC.ID_INT
 
 # --- create input dictionary -------------------------------------------------
 dIO = {# --- general

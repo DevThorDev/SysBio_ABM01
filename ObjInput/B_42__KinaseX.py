@@ -2,12 +2,13 @@
 ###############################################################################
 # --- B_42__KinaseX.py --------------------------------------------------------
 ###############################################################################
+import Core.C_00__GenConstants as GC
 
 # --- general -----------------------------------------------------------------
 strOType = 'Kinase'
 strNSpec = 'Kinase X'
-strCS = 'KinaseX'
-strCL = 'Standard Kinase X'
+strCS = GC.S_X
+strCL = GC.ID_KAS_K
 
 # --- dictionary of parameters for special sites ------------------------------
 dInfSpS = {}

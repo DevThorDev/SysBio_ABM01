@@ -44,14 +44,25 @@ SET_01_DASH = {S_0, S_1, S_DASH}
 
 ID_LPR_NRT2P1 = 'LPrNRT2p1'
 ID_SPR_NAR2P1 = 'SPrNAR2p1'
-ID_KAS_HPCAL1, ID_KAS_X, ID_KAS_Y = 'KAsHPCAL1', 'KAsX', 'KAsY'
-ID_PAS_1, ID_PAS_2, ID_PAS_3, ID_PAS_4 = 'PAs1', 'PAs2', 'PAs3', 'PAs4'
+ID_KAS_K, ID_KAS_X, ID_KAS_Y = 'KAsK', 'KAsX', 'KAsY'
+ID_PAS_A, ID_PAS_B, ID_PAS_C, ID_PAS_D = 'PAsA', 'PAsB', 'PAsC', 'PAsD'
 ID_NO3_1M = 'NO3_1m'
 ID_H2PO4_1M = 'H2PO4_1m'
 
-S_N = 'N'
-S_P = 'P'
-L_S_1DIG_SMO = [S_N, S_P]
+S_A = 'A'   # for phosphatase A
+S_B = 'B'   # for phosphatase B
+S_C = 'C'   # for phosphatase C
+S_D = 'D'   # for phosphatase D
+S_I = 'I'   # for strong interaction state
+S_J = 'J'   # for weak interaction state
+S_K = 'K'   # for kinase K (HPCAL1)
+S_L = 'L'   # for large protein L (NRT2.1)
+S_N = 'N'   # for small molecule NO3-
+S_P = 'P'   # for small molecule H2PO4-
+S_S = 'S'   # for small protein S (NAR2.1)
+S_T = 'T'   # for transition state
+S_X = 'X'   # for kinase X
+S_Y = 'Y'   # for kinase Y
 
 ID_BAS = 'Base'
 ID_CPB = 'CpBase'
@@ -76,8 +87,8 @@ L_ID_PRO = [ID_PRO]
 L_ID_LPR = [ID_LPR, ID_LPR_NRT2P1]
 L_ID_SPR = [ID_SPR, ID_SPR_NAR2P1]
 L_ID_ENZ = [ID_ENZ]
-L_ID_KAS = [ID_KAS, ID_KAS_HPCAL1, ID_KAS_X, ID_KAS_Y]
-L_ID_PAS = [ID_PAS, ID_PAS_1, ID_PAS_2, ID_PAS_3, ID_PAS_4]
+L_ID_KAS = [ID_KAS, ID_KAS_K, ID_KAS_X, ID_KAS_Y]
+L_ID_PAS = [ID_PAS, ID_PAS_A, ID_PAS_B, ID_PAS_C, ID_PAS_D]
 L_ID_MET = [ID_MET]
 L_ID_LMO = [ID_LMO]
 L_ID_SMO = [ID_SMO, ID_NO3_1M, ID_H2PO4_1M]
@@ -100,32 +111,27 @@ S_CH_SIN = 'sin'
 S_CH_STEP = 'step'
 
 # --- constants related to specific sites -------------------------------------
-S_SPS_LPRA_S21 = 'S21'
-S_SPS_LPRA_S28 = 'S28'
-S_SPS_KASA_S839 = 'S839'
-S_SPS_KASA_S870 = 'S870'
-L_S_SPS = [S_SPS_LPRA_S21, S_SPS_LPRA_S28, S_SPS_KASA_S839, S_SPS_KASA_S870]
+S_SPS_LPR_L_S21 = 'S21'
+S_SPS_LPR_L_S28 = 'S28'
+S_SPS_KAS_K_S839 = 'S839'
+S_SPS_KAS_K_S870 = 'S870'
+L_S_SPS = [S_SPS_LPR_L_S21, S_SPS_LPR_L_S28,
+           S_SPS_KAS_K_S839, S_SPS_KAS_K_S870]
 
-DS_SPS_LPR_NRT2P1 = {S_SPS_LPRA_S21: {'iSP': 3, ID_KAS: ID_KAS_HPCAL1,
-                                      ID_PAS: ID_PAS_3},
-                     S_SPS_LPRA_S28: {'iSP': 4, ID_KAS: ID_KAS_X,
-                                      ID_PAS: ID_PAS_4}}
-DS_SPS_KAS_HPCAL1 = {S_SPS_KASA_S839: {'iSP': 5, ID_KAS: ID_KAS_Y,
-                                       ID_PAS: ID_PAS_1},
-                     S_SPS_KASA_S870: {'iSP': 6, ID_KAS: ID_KAS_HPCAL1,
-                                       ID_PAS: ID_PAS_2}}
-DS_SPS = {ID_LPR_NRT2P1: DS_SPS_LPR_NRT2P1,
-          ID_KAS_HPCAL1: DS_SPS_KAS_HPCAL1}
+DS_SPS_LPR_NRT2P1 = {S_SPS_LPR_L_S21: {'iSP': 3, ID_KAS: ID_KAS_K,
+                                       ID_PAS: ID_PAS_C},
+                     S_SPS_LPR_L_S28: {'iSP': 4, ID_KAS: ID_KAS_X,
+                                       ID_PAS: ID_PAS_D}}
+DS_SPS_KAS_K = {S_SPS_KAS_K_S839: {'iSP': 5, ID_KAS: ID_KAS_Y,
+                                   ID_PAS: ID_PAS_A},
+                S_SPS_KAS_K_S870: {'iSP': 6, ID_KAS: ID_KAS_K,
+                                   ID_PAS: ID_PAS_B}}
+DS_SPS = {ID_LPR_NRT2P1: DS_SPS_LPR_NRT2P1, ID_KAS_K: DS_SPS_KAS_K}
 
 # --- constants related to interactions ---------------------------------------
-S_L = 'L'
-S_S = 'S'
-S_K = 'K'
-S_I = 'I'
-S_J = 'J'
-S_T = 'T'
 L_S_LSK = [S_L, S_S, S_K]
 L_S_IJT = [S_I, S_J, S_T]
+L_S_SMO = [S_N, S_P]
 
 S_STAT = 'Stat'
 S_DO_PYL = ID_PYL

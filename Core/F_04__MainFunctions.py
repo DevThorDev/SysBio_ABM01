@@ -4,8 +4,8 @@
 ###############################################################################
 import Core.C_00__GenConstants as GC
 
-from Core.O_02__Protein import (KinaseHPCAL1, KinaseX, KinaseY, Phosphatase1,
-                                Phosphatase2, Phosphatase3, Phosphatase4,
+from Core.O_02__Protein import (KinaseK, KinaseX, KinaseY, PhosphataseA,
+                                PhosphataseB, PhosphataseC, PhosphataseD,
                                 Protein_NRT2p1, Protein_NAR2p1)
 from Core.O_03__Metabolite import SMo_NO3_1m, SMo_H2PO4_1m
 # from Core.O_80__Interaction import Phosphorylation, Dephosphorylation
@@ -14,15 +14,15 @@ from Core.O_90__Component import Component
 
 # --- Functions (initialisation) ----------------------------------------------
 # def iniSystem(inpDG):
-#     # Kinases KAsHPCAL1, KAsX, KAsY -------------------------------------------
-#     KAsHPCAL1 = KinaseHPCAL1(inpDG)
+#     # Kinases KAsK, KAsX, KAsY -------------------------------------------
+#     KAsK = KinaseK(inpDG)
 #     KAsX = KinaseX(inpDG)
 #     KAsY = KinaseY(inpDG)
 #     # Phosphatases 1 - 4 ------------------------------------------------------
-#     PAs1 = Phosphatase1(inpDG)
-#     PAs2 = Phosphatase2(inpDG)
-#     PAs3 = Phosphatase3(inpDG)
-#     PAs4 = Phosphatase4(inpDG)
+#     PAsA = PhosphataseA(inpDG)
+#     PAsB = PhosphataseB(inpDG)
+#     PAsC = PhosphataseC(inpDG)
+#     PAsD = PhosphataseD(inpDG)
 #     # Large protein NRT2.1 ----------------------------------------------------
 #     NRT2p1 = Protein_NRT2p1(inpDG)
 #     # Small protein NAR2.1 ----------------------------------------------------
@@ -31,30 +31,30 @@ from Core.O_90__Component import Component
 #     NO3_1m = SMo_NO3_1m(inpDG)
 #     H2PO4_1m = SMo_H2PO4_1m(inpDG)
 #     # Interactions: phosphorylation and dephosphorylation ---------------------
-#     Pyl01 = Phosphorylation(inpDG, KAsHPCAL1, PAs1, GC.S_SPS_KASA_S839)
-#     Pyl02 = Phosphorylation(inpDG, KAsHPCAL1, PAs2, GC.S_SPS_KASA_S870)
-#     Pyl03 = Phosphorylation(inpDG, NRT2p1, PAs3, GC.S_SPS_LPRA_S21)
-#     Pyl04 = Phosphorylation(inpDG, NRT2p1, PAs4, GC.S_SPS_LPRA_S28)
-#     DePyl01 = Dephosphorylation(inpDG, KAsHPCAL1, PAs1, GC.S_SPS_KASA_S839)
-#     DePyl02 = Dephosphorylation(inpDG, KAsHPCAL1, PAs2, GC.S_SPS_KASA_S870)
-#     DePyl03 = Dephosphorylation(inpDG, NRT2p1, PAs3, GC.S_SPS_LPRA_S21)
-#     DePyl04 = Dephosphorylation(inpDG, NRT2p1, PAs4, GC.S_SPS_LPRA_S28)
+#     Pyl01 = Phosphorylation(inpDG, KAsK, PAsA, GC.S_SPS_KAS_K_S839)
+#     Pyl02 = Phosphorylation(inpDG, KAsK, PAsB, GC.S_SPS_KAS_K_S870)
+#     Pyl03 = Phosphorylation(inpDG, NRT2p1, PAsC GC.S_SPS_LPR_L_S21)
+#     Pyl04 = Phosphorylation(inpDG, NRT2p1, PAsD, GC.S_SPS_LPR_L_S28)
+#     DePyl01 = Dephosphorylation(inpDG, KAsK, PAsA, GC.S_SPS_KAS_K_S839)
+#     DePyl02 = Dephosphorylation(inpDG, KAsK, PAsB, GC.S_SPS_KAS_K_S870)
+#     DePyl03 = Dephosphorylation(inpDG, NRT2p1, PAsC, GC.S_SPS_LPR_L_S21)
+#     DePyl04 = Dephosphorylation(inpDG, NRT2p1, PAsD, GC.S_SPS_LPR_L_S28)
 #     # List of system components -----------------------------------------------
-#     lSysCmp = [KAsHPCAL1, KAsX, KAsY, PAs1, PAs2, PAs3, PAs4,
+#     lSysCmp = [KAsK, KAsX, KAsY, PAsA, PAsB, PAsC, PAsD,
 #                NRT2p1, NAR2p1, NO3_1m, H2PO4_1m, Pyl01, Pyl02, Pyl03, Pyl04,
 #                DePyl01, DePyl02, DePyl03, DePyl04]
 #     return System(inpDG, lOSys = lSysCmp)
 
 def iniComponent(inpDG, ddVOvwr = {}, iV = 0):
-    # Kinases KAsHPCAL1, KAsX, KAsY -------------------------------------------
-    KAsHPCAL1 = KinaseHPCAL1(inpDG)
+    # Kinases KAsK, KAsX, KAsY -------------------------------------------
+    KAsK = KinaseK(inpDG)
     KAsX = KinaseX(inpDG)
     KAsY = KinaseY(inpDG)
-    # Phosphatases PAs1, PAs2, PAs3, PAs4  ------------------------------------
-    PAs1 = Phosphatase1(inpDG)
-    PAs2 = Phosphatase2(inpDG)
-    PAs3 = Phosphatase3(inpDG)
-    PAs4 = Phosphatase4(inpDG)
+    # Phosphatases PAsA, PAsB, PAsC, PAsD  ------------------------------------
+    PAsA = PhosphataseA(inpDG)
+    PAsB = PhosphataseB(inpDG)
+    PAsC = PhosphataseC(inpDG)
+    PAsD = PhosphataseD(inpDG)
     # Large protein NRT2.1 ----------------------------------------------------
     NRT2p1 = Protein_NRT2p1(inpDG)
     # Small protein NAR2.1 ----------------------------------------------------
@@ -66,13 +66,13 @@ def iniComponent(inpDG, ddVOvwr = {}, iV = 0):
     NO3_1m.overwInpV(ddVOvwr, iV)
     H2PO4_1m.overwInpV(ddVOvwr, iV)
     # Create initial state ----------------------------------------------------
-    dOCp = {GC.ID_KAS_HPCAL1: KAsHPCAL1,
+    dOCp = {GC.ID_KAS_K: KAsK,
             GC.ID_KAS_X: KAsX,
             GC.ID_KAS_Y: KAsY,
-            GC.ID_PAS_1: PAs1,
-            GC.ID_PAS_2: PAs2,
-            GC.ID_PAS_3: PAs3,
-            GC.ID_PAS_4: PAs4,
+            GC.ID_PAS_A: PAsA,
+            GC.ID_PAS_B: PAsB,
+            GC.ID_PAS_C: PAsC,
+            GC.ID_PAS_D: PAsD,
             GC.ID_LPR_NRT2P1: NRT2p1,
             GC.ID_SPR_NAR2P1: NAR2p1,
             'lSMo': [NO3_1m, H2PO4_1m]}

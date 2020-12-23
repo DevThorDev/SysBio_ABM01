@@ -1,13 +1,14 @@
 # -*- coding: utf-8 -*-
 ###############################################################################
-# --- B_54__Phosphatase4.py ---------------------------------------------------
+# --- B_52__PhosphataseB.py ---------------------------------------------------
 ###############################################################################
+import Core.C_00__GenConstants as GC
 
 # --- general -----------------------------------------------------------------
 strOType = 'Phosphatase'
-strNSpec = 'Phosphatase 4'
-strCS = 'Phosphatase4'
-strCL = 'Standard Phosphatase 4'
+strNSpec = 'Phosphatase B'
+strCS = GC.S_B
+strCL = GC.ID_PAS_B
 
 # --- dictionary of parameters for special sites ------------------------------
 dInfSpS = {}

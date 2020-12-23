@@ -27,8 +27,8 @@ class LargeProtein(Protein):
 
 class Protein_NRT2p1(LargeProtein):
     def __init__(self, inpDat, iTp = 21,
-                 dStat = {GC.S_SPS_LPRA_S21: GC.S_IS_PYL,
-                          GC.S_SPS_LPRA_S28: GC.S_NOT_PYL}):
+                 dStat = {GC.S_SPS_LPR_L_S21: GC.S_IS_PYL,
+                          GC.S_SPS_LPR_L_S28: GC.S_NOT_PYL}):
         super().__init__(inpDat, iTp, dStat)
         self.idO = GC.ID_LPR_NRT2P1
         self.descO = 'Large protein NRT2.1'
@@ -64,15 +64,15 @@ class Kinase(Enzyme):
         self.descO = 'Kinase'
         # print('Initiated "Kinase" object.')
 
-class KinaseHPCAL1(Kinase):
+class KinaseK(Kinase):
     def __init__(self, inpDat, iTp = 41,
-                 dStat = {GC.S_SPS_KASA_S839: GC.S_NOT_PYL,
-                          GC.S_SPS_KASA_S870: GC.S_IS_PYL}):
+                 dStat = {GC.S_SPS_KAS_K_S839: GC.S_NOT_PYL,
+                          GC.S_SPS_KAS_K_S870: GC.S_IS_PYL}):
         super().__init__(inpDat, iTp, dStat)
-        self.idO = GC.ID_KAS_HPCAL1
-        self.descO = 'Kinase HPCAL1'
+        self.idO = GC.ID_KAS_K
+        self.descO = 'Kinase K (HPCAL1)'
         self.createDSpecSites()
-        # print('Initiated "KinaseHPCAL1" object.')
+        # print('Initiated "KinaseK" object.')
 
 class KinaseX(Kinase):
     def __init__(self, inpDat, iTp = 42, dStat = {}):
@@ -97,36 +97,36 @@ class Phosphatase(Enzyme):
         self.descO = 'Phosphatase'
         # print('Initiated "Phosphatase" object.')
 
-class Phosphatase1(Phosphatase):
+class PhosphataseA(Phosphatase):
     def __init__(self, inpDat, iTp = 51, dStat = {}):
         super().__init__(inpDat, iTp, dStat)
-        self.idO = GC.ID_PAS_1
-        self.descO = 'Phosphatase 1'
+        self.idO = GC.ID_PAS_A
+        self.descO = 'Phosphatase A'
         self.createDSpecSites()
-        # print('Initiated "Phosphatase1" object.')
+        # print('Initiated "PhosphataseA" object.')
 
-class Phosphatase2(Phosphatase):
+class PhosphataseB(Phosphatase):
     def __init__(self, inpDat, iTp = 52, dStat = {}):
         super().__init__(inpDat, iTp, dStat)
-        self.idO = GC.ID_PAS_2
-        self.descO = 'Phosphatase 2'
+        self.idO = GC.ID_PAS_B
+        self.descO = 'Phosphatase B'
         self.createDSpecSites()
-        # print('Initiated "Phosphatase2" object.')
+        # print('Initiated "PhosphataseB" object.')
 
-class Phosphatase3(Phosphatase):
+class PhosphataseC(Phosphatase):
     def __init__(self, inpDat, iTp = 53, dStat = {}):
         super().__init__(inpDat, iTp, dStat)
-        self.idO = GC.ID_PAS_3
-        self.descO = 'Phosphatase 3'
+        self.idO = GC.ID_PAS_C
+        self.descO = 'Phosphatase C'
         self.createDSpecSites()
-        # print('Initiated "Phosphatase3" object.')
+        # print('Initiated "PhosphataseC" object.')
 
-class Phosphatase4(Phosphatase):
+class PhosphataseD(Phosphatase):
     def __init__(self, inpDat, iTp = 54, dStat = {}):
         super().__init__(inpDat, iTp, dStat)
-        self.idO = GC.ID_PAS_4
-        self.descO = 'Phosphatase 4'
+        self.idO = GC.ID_PAS_D
+        self.descO = 'Phosphatase D'
         self.createDSpecSites()
-        # print('Initiated "Phosphatase4" object.')
+        # print('Initiated "PhosphataseD" object.')
 
 ###############################################################################

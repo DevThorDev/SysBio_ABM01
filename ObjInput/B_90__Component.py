@@ -6,9 +6,9 @@ import Core.C_00__GenConstants as GC
 
 # --- general -----------------------------------------------------------------
 strOType = 'Component'
-strNSpec = 'Component'
+strNSpec = 'Component of system'
 strCS = GC.ID_CPN
-strCL = 'Component'
+strCL = GC.ID_CPN
 
 # --- create input dictionary -------------------------------------------------
 dIO = {# --- general

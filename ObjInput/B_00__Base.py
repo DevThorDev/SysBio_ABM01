@@ -5,10 +5,10 @@
 import Core.C_00__GenConstants as GC
 
 # --- general -----------------------------------------------------------------
-strOType = 'BaseClass'
+strOType = 'Base'
 strNSpec = 'BaseClass'
 strCS = GC.ID_BAS
-strCL = 'BaseClass'
+strCL = strNSpec
 
 # --- create input dictionary -------------------------------------------------
 dIO = {# --- general

@@ -1,14 +1,14 @@
 # -*- coding: utf-8 -*-
 ###############################################################################
-# --- B_43__KinaseY.py --------------------------------------------------------
+# --- B_54__PhosphataseD.py ---------------------------------------------------
 ###############################################################################
 import Core.C_00__GenConstants as GC
 
 # --- general -----------------------------------------------------------------
-strOType = 'Kinase'
-strNSpec = 'Kinase Y'
-strCS = GC.S_Y
-strCL = GC.ID_KAS_Y
+strOType = 'Phosphatase'
+strNSpec = 'Phosphatase D'
+strCS = GC.S_D
+strCL = GC.ID_PAS_D
 
 # --- dictionary of parameters for special sites ------------------------------
 dInfSpS = {}

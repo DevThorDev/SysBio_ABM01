@@ -1,6 +1,13 @@
 --------------------------------------------------------------------------------
 Code updates remaining:
 --------------------------------------------------------------------------------
+Sigmoidal "step"-Function for external NO3- Conc.
+Sigmoidal functions that define dependency of component reaction weights on small molecule concentrations should be more uniformly defined
+Phosphatases 1 - 4 and Kinases X / Y should be system components as well
+	- S21: {Pyl: K, DPy: C}
+	- S28: {Pyl: X, DPy: D}
+	- S839: {Pyl: Y, DPy: A}
+	- S870: {Pyl: K, DPy: B}
 --------------------------------------------------------------------------------
 
 --------------------------------------------------------------------------------
@@ -20,5 +27,6 @@ Code updates done:
 * remove dCncEvo, dCnc from O_90__Component
 * remove lSMo from O_90__Component (incl. dOCp/dOComp)
 * changes in conc. SMo: write back to SMo objects (sMo.cCnc) - Metabolite - small molecule - setConc
-
+* additional LKT01__+S------_LSI01--+K----__ reactions
+* additional state J for weak interaction (site S21 in "wrong" phosphorylation state)
 --------------------------------------------------------------------------------

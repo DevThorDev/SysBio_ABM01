@@ -125,8 +125,8 @@ class InputFrames:
             for sHdCol in GC.L_S_PAR_TAB05:
                 assert sHdCol in cDfr.columns
             for sI in cDfr.index:
-                assert sI[0] in GC.L_S_1DIG_SMO
-                cKM = GC.L_ID_SMO_USED[GC.L_S_1DIG_SMO.index(sI[0])]
+                assert sI[0] in GC.L_S_SMO
+                cKM = GC.L_ID_SMO_USED[GC.L_S_SMO.index(sI[0])]
                 dV = {s: cDfr.at[sI, s] for s in GC.L_S_PAR_TAB05}
                 GF.addToDictD(self.dChgCncDep, cKM, sI[(1 + 1):], dV)
         else:
@@ -138,8 +138,8 @@ class InputFrames:
             cDfr = self.dDfrIn[sK]
             assert GC.S_VAL_ABS_CH in cDfr.columns
             for sI in cDfr.index:
-                assert sI[0] in GC.L_S_1DIG_SMO
-                cKM = GC.L_ID_SMO_USED[GC.L_S_1DIG_SMO.index(sI[0])]
+                assert sI[0] in GC.L_S_SMO
+                cKM = GC.L_ID_SMO_USED[GC.L_S_SMO.index(sI[0])]
                 cV = cDfr.at[sI, GC.S_VAL_ABS_CH]
                 GF.addToDictD(self.dCncChg, cKM, sI[(1 + 1):], cV)
         else:

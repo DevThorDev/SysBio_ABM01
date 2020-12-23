@@ -6,9 +6,9 @@ import Core.C_00__GenConstants as GC
 
 # --- general -----------------------------------------------------------------
 strOType = 'System'
-strNSpec = 'System'
+strNSpec = 'System with all components and small molecules'
 strCS = GC.ID_SYS
-strCL = 'System'
+strCL = GC.ID_SYS
 
 # --- graphics parameters: component numbers and molecule conc. plot ----------
 sPlt_SSC = '01_SelCpConc'               # name of sel. comps and conc. plot
@@ -57,7 +57,7 @@ dlSY = {(sPlt_SSC, 'A__7_Main_Groups'): (lSCpAll + [GC.ID_NO3_1M], yLbl_CpCnc,
                                          d_7_Groups),
         (sPlt_SSC, 'B__4_Complexes'): (lSCpAll + [GC.ID_NO3_1M], yLbl_CpCnc,
                                        d_4_Int_Tra),
-        (sPlt_SSC, 'C__L-I_vs_L-K'): (lSCpAll + [GC.ID_NO3_1M], yLbl_CpCnc,
+        (sPlt_SSC, 'C__Int_vs_Tra'): (lSCpAll + [GC.ID_NO3_1M], yLbl_CpCnc,
                                       d_Int_vs_Tra),
         (sPlt_SSC, 'D__LS-_vs_LK-'): (lSCpAll + [GC.ID_NO3_1M], yLbl_CpCnc,
                                       d_S_vs_K),

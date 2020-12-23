@@ -6,17 +6,17 @@ import Core.C_00__GenConstants as GC
 
 # --- general -----------------------------------------------------------------
 strOType = 'Large protein'
-strNSpec = 'NRT2.1'
-strCS = 'NRT2.1'
-strCL = 'NRT2p1'
+strNSpec = 'Large protein NRT2.1'
+strCS = GC.S_L
+strCL = GC.ID_LPR_NRT2P1
 
 # --- dictionary of parameters for special sites ------------------------------
-dInfSpS = {GC.S_SPS_LPRA_S21: {GC.S_STAT: GC.S_NOT_PYL,
-                               GC.S_DO_PYL: [GC.ID_KAS_HPCAL1],
-                               GC.S_DO_DPY: [GC.ID_PAS_3]},
-           GC.S_SPS_LPRA_S28: {GC.S_STAT: GC.S_NOT_PYL,
-                               GC.S_DO_PYL: [GC.ID_KAS_X],
-                               GC.S_DO_DPY: [GC.ID_PAS_4]}}
+dInfSpS = {GC.S_SPS_LPR_L_S21: {GC.S_STAT: GC.S_NOT_PYL,
+                                GC.S_DO_PYL: [GC.ID_KAS_K],
+                                GC.S_DO_DPY: [GC.ID_PAS_C]},
+           GC.S_SPS_LPR_L_S28: {GC.S_STAT: GC.S_NOT_PYL,
+                                GC.S_DO_PYL: [GC.ID_KAS_X],
+                                GC.S_DO_DPY: [GC.ID_PAS_D]}}
 
 # --- create input dictionary -------------------------------------------------
 dIO = {# --- general
