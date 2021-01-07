@@ -2,6 +2,8 @@
 ###############################################################################
 # --- I_02__InpFrames.py ------------------------------------------------------
 ###############################################################################
+import pprint
+
 import Core.C_00__GenConstants as GC
 import Core.F_00__GenFunctions as GF
 
@@ -13,7 +15,7 @@ class InputFrames:
         for sK, (sFInD, iC) in self.dIG['dSFInD'].items():
             sP = GF.joinToPath(self.dIG['sPInD'], sFInD + '.' + GC.S_EXT_CSV)
             self.dDfrIn[sK] = GF.readCSV(sP, iCol = iC)
-        self.getDSCp7()
+        self.getDSCpSL()
         self.getDSCpTp()
         self.getIniSysCpObj()
         self.getDParCnc()
@@ -22,8 +24,8 @@ class InputFrames:
         self.getDCncChgSMo()
         self.getDOthInpV()
 
-    def getDSCp7(self, sK = GC.S_00):
-        self.dSCp7, lTK, lTV = {}, [], []
+    def getDSCpSL(self, sK = GC.S_00):
+        self.dSCpSL, lTK, lTV = {}, [], []
         if sK in self.dDfrIn:
             cDfr = self.dDfrIn[sK]
             assert GC.S_CPSTR in cDfr.columns
@@ -38,7 +40,7 @@ class InputFrames:
                     if tK[0] == tV[0]:
                         cK = cDfr.at[tK[1], GC.S_CPSTR]
                         cV = cDfr.at[tV[1], GC.S_CPSTR]
-                        self.dSCp7[cK] = cV
+                        self.dSCpSL[cK] = cV
                         break
         else:
             print('ERROR: Key', sK, 'not in DataFrames dictionary!')
@@ -103,7 +105,7 @@ class InputFrames:
                 self.dParCnc[sSMo][GC.S_CNC_MAX] = cDfr.at[sSMo, GC.S_CNC_MAX]
 
     def getDRct(self, sK1 = GC.S_03, sK2 = GC.S_04):
-        self.dRct, self.dTpRct = {}, {}
+        self.dTpRct, self.dRct = {}, {}
         if sK2 in self.dDfrIn:
             cDfr = self.dDfrIn[sK2]
             assert GC.S_RCTSTR in cDfr.columns and GC.S_WT in cDfr.columns
@@ -111,10 +113,10 @@ class InputFrames:
                 sRct = cDfr.at[sI, GC.S_RCTSTR]
                 wtRct = cDfr.at[sI, GC.S_WT]
                 sRctType, dRctType = GF.analyseSRct(sRct)
-                if wtRct < 0:
+                if wtRct < 0 and sK1 in self.dDfrIn:
                     wtRct = GF.calcRctWeight(self.dDfrIn[sK1], dRctType)
-                self.dRct[sRct] = wtRct
                 self.dTpRct[sRct] = (sRctType, dRctType)
+                self.dRct[sRct] = wtRct
         else:
             print('ERROR: Key', sK2, 'not in DataFrames dictionary!')
 
@@ -172,6 +174,23 @@ class InputFrames:
             print(GC.S_DASH*8, 'Input DataFrame', k, 'with key', sK + ':',
                   GC.S_DASH*8)
             print(cDfrIn)
+
+    def printDRct(self, sRct = None):
+        if sRct is None:
+            print('Reaction dictionary:')
+            pprint.pprint(self.dRct)
+        else:
+            if sRct in self.dRct:
+                print(sRct + ':', self.dRct[sRct])
+
+    def printDTpRct(self, sRct = None):
+        if sRct is None:
+            print('Reaction type dictionary:')
+            for sK in self.dTpRct:
+                print(sK + ':', self.dTpRct[sK])
+        else:
+            if sRct in self.dRct:
+                print(sRct + ':', self.dTpRct[sRct])
 
     def getViaIdx(self, sK, iL = 0, iC = 0):
         if sK in self.dDfrIn:

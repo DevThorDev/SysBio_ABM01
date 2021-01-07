@@ -125,7 +125,9 @@ def updateDictH(inpFr, dO, dCncSMo):
         # recalculate dH, which contains the h_i (i = 1,... len(dH))
         dO['dH'][sRct] = dRUp[sRct]
         for sCpLHS in GF.partStr(sRct)[0]:
+            # TODO: add the case of 11-reactions with Ases 
             dO['dH'][sRct] *= dO['dN'][sCpLHS]
+        # TODO: add reaction types involving Ases (Pyl/DPy)
         if sRctType in [GC.S_RCT_21, GC.S_RCT_22]:
             dO['dH'][sRct] /= inpFr.dOthInpV['VolC']
     # (?) update the reaction rate constants according to the current [H2PO4-]

@@ -27,6 +27,7 @@ class System(Base):
         self.addCpObj(inpDat, refresh = refresh)
         self.getDictCpObj(refresh = refresh)
         self.getDictSMoObj(inpDat)
+        self.dResEvo = None
 
     def addCpObj(self, inpDat, refresh = False):
         dNCpO = self.inFr.dNCpObj
@@ -82,7 +83,7 @@ class System(Base):
             print(s + ':\t' + str(round(cCnc, GC.R04)))
 
     def printFinalSimuTime(self):
-        if len(self.dResEvo[GC.S_TIME]) > 0:
+        if self.dResEvo is not None and len(self.dResEvo[GC.S_TIME]) > 0:
             print(GC.S_DASH*8, 'Simulation time elapsed after',
                   len(self.dResEvo[GC.S_TIME]), 'time steps:',
                   round(self.dResEvo[GC.S_TIME][-1], GC.R04), GC.S_DASH*8)
@@ -99,7 +100,7 @@ class System(Base):
             assert len(cK) == 2 and len(cT) == 3
             dPPltF = TF.getDPFPltEvo(self.dIG, self.dITp, cK, dMS = cT[2])
             if self.dResEvo is not None and self.dfrResEvo is not None:
-                PF.plotEvo(dParPlt, self.dfrResEvo, dPPltF, self.inFr.dSCp7,
+                PF.plotEvo(dParPlt, self.dfrResEvo, dPPltF, self.inFr.dSCpSL,
                            tDat = cT[:2], overWr = overWr)
 
     def evolveOverTime(self, inpDat, doPlots = True):

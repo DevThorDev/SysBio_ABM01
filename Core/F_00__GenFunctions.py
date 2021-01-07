@@ -129,11 +129,9 @@ def sRct11(lSLHS, lSRHS):
             if chLHS != chRHS:
                 if chLHS == GC.S_0 and chRHS == GC.S_1: # phosphorylation
                     sKP = GC.S_DO_PYL + GC.S_USC + lSKeys[k]
-                    dRctTp[sKP] = GC.S_DO_PYL
                 else:                                   # dephosphorylation
                     sKP = GC.S_DO_DPY + GC.S_USC + lSKeys[k]
-                    dRctTp[sKP] = GC.S_DO_DPY
-                dRctTp[sKTp] = sKP
+                dRctTp[sKP] = sKTp
                 break       # only one (de)phosphorylation per event
     return GC.S_RCT_11, dRctTp
 

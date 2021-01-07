@@ -79,6 +79,9 @@ S_T = 'T'   # for transition state
 S_X = 'X'   # for kinase X
 S_Y = 'Y'   # for kinase Y
 
+S_L__ = S_L + S_DASH + S_DASH
+S_S__ = S_S + S_DASH + S_DASH
+S_K__ = S_K + S_DASH + S_DASH
 S_LSI = S_L + S_S + S_I
 S_LSJ = S_L + S_S + S_J
 S_LST = S_L + S_S + S_T
@@ -117,6 +120,9 @@ L_ID_SMO_USED = [ID_NO3_1M, ID_H2PO4_1M]
 L_ID_INT = [ID_INT]
 L_ID_PYL = [ID_PYL]
 L_ID_DPY = [ID_DPY]
+
+D_ID_AS = {S_K: ID_KAS_K, S_X: ID_KAS_X, S_Y: ID_KAS_Y,
+           S_A: ID_PAS_A, S_B: ID_PAS_B, S_C: ID_PAS_C, S_D: ID_PAS_D}
 
 S_CNC_INI = 'concIni'
 S_PERIOD_CHG = 'periodChg'
@@ -247,6 +253,13 @@ S_LONG = 'LONG'
 
 # --- constants related to reactions ------------------------------------------
 S_RCT_11 = S_1 + S_1
+S_RCT_11_K = S_RCT_11 + S_K
+S_RCT_11_X = S_RCT_11 + S_X
+S_RCT_11_Y = S_RCT_11 + S_Y
+S_RCT_11_A = S_RCT_11 + S_A
+S_RCT_11_B = S_RCT_11 + S_B
+S_RCT_11_C = S_RCT_11 + S_C
+S_RCT_11_D = S_RCT_11 + S_D
 S_RCT_12 = S_1 + S_2
 S_RCT_21 = S_2 + S_1
 S_RCT_22 = S_2 + S_2
