@@ -95,30 +95,16 @@ class Component(ComponentBase):
             self.descO = 'Component'
         # print('Initiated "Component" object ' + sComp + '.')
 
-    def createDOComp(self, inpDat, iV = 0):
-        # Large protein NRT2.1 ------------------------------------------------
-        NRT2p1 = Protein_NRT2p1(inpDat)
-        # Small protein NAR2.1 ------------------------------------------------
-        NAR2p1 = Protein_NAR2p1(inpDat)
-        # Kinases KAsK, KAsX, KAsY --------------------------------------------
-        KAsK = KinaseK(inpDat)
-        KAsX = KinaseX(inpDat)
-        KAsY = KinaseY(inpDat)
-        # Phosphatases PAsA, PAsB, PAsC, PAsD ---------------------------------
-        PAsA = PhosphataseA(inpDat)
-        PAsB = PhosphataseB(inpDat)
-        PAsC = PhosphataseC(inpDat)
-        PAsD = PhosphataseD(inpDat)
-        # Create initial component --------------------------------------------
-        self.dOCp = {GC.ID_KAS_K: KAsK,
-                     GC.ID_KAS_X: KAsX,
-                     GC.ID_KAS_Y: KAsY,
-                     GC.ID_PAS_A: PAsA,
-                     GC.ID_PAS_B: PAsB,
-                     GC.ID_PAS_C: PAsC,
-                     GC.ID_PAS_D: PAsD,
-                     GC.ID_LPR_NRT2P1: NRT2p1,
-                     GC.ID_SPR_NAR2P1: NAR2p1}
+    def createDOComp(self, inpDat):
+        self.dOCp = {GC.ID_LPR_NRT2P1: Protein_NRT2p1(inpDat),
+                     GC.ID_SPR_NAR2P1: Protein_NAR2p1(inpDat),
+                     GC.ID_KAS_K: KinaseK(inpDat),
+                     GC.ID_KAS_X: KinaseX(inpDat),
+                     GC.ID_KAS_Y: KinaseY(inpDat),
+                     GC.ID_PAS_A: PhosphataseA(inpDat),
+                     GC.ID_PAS_B: PhosphataseB(inpDat),
+                     GC.ID_PAS_C: PhosphataseC(inpDat),
+                     GC.ID_PAS_D: PhosphataseD(inpDat)}
 
     def ini_Cp_L(self, inpDat, iTp = 90):
         llOI = []

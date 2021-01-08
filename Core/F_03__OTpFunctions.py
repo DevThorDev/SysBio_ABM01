@@ -110,30 +110,34 @@ def changeCncSMo(inpFr, dO, dCncSMo, t, cID = None):
         dCncSMo[sSMo] += dO['dCncChgInt'][sSMo] + cncChgExt
         dCncSMo[sSMo] = GF.implMinMax(dCncSMo[sSMo], cncMn, cncMx)
 
-def updateDictH(inpFr, dO, dCncSMo):
+def updateDictH(dICp, inpFr, dO, dCncSMo):
     dRUp, sSMoN, p = {}, GC.ID_NO3_1M, GC.P_DUMMY
     # update the reaction rate constants according to the current [NO3-]
     for sRct, wtRct in inpFr.dRct.items():
         # NO3- dependency of incidences of each component
-        sRctType, dRctType = inpFr.dTpRct[sRct]
-        for sK in dRctType:
-            if sK in inpFr.dChgCncDep[sSMoN]:
-                dParPSig = inpFr.dChgCncDep[sSMoN][sK]
-                p = GF.calcPSigmoidal(dCncSMo[sSMoN], dParPSig)
-                break
+        sRctType, sRctClass, _ = inpFr.dTpRct[sRct]
+        assert sRctClass in inpFr.dChgCncDep[sSMoN]
+        dParPSig = inpFr.dChgCncDep[sSMoN][sRctClass]
+        p = GF.calcPSigmoidal(dCncSMo[sSMoN], dParPSig)
         dRUp[sRct] = wtRct*p
         # recalculate dH, which contains the h_i (i = 1,... len(dH))
         dO['dH'][sRct] = dRUp[sRct]
         for sCpLHS in GF.partStr(sRct)[0]:
-            # TODO: add the case of 11-reactions with Ases 
+            # TODO: add the case of 11-reactions with Ases
             dO['dH'][sRct] *= dO['dN'][sCpLHS]
-        # TODO: add reaction types involving Ases (Pyl/DPy)
-        if sRctType in [GC.S_RCT_21, GC.S_RCT_22]:
+            # TODO: get the conc. of the correct Ase
+            # check if reaction is (de)phosphorylation
+            if sRctClass in inpFr.dClRct[GC.S_DO_PYL]:
+                pass
+            elif sRctClass in inpFr.dClRct[GC.S_DO_DPY]:
+                pass
+        b = sRctClass in inpFr.dClRct[GC.S_DO_PYL] + inpFr.dClRct[GC.S_DO_DPY]
+        if (sRctType in GC.L_S_RCT_2ORD or (sRctType == GC.S_RCT_11 and b)):
             dO['dH'][sRct] /= inpFr.dOthInpV['VolC']
     # (?) update the reaction rate constants according to the current [H2PO4-]
 
-def reCalcReactHazards(inpFr, dO, dCncSMo):
-    updateDictH(inpFr, dO, dCncSMo)
+def reCalcReactHazards(dICp, inpFr, dO, dCncSMo):
+    updateDictH(dICp, inpFr, dO, dCncSMo)
     # h, the sum of the h_i, is the overall reaction hazard
     dO['h'] = sum(dO['dH'].values())
     # sort dH in ascending order for numerical stability
@@ -173,11 +177,11 @@ def updateDictOut(dO, dCnc, t):
     for s, nO in dO['dN'].items():
         dO['dRes'][s].append(nO)
 
-def evolveGillespie(dIG, inpFr, dCncSMo):
+def evolveGillespie(dIG, dICp, inpFr, dCncSMo):
     # initialisation
     t, T, tDelta, cTSt = dIG['tStart'], dIG['tMax'], 0, 0
     dO = iniDictOut(inpFr, dCncSMo, t, tDelta)
-    reCalcReactHazards(inpFr, dO, dCncSMo)
+    reCalcReactHazards(dICp, inpFr, dO, dCncSMo)
     while t < T and cTSt < dIG['maxTS']:
         cTSt += 1
         if cTSt >= dIG['minDispTS'] and cTSt%dIG['modDispTS'] == 0:
@@ -187,7 +191,7 @@ def evolveGillespie(dIG, inpFr, dCncSMo):
         # change the concentrations of the small molecules
         changeCncSMo(inpFr, dO, dCncSMo, t)
         # adapt the re-calc reaction hazards function to current system
-        reCalcReactHazards(inpFr, dO, dCncSMo)
+        reCalcReactHazards(dICp, inpFr, dO, dCncSMo)
         # update the data storage matrix
         updateDictOut(dO, dCncSMo, t)
     return dO['dRes'], dO['dN']

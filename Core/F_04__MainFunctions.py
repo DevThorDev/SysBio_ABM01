@@ -31,14 +31,14 @@ from Core.O_90__Component import Component
 #     NO3_1m = SMo_NO3_1m(inpDG)
 #     H2PO4_1m = SMo_H2PO4_1m(inpDG)
 #     # Interactions: phosphorylation and dephosphorylation ---------------------
-#     Pyl01 = Phosphorylation(inpDG, KAsK, PAsA, GC.S_SPS_KAS_K_S839)
-#     Pyl02 = Phosphorylation(inpDG, KAsK, PAsB, GC.S_SPS_KAS_K_S870)
-#     Pyl03 = Phosphorylation(inpDG, NRT2p1, PAsC GC.S_SPS_LPR_L_S21)
-#     Pyl04 = Phosphorylation(inpDG, NRT2p1, PAsD, GC.S_SPS_LPR_L_S28)
-#     DePyl01 = Dephosphorylation(inpDG, KAsK, PAsA, GC.S_SPS_KAS_K_S839)
-#     DePyl02 = Dephosphorylation(inpDG, KAsK, PAsB, GC.S_SPS_KAS_K_S870)
-#     DePyl03 = Dephosphorylation(inpDG, NRT2p1, PAsC, GC.S_SPS_LPR_L_S21)
-#     DePyl04 = Dephosphorylation(inpDG, NRT2p1, PAsD, GC.S_SPS_LPR_L_S28)
+#     Pyl01 = Phosphorylation(inpDG, KAsK, PAsA, GC.S_SPS_K_S839)
+#     Pyl02 = Phosphorylation(inpDG, KAsK, PAsB, GC.S_SPS_K_S870)
+#     Pyl03 = Phosphorylation(inpDG, NRT2p1, PAsC GC.S_SPS_L_S21)
+#     Pyl04 = Phosphorylation(inpDG, NRT2p1, PAsD, GC.S_SPS_L_S28)
+#     DePyl01 = Dephosphorylation(inpDG, KAsK, PAsA, GC.S_SPS_K_S839)
+#     DePyl02 = Dephosphorylation(inpDG, KAsK, PAsB, GC.S_SPS_K_S870)
+#     DePyl03 = Dephosphorylation(inpDG, NRT2p1, PAsC, GC.S_SPS_L_S21)
+#     DePyl04 = Dephosphorylation(inpDG, NRT2p1, PAsD, GC.S_SPS_L_S28)
 #     # List of system components -----------------------------------------------
 #     lSysCmp = [KAsK, KAsX, KAsY, PAsA, PAsB, PAsC, PAsD,
 #                NRT2p1, NAR2p1, NO3_1m, H2PO4_1m, Pyl01, Pyl02, Pyl03, Pyl04,

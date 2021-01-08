@@ -24,10 +24,11 @@ cInpFrames = InputFrames(inDG)
 # print(cInpFrames.dSCpTpS)
 # print(cInpFrames.lSCpTpL)
 # print(cInpFrames.dSCpTpL)
-# print(cInpFrames.dNCpObj)
+print(cInpFrames.dNCpObj)
 # print(cInpFrames.dParCnc)
-cInpFrames.printDRct()
-cInpFrames.printDTpRct()
+# cInpFrames.printDTpRct()
+# cInpFrames.printDClRct()
+# cInpFrames.printDRct()
 # print(cInpFrames.dChgCncDep)
 # print(cInpFrames.dCncChgSMo)
 # for cKO in cInpFrames.dCncChgSMo:
@@ -35,6 +36,7 @@ cInpFrames.printDTpRct()
 # print(cInpFrames.dOthInpV)
 
 cSystem = System(inDG, cInpFrames)
+cSystem.printDICp()
 if cSystem.dIG['doEvoT']:
     cSystem.evolveOverTime(inDG, doPlots = cSystem.dIG['doPlots'])
 if cSystem.dIG['doPlots']:

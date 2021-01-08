@@ -8,6 +8,8 @@ Phosphatases 1 - 4 and Kinases X / Y should be system components as well
 	- S28: {Pyl: X, DPy: D}
 	- S839: {Pyl: Y, DPy: A}
 	- S870: {Pyl: K, DPy: B}
+Component: remove self.dOCp
+Use dICp in updateDictH
 --------------------------------------------------------------------------------
 
 --------------------------------------------------------------------------------

@@ -116,28 +116,29 @@ def getSRct(dH):
     return list(dH)[rIdx]
 
 def sRct11(lSLHS, lSRHS):
-    sLHS, sRHS, lSKeys, dRctTp = lSLHS[0], lSRHS[0], GC.L_S_SPS, {}
+    sLHS, sRHS, lSKeys, sRctCl = lSLHS[0], lSRHS[0], GC.L_S_SPS, ''
     # check if it is a valid reaction string
-    assert len(sLHS) == GC.LEN_S_CP and len(sLHS) == len(sRHS)
+    assert (len(sLHS) == GC.LEN_S_CP and len(sLHS) == len(sRHS) and
+            len(sLHS[GC.I_S_CP_SEP:]) >= len(lSKeys))
     # find the appropriate key and value, and add the pair to the dict.
-    sKTp = (sLHS[:GC.I_S_CP_SEP].strip(GC.S_DASH) + GC.S_USC +
-            sRHS[:GC.I_S_CP_SEP].strip(GC.S_DASH))
+    sRctAI1 = (sLHS[:GC.I_S_CP_SEP].strip(GC.S_DASH) + GC.S_USC +
+               sRHS[:GC.I_S_CP_SEP].strip(GC.S_DASH))
     for k, chLHS in enumerate(sLHS[GC.I_S_CP_SEP:]):
         chRHS = sRHS[k + GC.I_S_CP_SEP]
         assert chLHS in GC.SET_01_DASH and chRHS in GC.SET_01_DASH
         if chLHS in GC.SET_01 and chRHS in GC.SET_01:
             if chLHS != chRHS:
                 if chLHS == GC.S_0 and chRHS == GC.S_1: # phosphorylation
-                    sKP = GC.S_DO_PYL + GC.S_USC + lSKeys[k]
+                    sRctCl = GC.S_DO_PYL + GC.S_USC + lSKeys[k]
                 else:                                   # dephosphorylation
-                    sKP = GC.S_DO_DPY + GC.S_USC + lSKeys[k]
-                dRctTp[sKP] = sKTp
+                    sRctCl = GC.S_DO_DPY + GC.S_USC + lSKeys[k]
                 break       # only one (de)phosphorylation per event
-    return GC.S_RCT_11, dRctTp
+    # TODO: correct GC.S_RCT_11... for current Ase
+    return GC.S_RCT_11, sRctCl, [sRctAI1]
 
 def sRct21(lSLHS, lSRHS):
     ((sLHS1, sLHS2), sRHS) = (lSLHS, lSRHS[0])
-    dRctTp, sK, s01LHS, s01RHS = {}, GC.S_DO_FRM + GC.S_USC, '', ''
+    sRctCl, sRctAI1, s01LHS, s01RHS = GC.S_DO_FRM + GC.S_USC, '', '', ''
     # check if it is a valid reaction string
     assert (len(sLHS1) == GC.LEN_S_CP and len(sLHS1) == len(sLHS2) and
             len(sLHS1) == len(sRHS))
@@ -147,17 +148,17 @@ def sRct21(lSLHS, lSRHS):
     assert sRHS[2] in GC.L_S_IJT
     # find the appropriate key
     if sRHS[:3] == GC.S_LSI:
-        sK += GC.S_FRM_L_S_LSI
+        sRctCl += GC.S_FRM_L_S_LSI
     elif sRHS[:3] == GC.S_LSJ:
-        sK += GC.S_FRM_L_S_LSJ
+        sRctCl += GC.S_FRM_L_S_LSJ
     elif sRHS[:3] == GC.S_LST:
-        sK += GC.S_FRM_L_S_LST
+        sRctCl += GC.S_FRM_L_S_LST
     elif sRHS[:3] == GC.S_LKI:
-        sK += GC.S_FRM_L_K_LKI
+        sRctCl += GC.S_FRM_L_K_LKI
     elif sRHS[:3] == GC.S_LKJ:
-        sK += GC.S_FRM_L_K_LKJ
+        sRctCl += GC.S_FRM_L_K_LKJ
     elif sRHS[:3] == GC.S_LKT:
-        sK += GC.S_FRM_L_K_LKT
+        sRctCl += GC.S_FRM_L_K_LKT
     # find and check the appropriate value
     for k, chRHS in enumerate(sRHS[GC.I_S_CP_SEP:]):
         chLHS1, chLHS2 = sLHS1[k + GC.I_S_CP_SEP], sLHS2[k + GC.I_S_CP_SEP]
@@ -173,16 +174,16 @@ def sRct21(lSLHS, lSRHS):
         if chRHS in GC.SET_01:
             s01RHS += chRHS
     # if OK, add the pair to the dict.
-    if len(sK) > len(GC.S_DO_FRM + GC.S_USC) and s01LHS == s01RHS:
-        dRctTp[sK] = s01LHS
+    if len(sRctCl) > len(GC.S_DO_FRM + GC.S_USC) and s01LHS == s01RHS:
+        sRctAI1 = s01LHS
     else:
-        print('ERROR: Key is', sK, 'while LHS 01-string is', s01LHS, 'but RHS',
-              '01-string is', s01RHS)
-    return GC.S_RCT_21, dRctTp
+        print('ERROR: Reaction class is', sRctCl, 'while LHS 01-string is',
+              s01LHS, 'but RHS 01-string is', s01RHS)
+    return GC.S_RCT_21, sRctCl, [sRctAI1]
 
 def sRct12(lSLHS, lSRHS):
     (sLHS, (sRHS1, sRHS2)) = (lSLHS[0], lSRHS)
-    dRctTp, sK, s01LHS, s01RHS = {}, GC.S_DO_DIS + GC.S_USC, '', ''
+    sRctCl, sRctAI1, s01LHS, s01RHS = GC.S_DO_DIS + GC.S_USC, '', '', ''
     # check if it is a valid reaction string
     assert (len(sLHS) == GC.LEN_S_CP and len(sLHS) == len(sRHS1) and
             len(sLHS) == len(sRHS2))
@@ -192,17 +193,17 @@ def sRct12(lSLHS, lSRHS):
     assert sLHS[2] in GC.L_S_IJT
     # find the appropriate key
     if sLHS[:3] == GC.S_LSI:
-        sK += GC.S_DIS_LSI_L_S
+        sRctCl += GC.S_DIS_LSI_L_S
     elif sLHS[:3] == GC.S_LSJ:
-        sK += GC.S_DIS_LSJ_L_S
+        sRctCl += GC.S_DIS_LSJ_L_S
     elif sLHS[:3] == GC.S_LST:
-        sK += GC.S_DIS_LST_L_S
+        sRctCl += GC.S_DIS_LST_L_S
     elif sLHS[:3] == GC.S_LKI:
-        sK += GC.S_DIS_LKI_L_K
+        sRctCl += GC.S_DIS_LKI_L_K
     elif sLHS[:3] == GC.S_LKJ:
-        sK += GC.S_DIS_LKJ_L_K
+        sRctCl += GC.S_DIS_LKJ_L_K
     elif sLHS[:3] == GC.S_LKT:
-        sK += GC.S_DIS_LKT_L_K
+        sRctCl += GC.S_DIS_LKT_L_K
     # find and check the appropriate value
     for k, chLHS in enumerate(sLHS[GC.I_S_CP_SEP:]):
         chRHS1, chRHS2 = sRHS1[k + GC.I_S_CP_SEP], sRHS2[k + GC.I_S_CP_SEP]
@@ -218,16 +219,16 @@ def sRct12(lSLHS, lSRHS):
         if chLHS in GC.SET_01:
             s01LHS += chLHS
     # if OK, add the pair to the dict.
-    if len(sK) > len(GC.S_DO_DIS + GC.S_USC) and s01LHS == s01RHS:
-        dRctTp[sK] = s01LHS
+    if len(sRctCl) > len(GC.S_DO_DIS + GC.S_USC) and s01LHS == s01RHS:
+        sRctAI1 = s01LHS
     else:
-        print('ERROR: Key is', sK, 'while LHS 01-string is', s01LHS, 'but RHS',
-              '01-string is', s01RHS)
-    return GC.S_RCT_12, dRctTp
+        print('ERROR: Reaction class is', sRctCl, 'while LHS 01-string is',
+              s01LHS, 'but RHS 01-string is', s01RHS)
+    return GC.S_RCT_12, sRctCl, [sRctAI1]
 
 def sRct22(lSLHS, lSRHS):
     ((sLHS1, sLHS2), (sRHS1, sRHS2)) = (lSLHS, lSRHS)
-    dRctTp, sK, s01LHS, s01RHS = {}, GC.S_DO_IPC + GC.S_USC, '', ''
+    sRctCl, sRctAI1, s01LHS, s01RHS = GC.S_DO_IPC + GC.S_USC, '', '', ''
     # check if it is a valid reaction string
     assert (len(sLHS1) == GC.LEN_S_CP and len(sLHS1) == len(sLHS2) and
             len(sLHS1) == len(sRHS1) and len(sLHS1) == len(sRHS2))
@@ -239,21 +240,21 @@ def sRct22(lSLHS, lSRHS):
     assert sLHS1[2] in GC.L_S_IJT and sRHS1[2] in GC.L_S_IJT
     # find the appropriate key
     if sLHS1[:3] == GC.S_LSI and sRHS1[:3] == GC.S_LKT:
-        sK += GC.S_IPC_LSI_LKT
+        sRctCl += GC.S_IPC_LSI_LKT
     elif sLHS1[:3] == GC.S_LSJ and sRHS1[:3] == GC.S_LKT:
-        sK += GC.S_IPC_LSJ_LKT
+        sRctCl += GC.S_IPC_LSJ_LKT
     elif sLHS1[:3] == GC.S_LST and sRHS1[:3] == GC.S_LKI:
-        sK += GC.S_IPC_LST_LKI
+        sRctCl += GC.S_IPC_LST_LKI
     elif sLHS1[:3] == GC.S_LST and sRHS1[:3] == GC.S_LKJ:
-        sK += GC.S_IPC_LST_LKJ
+        sRctCl += GC.S_IPC_LST_LKJ
     elif sLHS1[:3] == GC.S_LKI and sRHS1[:3] == GC.S_LST:
-        sK += GC.S_IPC_LKI_LST
+        sRctCl += GC.S_IPC_LKI_LST
     elif sLHS1[:3] == GC.S_LKJ and sRHS1[:3] == GC.S_LST:
-        sK += GC.S_IPC_LKJ_LST
+        sRctCl += GC.S_IPC_LKJ_LST
     elif sLHS1[:3] == GC.S_LKT and sRHS1[:3] == GC.S_LSI:
-        sK += GC.S_IPC_LKT_LSI
+        sRctCl += GC.S_IPC_LKT_LSI
     elif sLHS1[:3] == GC.S_LKT and sRHS1[:3] == GC.S_LSJ:
-        sK += GC.S_IPC_LKT_LSJ
+        sRctCl += GC.S_IPC_LKT_LSJ
     # find and check the appropriate value
     for k, _ in enumerate(sLHS1[GC.I_S_CP_SEP:]):
         chLHS1, chLHS2 = sLHS1[k + GC.I_S_CP_SEP], sLHS2[k + GC.I_S_CP_SEP]
@@ -275,12 +276,12 @@ def sRct22(lSLHS, lSRHS):
             print('ERROR: Position', k + GC.I_S_CP_SEP, ': RHS string 1 is',
                   chRHS1, 'while RHS string 2 is', chRHS2)
     # if OK, add the pair to the dict.
-    if len(sK) > len(GC.S_DO_IPC + GC.S_USC) and s01LHS == s01RHS:
-        dRctTp[sK] = s01LHS
+    if len(sRctCl) > len(GC.S_DO_IPC + GC.S_USC) and s01LHS == s01RHS:
+        sRctAI1 = s01LHS
     else:
-        print('ERROR: Key is', sK, 'while LHS 01-string is', s01LHS, 'but RHS',
-              '01-string is', s01RHS)
-    return GC.S_RCT_22, dRctTp
+        print('ERROR: Reaction class is', sRctCl, 'while LHS 01-string is',
+              s01LHS, 'but RHS 01-string is', s01RHS)
+    return GC.S_RCT_22, sRctCl, [sRctAI1]
 
 def analyseSRct(sRct):
     lSSplRct = partStr(sRct)
@@ -306,11 +307,14 @@ def analyseSRct(sRct):
               'implemented. Number of reactants is', len(lSSplRct[0]),
               'while number of products is', len(lSSplRct[1]), '.')
 
-def calcRctWeight(cDfr, dRctTp):
+def calcRctWeight(cDfr, sRctCl):
     wRct = 1.
-    if GC.S_VAL in cDfr.columns:
-        for sK in dRctTp:
-            wRct *= cDfr.at[sK, GC.S_VAL]
+    if sRctCl in cDfr.index and GC.S_VAL in cDfr.columns:
+        wRct = cDfr.at[sRctCl, GC.S_VAL]
+    else:
+        print('ERROR: Position (' + sRctCl + ', ' + GC.S_VAL + ') does not',
+              'exist in DataFrame!\nIndex =', cDfr.index, '\Columns =',
+              cDfr.columns)
     return wRct
 
 def updateDITpDIPlt(dITpC, dITpU, lKSpc = [GC.S_D_PLT]):

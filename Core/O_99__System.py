@@ -29,14 +29,27 @@ class System(Base):
         self.getDictSMoObj(inpDat)
         self.dResEvo = None
 
+    def createDICp(self, lOSy, iCp = 0):
+        if iCp == 0:
+            for cOSy in lOSy:
+                if len(cOSy.dITp['dInfSpS']) > 0:
+                    for cKS, cD in cOSy.dITp['dInfSpS'].items():
+                        for cKI in cD:
+                            if cKI in [GC.S_DO_PYL, GC.S_DO_DPY]:
+                                for cAs in cD[cKI]:
+                                    GF.addToDictL(self.dICp, (cKI, cKS), cAs,
+                                                  lUnique = True)
+
     def addCpObj(self, inpDat, refresh = False):
-        dNCpO = self.inFr.dNCpObj
+        dNCpO, self.dICp = self.inFr.dNCpObj, {}
         if refresh:
             self.lCpO = []
             dNCpO = self.dNCpO
         for sCp, nCp in dNCpO.items():
-            for cCp in range(nCp):
-                self.lCpO.append(Component(inpDat, self.inFr, sCp))
+            for iCp in range(nCp):
+                cCpO = Component(inpDat, self.inFr, sCp)
+                self.createDICp(cCpO.lOSy, iCp)
+                self.lCpO.append(cCpO)
 
     def getDictCpObj(self, refresh = False):
         self.dCpO = {}
@@ -53,6 +66,10 @@ class System(Base):
         self.dSMo = {NO3_1m.idO: NO3_1m, H2PO4_1m.idO: H2PO4_1m}
         for sSMo, cSMoO in self.dSMo.items():
             cSMoO.setConc(self.dCncSMo[sSMo])
+
+    def printDICp(self):
+        for cK, cAs in self.dICp.items():
+            print(str(cK) + ': ' + str(cAs))
 
     def printNCompObjSys(self):
         print(GC.S_STAR*16, 'Counts of comp. objects contained in System:',
@@ -104,8 +121,8 @@ class System(Base):
                            tDat = cT[:2], overWr = overWr)
 
     def evolveOverTime(self, inpDat, doPlots = True):
-        self.dResEvo, self.dNCpO = TF.evolveGillespie(self.dIG,  self.inFr,
-                                                      self.dCncSMo)
+        self.dResEvo, self.dNCpO = TF.evolveGillespie(self.dIG, self.dICp,
+                                                      self.inFr, self.dCncSMo)
         self.updateObjDicts(inpDat, refresh = True)
         # self.printCncSMo()
         # self.printNCompObjSys()

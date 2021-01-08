@@ -105,17 +105,19 @@ class InputFrames:
                 self.dParCnc[sSMo][GC.S_CNC_MAX] = cDfr.at[sSMo, GC.S_CNC_MAX]
 
     def getDRct(self, sK1 = GC.S_03, sK2 = GC.S_04):
-        self.dTpRct, self.dRct = {}, {}
+        self.dTpRct, self.dClRct, self.dRct = {}, {}, {}
         if sK2 in self.dDfrIn:
             cDfr = self.dDfrIn[sK2]
             assert GC.S_RCTSTR in cDfr.columns and GC.S_WT in cDfr.columns
             for sI in cDfr.index:
                 sRct = cDfr.at[sI, GC.S_RCTSTR]
                 wtRct = cDfr.at[sI, GC.S_WT]
-                sRctType, dRctType = GF.analyseSRct(sRct)
+                sRctType, sRctClass, lSRctAddI = GF.analyseSRct(sRct)
                 if wtRct < 0 and sK1 in self.dDfrIn:
-                    wtRct = GF.calcRctWeight(self.dDfrIn[sK1], dRctType)
-                self.dTpRct[sRct] = (sRctType, dRctType)
+                    wtRct = GF.calcRctWeight(self.dDfrIn[sK1], sRctClass)
+                self.dTpRct[sRct] = sRctType, sRctClass, lSRctAddI
+                GF.addToDictL(self.dClRct, sRctClass.split(GC.S_USC)[0],
+                              sRctClass, lUnique = True)
                 self.dRct[sRct] = wtRct
         else:
             print('ERROR: Key', sK2, 'not in DataFrames dictionary!')
@@ -175,14 +177,6 @@ class InputFrames:
                   GC.S_DASH*8)
             print(cDfrIn)
 
-    def printDRct(self, sRct = None):
-        if sRct is None:
-            print('Reaction dictionary:')
-            pprint.pprint(self.dRct)
-        else:
-            if sRct in self.dRct:
-                print(sRct + ':', self.dRct[sRct])
-
     def printDTpRct(self, sRct = None):
         if sRct is None:
             print('Reaction type dictionary:')
@@ -191,6 +185,23 @@ class InputFrames:
         else:
             if sRct in self.dRct:
                 print(sRct + ':', self.dTpRct[sRct])
+
+    def printDClRct(self, sRct = None):
+        if sRct is None:
+            print('Reaction class dictionary:')
+            for sK in self.dClRct:
+                print(sK + ':', self.dClRct[sK])
+        else:
+            if sRct in self.dRct:
+                print(sRct + ':', self.dClRct[sRct])
+
+    def printDRct(self, sRct = None):
+        if sRct is None:
+            print('Reaction dictionary:')
+            pprint.pprint(self.dRct)
+        else:
+            if sRct in self.dRct:
+                print(sRct + ':', self.dRct[sRct])
 
     def getViaIdx(self, sK, iL = 0, iC = 0):
         if sK in self.dDfrIn:

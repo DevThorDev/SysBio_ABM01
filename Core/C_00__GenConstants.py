@@ -138,22 +138,17 @@ S_CH_SIN = 'sin'
 S_CH_STEP = 'step'
 
 # --- constants related to specific sites -------------------------------------
-S_SPS_LPR_L_S21 = 'S21'
-S_SPS_LPR_L_S28 = 'S28'
-S_SPS_KAS_K_S839 = 'S839'
-S_SPS_KAS_K_S870 = 'S870'
-L_S_SPS = [S_SPS_LPR_L_S21, S_SPS_LPR_L_S28,
-           S_SPS_KAS_K_S839, S_SPS_KAS_K_S870]
+S_SPS_L_S21 = 'S21'
+S_SPS_L_S28 = 'S28'
+S_SPS_K_S839 = 'S839'
+S_SPS_K_S870 = 'S870'
+L_S_SPS = [S_SPS_L_S21, S_SPS_L_S28, S_SPS_K_S839, S_SPS_K_S870]
 
-DS_SPS_LPR_NRT2P1 = {S_SPS_LPR_L_S21: {'iSP': 3, ID_KAS: ID_KAS_K,
-                                       ID_PAS: ID_PAS_C},
-                     S_SPS_LPR_L_S28: {'iSP': 4, ID_KAS: ID_KAS_X,
-                                       ID_PAS: ID_PAS_D}}
-DS_SPS_KAS_K = {S_SPS_KAS_K_S839: {'iSP': 5, ID_KAS: ID_KAS_Y,
-                                   ID_PAS: ID_PAS_A},
-                S_SPS_KAS_K_S870: {'iSP': 6, ID_KAS: ID_KAS_K,
-                                   ID_PAS: ID_PAS_B}}
-DS_SPS = {ID_LPR_NRT2P1: DS_SPS_LPR_NRT2P1, ID_KAS_K: DS_SPS_KAS_K}
+DS_SPS_L = {S_SPS_L_S21: {'iSP': 3, ID_KAS: ID_KAS_K, ID_PAS: ID_PAS_C},
+            S_SPS_L_S28: {'iSP': 4, ID_KAS: ID_KAS_X, ID_PAS: ID_PAS_D}}
+DS_SPS_K = {S_SPS_K_S839: {'iSP': 5, ID_KAS: ID_KAS_Y, ID_PAS: ID_PAS_A},
+            S_SPS_K_S870: {'iSP': 6, ID_KAS: ID_KAS_K, ID_PAS: ID_PAS_B}}
+DS_SPS = {ID_LPR_NRT2P1: DS_SPS_L, ID_KAS_K: DS_SPS_K}
 
 # --- constants related to interactions ---------------------------------------
 L_S_LSK = [S_L, S_S, S_K]
@@ -253,16 +248,19 @@ S_LONG = 'LONG'
 
 # --- constants related to reactions ------------------------------------------
 S_RCT_11 = S_1 + S_1
-S_RCT_11_K = S_RCT_11 + S_K
-S_RCT_11_X = S_RCT_11 + S_X
-S_RCT_11_Y = S_RCT_11 + S_Y
-S_RCT_11_A = S_RCT_11 + S_A
-S_RCT_11_B = S_RCT_11 + S_B
-S_RCT_11_C = S_RCT_11 + S_C
-S_RCT_11_D = S_RCT_11 + S_D
+# S_RCT_11_K = S_RCT_11 + S_K
+# S_RCT_11_X = S_RCT_11 + S_X
+# S_RCT_11_Y = S_RCT_11 + S_Y
+# S_RCT_11_A = S_RCT_11 + S_A
+# S_RCT_11_B = S_RCT_11 + S_B
+# S_RCT_11_C = S_RCT_11 + S_C
+# S_RCT_11_D = S_RCT_11 + S_D
 S_RCT_12 = S_1 + S_2
 S_RCT_21 = S_2 + S_1
 S_RCT_22 = S_2 + S_2
+# L_S_RCT_ASES = [S_RCT_11_K, S_RCT_11_X, S_RCT_11_Y,
+#                 S_RCT_11_A, S_RCT_11_B, S_RCT_11_C, S_RCT_11_D]
+L_S_RCT_2ORD = [S_RCT_21, S_RCT_22]
 LEN_S_CP = 7
 I_S_CP_SEP = 3
 
