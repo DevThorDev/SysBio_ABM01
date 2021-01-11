@@ -12,11 +12,11 @@ strCL = GC.S_CL_LPR_NRT2P1
 
 # --- dictionary of parameters for special sites ------------------------------
 dInfSpS = {GC.S_SPS_L_S21: {GC.S_STAT: GC.S_NOT_PYL,
-                            GC.S_DO_PYL: [GC.ID_KAS_K],
-                            GC.S_DO_DPY: [GC.ID_PAS_C]},
+                            GC.S_DO_PYL: [GC.S_K__ + GC.S_2DASH01],
+                            GC.S_DO_DPY: [GC.S_C__ + GC.S_4DASH]},
            GC.S_SPS_L_S28: {GC.S_STAT: GC.S_NOT_PYL,
-                            GC.S_DO_PYL: [GC.ID_KAS_X],
-                            GC.S_DO_DPY: [GC.ID_PAS_D]}}
+                            GC.S_DO_PYL: [GC.S_X__ + GC.S_4DASH],
+                            GC.S_DO_DPY: [GC.S_D__ + GC.S_4DASH]}}
 
 # --- create input dictionary -------------------------------------------------
 dIO = {# --- general

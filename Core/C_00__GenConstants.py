@@ -19,6 +19,9 @@ S_4 = '4'
 S_5 = '5'
 S_6 = '6'
 S_7 = '7'
+S_8 = '8'
+S_9 = '9'
+
 S_00 = S_0 + S_0
 S_01 = S_0 + S_1
 S_02 = S_0 + S_2
@@ -27,10 +30,20 @@ S_04 = S_0 + S_4
 S_05 = S_0 + S_5
 S_06 = S_0 + S_6
 S_07 = S_0 + S_7
+S_08 = S_0 + S_8
+S_09 = S_0 + S_9
+S_10 = S_1 + S_0
+S_11 = S_1 + S_1
 
 SEP_STD = ';'
 S_USC = '_'
 S_DASH = '-'
+S_2DASH = S_DASH + S_DASH
+S_4DASH = S_2DASH + S_2DASH
+S_2DASH00 = S_2DASH + S_00
+S_2DASH01 = S_2DASH + S_01
+S_2DASH10 = S_2DASH + S_10
+S_2DASH11 = S_2DASH + S_11
 S_WAVE = '~'
 S_PLUS = '+'
 S_STAR = '*'
@@ -44,10 +57,10 @@ SET_01_DASH = {S_0, S_1, S_DASH}
 # --- constants related to molecule objects -----------------------------------
 
 ID_BAS = 'Base'
-ID_LPR_NRT2P1 = 'LPrNRT2p1'
-ID_SPR_NAR2P1 = 'SPrNAR2p1'
-ID_KAS_K, ID_KAS_X, ID_KAS_Y = 'KAsK', 'KAsX', 'KAsY'
-ID_PAS_A, ID_PAS_B, ID_PAS_C, ID_PAS_D = 'PAsA', 'PAsB', 'PAsC', 'PAsD'
+ID_LPR_NRT2P1 = 'L_Pr_NRT2p1'
+ID_SPR_NAR2P1 = 'S_Pr_NAR2p1'
+ID_KAS_K, ID_KAS_X, ID_KAS_Y = 'K_KAs', 'X_KAs', 'Y_KAs'
+ID_PAS_A, ID_PAS_B, ID_PAS_C, ID_PAS_D = 'A_PAs', 'B_PAs', 'C_PAs', 'D_PAs'
 ID_NO3_1M = 'NO3_1m'
 ID_H2PO4_1M = 'H2PO4_1m'
 
@@ -82,6 +95,12 @@ S_Y = 'Y'   # for kinase Y
 S_L__ = S_L + S_DASH + S_DASH
 S_S__ = S_S + S_DASH + S_DASH
 S_K__ = S_K + S_DASH + S_DASH
+S_X__ = S_X + S_DASH + S_DASH
+S_Y__ = S_Y + S_DASH + S_DASH
+S_A__ = S_A + S_DASH + S_DASH
+S_B__ = S_B + S_DASH + S_DASH
+S_C__ = S_C + S_DASH + S_DASH
+S_D__ = S_D + S_DASH + S_DASH
 S_LSI = S_L + S_S + S_I
 S_LSJ = S_L + S_S + S_J
 S_LST = S_L + S_S + S_T
@@ -106,23 +125,24 @@ ID_INT = 'Int'
 ID_PYL = 'Pyl'
 ID_DPY = 'DPy'
 
-L_ID_MOL = [ID_MOL]
-L_ID_PRO = [ID_PRO]
-L_ID_LPR = [ID_LPR, ID_LPR_NRT2P1]
-L_ID_SPR = [ID_SPR, ID_SPR_NAR2P1]
-L_ID_ENZ = [ID_ENZ]
-L_ID_KAS = [ID_KAS, ID_KAS_K, ID_KAS_X, ID_KAS_Y]
-L_ID_PAS = [ID_PAS, ID_PAS_A, ID_PAS_B, ID_PAS_C, ID_PAS_D]
-L_ID_MET = [ID_MET]
-L_ID_LMO = [ID_LMO]
-L_ID_SMO = [ID_SMO, ID_NO3_1M, ID_H2PO4_1M]
-L_ID_SMO_USED = [ID_NO3_1M, ID_H2PO4_1M]
-L_ID_INT = [ID_INT]
-L_ID_PYL = [ID_PYL]
-L_ID_DPY = [ID_DPY]
+L_ID_LPR_SYS = [ID_LPR_NRT2P1]
+L_ID_SPR_SYS = [ID_SPR_NAR2P1]
+L_ID_KAS_SYS = [ID_KAS_K, ID_KAS_X, ID_KAS_Y]
+L_ID_PAS_SYS = [ID_PAS_A, ID_PAS_B, ID_PAS_C, ID_PAS_D]
+L_ID_ENZ_SYS = L_ID_KAS_SYS + L_ID_PAS_SYS
+L_ID_PRO_SYS = L_ID_LPR_SYS + L_ID_SPR_SYS + L_ID_ENZ_SYS
+L_ID_LMO_SYS = []
+L_ID_SMO_SYS = [ID_NO3_1M, ID_H2PO4_1M]
+L_ID_MET_SYS = L_ID_LMO_SYS + L_ID_SMO_SYS
+L_ID_MOL_SYS = L_ID_PRO_SYS + L_ID_MET_SYS
 
-D_ID_AS = {S_K: ID_KAS_K, S_X: ID_KAS_X, S_Y: ID_KAS_Y,
-           S_A: ID_PAS_A, S_B: ID_PAS_B, S_C: ID_PAS_C, S_D: ID_PAS_D}
+D_CPS_TO_ID_AS = {S_K: ID_KAS_K, S_X: ID_KAS_X, S_Y: ID_KAS_Y,
+                  S_A: ID_PAS_A, S_B: ID_PAS_B, S_C: ID_PAS_C, S_D: ID_PAS_D}
+
+D_ID_TO_CPSX = {ID_LPR_NRT2P1: S_L__, ID_SPR_NAR2P1: S_S__,
+                ID_KAS_K: S_K__, ID_KAS_X: S_X__, ID_KAS_Y: S_Y__,
+                ID_PAS_A: S_A__, ID_PAS_B: S_B__, ID_PAS_C: S_C__,
+                ID_PAS_D: S_D__}
 
 S_CNC_INI = 'concIni'
 S_PERIOD_CHG = 'periodChg'
@@ -262,7 +282,8 @@ S_RCT_22 = S_2 + S_2
 #                 S_RCT_11_A, S_RCT_11_B, S_RCT_11_C, S_RCT_11_D]
 L_S_RCT_2ORD = [S_RCT_21, S_RCT_22]
 LEN_S_CP = 7
-I_S_CP_SEP = 3
+I_S_CP_SEP1 = 3
+I_S_CP_SEP2 = 5
 
 P_DUMMY = 0.5
 

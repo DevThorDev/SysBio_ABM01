@@ -10,6 +10,8 @@ Phosphatases 1 - 4 and Kinases X / Y should be system components as well
 	- S870: {Pyl: K, DPy: B}
 Component: remove self.dOCp
 Use dICp in updateDictH
+eliminate DS_SPS (Constants) from O_90__Component/adaptPSites
+ini_Cp_LSI/LSJ/LST, ...LKI/LKJ/LKT --> only 2 functions instead of 6?
 --------------------------------------------------------------------------------
 
 --------------------------------------------------------------------------------

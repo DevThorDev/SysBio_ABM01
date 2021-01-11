@@ -8,8 +8,8 @@ from Core.O_00__Base import Base
 
 # +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 class Molecule(Base):
-    def __init__(self, inpDat, iTp, lITpU = [0, 1]):
-        super().__init__(inpDat, iTp, lITpU = lITpU)
+    def __init__(self, inpDat, iTp, sPat01 = GC.S_4DASH, lITpU = [0, 1]):
+        super().__init__(inpDat, iTp, sPat01, lITpU = lITpU)
         self.idO = GC.ID_MOL
         self.descO = 'Molecule'
         # print('Initiated "Molecule" object.')
@@ -44,8 +44,8 @@ class SpecSite:
     def __init__(self, dISpS, sIDSpS, idMol, descMol):
         self.idSpS = sIDSpS                         # ID string of site
         self.sSPTM = dISpS[self.idSpS][GC.S_STAT]   # status of PTM ('P-',...)
-        self.lPyl = dISpS[self.idSpS][GC.S_DO_PYL]  # list Pyl
-        self.lDPy = dISpS[self.idSpS][GC.S_DO_DPY]  # list DPy
+        self.lPyl = dISpS[self.idSpS][GC.S_DO_PYL]  # list Pyl agents
+        self.lDPy = dISpS[self.idSpS][GC.S_DO_DPY]  # list DPy agents
         self.idMol = idMol                          # ID of molecule
         self.descMol = descMol                      # description of molecule
 

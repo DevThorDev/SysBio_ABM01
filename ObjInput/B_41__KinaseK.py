@@ -12,11 +12,12 @@ strCL = GC.S_CL_KAS_K
 
 # --- dictionary of parameters for special sites ------------------------------
 dInfSpS = {GC.S_SPS_K_S839: {GC.S_STAT: GC.S_NOT_PYL,
-                             GC.S_DO_PYL: [GC.ID_KAS_Y],
-                             GC.S_DO_DPY: [GC.ID_PAS_A]},
+                             GC.S_DO_PYL: [GC.S_Y__ + GC.S_4DASH],
+                             GC.S_DO_DPY: [GC.S_A__ + GC.S_4DASH]},
            GC.S_SPS_K_S870: {GC.S_STAT: GC.S_NOT_PYL,
-                             GC.S_DO_PYL: [GC.ID_KAS_K],
-                             GC.S_DO_DPY: [GC.ID_PAS_B]}}
+                             GC.S_DO_PYL: [GC.S_K__ + GC.S_2DASH00,
+                                           GC.S_K__ + GC.S_2DASH10],
+                             GC.S_DO_DPY: [GC.S_B__ + GC.S_4DASH]}}
 
 # --- create input dictionary -------------------------------------------------
 dIO = {# --- general

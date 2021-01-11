@@ -20,8 +20,8 @@ class InputFrames:
         self.getIniSysCpObj()
         self.getDParCnc()
         self.getDRct()
-        self.getDChgCncDep()
-        self.getDCncChgSMo()
+        self.getDCpDepOnSMoCnc()
+        self.getDSMoCncDepOnCp()
         self.getDOthInpV()
 
     def getDSCpSL(self, sK = GC.S_00):
@@ -122,30 +122,30 @@ class InputFrames:
         else:
             print('ERROR: Key', sK2, 'not in DataFrames dictionary!')
 
-    def getDChgCncDep(self, sK = GC.S_05):
-        self.dChgCncDep = {}
+    def getDCpDepOnSMoCnc(self, sK = GC.S_05):
+        self.dCpDepOnSMoCnc = {}
         if sK in self.dDfrIn:
             cDfr = self.dDfrIn[sK]
             for sHdCol in GC.L_S_PAR_TAB05:
                 assert sHdCol in cDfr.columns
             for sI in cDfr.index:
                 assert sI[0] in GC.L_S_SMO
-                cKM = GC.L_ID_SMO_USED[GC.L_S_SMO.index(sI[0])]
+                cKM = GC.L_ID_SMO_SYS[GC.L_S_SMO.index(sI[0])]
                 dV = {s: cDfr.at[sI, s] for s in GC.L_S_PAR_TAB05}
-                GF.addToDictD(self.dChgCncDep, cKM, sI[(1 + 1):], dV)
+                GF.addToDictD(self.dCpDepOnSMoCnc, cKM, sI[(1 + 1):], dV)
         else:
             print('ERROR: Key', sK, 'not in DataFrames dictionary!')
 
-    def getDCncChgSMo(self, sK = GC.S_06):
-        self.dCncChgSMo = {}
+    def getDSMoCncDepOnCp(self, sK = GC.S_06):
+        self.dSMoCncDepOnCp = {}
         if sK in self.dDfrIn:
             cDfr = self.dDfrIn[sK]
             assert GC.S_VAL_ABS_CH in cDfr.columns
             for sI in cDfr.index:
                 assert sI[0] in GC.L_S_SMO
-                cKM = GC.L_ID_SMO_USED[GC.L_S_SMO.index(sI[0])]
+                cKM = GC.L_ID_SMO_SYS[GC.L_S_SMO.index(sI[0])]
                 cV = cDfr.at[sI, GC.S_VAL_ABS_CH]
-                GF.addToDictD(self.dCncChgSMo, cKM, sI[(1 + 1):], cV)
+                GF.addToDictD(self.dSMoCncDepOnCp, cKM, sI[(1 + 1):], cV)
         else:
             print('ERROR: Key', sK, 'not in DataFrames dictionary!')
 
@@ -162,46 +162,123 @@ class InputFrames:
                '\nDictionary of input DataFrames:\n' + str(self.dDfrIn))
         return sIn
 
-    def printInputFrame(self, sK):
-        if sK in self.dDfrIn:
-            print(GC.S_DASH*8, 'Input DataFrame with key', sK + ':',
-                  GC.S_DASH*8)
-            print(self.dDfrIn[sK])
+    def printInputFrames(self, sK = None):
+        if sK is None:
+            print(GC.S_DASH*16, 'Input DataFrames', GC.S_DASH*16)
+            for (k, (sK, cDfrIn)) in enumerate(self.dDfrIn.items()):
+                print(GC.S_DASH*8, 'Input DataFrame', k, 'with key', sK + ':',
+                      GC.S_DASH*8)
+                print(cDfrIn)
+            print(GC.S_DASH*60)
         else:
-            print(GC.S_DASH*8, 'Key', sK, 'not in DataFrames dictionary!',
-                  GC.S_DASH*8)
+            if sK in self.dDfrIn:
+                print(GC.S_DASH*8, 'Input DataFrame with key', sK + ':',
+                      GC.S_DASH*8)
+                print(self.dDfrIn[sK])
+                print(GC.S_DASH*60)
+            else:
+                print(GC.S_DASH*8, 'Key', sK, 'not in DataFrames dictionary!',
+                      GC.S_DASH*8)
 
-    def printInputFrames(self):
-        for (k, (sK, cDfrIn)) in enumerate(self.dDfrIn.items()):
-            print(GC.S_DASH*8, 'Input DataFrame', k, 'with key', sK + ':',
+    def printDSCpSL(self, sCpSL = None):
+        if sCpSL is None:
+            print(GC.S_DASH*8, 'Component string dictionary:', GC.S_DASH*8)
+            pprint.pprint(self.dSCpSL)
+            print(GC.S_DASH*60)
+        else:
+            if sCpSL in self.dSCpSL:
+                print(sCpSL + ':', self.dSCpSL[sCpSL])
+
+    def printDSCpTp(self, sCpTp = None):
+        if sCpTp is None:
+            print(GC.S_DASH*8, 'Component type dictionary (L):', GC.S_DASH*8)
+            pprint.pprint(self.dSCpTpL)
+            print(GC.S_DASH*60)
+            print(GC.S_DASH*8, 'Component type dictionary (S):', GC.S_DASH*8)
+            pprint.pprint(self.dSCpTpS)
+            print(GC.S_DASH*60)
+        else:
+            if sCpTp in self.dSCpTpL:
+                print('(L)', sCpTp + ':', self.dSCpTpL[sCpTp])
+                print('(S)', sCpTp + ':', self.dSCpTpS[sCpTp])
+
+    def printDNCpObj(self, sCp = None):
+        if sCp is None:
+            print(GC.S_DASH*8, 'Dictionary of number of component objets:',
                   GC.S_DASH*8)
-            print(cDfrIn)
+            pprint.pprint(self.dNCpObj)
+            print(GC.S_DASH*60)
+        else:
+            if sCp in self.dNCpObj:
+                print(sCp + ':', self.dNCpObj[sCp])
+
+    def printDParCnc(self, sSMo = None):
+        if sSMo is None:
+            print(GC.S_DASH*8, 'Dictionary of parameters / small molecule',
+                  'concentrations:', GC.S_DASH*8)
+            pprint.pprint(self.dParCnc)
+            print(GC.S_DASH*60)
+        else:
+            if sSMo in self.dParCnc:
+                print(sSMo + ':', self.dParCnc[sSMo])
 
     def printDTpRct(self, sRct = None):
         if sRct is None:
-            print('Reaction type dictionary:')
+            print(GC.S_DASH*8, 'Reaction type dictionary:', GC.S_DASH*8)
             for sK in self.dTpRct:
                 print(sK + ':', self.dTpRct[sK])
+            print(GC.S_DASH*60)
         else:
-            if sRct in self.dRct:
+            if sRct in self.dTpRct:
                 print(sRct + ':', self.dTpRct[sRct])
 
     def printDClRct(self, sRct = None):
         if sRct is None:
-            print('Reaction class dictionary:')
+            print(GC.S_DASH*8, 'Reaction class dictionary:', GC.S_DASH*8)
             for sK in self.dClRct:
                 print(sK + ':', self.dClRct[sK])
+            print(GC.S_DASH*60)
         else:
-            if sRct in self.dRct:
+            if sRct in self.dClRct:
                 print(sRct + ':', self.dClRct[sRct])
 
     def printDRct(self, sRct = None):
         if sRct is None:
-            print('Reaction dictionary:')
+            print(GC.S_DASH*8, 'Reaction dictionary:', GC.S_DASH*8)
             pprint.pprint(self.dRct)
+            print(GC.S_DASH*60)
         else:
             if sRct in self.dRct:
                 print(sRct + ':', self.dRct[sRct])
+
+    def printDCpDepOnSMoCnc(self, sSMo = None):
+        if sSMo is None:
+            print(GC.S_DASH*8, 'Components depending on small molecule',
+                  'concentrations dictionary:', GC.S_DASH*8)
+            pprint.pprint(self.dCpDepOnSMoCnc)
+            print(GC.S_DASH*60)
+        else:
+            if sSMo in self.dCpDepOnSMoCnc:
+                print(sSMo + ':', self.dCpDepOnSMoCnc[sSMo])
+
+    def printDSMoCncDepOnCp(self, sSMo = None):
+        if sSMo is None:
+            print(GC.S_DASH*8, 'Small molecule concentrations depending on',
+                  'components dictionary:', GC.S_DASH*8)
+            pprint.pprint(self.dSMoCncDepOnCp)
+            print(GC.S_DASH*60)
+        else:
+            if sSMo in self.dSMoCncDepOnCp:
+                print(sSMo + ':', self.dSMoCncDepOnCp[sSMo])
+
+    def printDOthInpV(self, sK = None):
+        if sK is None:
+            print(GC.S_DASH*8, 'Other input values dictionary:', GC.S_DASH*8)
+            pprint.pprint(self.dOthInpV)
+            print(GC.S_DASH*60)
+        else:
+            if sK in self.dOthInpV:
+                print(sK + ':', self.dOthInpV[sK])
 
     def getViaIdx(self, sK, iL = 0, iC = 0):
         if sK in self.dDfrIn:

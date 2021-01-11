@@ -68,32 +68,59 @@ class ComponentBase(Base):
 class Component(ComponentBase):
     def __init__(self, inpDat, inpFr, sComp, iTp = 90):
         self.inFr = inpFr
-        self.sCp, sCp1, sCp3 = sComp, sComp[:1], sComp[:3]
+        self.sCp, sCp1, sCpS1 = sComp, sComp[:1], sComp[:GC.I_S_CP_SEP1]
         self.createDOComp(inpDat)
-        if sCp3 == GC.S_L__:
-            self.ini_Cp_L(inpDat, iTp = iTp)
-        elif sCp3 == GC.S_S__:
-            self.ini_Cp_S(inpDat, iTp = iTp)
-        elif sCp3 == GC.S_K__:
-            self.ini_Cp_K(inpDat, iTp = iTp)
+        sPat01_L = self.sCp[GC.I_S_CP_SEP1:GC.I_S_CP_SEP2] + GC.S_2DASH
+        sPat01_K = GC.S_2DASH + self.sCp[GC.I_S_CP_SEP2:]
+        if sCpS1 == GC.S_L__:
+            NRT2p1 = Protein_NRT2p1(inpDat, sPat01 = sPat01_L)
+            self.ini_Cp_L(inpDat, LPr = NRT2p1, iTp = iTp)
+        elif sCpS1 == GC.S_S__:
+            NAR2p1 = Protein_NAR2p1(inpDat)
+            self.ini_Cp_S(inpDat, SPr = NAR2p1, iTp = iTp)
+        elif sCpS1 == GC.S_K__:
+            HPCAL1 = KinaseK(inpDat, sPat01 = sPat01_K)
+            self.ini_Cp_K(inpDat, KAsK = HPCAL1, iTp = iTp)
         elif sCp1 in [GC.S_X, GC.S_Y, GC.S_A, GC.S_B, GC.S_C, GC.S_D]:
-            self.ini_Cp_As(inpDat, sIDAs = sCp1, iTp = iTp)
-        elif sCp3 == GC.S_LSI:
-            self.ini_Cp_LSI(inpDat, iTp = iTp)
-        elif sCp3 == GC.S_LSJ:
-            self.ini_Cp_LSJ(inpDat, iTp = iTp)
-        elif sCp3 == GC.S_LST:
-            self.ini_Cp_LST(inpDat, iTp = iTp)
-        elif sCp3 == GC.S_LKI:
-            self.ini_Cp_LKI(inpDat, iTp = iTp)
-        elif sCp3 == GC.S_LKJ:
-            self.ini_Cp_LKJ(inpDat, iTp = iTp)
-        elif sCp3 == GC.S_LKT:
-            self.ini_Cp_LKT(inpDat, iTp = iTp)
+            OAs = self.selAs(inpDat, sCp1 = sCp1)
+            self.ini_Cp_OAs(inpDat, As = OAs, iTp = iTp)
+        elif sCpS1 in [GC.S_LSI, GC.S_LSJ, GC.S_LST]:
+            NRT2p1 = Protein_NRT2p1(inpDat, sPat01 = sPat01_L)
+            NAR2p1 = Protein_NAR2p1(inpDat)
+            if sCpS1 == GC.S_LSI:
+                self.ini_Cp_LSI(inpDat, LPr = NRT2p1, SPr = NAR2p1, iTp = iTp)
+            elif sCpS1 == GC.S_LSJ:
+                self.ini_Cp_LSJ(inpDat, LPr = NRT2p1, SPr = NAR2p1, iTp = iTp)
+            elif sCpS1 == GC.S_LST:
+                self.ini_Cp_LST(inpDat, LPr = NRT2p1, SPr = NAR2p1, iTp = iTp)
+        elif sCpS1 in [GC.S_LKI, GC.S_LKJ, GC.S_LKT]:
+            NRT2p1 = Protein_NRT2p1(inpDat, sPat01 = sPat01_L)
+            HPCAL1 = KinaseK(inpDat, sPat01 = sPat01_K)
+            if sCpS1 == GC.S_LKI:
+                self.ini_Cp_LKI(inpDat, LPr = NRT2p1, KAsK = HPCAL1, iTp = iTp)
+            elif sCpS1 == GC.S_LKJ:
+                self.ini_Cp_LKJ(inpDat, LPr = NRT2p1, KAsK = HPCAL1, iTp = iTp)
+            elif sCpS1 == GC.S_LKT:
+                self.ini_Cp_LKT(inpDat, LPr = NRT2p1, KAsK = HPCAL1, iTp = iTp)
         else:
             self.idO = GC.ID_CPN
             self.descO = 'Component'
         # print('Initiated "Component" object ' + sComp + '.')
+
+    def selAs(self, inpDat, sCp1):
+        if sCp1 == GC.S_X:
+            cAs = KinaseX(inpDat)
+        elif sCp1 == GC.S_Y:
+            cAs = KinaseY(inpDat)
+        elif sCp1 == GC.S_A:
+            cAs = PhosphataseA(inpDat)
+        elif sCp1 == GC.S_B:
+            cAs = PhosphataseB(inpDat)
+        elif sCp1 == GC.S_C:
+            cAs = PhosphataseC(inpDat)
+        elif sCp1 == GC.S_D:
+            cAs = PhosphataseD(inpDat)
+        return cAs
 
     def createDOComp(self, inpDat):
         self.dOCp = {GC.ID_LPR_NRT2P1: Protein_NRT2p1(inpDat),
@@ -106,85 +133,76 @@ class Component(ComponentBase):
                      GC.ID_PAS_C: PhosphataseC(inpDat),
                      GC.ID_PAS_D: PhosphataseD(inpDat)}
 
-    def ini_Cp_L(self, inpDat, iTp = 90):
-        llOI = []
-        lOO = [self.dOCp[GC.ID_LPR_NRT2P1]]
+    def ini_Cp_L(self, inpDat, LPr, iTp = 90):
+        llOI, lOO = [], [LPr]
         super().__init__(inpDat, self.dOCp, llOI, lOO, iTp = iTp)
-        self.idO = self.inFr.dSCpSL[self.sCp[:3]]
+        self.idO = self.inFr.dSCpSL[self.sCp[:GC.I_S_CP_SEP1]]
         self.descO = 'Component NRT2.1'
-        self.adaptPSites(inpDat, self.dOCp[GC.ID_LPR_NRT2P1])
+        self.adaptPSites(inpDat, LPr)
 
-    def ini_Cp_S(self, inpDat, iTp = 90):
-        llOI = []
-        lOO = [self.dOCp[GC.ID_SPR_NAR2P1]]
+    def ini_Cp_S(self, inpDat, SPr, iTp = 90):
+        llOI, lOO = [], [SPr]
+        lOO = [Protein_NAR2p1(inpDat)]
         super().__init__(inpDat, self.dOCp, llOI, lOO, iTp = iTp)
-        self.idO = self.inFr.dSCpSL[self.sCp[:3]]
+        self.idO = self.inFr.dSCpSL[self.sCp[:GC.I_S_CP_SEP1]]
         self.descO = 'Component NAR2.1'
 
-    def ini_Cp_K(self, inpDat, iTp = 90):
-        llOI = []
-        lOO = [self.dOCp[GC.ID_KAS_K]]
+    def ini_Cp_K(self, inpDat, KAsK, iTp = 90):
+        llOI, lOO = [], [KAsK]
         super().__init__(inpDat, self.dOCp, llOI, lOO, iTp = iTp)
-        self.idO = self.inFr.dSCpSL[self.sCp[:3]]
+        self.idO = self.inFr.dSCpSL[self.sCp[:GC.I_S_CP_SEP1]]
         self.descO = 'Component K (HPCAL1)'
-        self.adaptPSites(inpDat, self.dOCp[GC.ID_KAS_K])
+        self.adaptPSites(inpDat, KAsK)
 
-    def ini_Cp_As(self, inpDat, sIDAs, iTp = 90):
-        llOI = []
-        lOO = [self.dOCp[GC.D_ID_AS[sIDAs]]]
+    def ini_Cp_OAs(self, inpDat, As, iTp = 90):
+        llOI, lOO = [], [As]
         super().__init__(inpDat, self.dOCp, llOI, lOO, iTp = iTp)
-        self.idO = self.inFr.dSCpSL[self.sCp[:3]]
-        self.descO = 'Component ' + sIDAs
+        self.idO = self.inFr.dSCpSL[self.sCp[:GC.I_S_CP_SEP1]]
+        self.descO = 'Component ' + As.idO
 
-    def ini_Cp_LSI(self, inpDat, iTp = 90):
-        llOI = [[self.dOCp[GC.ID_SPR_NAR2P1], self.dOCp[GC.ID_LPR_NRT2P1]]]
-        lOO = []
+    def ini_Cp_LSI(self, inpDat, LPr, SPr, iTp = 90):
+        llOI, lOO = [[SPr, LPr]], []
         super().__init__(inpDat, self.dOCp, llOI, lOO, iTp = iTp)
-        self.idO = self.inFr.dSCpSL[self.sCp[:3]]
+        self.idO = self.inFr.dSCpSL[self.sCp[:GC.I_S_CP_SEP1]]
         self.descO = 'Component NRT2.1-NAR2.1 strong interaction'
-        self.adaptPSites(inpDat, self.dOCp[GC.ID_LPR_NRT2P1])
+        self.adaptPSites(inpDat, LPr)
 
-    def ini_Cp_LSJ(self, inpDat, iTp = 90):
-        llOI = [[self.dOCp[GC.ID_SPR_NAR2P1], self.dOCp[GC.ID_LPR_NRT2P1]]]
-        lOO = []
+    def ini_Cp_LSJ(self, inpDat, LPr, SPr, iTp = 90):
+        llOI, lOO = [[SPr, LPr]], []
         super().__init__(inpDat, self.dOCp, llOI, lOO, iTp = iTp)
-        self.idO = self.inFr.dSCpSL[self.sCp[:3]]
+        self.idO = self.inFr.dSCpSL[self.sCp[:GC.I_S_CP_SEP1]]
         self.descO = 'Component NRT2.1-NAR2.1 weak interaction'
-        self.adaptPSites(inpDat, self.dOCp[GC.ID_LPR_NRT2P1])
+        self.adaptPSites(inpDat, LPr)
 
-    def ini_Cp_LST(self, inpDat, iTp = 90):
-        llOI = [[self.dOCp[GC.ID_SPR_NAR2P1], self.dOCp[GC.ID_LPR_NRT2P1]]]
-        lOO = []
+    def ini_Cp_LST(self, inpDat, LPr, SPr, iTp = 90):
+        llOI, lOO = [[SPr, LPr]], []
         super().__init__(inpDat, self.dOCp, llOI, lOO, iTp = iTp)
-        self.idO = self.inFr.dSCpSL[self.sCp[:3]]
+        self.idO = self.inFr.dSCpSL[self.sCp[:GC.I_S_CP_SEP1]]
         self.descO = 'Component NRT2.1-NAR2.1 transition'
-        self.adaptPSites(inpDat, self.dOCp[GC.ID_LPR_NRT2P1])
+        self.adaptPSites(inpDat, LPr)
 
-    def ini_Cp_LKI(self, inpDat, iTp = 90):
-        llOI = [[self.dOCp[GC.ID_KAS_K], self.dOCp[GC.ID_LPR_NRT2P1]]]
-        lOO = []
+    def ini_Cp_LKI(self, inpDat, LPr, KAsK, iTp = 90):
+        llOI, lOO = [[KAsK, LPr]], []
         super().__init__(inpDat, self.dOCp, llOI, lOO, iTp = iTp)
-        self.idO = self.inFr.dSCpSL[self.sCp[:3]]
+        self.idO = self.inFr.dSCpSL[self.sCp[:GC.I_S_CP_SEP1]]
         self.descO = 'Component NRT2.1-HPCAL1 strong interaction'
-        self.adaptPSites(inpDat, self.dOCp[GC.ID_LPR_NRT2P1])
-        self.adaptPSites(inpDat, self.dOCp[GC.ID_KAS_K])
+        self.adaptPSites(inpDat, LPr)
+        self.adaptPSites(inpDat, KAsK)
 
-    def ini_Cp_LKJ(self, inpDat, iTp = 90):
-        llOI = [[self.dOCp[GC.ID_KAS_K], self.dOCp[GC.ID_LPR_NRT2P1]]]
-        lOO = []
+    def ini_Cp_LKJ(self, inpDat, LPr, KAsK, iTp = 90):
+        llOI, lOO = [[KAsK, LPr]], []
         super().__init__(inpDat, self.dOCp, llOI, lOO, iTp = iTp)
-        self.idO = self.inFr.dSCpSL[self.sCp[:3]]
+        self.idO = self.inFr.dSCpSL[self.sCp[:GC.I_S_CP_SEP1]]
         self.descO = 'Component NRT2.1-HPCAL1 weak interaction'
-        self.adaptPSites(inpDat, self.dOCp[GC.ID_LPR_NRT2P1])
-        self.adaptPSites(inpDat, self.dOCp[GC.ID_KAS_K])
+        self.adaptPSites(inpDat, LPr)
+        self.adaptPSites(inpDat, KAsK)
 
-    def ini_Cp_LKT(self, inpDat, iTp = 90):
-        llOI = [[self.dOCp[GC.ID_KAS_K], self.dOCp[GC.ID_LPR_NRT2P1]]]
-        lOO = []
+    def ini_Cp_LKT(self, inpDat, LPr, KAsK, iTp = 90):
+        llOI, lOO = [[KAsK, LPr]], []
         super().__init__(inpDat, self.dOCp, llOI, lOO, iTp = iTp)
-        self.idO = self.inFr.dSCpSL[self.sCp[:3]]
+        self.idO = self.inFr.dSCpSL[self.sCp[:GC.I_S_CP_SEP1]]
         self.descO = 'Component NRT2.1-HPCAL1 transition'
-        self.adaptPSites(inpDat, self.dOCp[GC.ID_LPR_NRT2P1])
-        self.adaptPSites(inpDat, self.dOCp[GC.ID_KAS_K])
+        self.adaptPSites(inpDat, LPr)
+        self.adaptPSites(inpDat, KAsK)
 
 ###############################################################################

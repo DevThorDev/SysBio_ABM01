@@ -2,6 +2,8 @@
 ###############################################################################
 # --- O_99__System.py ---------------------------------------------------------
 ###############################################################################
+import pprint
+
 import Core.C_00__GenConstants as GC
 import Core.F_00__GenFunctions as GF
 import Core.F_02__PltFunctions as PF
@@ -29,16 +31,15 @@ class System(Base):
         self.getDictSMoObj(inpDat)
         self.dResEvo = None
 
-    def createDICp(self, lOSy, iCp = 0):
-        if iCp == 0:
-            for cOSy in lOSy:
-                if len(cOSy.dITp['dInfSpS']) > 0:
-                    for cKS, cD in cOSy.dITp['dInfSpS'].items():
-                        for cKI in cD:
-                            if cKI in [GC.S_DO_PYL, GC.S_DO_DPY]:
-                                for cAs in cD[cKI]:
-                                    GF.addToDictL(self.dICp, (cKI, cKS), cAs,
-                                                  lUnique = True)
+    def complDICp(self, lOSy):
+        for cOSy in lOSy:
+            if len(cOSy.dITp['dInfSpS']) > 0:
+                for cKSpS, cD in cOSy.dITp['dInfSpS'].items():
+                    for cKSPD in cD:
+                        if cKSPD in [GC.S_DO_PYL, GC.S_DO_DPY]:
+                            for sPDAgent in cD[cKSPD]:
+                                GF.addToDictDL(self.dICp, cKSPD, cKSpS,
+                                               sPDAgent, lUnique = True)
 
     def addCpObj(self, inpDat, refresh = False):
         dNCpO, self.dICp = self.inFr.dNCpObj, {}
@@ -48,8 +49,9 @@ class System(Base):
         for sCp, nCp in dNCpO.items():
             for iCp in range(nCp):
                 cCpO = Component(inpDat, self.inFr, sCp)
-                self.createDICp(cCpO.lOSy, iCp)
                 self.lCpO.append(cCpO)
+                if iCp == 0:
+                    self.complDICp(cCpO.lOSy)
 
     def getDictCpObj(self, refresh = False):
         self.dCpO = {}
@@ -67,9 +69,26 @@ class System(Base):
         for sSMo, cSMoO in self.dSMo.items():
             cSMoO.setConc(self.dCncSMo[sSMo])
 
-    def printDICp(self):
-        for cK, cAs in self.dICp.items():
-            print(str(cK) + ': ' + str(cAs))
+    def printDICp(self, sPD = None):
+        if sPD is None:
+            print(GC.S_DASH*8, 'Component info dictionary:', GC.S_DASH*8)
+            pprint.pprint(self.dICp)
+        else:
+            if sPD in self.dICp:
+                print(GC.S_DASH*8, 'Component info dictionary of', sPD + ':',
+                      GC.S_DASH*8)
+                pprint.pprint(self.dICp[sPD])
+        print(GC.S_DASH*60)
+
+    def printDSCpSL(self, sCpSL = None):
+        if sCpSL is None:
+            print(GC.S_DASH*8, 'Component string dictionary:', GC.S_DASH*8)
+            pprint.pprint(self.dSCpSL)
+            print(GC.S_DASH*60)
+        else:
+            if sCpSL in self.dRct:
+                print(sCpSL + ':', self.dRct[sCpSL])
+
 
     def printNCompObjSys(self):
         print(GC.S_STAR*16, 'Counts of comp. objects contained in System:',

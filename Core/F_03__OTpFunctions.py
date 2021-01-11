@@ -45,27 +45,27 @@ def doSinChange(x, dPar):
         return 0.0
 
 # --- Functions (O_80__Interaction) -------------------------------------------
-def doSiteChange(cO, sSpS, sAse, doDePyl = False):
+def doSiteChange(cO, sSpS, sPDAgent, doDePyl = False):
     opDone = False
     assert sSpS in cO.dSpS
     cSpS = cO.dSpS[sSpS]
-    if not doDePyl and cSpS.sSPTM == GC.S_NOT_PYL and sAse in cSpS.lPyl:
+    if not doDePyl and cSpS.sSPTM == GC.S_NOT_PYL and sPDAgent in cSpS.lPyl:
         cSpS.sSPTM = GC.S_IS_PYL
         opDone = True
-    elif doDePyl and cSpS.sSPTM == GC.S_IS_PYL and sAse in cSpS.lDPy:
+    elif doDePyl and cSpS.sSPTM == GC.S_IS_PYL and sPDAgent in cSpS.lDPy:
         cSpS.sSPTM = GC.S_NOT_PYL
         opDone = True
     return opDone
 
 # --- Functions (O_90_Component) ----------------------------------------------
-def complLSpec(inpDt, lOAll, sPylDPy = GC.S_DO_PYL):
-    lID = []
+def createLSCp(inpDt, lOAll, sPylDPy = GC.S_DO_PYL):
+    lSCp = []
     for cO in lOAll:
         for cSpS in cO.dITp['dInfSpS']:
-            for idTp in cO.dITp['dInfSpS'][cSpS][sPylDPy]:
-                if idTp not in lID:
-                    lID.append(idTp)
-    return sorted(lID)
+            for sCp in cO.dITp['dInfSpS'][cSpS][sPylDPy]:
+                if sCp not in lSCp:
+                    lSCp.append(sCp)
+    return sorted(lSCp)
 
 # --- Functions (O_99__System) ------------------------------------------------
 def createDCnc(inpFr):
@@ -94,8 +94,8 @@ def changeCncSMo(inpFr, dO, dCncSMo, t, cID = None):
         cncMn, cncMx = cD[GC.S_CNC_MIN], cD[GC.S_CNC_MAX]
         for s, nO in dO['dN'].items():
             ss = s.replace(GC.S_DASH, '')
-            assert ss in inpFr.dCncChgSMo[sSMo]
-            cncChgSMo += inpFr.dCncChgSMo[sSMo][ss]*nO
+            assert ss in inpFr.dSMoCncDepOnCp[sSMo]
+            cncChgSMo += inpFr.dSMoCncDepOnCp[sSMo][ss]*nO
         # component-distribution-dependent (internal) conc. change
         nCpO = sum(dO['dN'].values())
         cncChgInt = cncChgSMo*dO['tDlt']/nCpO*inpFr.dOthInpV['cncChgScale']
@@ -116,8 +116,10 @@ def updateDictH(dICp, inpFr, dO, dCncSMo):
     for sRct, wtRct in inpFr.dRct.items():
         # NO3- dependency of incidences of each component
         sRctType, sRctClass, _ = inpFr.dTpRct[sRct]
-        assert sRctClass in inpFr.dChgCncDep[sSMoN]
-        dParPSig = inpFr.dChgCncDep[sSMoN][sRctClass]
+        assert (len(GF.splitStr(sRctClass)) >= 2 and
+                sRctClass in inpFr.dCpDepOnSMoCnc[sSMoN])
+        sSpS = GF.splitStr(sRctClass)[1]
+        dParPSig = inpFr.dCpDepOnSMoCnc[sSMoN][sRctClass]
         p = GF.calcPSigmoidal(dCncSMo[sSMoN], dParPSig)
         dRUp[sRct] = wtRct*p
         # recalculate dH, which contains the h_i (i = 1,... len(dH))
@@ -125,12 +127,18 @@ def updateDictH(dICp, inpFr, dO, dCncSMo):
         for sCpLHS in GF.partStr(sRct)[0]:
             # TODO: add the case of 11-reactions with Ases
             dO['dH'][sRct] *= dO['dN'][sCpLHS]
-            # TODO: get the conc. of the correct Ase
+            # TODO: get the incidence of the correct Ase
             # check if reaction is (de)phosphorylation
-            if sRctClass in inpFr.dClRct[GC.S_DO_PYL]:
-                pass
-            elif sRctClass in inpFr.dClRct[GC.S_DO_DPY]:
-                pass
+            if sRctClass in (inpFr.dClRct[GC.S_DO_PYL] +
+                             inpFr.dClRct[GC.S_DO_PYL]):
+                x, sPylDPy = 0., GC.S_DO_PYL
+                if sRctClass in inpFr.dClRct[GC.S_DO_PYL]:
+                    sPylDPy = GC.S_DO_PYL
+                elif sRctClass in inpFr.dClRct[GC.S_DO_DPY]:
+                    sPylDPy = GC.S_DO_DPY
+                for sCpAse in dICp[sPylDPy][sSpS]:
+                    x += dO['dN'][sCpAse]
+                dO['dH'][sRct] *= x
         b = sRctClass in inpFr.dClRct[GC.S_DO_PYL] + inpFr.dClRct[GC.S_DO_DPY]
         if (sRctType in GC.L_S_RCT_2ORD or (sRctType == GC.S_RCT_11 and b)):
             dO['dH'][sRct] /= inpFr.dOthInpV['VolC']

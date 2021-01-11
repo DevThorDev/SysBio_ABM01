@@ -19,7 +19,7 @@ def prepDict4Sel(d4Sel, d4Leg, lSLY, dCp, dSCp):
     for sHdC in lSLY:
         for sLg, lCp in dCp.items():
             if (len(sHdC) == GC.LEN_S_CP and
-                set(sHdC[GC.I_S_CP_SEP:]) <= GC.SET_01_DASH):
+                set(sHdC[GC.I_S_CP_SEP1:]) <= GC.SET_01_DASH):
                 # this column header IS a component string
                 for sCp in lCp:
                     if sHdC.startswith(sCp):

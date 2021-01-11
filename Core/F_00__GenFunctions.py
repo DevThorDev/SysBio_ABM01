@@ -33,6 +33,9 @@ def joinToPath(pF = '', sF = 'Dummy.txt'):
     else:
         return sF
 
+def splitStr(s, sSpl = GC.S_USC):
+    return s.split(sSpl)
+
 def partStr(s0, sSplO = GC.S_USC, sSplI = GC.S_PLUS):
     lSSplRet = [[s0]]
     if sSplO is not None:
@@ -78,6 +81,16 @@ def addToDictD(cD, cKO, cKI, cEI):
     else:
         cD[cKO] = {cKI: cEI}
 
+def addToDictDL(cD, cKO, cKI, cEI, lUnique = False):
+    if cKO in cD:
+        if cKI in cD[cKO]:
+            if not lUnique or cEI not in cD[cKO][cKI]:
+                cD[cKO][cKI].append(cEI)
+        else:
+            cD[cKO][cKI] = [cEI]
+    else:
+        cD[cKO] = {cKI: [cEI]}
+
 def appendToDictL(cD, lE):
     assert len(lE) == len(cD)
     for i, cK in enumerate(cD):
@@ -119,12 +132,12 @@ def sRct11(lSLHS, lSRHS):
     sLHS, sRHS, lSKeys, sRctCl = lSLHS[0], lSRHS[0], GC.L_S_SPS, ''
     # check if it is a valid reaction string
     assert (len(sLHS) == GC.LEN_S_CP and len(sLHS) == len(sRHS) and
-            len(sLHS[GC.I_S_CP_SEP:]) >= len(lSKeys))
+            len(sLHS[GC.I_S_CP_SEP1:]) >= len(lSKeys))
     # find the appropriate key and value, and add the pair to the dict.
-    sRctAI1 = (sLHS[:GC.I_S_CP_SEP].strip(GC.S_DASH) + GC.S_USC +
-               sRHS[:GC.I_S_CP_SEP].strip(GC.S_DASH))
-    for k, chLHS in enumerate(sLHS[GC.I_S_CP_SEP:]):
-        chRHS = sRHS[k + GC.I_S_CP_SEP]
+    sRctAI1 = (sLHS[:GC.I_S_CP_SEP1].strip(GC.S_DASH) + GC.S_USC +
+               sRHS[:GC.I_S_CP_SEP1].strip(GC.S_DASH))
+    for k, chLHS in enumerate(sLHS[GC.I_S_CP_SEP1:]):
+        chRHS = sRHS[k + GC.I_S_CP_SEP1]
         assert chLHS in GC.SET_01_DASH and chRHS in GC.SET_01_DASH
         if chLHS in GC.SET_01 and chRHS in GC.SET_01:
             if chLHS != chRHS:
@@ -133,7 +146,6 @@ def sRct11(lSLHS, lSRHS):
                 else:                                   # dephosphorylation
                     sRctCl = GC.S_DO_DPY + GC.S_USC + lSKeys[k]
                 break       # only one (de)phosphorylation per event
-    # TODO: correct GC.S_RCT_11... for current Ase
     return GC.S_RCT_11, sRctCl, [sRctAI1]
 
 def sRct21(lSLHS, lSRHS):
@@ -160,8 +172,8 @@ def sRct21(lSLHS, lSRHS):
     elif sRHS[:3] == GC.S_LKT:
         sRctCl += GC.S_FRM_L_K_LKT
     # find and check the appropriate value
-    for k, chRHS in enumerate(sRHS[GC.I_S_CP_SEP:]):
-        chLHS1, chLHS2 = sLHS1[k + GC.I_S_CP_SEP], sLHS2[k + GC.I_S_CP_SEP]
+    for k, chRHS in enumerate(sRHS[GC.I_S_CP_SEP1:]):
+        chLHS1, chLHS2 = sLHS1[k + GC.I_S_CP_SEP1], sLHS2[k + GC.I_S_CP_SEP1]
         assert (chLHS1 in GC.SET_01_DASH and chLHS2 in GC.SET_01_DASH and
                 chRHS in GC.SET_01_DASH)
         if chLHS1 in GC.SET_01 and chLHS2 not in GC.SET_01:
@@ -169,7 +181,7 @@ def sRct21(lSLHS, lSRHS):
         elif chLHS2 in GC.SET_01 and chLHS1 not in GC.SET_01:
             s01LHS += chLHS2
         elif chLHS1 in GC.SET_01 and chLHS2 in GC.SET_01:
-            print('ERROR: Position', k + GC.I_S_CP_SEP, ': LHS string 1 is',
+            print('ERROR: Position', k + GC.I_S_CP_SEP1, ': LHS string 1 is',
                   chLHS1, 'while LHS string 2 is', chLHS2)
         if chRHS in GC.SET_01:
             s01RHS += chRHS
@@ -205,8 +217,8 @@ def sRct12(lSLHS, lSRHS):
     elif sLHS[:3] == GC.S_LKT:
         sRctCl += GC.S_DIS_LKT_L_K
     # find and check the appropriate value
-    for k, chLHS in enumerate(sLHS[GC.I_S_CP_SEP:]):
-        chRHS1, chRHS2 = sRHS1[k + GC.I_S_CP_SEP], sRHS2[k + GC.I_S_CP_SEP]
+    for k, chLHS in enumerate(sLHS[GC.I_S_CP_SEP1:]):
+        chRHS1, chRHS2 = sRHS1[k + GC.I_S_CP_SEP1], sRHS2[k + GC.I_S_CP_SEP1]
         assert (chLHS in GC.SET_01_DASH and chRHS1 in GC.SET_01_DASH and
                 chRHS2 in GC.SET_01_DASH)
         if chRHS1 in GC.SET_01 and chRHS2 not in GC.SET_01:
@@ -214,7 +226,7 @@ def sRct12(lSLHS, lSRHS):
         elif chRHS2 in GC.SET_01 and chRHS1 not in GC.SET_01:
             s01RHS += chRHS2
         elif chRHS1 in GC.SET_01 and chRHS2 in GC.SET_01:
-            print('ERROR: Position', k + GC.I_S_CP_SEP, ': RHS string 1 is',
+            print('ERROR: Position', k + GC.I_S_CP_SEP1, ': RHS string 1 is',
                   chRHS1, 'while RHS string 2 is', chRHS2)
         if chLHS in GC.SET_01:
             s01LHS += chLHS
@@ -256,9 +268,9 @@ def sRct22(lSLHS, lSRHS):
     elif sLHS1[:3] == GC.S_LKT and sRHS1[:3] == GC.S_LSJ:
         sRctCl += GC.S_IPC_LKT_LSJ
     # find and check the appropriate value
-    for k, _ in enumerate(sLHS1[GC.I_S_CP_SEP:]):
-        chLHS1, chLHS2 = sLHS1[k + GC.I_S_CP_SEP], sLHS2[k + GC.I_S_CP_SEP]
-        chRHS1, chRHS2 = sRHS1[k + GC.I_S_CP_SEP], sRHS2[k + GC.I_S_CP_SEP]
+    for k, _ in enumerate(sLHS1[GC.I_S_CP_SEP1:]):
+        chLHS1, chLHS2 = sLHS1[k + GC.I_S_CP_SEP1], sLHS2[k + GC.I_S_CP_SEP1]
+        chRHS1, chRHS2 = sRHS1[k + GC.I_S_CP_SEP1], sRHS2[k + GC.I_S_CP_SEP1]
         assert (chLHS1 in GC.SET_01_DASH and chLHS2 in GC.SET_01_DASH and
                 chRHS1 in GC.SET_01_DASH and chRHS2 in GC.SET_01_DASH)
         if chLHS1 in GC.SET_01 and chLHS2 not in GC.SET_01:
@@ -266,14 +278,14 @@ def sRct22(lSLHS, lSRHS):
         elif chLHS2 in GC.SET_01 and chLHS1 not in GC.SET_01:
             s01LHS += chLHS2
         elif chLHS1 in GC.SET_01 and chLHS2 in GC.SET_01:
-            print('ERROR: Position', k + GC.I_S_CP_SEP, ': LHS string 1 is',
+            print('ERROR: Position', k + GC.I_S_CP_SEP1, ': LHS string 1 is',
                   chLHS1, 'while LHS string 2 is', chLHS2)
         if chRHS1 in GC.SET_01 and chRHS2 not in GC.SET_01:
             s01RHS += chRHS1
         elif chRHS2 in GC.SET_01 and chRHS1 not in GC.SET_01:
             s01RHS += chRHS2
         elif chRHS1 in GC.SET_01 and chRHS2 in GC.SET_01:
-            print('ERROR: Position', k + GC.I_S_CP_SEP, ': RHS string 1 is',
+            print('ERROR: Position', k + GC.I_S_CP_SEP1, ': RHS string 1 is',
                   chRHS1, 'while RHS string 2 is', chRHS2)
     # if OK, add the pair to the dict.
     if len(sRctCl) > len(GC.S_DO_IPC + GC.S_USC) and s01LHS == s01RHS:
@@ -286,11 +298,7 @@ def sRct22(lSLHS, lSRHS):
 def analyseSRct(sRct):
     lSSplRct = partStr(sRct)
     assert len(lSSplRct) == 2       # required for a valid reaction: LHS, RHS
-    # 1st-order reactions with single product (Rct11)
-    # TODO: first reaction type: phosphorylation with appropriate kinase
-    #       (~KAsK, ~KAsX, ~KAsY)
-    # TODO: second reaction type: dephosphorylation with appropriate phosphatase
-    #       (~PAsA, ~PAsB, ~PAsC, ~PAsD)
+    # 1st-order reactions with single product (Rct11) [potentially KAs/PAs]
     if len(lSSplRct[0]) == 1 and len(lSSplRct[1]) == 1:
         return sRct11(lSSplRct[0], lSSplRct[1])
     # 2nd-order reactions with single product (Rct21)
