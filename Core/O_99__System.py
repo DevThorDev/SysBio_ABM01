@@ -29,7 +29,8 @@ class System(Base):
         self.addCpObj(inpDat, refresh = refresh)
         self.getDictCpObj(refresh = refresh)
         self.getDictSMoObj(inpDat)
-        self.dResEvo = None
+        if not hasattr(self, 'dResEvo'):
+            self.dResEvo = None
 
     def complDICp(self, lOSy):
         for cOSy in lOSy:

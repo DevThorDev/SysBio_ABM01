@@ -1,17 +1,12 @@
 --------------------------------------------------------------------------------
 Code updates remaining:
 --------------------------------------------------------------------------------
-Sigmoidal "step"-Function for external NO3- Conc.
-Sigmoidal functions that define dependency of component reaction weights on small molecule concentrations should be more uniformly defined
-Phosphatases 1 - 4 and Kinases X / Y should be system components as well
-	- S21: {Pyl: K, DPy: C}
-	- S28: {Pyl: X, DPy: D}
-	- S839: {Pyl: Y, DPy: A}
-	- S870: {Pyl: K, DPy: B}
-Component: remove self.dOCp
-Use dICp in updateDictH
-eliminate DS_SPS (Constants) from O_90__Component/adaptPSites
-ini_Cp_LSI/LSJ/LST, ...LKI/LKJ/LKT --> only 2 functions instead of 6?
+* sigmoidal "step"-Function for external NO3- Conc.
+* Component: remove self.dOCp
+* eliminate DS_SPS (Constants) from O_90__Component/adaptPSites
+* use dICp in updateDictH
+* ini_Cp_LSI/LSJ/LST, ...LKI/LKJ/LKT --> only 2 functions instead of 6?
+* sigmoidal functions that define dependency of component reaction weights on small molecule concentrations should be more uniformly defined
 --------------------------------------------------------------------------------
 
 --------------------------------------------------------------------------------
@@ -33,4 +28,10 @@ Code updates done:
 * changes in conc. SMo: write back to SMo objects (sMo.cCnc) - Metabolite - small molecule - setConc
 * additional LKT01__+S------_LSI01--+K----__ reactions
 * additional state J for weak interaction (site S21 in "wrong" phosphorylation state)
+* Phosphatases 1 - 4 and Kinases X / Y should be system components as well
+	- S21: {Pyl: K, DPy: C}
+	- S28: {Pyl: X, DPy: D}
+	- S839: {Pyl: Y, DPy: A}
+	- S870: {Pyl: K, DPy: B}
+
 --------------------------------------------------------------------------------

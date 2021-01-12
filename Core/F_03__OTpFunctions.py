@@ -110,14 +110,26 @@ def changeCncSMo(inpFr, dO, dCncSMo, t, cID = None):
         dCncSMo[sSMo] += dO['dCncChgInt'][sSMo] + cncChgExt
         dCncSMo[sSMo] = GF.implMinMax(dCncSMo[sSMo], cncMn, cncMx)
 
+def incorpEnzyme(dICp, dO, lSPyl, lSDPy, sRct, sRctCl, sSpS):
+    x, sPylDPy = 0., GC.S_DO_PYL
+    if sRctCl in lSPyl:
+        sPylDPy = GC.S_DO_PYL
+    elif sRctCl in lSDPy:
+        sPylDPy = GC.S_DO_DPY
+    for sCpAse in dICp[sPylDPy][sSpS]:
+        x += dO['dN'][sCpAse]
+    dO['dH'][sRct] *= x
+
 def updateDictH(dICp, inpFr, dO, dCncSMo):
     dRUp, sSMoN, p = {}, GC.ID_NO3_1M, GC.P_DUMMY
+    lSPyl, lSDPy = inpFr.dClRct[GC.S_DO_PYL], inpFr.dClRct[GC.S_DO_DPY]
     # update the reaction rate constants according to the current [NO3-]
     for sRct, wtRct in inpFr.dRct.items():
         # NO3- dependency of incidences of each component
         sRctType, sRctClass, _ = inpFr.dTpRct[sRct]
-        assert (len(GF.splitStr(sRctClass)) >= 2 and
-                sRctClass in inpFr.dCpDepOnSMoCnc[sSMoN])
+        assert (len(GF.splitStr(sRctClass)) >= 2 and sRctClass in
+                inpFr.dCpDepOnSMoCnc[sSMoN])
+        b = sRctClass in lSPyl + lSDPy
         sSpS = GF.splitStr(sRctClass)[1]
         dParPSig = inpFr.dCpDepOnSMoCnc[sSMoN][sRctClass]
         p = GF.calcPSigmoidal(dCncSMo[sSMoN], dParPSig)
@@ -125,22 +137,10 @@ def updateDictH(dICp, inpFr, dO, dCncSMo):
         # recalculate dH, which contains the h_i (i = 1,... len(dH))
         dO['dH'][sRct] = dRUp[sRct]
         for sCpLHS in GF.partStr(sRct)[0]:
-            # TODO: add the case of 11-reactions with Ases
             dO['dH'][sRct] *= dO['dN'][sCpLHS]
-            # TODO: get the incidence of the correct Ase
-            # check if reaction is (de)phosphorylation
-            if sRctClass in (inpFr.dClRct[GC.S_DO_PYL] +
-                             inpFr.dClRct[GC.S_DO_PYL]):
-                x, sPylDPy = 0., GC.S_DO_PYL
-                if sRctClass in inpFr.dClRct[GC.S_DO_PYL]:
-                    sPylDPy = GC.S_DO_PYL
-                elif sRctClass in inpFr.dClRct[GC.S_DO_DPY]:
-                    sPylDPy = GC.S_DO_DPY
-                for sCpAse in dICp[sPylDPy][sSpS]:
-                    x += dO['dN'][sCpAse]
-                dO['dH'][sRct] *= x
-        b = sRctClass in inpFr.dClRct[GC.S_DO_PYL] + inpFr.dClRct[GC.S_DO_DPY]
-        if (sRctType in GC.L_S_RCT_2ORD or (sRctType == GC.S_RCT_11 and b)):
+        if b:   # check if reaction is (de)phosphorylation
+            incorpEnzyme(dICp, dO, lSPyl, lSDPy, sRct, sRctClass, sSpS)
+        if (sRctType in GC.L_S_RCT_2ORD or b):
             dO['dH'][sRct] /= inpFr.dOthInpV['VolC']
     # (?) update the reaction rate constants according to the current [H2PO4-]
 

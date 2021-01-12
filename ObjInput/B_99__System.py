@@ -22,6 +22,8 @@ yLbl_Cp = 'Component incidence'
 yLbl_Cnc = 'Molecule concentration (mM)'
 yLbl_Cnc_N = '$[NO_3^-]$ (mM)'          # y-label of NO3- concentration plot
 yLbl_Cnc_P = '$[H_2PO_4^-]$ (mM)'       # y-label of H2PO4- concentration plot
+# xLim = None                             # x limits of plot (None: autom.)
+# yLim = None                             # x limits of plot (None: autom.)
 tpMark_CpCnc = None                     # marker type of plot
 szMark_CpCnc = 1                        # marker size of plot
 ewMark_CpCnc = 1                        # marker edge width of plot
@@ -47,22 +49,27 @@ d_9_Groups = {cK: {'L--': ['L--'], 'S--': ['S--'], 'K--': ['K--'],
                    'LSI': ['LSI'], 'LSJ': ['LSJ'], 'LST': ['LST'],
                    'LKI': ['LKI'], 'LKJ': ['LKJ'], 'LKT': ['LKT']}
               for cK in [GC.S_MEAN, GC.S_SUM]}
-d_Int_vs_Tra = {cK: {'LSI': ['LSI', 'LSJ', 'LKI', 'LKJ'],
-                     'LST': ['LST', 'LKT']}
+d_I_vs_J_vs_T = {cK: {'LSI': ['LSI', 'LKI'],
+                      'LSJ': ['LSJ', 'LKJ'],
+                      'LST': ['LST', 'LKT']}
                 for cK in [GC.S_MEAN, GC.S_SUM]}
 d_S_vs_K = {cK: {'LSI': ['LSI', 'LSJ', 'LST'], 'LKI': ['LKI', 'LKJ', 'LKT']}
             for cK in [GC.S_MEAN, GC.S_SUM]}
 d_4_Int_Tra = {cK: {'LSI': ['LSI'], 'LSJ': ['LSJ'], 'LST': ['LST'],
                     'LKI': ['LKI'], 'LKJ': ['LKJ'], 'LKT': ['LKT']}
                for cK in [GC.S_MEAN, GC.S_SUM]}
-dlSY = {(sPlt_SSC, 'A__9_Main_Groups'): (lSCpAll + [GC.ID_NO3_1M], yLbl_CpCnc,
-                                         d_9_Groups),
-        (sPlt_SSC, 'B__Complexes'): (lSCpAll + [GC.ID_NO3_1M], yLbl_CpCnc,
-                                     d_4_Int_Tra),
-        (sPlt_SSC, 'C__Int_vs_Tra'): (lSCpAll + [GC.ID_NO3_1M], yLbl_CpCnc,
-                                      d_Int_vs_Tra),
-        (sPlt_SSC, 'D__LS-_vs_LK-'): (lSCpAll + [GC.ID_NO3_1M], yLbl_CpCnc,
-                                      d_S_vs_K),
+dlSY = {(sPlt_SCp, 'A__9_Main_Groups'): (lSCpAll, yLbl_Cp, d_9_Groups),
+        (sPlt_SCp, 'B__Complexes'): (lSCpAll, yLbl_Cp, d_4_Int_Tra),
+        (sPlt_SCp, 'C__I_vs_J_vs_T'): (lSCpAll, yLbl_Cp, d_I_vs_J_vs_T),
+        (sPlt_SCp, 'D__LS-_vs_LK-'): (lSCpAll, yLbl_Cp, d_S_vs_K),
+        # (sPlt_SSC, 'A__9_Main_Groups'): (lSCpAll + [GC.ID_NO3_1M], yLbl_CpCnc,
+        #                                  d_9_Groups),
+        # (sPlt_SSC, 'B__Complexes'): (lSCpAll + [GC.ID_NO3_1M], yLbl_CpCnc,
+        #                              d_4_Int_Tra),
+        # (sPlt_SSC, 'C__I_vs_J_vs_T'): (lSCpAll + [GC.ID_NO3_1M], yLbl_CpCnc,
+        #                                d_I_vs_J_vs_T),
+        # (sPlt_SSC, 'D__LS-_vs_LK-'): (lSCpAll + [GC.ID_NO3_1M], yLbl_CpCnc,
+        #                               d_S_vs_K),
         (sPlt_SCp, 1): (lSCpAll[:9], yLbl_Cp, None),
         (sPlt_SCp, None): (lSCpAll, yLbl_Cp, d_9_Groups),
         (sPlt_SCn, None): ([GC.ID_NO3_1M, GC.ID_H2PO4_1M], yLbl_Cnc, None)}

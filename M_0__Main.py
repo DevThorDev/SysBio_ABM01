@@ -26,14 +26,14 @@ cInpFrames = InputFrames(inDG)
 # cInpFrames.printDNCpObj()
 # cInpFrames.printDParCnc()
 # cInpFrames.printDTpRct()
-cInpFrames.printDClRct()
+# cInpFrames.printDClRct()
 # cInpFrames.printDRct()
 # cInpFrames.printDCpDepOnSMoCnc()
 # cInpFrames.printDSMoCncDepOnCp()
 # cInpFrames.printDOthInpV()
 
 cSystem = System(inDG, cInpFrames)
-cSystem.printDICp()
+# cSystem.printDICp()
 if cSystem.dIG['doEvoT']:
     cSystem.evolveOverTime(inDG, doPlots = cSystem.dIG['doPlots'])
 if cSystem.dIG['doPlots']:
