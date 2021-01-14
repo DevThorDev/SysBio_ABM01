@@ -1,11 +1,7 @@
 --------------------------------------------------------------------------------
 Code updates remaining:
 --------------------------------------------------------------------------------
-* sigmoidal "step"-Function for external NO3- Conc.
-* Component: remove self.dOCp
-* eliminate DS_SPS (Constants) from O_90__Component/adaptPSites
-* use dICp in updateDictH
-* ini_Cp_LSI/LSJ/LST, ...LKI/LKJ/LKT --> only 2 functions instead of 6?
+* sigmoidal/"step"-Function mixture for external NO3- Conc.
 * sigmoidal functions that define dependency of component reaction weights on small molecule concentrations should be more uniformly defined
 --------------------------------------------------------------------------------
 
@@ -33,5 +29,11 @@ Code updates done:
 	- S28: {Pyl: X, DPy: D}
 	- S839: {Pyl: Y, DPy: A}
 	- S870: {Pyl: K, DPy: B}
+* Component: remove self.dOCp
+* eliminate DS_SPS (Constants) from O_90__Component/adaptPSites
+* eliminate DS_SITES_PYL
+* use dICp in updateDictH
+* ini_Cp_LSI/LSJ/LST, ...LKI/LKJ/LKT --> only 2 functions instead of 6?
+* "step"-Function for external NO3- Conc.
 
 --------------------------------------------------------------------------------

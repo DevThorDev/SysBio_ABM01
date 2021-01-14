@@ -44,17 +44,36 @@ def doSinChange(x, dPar):
     else:
         return 0.0
 
+def doStepChange(x, dPar):
+    if (GC.S_STEP_T1 in dPar and GC.S_STEP_T2 in dPar and
+        GC.S_STEP_V01 in dPar and GC.S_STEP_V12 in dPar and
+        GC.S_STEP_V2T in dPar):
+        if x < dPar[GC.S_STEP_T1]:
+            return dPar[GC.S_STEP_V01]
+        elif (x >= dPar[GC.S_STEP_T1] and x < dPar[GC.S_STEP_T2]):
+            return dPar[GC.S_STEP_V12]
+        else:
+            return dPar[GC.S_STEP_V2T]
+    else:
+        return 0.0
+
 # --- Functions (O_80__Interaction) -------------------------------------------
-def doSiteChange(cO, sSpS, sPDAgent, doDePyl = False):
+def doSiteChange(cO, sSpS, lSCpAs, doPyl = True):
     opDone = False
     assert sSpS in cO.dSpS
     cSpS = cO.dSpS[sSpS]
-    if not doDePyl and cSpS.sSPTM == GC.S_NOT_PYL and sPDAgent in cSpS.lPyl:
-        cSpS.sSPTM = GC.S_IS_PYL
-        opDone = True
-    elif doDePyl and cSpS.sSPTM == GC.S_IS_PYL and sPDAgent in cSpS.lDPy:
-        cSpS.sSPTM = GC.S_NOT_PYL
-        opDone = True
+    if doPyl and cSpS.sSPTM == GC.S_NOT_PYL:
+        for sCpAs in lSCpAs:
+            if sCpAs in cSpS.lPyl:
+                cSpS.sSPTM = GC.S_IS_PYL
+                opDone = True
+                break
+    elif not doPyl and cSpS.sSPTM == GC.S_IS_PYL:
+        for sCpAs in lSCpAs:
+            if sCpAs in cSpS.lDPy:
+                cSpS.sSPTM = GC.S_NOT_PYL
+                opDone = True
+                break
     return opDone
 
 # --- Functions (O_90_Component) ----------------------------------------------
@@ -105,7 +124,7 @@ def changeCncSMo(inpFr, dO, dCncSMo, t, cID = None):
         if cTp == GC.S_CH_SIN:
             cncChgExt = doSinChange(t, dPar)
         elif cTp == GC.S_CH_STEP:
-            pass
+            cncChgExt = doStepChange(t, dPar)
         dCncSMo[sSMo] = dO['dCncIni'][sSMo]
         dCncSMo[sSMo] += dO['dCncChgInt'][sSMo] + cncChgExt
         dCncSMo[sSMo] = GF.implMinMax(dCncSMo[sSMo], cncMn, cncMx)
@@ -121,7 +140,7 @@ def incorpEnzyme(dICp, dO, lSPyl, lSDPy, sRct, sRctCl, sSpS):
     dO['dH'][sRct] *= x
 
 def updateDictH(dICp, inpFr, dO, dCncSMo):
-    dRUp, sSMoN, p = {}, GC.ID_NO3_1M, GC.P_DUMMY
+    sSMoN, p = GC.ID_NO3_1M, GC.P_DUMMY
     lSPyl, lSDPy = inpFr.dClRct[GC.S_DO_PYL], inpFr.dClRct[GC.S_DO_DPY]
     # update the reaction rate constants according to the current [NO3-]
     for sRct, wtRct in inpFr.dRct.items():
@@ -133,9 +152,8 @@ def updateDictH(dICp, inpFr, dO, dCncSMo):
         sSpS = GF.splitStr(sRctClass)[1]
         dParPSig = inpFr.dCpDepOnSMoCnc[sSMoN][sRctClass]
         p = GF.calcPSigmoidal(dCncSMo[sSMoN], dParPSig)
-        dRUp[sRct] = wtRct*p
         # recalculate dH, which contains the h_i (i = 1,... len(dH))
-        dO['dH'][sRct] = dRUp[sRct]
+        dO['dH'][sRct] = wtRct*p
         for sCpLHS in GF.partStr(sRct)[0]:
             dO['dH'][sRct] *= dO['dN'][sCpLHS]
         if b:   # check if reaction is (de)phosphorylation

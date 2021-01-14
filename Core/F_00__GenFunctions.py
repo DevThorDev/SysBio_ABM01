@@ -138,8 +138,8 @@ def sRct11(lSLHS, lSRHS):
                sRHS[:GC.I_S_CP_SEP1].strip(GC.S_DASH))
     for k, chLHS in enumerate(sLHS[GC.I_S_CP_SEP1:]):
         chRHS = sRHS[k + GC.I_S_CP_SEP1]
-        assert chLHS in GC.SET_01_DASH and chRHS in GC.SET_01_DASH
-        if chLHS in GC.SET_01 and chRHS in GC.SET_01:
+        assert chLHS in GC.SET_0_1_DASH and chRHS in GC.SET_0_1_DASH
+        if chLHS in GC.SET_0_1 and chRHS in GC.SET_0_1:
             if chLHS != chRHS:
                 if chLHS == GC.S_0 and chRHS == GC.S_1: # phosphorylation
                     sRctCl = GC.S_DO_PYL + GC.S_USC + lSKeys[k]
@@ -174,16 +174,16 @@ def sRct21(lSLHS, lSRHS):
     # find and check the appropriate value
     for k, chRHS in enumerate(sRHS[GC.I_S_CP_SEP1:]):
         chLHS1, chLHS2 = sLHS1[k + GC.I_S_CP_SEP1], sLHS2[k + GC.I_S_CP_SEP1]
-        assert (chLHS1 in GC.SET_01_DASH and chLHS2 in GC.SET_01_DASH and
-                chRHS in GC.SET_01_DASH)
-        if chLHS1 in GC.SET_01 and chLHS2 not in GC.SET_01:
+        assert (chLHS1 in GC.SET_0_1_DASH and chLHS2 in GC.SET_0_1_DASH and
+                chRHS in GC.SET_0_1_DASH)
+        if chLHS1 in GC.SET_0_1 and chLHS2 not in GC.SET_0_1:
             s01LHS += chLHS1
-        elif chLHS2 in GC.SET_01 and chLHS1 not in GC.SET_01:
+        elif chLHS2 in GC.SET_0_1 and chLHS1 not in GC.SET_0_1:
             s01LHS += chLHS2
-        elif chLHS1 in GC.SET_01 and chLHS2 in GC.SET_01:
+        elif chLHS1 in GC.SET_0_1 and chLHS2 in GC.SET_0_1:
             print('ERROR: Position', k + GC.I_S_CP_SEP1, ': LHS string 1 is',
                   chLHS1, 'while LHS string 2 is', chLHS2)
-        if chRHS in GC.SET_01:
+        if chRHS in GC.SET_0_1:
             s01RHS += chRHS
     # if OK, add the pair to the dict.
     if len(sRctCl) > len(GC.S_DO_FRM + GC.S_USC) and s01LHS == s01RHS:
@@ -219,16 +219,16 @@ def sRct12(lSLHS, lSRHS):
     # find and check the appropriate value
     for k, chLHS in enumerate(sLHS[GC.I_S_CP_SEP1:]):
         chRHS1, chRHS2 = sRHS1[k + GC.I_S_CP_SEP1], sRHS2[k + GC.I_S_CP_SEP1]
-        assert (chLHS in GC.SET_01_DASH and chRHS1 in GC.SET_01_DASH and
-                chRHS2 in GC.SET_01_DASH)
-        if chRHS1 in GC.SET_01 and chRHS2 not in GC.SET_01:
+        assert (chLHS in GC.SET_0_1_DASH and chRHS1 in GC.SET_0_1_DASH and
+                chRHS2 in GC.SET_0_1_DASH)
+        if chRHS1 in GC.SET_0_1 and chRHS2 not in GC.SET_0_1:
             s01RHS += chRHS1
-        elif chRHS2 in GC.SET_01 and chRHS1 not in GC.SET_01:
+        elif chRHS2 in GC.SET_0_1 and chRHS1 not in GC.SET_0_1:
             s01RHS += chRHS2
-        elif chRHS1 in GC.SET_01 and chRHS2 in GC.SET_01:
+        elif chRHS1 in GC.SET_0_1 and chRHS2 in GC.SET_0_1:
             print('ERROR: Position', k + GC.I_S_CP_SEP1, ': RHS string 1 is',
                   chRHS1, 'while RHS string 2 is', chRHS2)
-        if chLHS in GC.SET_01:
+        if chLHS in GC.SET_0_1:
             s01LHS += chLHS
     # if OK, add the pair to the dict.
     if len(sRctCl) > len(GC.S_DO_DIS + GC.S_USC) and s01LHS == s01RHS:
@@ -271,20 +271,20 @@ def sRct22(lSLHS, lSRHS):
     for k, _ in enumerate(sLHS1[GC.I_S_CP_SEP1:]):
         chLHS1, chLHS2 = sLHS1[k + GC.I_S_CP_SEP1], sLHS2[k + GC.I_S_CP_SEP1]
         chRHS1, chRHS2 = sRHS1[k + GC.I_S_CP_SEP1], sRHS2[k + GC.I_S_CP_SEP1]
-        assert (chLHS1 in GC.SET_01_DASH and chLHS2 in GC.SET_01_DASH and
-                chRHS1 in GC.SET_01_DASH and chRHS2 in GC.SET_01_DASH)
-        if chLHS1 in GC.SET_01 and chLHS2 not in GC.SET_01:
+        assert (chLHS1 in GC.SET_0_1_DASH and chLHS2 in GC.SET_0_1_DASH and
+                chRHS1 in GC.SET_0_1_DASH and chRHS2 in GC.SET_0_1_DASH)
+        if chLHS1 in GC.SET_0_1 and chLHS2 not in GC.SET_0_1:
             s01LHS += chLHS1
-        elif chLHS2 in GC.SET_01 and chLHS1 not in GC.SET_01:
+        elif chLHS2 in GC.SET_0_1 and chLHS1 not in GC.SET_0_1:
             s01LHS += chLHS2
-        elif chLHS1 in GC.SET_01 and chLHS2 in GC.SET_01:
+        elif chLHS1 in GC.SET_0_1 and chLHS2 in GC.SET_0_1:
             print('ERROR: Position', k + GC.I_S_CP_SEP1, ': LHS string 1 is',
                   chLHS1, 'while LHS string 2 is', chLHS2)
-        if chRHS1 in GC.SET_01 and chRHS2 not in GC.SET_01:
+        if chRHS1 in GC.SET_0_1 and chRHS2 not in GC.SET_0_1:
             s01RHS += chRHS1
-        elif chRHS2 in GC.SET_01 and chRHS1 not in GC.SET_01:
+        elif chRHS2 in GC.SET_0_1 and chRHS1 not in GC.SET_0_1:
             s01RHS += chRHS2
-        elif chRHS1 in GC.SET_01 and chRHS2 in GC.SET_01:
+        elif chRHS1 in GC.SET_0_1 and chRHS2 in GC.SET_0_1:
             print('ERROR: Position', k + GC.I_S_CP_SEP1, ': RHS string 1 is',
                   chRHS1, 'while RHS string 2 is', chRHS2)
     # if OK, add the pair to the dict.

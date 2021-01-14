@@ -50,9 +50,9 @@ S_STAR = '*'
 S_COM_BL = ', '
 
 # --- sets --------------------------------------------------------------------
-SET_01 = {S_0, S_1}
-SET_01_USC = {S_0, S_1, S_USC}
-SET_01_DASH = {S_0, S_1, S_DASH}
+SET_0_1 = {S_0, S_1}
+SET_0_1_USC = {S_0, S_1, S_USC}
+SET_0_1_DASH = {S_0, S_1, S_DASH}
 
 # --- constants related to molecule objects -----------------------------------
 
@@ -147,7 +147,11 @@ D_ID_TO_CPSX = {ID_LPR_NRT2P1: S_L__, ID_SPR_NAR2P1: S_S__,
 S_CNC_INI = 'concIni'
 S_PERIOD_CHG = 'periodChg'
 S_AMPL_CHG = 'amplitudeChg'
-S_THR_LOW_CNC = 'thrLowConc'
+S_STEP_T1 = 'stepTime1'
+S_STEP_T2 = 'stepTime2'
+S_STEP_V01 = 'stepVal01'
+S_STEP_V12 = 'stepVal12'
+S_STEP_V2T = 'stepVal2T'
 S_THR_HIGH_CNC = 'thrHighConc'
 
 S_PROP_INC_CP_LS = 'propIncCpLS'
@@ -164,12 +168,6 @@ S_SPS_K_S839 = 'S839'
 S_SPS_K_S870 = 'S870'
 L_S_SPS = [S_SPS_L_S21, S_SPS_L_S28, S_SPS_K_S839, S_SPS_K_S870]
 
-DS_SPS_L = {S_SPS_L_S21: {'iSP': 3, ID_KAS: ID_KAS_K, ID_PAS: ID_PAS_C},
-            S_SPS_L_S28: {'iSP': 4, ID_KAS: ID_KAS_X, ID_PAS: ID_PAS_D}}
-DS_SPS_K = {S_SPS_K_S839: {'iSP': 5, ID_KAS: ID_KAS_Y, ID_PAS: ID_PAS_A},
-            S_SPS_K_S870: {'iSP': 6, ID_KAS: ID_KAS_K, ID_PAS: ID_PAS_B}}
-DS_SPS = {ID_LPR_NRT2P1: DS_SPS_L, ID_KAS_K: DS_SPS_K}
-
 # --- constants related to interactions ---------------------------------------
 L_S_LSK = [S_L, S_S, S_K]
 L_S_IJT = [S_I, S_J, S_T]
@@ -182,7 +180,6 @@ S_DO_FRM = 'Frm'
 S_DO_DIS = 'Dis'
 S_DO_IPC = 'IPC'
 L_RCT_TYPE = [S_DO_PYL, S_DO_DPY, S_DO_FRM, S_DO_DIS, S_DO_IPC]
-DS_SITES_PYL = {S_0: (S_DO_DPY, ID_PAS), S_1: (S_DO_PYL, ID_KAS)}
 
 S_IS_PYL = 'P+'
 S_NOT_PYL = 'P-'
@@ -237,14 +234,22 @@ S_STR_PAR_1_TCHG = 'StrPar1_TChg'
 S_STR_PAR_2_TCHG = 'StrPar2_TChg'
 S_STR_PAR_3_TCHG = 'StrPar3_TChg'
 S_STR_PAR_4_TCHG = 'StrPar4_TChg'
+S_STR_PAR_5_TCHG = 'StrPar5_TChg'
+S_STR_PAR_6_TCHG = 'StrPar6_TChg'
+S_STR_PAR_7_TCHG = 'StrPar7_TChg'
 L_S_STR_PAR_TCHG = [S_STR_PAR_1_TCHG, S_STR_PAR_2_TCHG, S_STR_PAR_3_TCHG,
-                    S_STR_PAR_4_TCHG]
+                    S_STR_PAR_4_TCHG, S_STR_PAR_5_TCHG, S_STR_PAR_6_TCHG,
+                    S_STR_PAR_7_TCHG]
 S_VAL_PAR_1_TCHG = 'ValPar1_TChg'
 S_VAL_PAR_2_TCHG = 'ValPar2_TChg'
 S_VAL_PAR_3_TCHG = 'ValPar3_TChg'
 S_VAL_PAR_4_TCHG = 'ValPar4_TChg'
+S_VAL_PAR_5_TCHG = 'ValPar5_TChg'
+S_VAL_PAR_6_TCHG = 'ValPar6_TChg'
+S_VAL_PAR_7_TCHG = 'ValPar7_TChg'
 L_S_VAL_PAR_TCHG = [S_VAL_PAR_1_TCHG, S_VAL_PAR_2_TCHG, S_VAL_PAR_3_TCHG,
-                    S_VAL_PAR_4_TCHG]
+                    S_VAL_PAR_4_TCHG, S_VAL_PAR_5_TCHG, S_VAL_PAR_6_TCHG,
+                    S_VAL_PAR_7_TCHG]
 S_VAL = 'Value'
 S_VAL_ABS_CH = 'ValueAbsoluteChange'
 S_PAR_DESC = 'ParameterDescription'
@@ -265,6 +270,20 @@ S_VAR = 'Variable'
 # --- constants related to components (short and long form) -------------------
 S_SHORT = 'SHORT'
 S_LONG = 'LONG'
+
+S_DESC_L__ = 'Component NRT2.1 (L)'
+S_DESC_S__ = 'Component NAR2.1 (S)'
+S_DESC_K__ = 'Component HPCAL1 (K)'
+S_DESC_OAS = 'Component '
+S_DESC_LSI = 'Component NRT2.1-NAR2.1 (LS) strong interaction'
+S_DESC_LSJ = 'Component NRT2.1-NAR2.1 (LS) weak interaction'
+S_DESC_LST = 'Component NRT2.1-NAR2.1 (LS) transition'
+S_DESC_LKI = 'Component NRT2.1-HPCAL1 (LK) strong interaction'
+S_DESC_LKJ = 'Component NRT2.1-HPCAL1 (LK) weak interaction'
+S_DESC_LKT = 'Component NRT2.1-HPCAL1 (LK) transition'
+D_DESC = {S_L__: S_DESC_L__, S_S__: S_DESC_S__, S_K__: S_DESC_K__,
+          S_LSI: S_DESC_LSI, S_LSJ: S_DESC_LSJ, S_LST: S_DESC_LST,
+          S_LKI: S_DESC_LKI, S_LKJ: S_DESC_LKJ, S_LKT: S_DESC_LKT}
 
 # --- constants related to reactions ------------------------------------------
 S_RCT_11 = S_1 + S_1
