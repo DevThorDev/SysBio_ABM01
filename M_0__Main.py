@@ -39,7 +39,7 @@ if cSystem.dIG['doEvoT']:
 if cSystem.dIG['doPlots']:
     cSystem.plotResEvo(sFRes = cSystem.dITp['sF_SysEvo'], overWr = False)
 cSystem.printNCompObjSys()
-# cSystem.printAllCompObjSys()
+cSystem.printAllCompObjSys()
 cSystem.printSMo()
 # cSystem.printCncSMo()
 

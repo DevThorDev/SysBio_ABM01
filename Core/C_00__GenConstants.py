@@ -145,13 +145,14 @@ D_ID_TO_CPSX = {ID_LPR_NRT2P1: S_L__, ID_SPR_NAR2P1: S_S__,
                 ID_PAS_D: S_D__}
 
 S_CNC_INI = 'concIni'
+S_QMIX = 'qMix'
 S_PERIOD_CHG = 'periodChg'
 S_AMPL_CHG = 'amplitudeChg'
 S_STEP_T1 = 'stepTime1'
 S_STEP_T2 = 'stepTime2'
 S_STEP_V01 = 'stepVal01'
 S_STEP_V12 = 'stepVal12'
-S_STEP_V2T = 'stepVal2T'
+S_STEP_V_T = 'stepVal_T'
 S_THR_HIGH_CNC = 'thrHighConc'
 
 S_PROP_INC_CP_LS = 'propIncCpLS'
@@ -160,6 +161,7 @@ S_PROP_DEC_CP_LK = 'propDecCpLK'
 S_NO = 'no'
 S_CH_SIN = 'sin'
 S_CH_STEP = 'step'
+S_CH_MXDQ = 'mixedQ'
 
 # --- constants related to specific sites -------------------------------------
 S_SPS_L_S21 = 'S21'
@@ -230,6 +232,7 @@ L_S_VAL_PAR_INI = [S_VAL_PAR_1_INI, S_VAL_PAR_2_INI]
 S_CNC_MIN = 'ConcMin'
 S_CNC_MAX = 'ConcMax'
 S_CNC_CHG_MODE = 'ConcChgMode'
+S_STR_PAR_0_TCHG = 'StrPar0_TChg'
 S_STR_PAR_1_TCHG = 'StrPar1_TChg'
 S_STR_PAR_2_TCHG = 'StrPar2_TChg'
 S_STR_PAR_3_TCHG = 'StrPar3_TChg'
@@ -237,9 +240,10 @@ S_STR_PAR_4_TCHG = 'StrPar4_TChg'
 S_STR_PAR_5_TCHG = 'StrPar5_TChg'
 S_STR_PAR_6_TCHG = 'StrPar6_TChg'
 S_STR_PAR_7_TCHG = 'StrPar7_TChg'
-L_S_STR_PAR_TCHG = [S_STR_PAR_1_TCHG, S_STR_PAR_2_TCHG, S_STR_PAR_3_TCHG,
-                    S_STR_PAR_4_TCHG, S_STR_PAR_5_TCHG, S_STR_PAR_6_TCHG,
-                    S_STR_PAR_7_TCHG]
+L_S_STR_PAR_TCHG = [S_STR_PAR_0_TCHG, S_STR_PAR_1_TCHG, S_STR_PAR_2_TCHG,
+                    S_STR_PAR_3_TCHG, S_STR_PAR_4_TCHG, S_STR_PAR_5_TCHG,
+                    S_STR_PAR_6_TCHG, S_STR_PAR_7_TCHG]
+S_VAL_PAR_0_TCHG = 'ValPar0_TChg'
 S_VAL_PAR_1_TCHG = 'ValPar1_TChg'
 S_VAL_PAR_2_TCHG = 'ValPar2_TChg'
 S_VAL_PAR_3_TCHG = 'ValPar3_TChg'
@@ -247,9 +251,9 @@ S_VAL_PAR_4_TCHG = 'ValPar4_TChg'
 S_VAL_PAR_5_TCHG = 'ValPar5_TChg'
 S_VAL_PAR_6_TCHG = 'ValPar6_TChg'
 S_VAL_PAR_7_TCHG = 'ValPar7_TChg'
-L_S_VAL_PAR_TCHG = [S_VAL_PAR_1_TCHG, S_VAL_PAR_2_TCHG, S_VAL_PAR_3_TCHG,
-                    S_VAL_PAR_4_TCHG, S_VAL_PAR_5_TCHG, S_VAL_PAR_6_TCHG,
-                    S_VAL_PAR_7_TCHG]
+L_S_VAL_PAR_TCHG = [S_VAL_PAR_0_TCHG, S_VAL_PAR_1_TCHG, S_VAL_PAR_2_TCHG,
+                    S_VAL_PAR_3_TCHG, S_VAL_PAR_4_TCHG, S_VAL_PAR_5_TCHG,
+                    S_VAL_PAR_6_TCHG, S_VAL_PAR_7_TCHG]
 S_VAL = 'Value'
 S_VAL_ABS_CH = 'ValueAbsoluteChange'
 S_PAR_DESC = 'ParameterDescription'

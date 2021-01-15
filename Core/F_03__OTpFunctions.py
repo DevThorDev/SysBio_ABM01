@@ -37,25 +37,68 @@ def getDITp(dIG, iTp, lITpU):
     return dITp
 
 # --- Functions (O_03__Metabolite) --------------------------------------------
+def clampF(x, xSlopeStart = 0., xSlopeEnd = 1.):
+    assert xSlopeEnd >= xSlopeStart
+    if x < xSlopeStart:
+        x = xSlopeStart
+    elif x > xSlopeEnd:
+        x = xSlopeEnd
+    return x
+
+def smoothStepF(x, edgeL = 0., edgeR = 1., cOrdSm = 0):
+    # scale, bias and saturate x to the [0, 1] range
+    x = clampF((x - edgeL)/(edgeR - edgeL))
+    # evaluate polynomial corresponding to current smoothing order cOrdSm
+    if cOrdSm == 1:
+        return x*x*(3 - 2*x)
+    elif cOrdSm == 2:
+        return x*x*x*(x*(x*6 - 15) + 10)
+    else:
+        return x
+
+def doStepChange(x, dPar):
+    if (GC.S_STEP_T1 in dPar and GC.S_STEP_V01 in dPar and
+        GC.S_STEP_V_T in dPar):
+        edgeL, edgeR = 0., 0.
+        if (GC.S_STEP_T2 in dPar and GC.S_STEP_V12 in dPar):
+            if x < dPar[GC.S_STEP_T1]:
+                return dPar[GC.S_STEP_V01]
+            elif (x >= dPar[GC.S_STEP_T1] and x < dPar[GC.S_STEP_T2]):
+                return dPar[GC.S_STEP_V12]
+            else:
+                return dPar[GC.S_STEP_V_T]
+        else:
+            if x < dPar[GC.S_STEP_T1]:
+                return dPar[GC.S_STEP_V01]
+            else:
+                return dPar[GC.S_STEP_V_T]
+    else:
+        return 0.0
+
+def doSmoothStepChange(x, dPar, edgeL = 0.2, edgeR = 0.8):
+    # scale, bias and saturate x to the [0, 1] range
+    x = clampF((x - edgeL)/(edgeR - edgeL))
+    # evaluate corresponding polynomial
+    return x*x*(3 - 2*x)
+
 def doSinChange(x, dPar):
-    if GC.S_PERIOD_CHG in dPar and GC.S_AMPL_CHG in dPar:
+    if (GC.S_PERIOD_CHG in dPar and GC.S_AMPL_CHG in dPar):
         cPeriod, cAmplit = dPar[GC.S_PERIOD_CHG], dPar[GC.S_AMPL_CHG]
         return cAmplit*np.sin(x*2*np.pi/cPeriod)
     else:
         return 0.0
 
-def doStepChange(x, dPar):
-    if (GC.S_STEP_T1 in dPar and GC.S_STEP_T2 in dPar and
-        GC.S_STEP_V01 in dPar and GC.S_STEP_V12 in dPar and
-        GC.S_STEP_V2T in dPar):
-        if x < dPar[GC.S_STEP_T1]:
-            return dPar[GC.S_STEP_V01]
-        elif (x >= dPar[GC.S_STEP_T1] and x < dPar[GC.S_STEP_T2]):
-            return dPar[GC.S_STEP_V12]
-        else:
-            return dPar[GC.S_STEP_V2T]
+def doMixedQChange(x, dPar):
+    cChg, qMix = 0.0, dPar[GC.S_QMIX]
+    if (GC.S_QMIX in dPar and GC.S_STEP_T1 in dPar and
+        GC.S_STEP_V01 in dPar and GC.S_STEP_V_T in dPar):
+        cChg += (1 - qMix)*doStepChange(x, dPar)
+        if (GC.S_PERIOD_CHG in dPar and GC.S_AMPL_CHG in dPar):
+            cChg += qMix*doSinChange(x, dPar)
     else:
-        return 0.0
+        if (GC.S_PERIOD_CHG in dPar and GC.S_AMPL_CHG in dPar):
+            cChg += qMix*doSinChange(x, dPar)
+    return cChg
 
 # --- Functions (O_80__Interaction) -------------------------------------------
 def doSiteChange(cO, sSpS, lSCpAs, doPyl = True):
@@ -121,10 +164,12 @@ def changeCncSMo(inpFr, dO, dCncSMo, t, cID = None):
         dO['dCncChgInt'][sSMo] += cncChgInt
         # externally forced conc. change
         cTp, dPar = cD[GC.S_CNC_CHG_MODE]
-        if cTp == GC.S_CH_SIN:
-            cncChgExt = doSinChange(t, dPar)
-        elif cTp == GC.S_CH_STEP:
+        if cTp == GC.S_CH_STEP:
             cncChgExt = doStepChange(t, dPar)
+        elif cTp == GC.S_CH_SIN:
+            cncChgExt = doSinChange(t, dPar)
+        elif cTp == GC.S_CH_MXDQ:
+            cncChgExt = doMixedQChange(t, dPar)
         dCncSMo[sSMo] = dO['dCncIni'][sSMo]
         dCncSMo[sSMo] += dO['dCncChgInt'][sSMo] + cncChgExt
         dCncSMo[sSMo] = GF.implMinMax(dCncSMo[sSMo], cncMn, cncMx)
