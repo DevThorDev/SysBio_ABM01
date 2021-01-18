@@ -145,6 +145,8 @@ D_ID_TO_CPSX = {ID_LPR_NRT2P1: S_L__, ID_SPR_NAR2P1: S_S__,
                 ID_PAS_D: S_D__}
 
 S_CNC_INI = 'concIni'
+S_THR_HIGH_CNC = 'thrHighConc'
+
 S_QMIX = 'qMix'
 S_PERIOD_CHG = 'periodChg'
 S_AMPL_CHG = 'amplitudeChg'
@@ -153,7 +155,9 @@ S_STEP_T2 = 'stepTime2'
 S_STEP_V01 = 'stepVal01'
 S_STEP_V12 = 'stepVal12'
 S_STEP_V_T = 'stepVal_T'
-S_THR_HIGH_CNC = 'thrHighConc'
+S_DLT_SM_1 = 'deltaSm1'
+S_DLT_SM_2 = 'deltaSm2'
+S_SM_ORD = 'smOrd'
 
 S_PROP_INC_CP_LS = 'propIncCpLS'
 S_PROP_DEC_CP_LK = 'propDecCpLK'
@@ -240,9 +244,13 @@ S_STR_PAR_4_TCHG = 'StrPar4_TChg'
 S_STR_PAR_5_TCHG = 'StrPar5_TChg'
 S_STR_PAR_6_TCHG = 'StrPar6_TChg'
 S_STR_PAR_7_TCHG = 'StrPar7_TChg'
+S_STR_PAR_8_TCHG = 'StrPar8_TChg'
+S_STR_PAR_9_TCHG = 'StrPar9_TChg'
+S_STR_PAR_10_TCHG = 'StrPar10_TChg'
 L_S_STR_PAR_TCHG = [S_STR_PAR_0_TCHG, S_STR_PAR_1_TCHG, S_STR_PAR_2_TCHG,
                     S_STR_PAR_3_TCHG, S_STR_PAR_4_TCHG, S_STR_PAR_5_TCHG,
-                    S_STR_PAR_6_TCHG, S_STR_PAR_7_TCHG]
+                    S_STR_PAR_6_TCHG, S_STR_PAR_7_TCHG, S_STR_PAR_8_TCHG,
+                    S_STR_PAR_9_TCHG, S_STR_PAR_10_TCHG]
 S_VAL_PAR_0_TCHG = 'ValPar0_TChg'
 S_VAL_PAR_1_TCHG = 'ValPar1_TChg'
 S_VAL_PAR_2_TCHG = 'ValPar2_TChg'
@@ -251,9 +259,13 @@ S_VAL_PAR_4_TCHG = 'ValPar4_TChg'
 S_VAL_PAR_5_TCHG = 'ValPar5_TChg'
 S_VAL_PAR_6_TCHG = 'ValPar6_TChg'
 S_VAL_PAR_7_TCHG = 'ValPar7_TChg'
+S_VAL_PAR_8_TCHG = 'ValPar8_TChg'
+S_VAL_PAR_9_TCHG = 'ValPar9_TChg'
+S_VAL_PAR_10_TCHG = 'ValPar10_TChg'
 L_S_VAL_PAR_TCHG = [S_VAL_PAR_0_TCHG, S_VAL_PAR_1_TCHG, S_VAL_PAR_2_TCHG,
                     S_VAL_PAR_3_TCHG, S_VAL_PAR_4_TCHG, S_VAL_PAR_5_TCHG,
-                    S_VAL_PAR_6_TCHG, S_VAL_PAR_7_TCHG]
+                    S_VAL_PAR_6_TCHG, S_VAL_PAR_7_TCHG, S_VAL_PAR_8_TCHG,
+                    S_VAL_PAR_9_TCHG, S_VAL_PAR_10_TCHG]
 S_VAL = 'Value'
 S_VAL_ABS_CH = 'ValueAbsoluteChange'
 S_PAR_DESC = 'ParameterDescription'

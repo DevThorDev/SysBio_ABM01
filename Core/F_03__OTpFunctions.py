@@ -45,41 +45,79 @@ def clampF(x, xSlopeStart = 0., xSlopeEnd = 1.):
         x = xSlopeEnd
     return x
 
-def smoothStepF(x, edgeL = 0., edgeR = 1., cOrdSm = 0):
-    # scale, bias and saturate x to the [0, 1] range
-    x = clampF((x - edgeL)/(edgeR - edgeL))
-    # evaluate polynomial corresponding to current smoothing order cOrdSm
-    if cOrdSm == 1:
-        return x*x*(3 - 2*x)
-    elif cOrdSm == 2:
-        return x*x*x*(x*(x*6 - 15) + 10)
+def smoothStepF(x, lX_LR = [0., 1.], lY_LR = [0., 1.], cOrdSm = 0):
+    assert (len(lX_LR) == len(lY_LR) and len(lX_LR) == 2)
+    ((xL, xR), (yL, yR)) = lX_LR, lY_LR
+    lbd = 1.
+    if xL != xR:
+        # scale, bias and saturate x to the [0, 1] range
+        x = clampF((x - xL)/abs(xR - xL))
+        lbd = x
+        # evaluate polynomial corresponding to current smoothing order cOrdSm
+        if cOrdSm == 1:
+            lbd = x*x*(-2*x + 3)
+        elif cOrdSm == 2:
+            lbd = x*x*x*(x*(6*x - 15) + 10)
+        elif cOrdSm == 3:
+            lbd = x*x*x*x*(x*(x*(-20*x + 70) - 84) + 35)
+    return yL + lbd*(yR - yL)
+
+def stepF_1Step(dPar, x, lX_LR, lY_LR, lSStep, cOrdSm = 0):
+    assert (len(lX_LR) == len(lY_LR) and len(lX_LR) == len(lSStep) and
+            len(lX_LR) >= 2)
+    if (x < lX_LR[0]):
+        return dPar[lSStep[0]]
+    elif (x >= lX_LR[0] and x < lX_LR[1]):
+        return smoothStepF(x, lX_LR, lY_LR, cOrdSm)
     else:
-        return x
+        return dPar[lSStep[1]]
+
+def stepF_2Step(dPar, x, lX_LR1, lX_LR2, lY_LR1, lY_LR2, lSStep, cOrdSm = 0):
+    assert (len(lX_LR1) == len(lY_LR1) and len(lX_LR2) == len(lY_LR2) and
+            len(lX_LR1) >= 2 and len(lX_LR2) >= 2 and len(lSStep) >= 3)
+    if (x < lX_LR1[0]):
+        return dPar[lSStep[0]]
+    elif (x >= lX_LR1[0] and x < lX_LR1[1]):
+        return smoothStepF(x, lX_LR1, lY_LR1, cOrdSm)
+    elif (x >= lX_LR1[1] and x < lX_LR2[0]):
+        return dPar[lSStep[1]]
+    elif (x >= lX_LR2[0] and x < lX_LR2[1]):
+        return smoothStepF(x, lX_LR2, lY_LR2, cOrdSm)
+    else:
+        return dPar[lSStep[2]]
 
 def doStepChange(x, dPar):
-    if (GC.S_STEP_T1 in dPar and GC.S_STEP_V01 in dPar and
-        GC.S_STEP_V_T in dPar):
-        edgeL, edgeR = 0., 0.
-        if (GC.S_STEP_T2 in dPar and GC.S_STEP_V12 in dPar):
-            if x < dPar[GC.S_STEP_T1]:
-                return dPar[GC.S_STEP_V01]
-            elif (x >= dPar[GC.S_STEP_T1] and x < dPar[GC.S_STEP_T2]):
-                return dPar[GC.S_STEP_V12]
-            else:
-                return dPar[GC.S_STEP_V_T]
+    sStepT1, sStepT2 = GC.S_STEP_T1, GC.S_STEP_T2
+    sStepV01, sStepV12, sStepV_T = GC.S_STEP_V01, GC.S_STEP_V12, GC.S_STEP_V_T
+    sDltSm1, sDltSm2, sSmOrd = GC.S_DLT_SM_1, GC.S_DLT_SM_2, GC.S_SM_ORD
+    if (sStepT1 in dPar and sStepV01 in dPar and sStepV_T in dPar):
+        yL_T1, yR_T1, smOrd = dPar[sStepV01], dPar[sStepV_T], -1
+        xL_T1, xR_T1 = dPar[sStepT1], dPar[sStepT1]
+        if sSmOrd in dPar:
+            smOrd = dPar[sSmOrd]
+        if (sDltSm1 in dPar and smOrd >= 0):
+            assert dPar[sDltSm1] >= 0
+            xL_T1 = dPar[sStepT1] - dPar[sDltSm1]
+            xR_T1 = dPar[sStepT1] + dPar[sDltSm1]
+        if (sStepT2 in dPar and sStepV12 in dPar):
+            assert dPar[sStepT1] <= dPar[sStepT2]
+            yR_T1, yR_T2 = dPar[sStepV12], dPar[sStepV_T]
+            yL_T2, xL_T2, xR_T2 = yR_T1, dPar[sStepT2], dPar[sStepT2]
+            if (sDltSm2 in dPar and smOrd >= 0):
+                assert dPar[sDltSm2] >= 0
+                xL_T2 = dPar[sStepT2] - dPar[sDltSm2]
+                xR_T2 = dPar[sStepT2] + dPar[sDltSm2]
+            if (xL_T2 < xR_T1):
+                xL_T2 = 0.5*(xR_T1 + xL_T2)
+                xR_T1 = xL_T2
+            return stepF_2Step(dPar, x, [xL_T1, xR_T1], [xL_T2, xR_T2],
+                               [yL_T1, yR_T1], [yL_T2, yR_T2],
+                               [sStepV01, sStepV12, sStepV_T], cOrdSm = smOrd)
         else:
-            if x < dPar[GC.S_STEP_T1]:
-                return dPar[GC.S_STEP_V01]
-            else:
-                return dPar[GC.S_STEP_V_T]
+            return stepF_1Step(dPar, x, [xL_T1, xR_T1], [yL_T1, yR_T1],
+                               [sStepV01, sStepV_T], cOrdSm = smOrd)
     else:
         return 0.0
-
-def doSmoothStepChange(x, dPar, edgeL = 0.2, edgeR = 0.8):
-    # scale, bias and saturate x to the [0, 1] range
-    x = clampF((x - edgeL)/(edgeR - edgeL))
-    # evaluate corresponding polynomial
-    return x*x*(3 - 2*x)
 
 def doSinChange(x, dPar):
     if (GC.S_PERIOD_CHG in dPar and GC.S_AMPL_CHG in dPar):
