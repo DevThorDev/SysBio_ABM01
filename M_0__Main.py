@@ -40,7 +40,7 @@ for cRep in range(1, inDG.dI['nReps'] + 1):
         cSystem.evolveOverTime(inDG, doPlots = cSystem.dIG['doPlots'])
     if cSystem.dIG['doPlots']:
         cSystem.plotResEvo(sFRes = cSystem.dITp['sF_SysEvo'], overWr = False)
-    dResRed = SF.reduceData(inDG.dI, cSystem.dResEvo)
+    dResRed = SF.reduceData(inDG.dI, cSystem.dfrResEvo)
     cSystem.printNCompObjSys()
     # cSystem.printAllCompObjSys()
     cSystem.printSMo()
