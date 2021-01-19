@@ -7,6 +7,17 @@ import pandas as pd
 import Core.C_00__GenConstants as GC
 import Core.F_00__GenFunctions as GF
 
+# --- Functions (M_0__Main) ---------------------------------------------------
+def reduceData(dIG, dfrRes):
+    halfStep = dIG['tMax']/(2*dIG['nTSAllRep'])
+    lTimes = [k*halfStep for k in range(1, 2*dIG['nTSAllRep'], 2)]
+    assert GC.S_TIME in dfrRes.columns
+    lDfr = [dfrRes[dfrRes[GC.S_TIME] >= lTimes[k] and
+                   dfrRes[GC.S_TIME] < lTimes[k + 1]]
+            for k in range(1, len(lTimes) - 1)]
+    lDfr = ([dfrRes[dfrRes[GC.S_TIME] < lTimes[1]]] + lDfr +
+            [dfrRes[dfrRes[GC.S_TIME] >= lTimes[-2]]])
+
 # --- Functions (O_90__Component) ---------------------------------------------
 def setPylDPy(sCp, iSpS):
     assert len(sCp) == GC.LEN_S_CP

@@ -12,6 +12,8 @@ levelDebugOut = 2   # level of debug output (0: no debug output)
 # --- Input: Flow control -----------------------------------------------------
 doEvoT = True
 doPlots = True
+nReps = 1                   # 10
+nTSAllRep = 100             # 1000
 tStart = 0                  # 0
 tMax = 10.                  # 10.
 maxTS = 10000000            # 10000000
@@ -43,6 +45,8 @@ dictInpG = {# --- Input: Debug Info
             # --- Input: Flow control
             'doEvoT': doEvoT,
             'doPlots': doPlots,
+            'nReps': nReps,
+            'nTSAllRep': nTSAllRep,
             'tStart': tStart,
             'tMax': tMax,
             'maxTS': maxTS,
