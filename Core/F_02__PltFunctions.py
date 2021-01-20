@@ -4,9 +4,9 @@
 ###############################################################################
 import os
 import matplotlib.pyplot as plt
-import pandas as pd
 
 import Core.C_00__GenConstants as GC
+import Core.F_00__GenFunctions as GF
 import Core.F_01__SpcFunctions as SF
 
 # --- Functions (general) -----------------------------------------------------
@@ -57,7 +57,7 @@ def plotDCncEvo(dIPlt, dCncEvo, pFPlt, lIPlt, tpMark = 'x', szMark = 5,
     if not os.path.isfile(pFPlt) or overWr:
         assert len(lIPlt) >= 2
         cFig = plt.figure()
-        pdDfr = pd.DataFrame(dCncEvo)
+        pdDfr = GF.iniPdDfr(dCncEvo)
         cX, cY = pdDfr.iloc[:, lIPlt[0]], pdDfr.iloc[:, lIPlt[1:]]
         plt.plot(cX, cY, marker = dIPlt['tpMark'], ms = dIPlt['szMark'],
                  mew = dIPlt['ewMark'], mec = dIPlt['ecMark'],
@@ -67,7 +67,7 @@ def plotDCncEvo(dIPlt, dCncEvo, pFPlt, lIPlt, tpMark = 'x', szMark = 5,
                          dIPlt['yLbl'], pltAxXY = dIPlt['pltAxXY_Conc'])
         plt.close()
 
-# --- Functions (O_99_System) -------------------------------------------------
+# --- Functions (O_95_System) -------------------------------------------------
 def plotEvoFig(dIPlt, dfrR, pF, sHdCX, dSHdCY, sLblY):
     cFig = plt.figure()
     for sHdCY, lSY in dSHdCY.items():
@@ -85,7 +85,7 @@ def plotEvo(dIPlt, dResEvo, dPF, dSCp, tDat, sHdCX = GC.S_TIME, overWr = True):
     for pF, tKDCp in dPF.items():
         if (not os.path.isfile(pF) or overWr) and len(tDat[0]) > 0:
             lSHdCY, sLblY = tDat
-            dfrR = pd.DataFrame(dResEvo).loc[:, [sHdCX] + lSHdCY]
+            dfrR = GF.iniPdDfr(dResEvo).loc[:, [sHdCX] + lSHdCY]
             if tKDCp is None:
                 dSHdCY =  {sHd: [sHd] for sHd in lSHdCY}
             else:

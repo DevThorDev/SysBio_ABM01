@@ -76,6 +76,7 @@ S_CL_H2PO4_1M = 'H2PO4-'
 S_CL_INTERACTION = 'Interaction'
 S_CL_COMPONENT = 'SystemComponent'
 S_CL_SYSTEM = 'System'
+S_CL_SIMULATION = 'Simulation'
 
 S_A = 'A'   # for phosphatase A
 S_B = 'B'   # for phosphatase B
@@ -108,9 +109,6 @@ S_LKI = S_L + S_K + S_I
 S_LKJ = S_L + S_K + S_J
 S_LKT = S_L + S_K + S_T
 
-ID_CPB = 'CpBase'
-ID_CPN = 'Cp'
-ID_SYS = 'Sys'
 ID_MOL = 'Mol'
 ID_PRO = 'Pro'
 ID_LPR = 'LPr'
@@ -124,6 +122,10 @@ ID_SMO = 'SMo'
 ID_INT = 'Int'
 ID_PYL = 'Pyl'
 ID_DPY = 'DPy'
+ID_CPB = 'CpBase'
+ID_CPN = 'Cp'
+ID_SYS = 'Sys'
+ID_SIM = 'Sim'
 
 L_ID_LPR_SYS = [ID_LPR_NRT2P1]
 L_ID_SPR_SYS = [ID_SPR_NAR2P1]
@@ -143,6 +145,8 @@ D_ID_TO_CPSX = {ID_LPR_NRT2P1: S_L__, ID_SPR_NAR2P1: S_S__,
                 ID_KAS_K: S_K__, ID_KAS_X: S_X__, ID_KAS_Y: S_Y__,
                 ID_PAS_A: S_A__, ID_PAS_B: S_B__, ID_PAS_C: S_C__,
                 ID_PAS_D: S_D__}
+
+S_REP = 'Rep'
 
 S_CNC_INI = 'concIni'
 S_THR_HIGH_CNC = 'thrHighConc'

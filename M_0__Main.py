@@ -10,7 +10,7 @@ from Control.A_00__GenInput import dictInpG
 from Core.C_00__GenConstants import S_D_OBJINP, S_DASH, S_PLUS
 from Core.I_01__InpData import InputData
 from Core.I_02__InpFrames import InputFrames
-from Core.O_99__System import System
+from Core.O_95__System import System
 
 # ### MAIN ####################################################################
 startTime = GF.startSimu()
@@ -25,7 +25,7 @@ cInpFrames = InputFrames(inDG)
 # cInpFrames.printDSCpSL()
 # cInpFrames.printDSCpTp()
 # cInpFrames.printDNCpObj()
-cInpFrames.printDParCnc()
+# cInpFrames.printDParCnc()
 # cInpFrames.printDTpRct()
 # cInpFrames.printDClRct()
 # cInpFrames.printDRct()
@@ -33,6 +33,7 @@ cInpFrames.printDParCnc()
 # cInpFrames.printDSMoCncDepOnCp()
 # cInpFrames.printDOthInpV()
 
+lResRed = []
 for cRep in range(1, inDG.dI['nReps'] + 1):
     print(S_PLUS*8, 'Starting repetition', cRep, 'of', inDG.dI['nReps'])
     cSystem = System(inDG, cInpFrames)
@@ -40,7 +41,7 @@ for cRep in range(1, inDG.dI['nReps'] + 1):
         cSystem.evolveOverTime(inDG, doPlots = cSystem.dIG['doPlots'])
     if cSystem.dIG['doPlots']:
         cSystem.plotResEvo(sFRes = cSystem.dITp['sF_SysEvo'], overWr = False)
-    dResRed = SF.reduceData(inDG.dI, cSystem.dfrResEvo)
+    lResRed.append(SF.reduceData(inDG.dI, cSystem.dfrResEvo, cRep = cRep))
     cSystem.printNCompObjSys()
     # cSystem.printAllCompObjSys()
     cSystem.printSMo()

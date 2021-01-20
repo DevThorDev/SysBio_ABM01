@@ -5,7 +5,6 @@
 import os, copy
 from operator import itemgetter
 import numpy as np
-import pandas as pd
 
 import Core.C_00__GenConstants as GC
 import Core.F_00__GenFunctions as GF
@@ -23,7 +22,7 @@ def savePdDfr(dIG, pdDfr, sD, sF, overWr = True, sFExt = GC.S_EXT_CSV):
 def saveAsPdDfr(dIG, dRes, sD, sF, overWr = True, sFExt = GC.S_EXT_CSV):
     sP = getPF(dIG['sPRes'], sD, sF, sFExt = sFExt)
     if not os.path.isfile(sP) or overWr:
-        pd.DataFrame(dRes).to_csv(sP, sep = dIG['cSep'])
+        GF.iniPdDfr(dRes).to_csv(sP, sep = dIG['cSep'])
     return sP
 
 # --- Functions (O_00__Base) --------------------------------------------------
@@ -167,7 +166,7 @@ def createLSCp(inpDt, lOAll, sPylDPy = GC.S_DO_PYL):
                     lSCp.append(sCp)
     return sorted(lSCp)
 
-# --- Functions (O_99__System) ------------------------------------------------
+# --- Functions (O_95__System) ------------------------------------------------
 def createDCnc(inpFr):
     dCncIni = {}
     for sSMo, dIni in inpFr.dParCnc.items():

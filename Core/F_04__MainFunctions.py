@@ -10,7 +10,7 @@ from Core.O_02__Protein import (KinaseK, KinaseX, KinaseY, PhosphataseA,
 from Core.O_03__Metabolite import SMo_NO3_1m, SMo_H2PO4_1m
 # from Core.O_80__Interaction import Phosphorylation, Dephosphorylation
 from Core.O_90__Component import Component
-# from Core.O_99__System import System
+# from Core.O_95__System import System
 
 # --- Functions (initialisation) ----------------------------------------------
 # def iniSystem(inpDG):
