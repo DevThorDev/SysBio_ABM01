@@ -130,8 +130,8 @@ class System(Base):
         dParPlt = self.dITp[GC.S_D_PLT][GC.S_CP_CNC]
         if sFRes is not None:
             self.dfrResEvo = TF.getPFResEvo(self.dIG, self.dITp, sFRs = sFRes)
-        else:
-            self.dfrResEvo = GF.iniPdDfr(self.dResEvo)
+        # else:
+        #     self.dfrResEvo = GF.iniPdDfr(self.dResEvo)
         for cK, cT in dParPlt['dlSY'].items():
             assert len(cK) == 2 and len(cT) == 3
             dPPltF = TF.getDPFPltEvo(self.dIG, self.dITp, cK, dMS = cT[2])
@@ -139,14 +139,16 @@ class System(Base):
                 PF.plotEvo(dParPlt, self.dfrResEvo, dPPltF, self.inFr.dSCpSL,
                            tDat = cT[:2], overWr = overWr)
 
-    def evolveOverTime(self, inpDat, doPlots = True):
+    def evolveOverTime(self, inpDat, cRp, doPlots = True):
         self.dResEvo, self.dNCpO = TF.evolveGillespie(self.dIG, self.dICp,
                                                       self.inFr, self.dCncSMo)
+        self.dfrResEvo = GF.iniPdDfr(self.dResEvo)
         self.updateObjDicts(inpDat, refresh = True)
         # self.printCncSMo()
         # self.printNCompObjSys()
         # self.printAllCompObjSys()
-        dR, sD, sF = self.dResEvo, self.dITp['sD_Sys'], self.dITp['sF_SysEvo']
+        dR, sD = self.dResEvo, self.dITp['sD_Sys']
+        sF = self.dITp['sF_SysEvo'] + GC.S_USC + str(cRp)
         self.pFResEvo = TF.saveAsPdDfr(self.dIG, dR, sD, sF, overWr = True)
         if doPlots:
             self.plotResEvo()

@@ -1,8 +1,8 @@
 --------------------------------------------------------------------------------
 Code updates remaining:
 --------------------------------------------------------------------------------
+* plots for single reps and mean
 * weighted mean instead of mean
-* weighted standard deviation
 * move input data to 99_Simulation
 * Max' data for incidences of peptides
 * sigmoidal functions that define dependency of component reaction weights on small molecule concentrations should be more uniformly defined

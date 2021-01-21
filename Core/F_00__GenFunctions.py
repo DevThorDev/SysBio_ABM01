@@ -104,20 +104,29 @@ def implMinMax(x, lowB = 0, upB = 1):
 # mean accumulates the mean of the entire dataset
 # M2 aggregates the squared distance from the mean
 # count aggregates the number of samples seen so far
-def update(existingAggregate, newValue):
+def updateAggr(existingAggregate, newValue):
     (count, mean, M2) = existingAggregate
     count += 1
-    delta = newValue - mean
-    mean += delta/count
-    delta2 = newValue - mean
-    M2 += delta*delta2
+    if not np.isnan(newValue):
+        delta = newValue - mean
+        mean += delta/count
+        delta2 = newValue - mean
+        M2 += delta*delta2
     return (count, mean, M2)
+
+def updateMeanM2(cMean, cM2, cCnt, newValue):
+    if not np.isnan(newValue):
+        delta = newValue - cMean
+        cMean += delta/cCnt
+        delta2 = newValue - cMean
+        cM2 += delta*delta2
+    return cMean, cM2
 
 # Retrieve the mean, variance and sample variance from an aggregate
 def finalRunMeanSD(existingAggregate):
     (count, mean, M2) = existingAggregate
     if count < 2:
-        return None
+        return (mean, np.nan, np.nan)
     else:
         (mean, variance, sampleVariance) = (mean, M2/count, M2/(count - 1))
         return (mean, variance, sampleVariance)

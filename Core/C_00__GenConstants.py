@@ -334,6 +334,10 @@ S_CNC_NO3_1M = 'Conc_NO3-'
 S_CNC_H2PO4_1M = 'Conc_H2PO4-'
 S_MEAN = 'Mean'
 S_SUM = 'Sum'
+S_M2 = 'M2'
+S_VARIANCE = 'Variance'
+S_STDDEV = 'StdDev'
+S_SEM = 'SEM'
 
 # --- constants related to plots ----------------------------------------------
 S_D_PLT = 'dPlt'
