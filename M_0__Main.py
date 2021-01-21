@@ -5,6 +5,8 @@
 import Core.C_00__GenConstants as GC
 import Core.F_00__GenFunctions as GF
 import Core.F_01__SpcFunctions as SF
+import Core.F_02__PltFunctions as PF
+import Core.F_03__OTpFunctions as TF
 # import Core.F_04__MainFunctions as MF
 
 from Control.A_00__GenInput import dictInpG
@@ -40,9 +42,15 @@ for cRep in range(1, inDG.dI['nReps'] + 1):
     if cSystem.dIG['doEvoT']:
         cSystem.evolveOverTime(inDG, cRep, doPlots = cSystem.dIG['doPlots'])
     if cSystem.dIG['doPlots']:
-        cSystem.plotResEvo(sFRes = cSystem.dITp['sF_SysEvo'], overWr = False)
+        cSystem.plotResEvo(cRp = cRep, sFRes = cSystem.dITp['sF_SysEvo'],
+                           overWr = False)
     dfrResRed = SF.reduceData(inDG.dI, cSystem.dfrResEvo, cRep = cRep)
     SF.calcRunMeanM2Dfr(dDfrRunV, dfrResRed, cCt = cRep)
+    dParPlt = cSystem.dITp[GC.S_D_PLT][GC.S_CP_CNC]
+    for cK, cT in dParPlt['dlSY'].items():
+        dPPltF = TF.getDPFPltEvo(inDG.dI, cSystem.dITp, cK, dMS = cT[2])
+        PF.plotEvo(dParPlt, dDfrRunV[GC.S_MEAN], dPPltF, cInpFrames.dSCpTpL,
+                   tDat = cT[:2], overWr = True)
     cSystem.printNCompObjSys()
     # cSystem.printAllCompObjSys()
     cSystem.printSMo()

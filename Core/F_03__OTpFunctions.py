@@ -310,14 +310,14 @@ def getPFResEvo(dIG, dITp, sFRs):
         return GF.readCSV(pFRes, iCol = 0)
     return None
 
-def getDPFPltEvo(dIG, dITp, tKey, dMS = None):
+def getDPFPltEvo(dIG, dITp, tKey, cRp = 0, dMS = None):
     dP = {}
     if dMS is None:
         sF = GC.S_USC.join([str(cEl) for cEl in tKey if cEl is not None])
         dP[getPF(dIG['sPPlt'], dITp['sD_Sys'], sF, sFExt = GC.S_EXT_PDF)] = dMS
     else:
         for sMS, dCp in dMS.items():
-            sF = str(tKey[0]) + GC.S_USC + sMS
+            sF = str(tKey[0]) + GC.S_USC + GC.S_REP + str(cRp) + GC.S_USC + sMS
             if tKey[1] is not None:
                 sF +=  GC.S_USC + str(tKey[1])
             pF = getPF(dIG['sPPlt'], dITp['sD_Sys'], sF, sFExt = GC.S_EXT_PDF)

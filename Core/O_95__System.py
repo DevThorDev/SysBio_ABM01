@@ -126,15 +126,15 @@ class System(Base):
         else:
             print(GC.S_DASH*8, 'Simulation has not even started!', GC.S_DASH*8)
 
-    def plotResEvo(self, sFRes = None, overWr = True):
+    def plotResEvo(self, cRp = 0, sFRes = None, overWr = True):
         dParPlt = self.dITp[GC.S_D_PLT][GC.S_CP_CNC]
         if sFRes is not None:
             self.dfrResEvo = TF.getPFResEvo(self.dIG, self.dITp, sFRs = sFRes)
-        # else:
-        #     self.dfrResEvo = GF.iniPdDfr(self.dResEvo)
+        else:
+            self.dfrResEvo = GF.iniPdDfr(self.dResEvo)
         for cK, cT in dParPlt['dlSY'].items():
             assert len(cK) == 2 and len(cT) == 3
-            dPPltF = TF.getDPFPltEvo(self.dIG, self.dITp, cK, dMS = cT[2])
+            dPPltF = TF.getDPFPltEvo(self.dIG, self.dITp, cK, cRp, dMS = cT[2])
             if self.dResEvo is not None and self.dfrResEvo is not None:
                 PF.plotEvo(dParPlt, self.dfrResEvo, dPPltF, self.inFr.dSCpSL,
                            tDat = cT[:2], overWr = overWr)
@@ -151,6 +151,6 @@ class System(Base):
         sF = self.dITp['sF_SysEvo'] + GC.S_USC + str(cRp)
         self.pFResEvo = TF.saveAsPdDfr(self.dIG, dR, sD, sF, overWr = True)
         if doPlots:
-            self.plotResEvo()
+            self.plotResEvo(cRp=cRp)
 
 ###############################################################################
