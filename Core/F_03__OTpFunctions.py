@@ -19,7 +19,10 @@ def savePdDfr(dIG, pdDfr, sD, sF, overWr = True, sFExt = GC.S_EXT_CSV):
         pdDfr.to_csv(sP, sep = dIG['cSep'])
     return sP
 
-def saveAsPdDfr(dIG, dRes, sD, sF, overWr = True, sFExt = GC.S_EXT_CSV):
+def saveAsPdDfr(dIG, dRes, sD, sF, cRp = 0, overWr = True,
+                sFExt = GC.S_EXT_CSV):
+    if cRp > 0:
+        sD = os.path.join(sD, GC.S_REP + str(cRp))
     sP = getPF(dIG['sPRes'], sD, sF, sFExt = sFExt)
     if not os.path.isfile(sP) or overWr:
         GF.iniPdDfr(dRes).to_csv(sP, sep = dIG['cSep'])
@@ -304,23 +307,32 @@ def evolveGillespie(dIG, dICp, inpFr, dCncSMo):
         updateDictOut(dO, dCncSMo, t)
     return dO['dRes'], dO['dN']
 
-def getPFResEvo(dIG, dITp, sFRs):
-    pFRes = getPF(dIG['sPRes'], dITp['sD_Sys'], sFRs, sFExt = GC.S_EXT_CSV)
+def getPFResEvo(dIG, dITp, sFRs, cRp = 0):
+    sD = dITp['sD_Obj']
+    if cRp > 0:
+        sD = os.path.join(sD, GC.S_REP + str(cRp))
+    pFRes = getPF(dIG['sPRes'], sD, sFRs, sFExt = GC.S_EXT_CSV)
     if os.path.isfile(pFRes):
         return GF.readCSV(pFRes, iCol = 0)
     return None
 
 def getDPFPltEvo(dIG, dITp, tKey, cRp = 0, dMS = None):
-    dP = {}
+    dP, sD = {}, dITp['sD_Obj']
+    if cRp > 0:
+        sD = os.path.join(sD, GC.S_REP + str(cRp))
     if dMS is None:
         sF = GC.S_USC.join([str(cEl) for cEl in tKey if cEl is not None])
-        dP[getPF(dIG['sPPlt'], dITp['sD_Sys'], sF, sFExt = GC.S_EXT_PDF)] = dMS
+        if cRp == 0:
+            pF = getPF(dIG['sPPlt'], sD, sF, sFExt = GC.S_EXT_PDF)
+        else:
+            pF = getPF(dIG['sPPlt'], sD, sF, sFExt = GC.S_EXT_PDF)
+        dP[pF] = dMS
     else:
         for sMS, dCp in dMS.items():
-            sF = str(tKey[0]) + GC.S_USC + GC.S_REP + str(cRp) + GC.S_USC + sMS
+            sF = str(tKey[0]) + GC.S_USC + sMS
             if tKey[1] is not None:
                 sF +=  GC.S_USC + str(tKey[1])
-            pF = getPF(dIG['sPPlt'], dITp['sD_Sys'], sF, sFExt = GC.S_EXT_PDF)
+            pF = getPF(dIG['sPPlt'], sD, sF, sFExt = GC.S_EXT_PDF)
             dP[pF] = (sMS, dCp)
     return dP
 

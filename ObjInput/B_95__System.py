@@ -11,8 +11,8 @@ strCS = GC.ID_SYS
 strCL = GC.S_CL_SYSTEM
 
 # --- path, directory and file names ------------------------------------------
-sD_Sys = '95_Sys'
-sF_SysEvo = 'SysEvo'
+sD_Obj = '95_Sys'
+sF_Obj = 'SysEvo'
 
 # --- graphics parameters: component numbers and molecule conc. plot ----------
 sPlt_SSC = '01_SelCpConc'               # name of sel. comps and conc. plot
@@ -85,8 +85,8 @@ dIO = {# --- general
        'strCS': strCS,
        'strCL': strCL,
        # --- path, directory and file names
-       'sD_Sys': sD_Sys,
-       'sF_SysEvo': sF_SysEvo,
+       'sD_Obj': sD_Obj,
+       'sF_Obj': sF_Obj,
        # --- graphics parameters: component numbers and molecule conc. plot
        GC.S_D_PLT: {GC.S_CP_CNC: {'sPlt_SSC': sPlt_SSC,
                                   'sPlt_SCp': sPlt_SCp,

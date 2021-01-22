@@ -11,8 +11,8 @@ strCS = GC.ID_SIM
 strCL = GC.S_CL_SIMULATION
 
 # --- path, directory and file names ------------------------------------------
-sD_Sim = '99_Sim'
-sF_Sim = 'SimSysEvo'
+sD_Obj = '99_Sim'
+sF_Obj = 'SimSysEvo'
 
 # --- create input dictionary -------------------------------------------------
 dIO = {# --- general
@@ -21,7 +21,7 @@ dIO = {# --- general
        'strCS': strCS,
        'strCL': strCL,
        # --- path, directory and file names
-       'sD_Sim': sD_Sim,
-       'sF_Sim': sF_Sim}
+       'sD_Obj': sD_Obj,
+       'sF_Obj': sF_Obj}
 
 ###############################################################################

@@ -12,7 +12,7 @@ levelDebugOut = 2   # level of debug output (0: no debug output)
 # --- Input: Flow control -----------------------------------------------------
 doEvoT = True
 doPlots = True
-nReps = 3                   # 10
+nReps = 5                   # 10
 nTSAllRep = 100             # 1000
 tStart = 0                  # 0
 tMax = 10.                  # 10.

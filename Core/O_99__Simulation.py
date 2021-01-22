@@ -13,7 +13,7 @@ from Core.O_00__Base import Base
 
 # +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 class Simulation(Base):
-    def __init__(self, inpDat, inpFr, lCpObj = [], iTp = 99):
+    def __init__(self, inpDat, iTp = 99):
         super().__init__(inpDat, iTp)
         self.idO = GC.ID_SIM
         self.descO = 'Simulation'

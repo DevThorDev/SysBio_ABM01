@@ -2,6 +2,8 @@
 ###############################################################################
 # --- F_01__SpcFunctions.py ---------------------------------------------------
 ###############################################################################
+import os
+
 import numpy as np
 
 import Core.C_00__GenConstants as GC
@@ -21,7 +23,8 @@ def calcRunMeanM2Dfr(dDfrI, cDfr, cCt=0, lSCDisr=[GC.S_TIME]):
             cMn, cM2 = GF.updateMeanM2(cMn, cM2, cCt, cDfr.at[sR, sC])
             dDfrI[GC.S_MEAN].at[sR, sC], dDfrI[GC.S_M2].at[sR, sC] = cMn, cM2
     for sK in [GC.S_MEAN, GC.S_M2]:
-        dDfrI[sK] = GF.iniPdDfr(cDfr[GC.S_TIME]).join(dDfrI[sK])
+        if GC.S_TIME not in dDfrI[sK].columns:
+            dDfrI[sK] = GF.iniPdDfr(cDfr[GC.S_TIME]).join(dDfrI[sK])
 
 def calcMeanVarSDDfr(dDfrI, nRp=0):
     lSR, lSC = dDfrI[GC.S_MEAN].index, dDfrI[GC.S_MEAN].columns
@@ -39,7 +42,10 @@ def calcMeanVarSDDfr(dDfrI, nRp=0):
             dDfrI[GC.S_STDDEV].at[sR, sC] = cStdDevS
             dDfrI[GC.S_SEM].at[sR, sC] = cSEM
 
-def reduceData(dIG, dfrResFull, sCT=GC.S_TIME, cRep=0):
+def reduceData(dIG, dITp, dfrResFull, sCT=GC.S_TIME, cRep=0):
+    sP = os.path.join(dIG['sPRes'], dITp['sD_Obj'])
+    if cRep > 0:
+        sP = os.path.join(sP, GC.S_REP + str(cRep))
     halfStep = dIG['tMax']/(2*dIG['nTSAllRep'])
     lTRed = [k*halfStep for k in range(1, 2*dIG['nTSAllRep'], 2)]
     assert sCT in dfrResFull.columns
@@ -70,11 +76,11 @@ def setPylDPy(sCp, iSpS):
     return sPD
 
 # --- Functions (O_95__System) ------------------------------------------------
-def prepDict4Sel(d4Sel, d4Leg, lSLY, dCp, dSCp):
+def prepDict4Sel(d4Sel, d4Leg, lSLY, dCp):
     for sHdC in lSLY:
         for sLg, lCp in dCp.items():
             if (len(sHdC) == GC.LEN_S_CP and
-                    set(sHdC[GC.I_S_CP_SEP1:]) <= GC.SET_0_1_DASH):
+                set(sHdC[GC.I_S_CP_SEP1:]) <= GC.SET_0_1_DASH):
                 # this column header IS a component string
                 for sCp in lCp:
                     if sHdC.startswith(sCp):
@@ -91,7 +97,7 @@ def prepDict4Sel(d4Sel, d4Leg, lSLY, dCp, dSCp):
 def preProcMeanSum(pdDfr, sLX, lSLY, tKDCp, dSCp):
     d4Sel, d4Leg, mdDfr = {}, {}, GF.iniPdDfr()
     sOp, dCp = tKDCp
-    prepDict4Sel(d4Sel, d4Leg, lSLY, dCp, dSCp=dSCp)
+    prepDict4Sel(d4Sel, d4Leg, lSLY, dCp)
     mdDfr.loc[:, sLX] = pdDfr.loc[:, sLX]
     for sK in d4Sel:
         if sK in dSCp:

@@ -11,8 +11,8 @@ strCS = GC.ID_MOL
 strCL = GC.S_CL_MOLEC
 
 # --- names of directories and files ------------------------------------------
-sD_SMo = '80_SMo'
-sF_SMo = GC.ID_SMO
+sD_Obj = '80_SMo'
+sF_Obj = GC.ID_SMO
 
 # --- graphics parameters molecule concentrations plot ------------------------
 sPlt_Conc = 'Conc'      # name of the plot and key of the input dict
@@ -36,8 +36,8 @@ dIO = {# --- general
        'strCS': strCS,
        'strCL': strCL,
        # --- names of directories and files
-       'sD_SMo': sD_SMo,
-       'sF_SMo': sF_SMo,
+       'sD_Obj': sD_Obj,
+       'sF_Obj': sF_Obj,
        # --- graphics parameters molecule concentrations plot
        'sPlt_Conc': sPlt_Conc,
        GC.S_D_PLT: {sPlt_Conc: {'title': title_Conc,

@@ -129,7 +129,8 @@ class System(Base):
     def plotResEvo(self, cRp = 0, sFRes = None, overWr = True):
         dParPlt = self.dITp[GC.S_D_PLT][GC.S_CP_CNC]
         if sFRes is not None:
-            self.dfrResEvo = TF.getPFResEvo(self.dIG, self.dITp, sFRs = sFRes)
+            self.dfrResEvo = TF.getPFResEvo(self.dIG, self.dITp, sFRs = sFRes,
+                                            cRp = cRp)
         else:
             self.dfrResEvo = GF.iniPdDfr(self.dResEvo)
         for cK, cT in dParPlt['dlSY'].items():
@@ -147,9 +148,10 @@ class System(Base):
         # self.printCncSMo()
         # self.printNCompObjSys()
         # self.printAllCompObjSys()
-        dR, sD = self.dResEvo, self.dITp['sD_Sys']
-        sF = self.dITp['sF_SysEvo'] + GC.S_USC + str(cRp)
-        self.pFResEvo = TF.saveAsPdDfr(self.dIG, dR, sD, sF, overWr = True)
+        dR, sD = self.dResEvo, self.dITp['sD_Obj']
+        sF = self.dITp['sF_Obj'] + GC.S_USC + GC.S_REP + str(cRp)
+        self.pFResEvo = TF.saveAsPdDfr(self.dIG, dR, sD, sF, cRp = cRp,
+                                       overWr = True)
         if doPlots:
             self.plotResEvo(cRp=cRp)
 
