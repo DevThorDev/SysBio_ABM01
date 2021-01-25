@@ -8,8 +8,8 @@ from Core.O_00__Base import Base
 
 # +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 class Molecule(Base):
-    def __init__(self, inpDat, iTp, sPat01 = GC.S_4DASH, lITpU = [0, 1]):
-        super().__init__(inpDat, iTp, sPat01, lITpU = lITpU)
+    def __init__(self, inpDat, iTp, sPat01=GC.S_4DASH, lITpU=[0, 1]):
+        super().__init__(inpDat, iTp, sPat01, lITpU=lITpU)
         self.idO = GC.ID_MOL
         self.descO = 'Molecule'
         # print('Initiated "Molecule" object.')

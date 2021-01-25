@@ -10,7 +10,7 @@ import Core.C_00__GenConstants as GC
 
 # +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 class InputData:
-    def __init__(self, inpDat, lVals = []):
+    def __init__(self, inpDat, lVals=[]):
         dInp = {}
         if type(inpDat) is dict:
             for cKey in inpDat:

@@ -9,7 +9,7 @@ import Core.F_03__OTpFunctions as TF
 
 # +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 class Base:
-    def __init__(self, inpDat, iTp = 0, sPat01 = GC.S_4DASH, lITpU = [0]):
+    def __init__(self, inpDat, iTp=0, sPat01=GC.S_4DASH, lITpU=[0]):
         self.idO = GC.ID_BAS
         self.descO = 'Base class'
         self.sPt01 = sPat01
@@ -32,7 +32,7 @@ class Base:
         print(GC.S_DASH*20, 'Type dictionary:', GC.S_DASH*20)
         pprint.pprint(self.dITp)
 
-    def overwInpV(self, dDOvw = {}, i = 0):
+    def overwInpV(self, dDOvw={}, i=0):
         if self.idO in dDOvw:
             for cK, cArr in dDOvw[self.idO].items():
                 if cK in self.dITp and i < cArr.size:

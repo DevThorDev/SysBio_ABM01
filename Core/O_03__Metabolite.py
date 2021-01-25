@@ -8,13 +8,13 @@ from Core.O_01__Molecule import Molecule
 
 # +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 class Metabolite(Molecule):
-    def __init__(self, inpDat, iTp, dStat = {}):
+    def __init__(self, inpDat, iTp, dStat={}):
         super().__init__(inpDat, iTp)
         self.idO = GC.ID_MET
         self.descO = 'Metabolite'
         # print('Initiated "Metabolite" object.')
 
-    def setConc(self, cConc = 0.0):
+    def setConc(self, cConc=0.0):
         self.cCnc = cConc
 
     def __str__(self):
@@ -23,21 +23,21 @@ class Metabolite(Molecule):
         return sIn
 
 class LargeMolecule(Metabolite):
-    def __init__(self, inpDat, iTp, dStat = {}):
+    def __init__(self, inpDat, iTp, dStat={}):
         super().__init__(inpDat, iTp, dStat)
         self.idO = GC.ID_LMO
         self.descO = 'Large molecule'
         # print('Initiated "LargeMolecule" object.')
 
 class SmallMolecule(Metabolite):
-    def __init__(self, inpDat, iTp, dStat = {}):
+    def __init__(self, inpDat, iTp, dStat={}):
         super().__init__(inpDat, iTp, dStat)
         self.idO = GC.ID_SMO
         self.descO = 'Small molecule'
         # print('Initiated "SmallMolecule" object.')
 
 class SMo_NO3_1m(SmallMolecule):
-    def __init__(self, inpDat, iTp = 61, dStat = {}):
+    def __init__(self, inpDat, iTp=61, dStat={}):
         super().__init__(inpDat, iTp, dStat)
         self.idO = GC.ID_NO3_1M
         self.descO = 'Small molecule NO3-'
@@ -45,7 +45,7 @@ class SMo_NO3_1m(SmallMolecule):
         # print('Initiated "SMo_NO3_1m" object.')
 
 class SMo_H2PO4_1m(SmallMolecule):
-    def __init__(self, inpDat, iTp = 62, dStat = {}):
+    def __init__(self, inpDat, iTp=62, dStat={}):
         super().__init__(inpDat, iTp, dStat)
         self.idO = GC.ID_H2PO4_1M
         self.descO = 'Small molecule H2PO4-'

@@ -43,9 +43,9 @@ from Core.O_90__Component import Component
 #     lSysCmp = [KAsK, KAsX, KAsY, PAsA, PAsB, PAsC, PAsD,
 #                NRT2p1, NAR2p1, NO3_1m, H2PO4_1m, Pyl01, Pyl02, Pyl03, Pyl04,
 #                DePyl01, DePyl02, DePyl03, DePyl04]
-#     return System(inpDG, lOSys = lSysCmp)
+#     return System(inpDG, lOSys=lSysCmp)
 
-def iniComponent(inpDG, ddVOvwr = {}, iV = 0):
+def iniComponent(inpDG, ddVOvwr={}, iV=0):
     # Kinases KAsK, KAsX, KAsY -------------------------------------------
     KAsK = KinaseK(inpDG)
     KAsX = KinaseX(inpDG)
@@ -76,7 +76,7 @@ def iniComponent(inpDG, ddVOvwr = {}, iV = 0):
             GC.ID_LPR_NRT2P1: NRT2p1,
             GC.ID_SPR_NAR2P1: NAR2p1,
             'lSMo': [NO3_1m, H2PO4_1m]}
-    cCp = Component(inpDG, dOComp = dOCp)
+    cCp = Component(inpDG, dOComp=dOCp)
     # Create system from state ------------------------------------------------
     # return cCp, cCp.createSystem(inpDG)
     # Return the current state ------------------------------------------------
@@ -96,7 +96,7 @@ def changeComponentCncDep(inpDG, cCp):
         elif cCp.idO == GC.S_CP_LKT_LONG:
             cCp.to_Cp_LSI(inpDG)
 
-def evolveIni(inpDG, nCpO = 1, ddVOvwr = {}):
+def evolveIni(inpDG, nCpO=1, ddVOvwr={}):
     lCpO = []
     for iCpO in range(nCpO):
         # cCpO, cSys = iniComponent(inpDG, ddVOvwr, iCpO)
@@ -105,15 +105,15 @@ def evolveIni(inpDG, nCpO = 1, ddVOvwr = {}):
     print('--- Initialisation done.')
     return lCpO
 
-def evolveTS(inpDG, lCpO, curTS, nCpO = 1, ddVOvwr = {}):
+def evolveTS(inpDG, lCpO, curTS, nCpO=1, ddVOvwr={}):
     print('--- Current time step:', curTS)
     for iCpO in range(nCpO):
         print('- Component', iCpO + 1)
         lCpO[iCpO].changeCncSMo(curTS)
-        lCpO[iCpO].printDCnc(prID = GC.ID_NO3_1M)
+        lCpO[iCpO].printDCnc(prID=GC.ID_NO3_1M)
         changeComponentCncDep(inpDG, lCpO[iCpO])
 
-def evolve_TimeSteps(inpDG, nObj = 1, ddVOvwr = {}):
+def evolve_TimeSteps(inpDG, nObj=1, ddVOvwr={}):
     lCpO = evolveIni(inpDG, nObj, ddVOvwr)
     for curTS in range(1, inpDG.dI['maxTS'] + 1):
         evolveTS(inpDG, lCpO, curTS, nObj, ddVOvwr)
@@ -121,7 +121,7 @@ def evolve_TimeSteps(inpDG, nObj = 1, ddVOvwr = {}):
         print('++++++++ Component ' + str(k + 1) + ':')
         cCpO.printComponentDetails()
         print(cCpO.dfrEvo)
-        cCpO.savePlotDfrEvo(kCp = k + 1, llIPlot = [[0, 1], [0, 2]], iSMo = 0)
-        cCpO.savePlotDfrEvo(kCp = k + 1, llIPlot = [[0, 1], [0, 2]], iSMo = 1)
+        cCpO.savePlotDfrEvo(kCp=k + 1, llIPlot=[[0, 1], [0, 2]], iSMo=0)
+        cCpO.savePlotDfrEvo(kCp=k + 1, llIPlot=[[0, 1], [0, 2]], iSMo=1)
 
 ###############################################################################

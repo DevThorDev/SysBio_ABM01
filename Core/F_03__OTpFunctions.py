@@ -10,36 +10,35 @@ import Core.C_00__GenConstants as GC
 import Core.F_00__GenFunctions as GF
 
 # --- Functions (general) -----------------------------------------------------
-def getPF(sP, sD, sF, sFExt = GC.S_EXT_CSV):
-    return GF.joinToPath(os.path.join(sP, sD), sF + '.' + sFExt)
+def getPF(lD4P, sF, sFExt=GC.S_EXT_CSV):
+    return GF.joinToPath(lD4P, sF + '.' + sFExt)
 
-def savePdDfr(dIG, pdDfr, sD, sF, overWr = True, sFExt = GC.S_EXT_CSV):
-    sP = getPF(dIG['sPRes'], sD, sF, sFExt = sFExt)
+def savePdDfr(dITp, pdDfr, lD, sF, overWr=True, sFExt=GC.S_EXT_CSV):
+    sP = getPF([dITp['sPRes']] + lD, sF, sFExt=sFExt)
     if not os.path.isfile(sP) and overWr:
-        pdDfr.to_csv(sP, sep = dIG['cSep'])
+        pdDfr.to_csv(sP, sep=dITp['cSep'])
     return sP
 
-def saveAsPdDfr(dIG, dRes, sD, sF, cRp = 0, overWr = True,
-                sFExt = GC.S_EXT_CSV):
+def saveAsPdDfr(dITp, dRes, lD, sF, cRp=0, overWr=True, sFExt=GC.S_EXT_CSV):
     if cRp > 0:
         sD = os.path.join(sD, GC.S_REP + str(cRp))
-    sP = getPF(dIG['sPRes'], sD, sF, sFExt = sFExt)
+    sP = getPF([dITp['sPRes'], sD], sF, sFExt=sFExt)
     if not os.path.isfile(sP) or overWr:
-        GF.iniPdDfr(dRes).to_csv(sP, sep = dIG['cSep'])
+        GF.iniPdDfr(dRes).to_csv(sP, sep=dITp['cSep'])
     return sP
 
 # --- Functions (O_00__Base) --------------------------------------------------
-def getDITp(dIG, iTp, lITpU):
+def getDITp(dITp, iTp, lITpU):
     dITp = {}
     if len(lITpU) > 0:
-        dITp = copy.deepcopy(dIG[lITpU[0]])     # content of lITpU[0] input
+        dITp = copy.deepcopy(dITp[lITpU[0]])     # content of lITpU[0] input
         for iTpU in lITpU[1:]:
-            GF.updateDITpDIPlt(dITp, dIG[iTpU]) # updated with iTpU input
-    GF.updateDITpDIPlt(dITp, dIG[iTp])          # updated with iTp input
+            GF.updateDITpDIPlt(dITp, dITp[iTpU]) # updated with iTpU input
+    GF.updateDITpDIPlt(dITp, dITp[iTp])          # updated with iTp input
     return dITp
 
 # --- Functions (O_03__Metabolite) --------------------------------------------
-def clampF(x, xSlopeStart = 0., xSlopeEnd = 1.):
+def clampF(x, xSlopeStart=0., xSlopeEnd=1.):
     assert xSlopeEnd >= xSlopeStart
     if x < xSlopeStart:
         x = xSlopeStart
@@ -47,7 +46,7 @@ def clampF(x, xSlopeStart = 0., xSlopeEnd = 1.):
         x = xSlopeEnd
     return x
 
-def smoothStepF(x, lX_LR = [0., 1.], lY_LR = [0., 1.], cOrdSm = 0):
+def smoothStepF(x, lX_LR=[0., 1.], lY_LR=[0., 1.], cOrdSm=0):
     assert (len(lX_LR) == len(lY_LR) and len(lX_LR) == 2)
     ((xL, xR), (yL, yR)) = lX_LR, lY_LR
     lbd = 1.
@@ -64,7 +63,7 @@ def smoothStepF(x, lX_LR = [0., 1.], lY_LR = [0., 1.], cOrdSm = 0):
             lbd = x*x*x*x*(x*(x*(-20*x + 70) - 84) + 35)
     return yL + lbd*(yR - yL)
 
-def stepF_1Step(dPar, x, lX_LR, lY_LR, lSStep, cOrdSm = 0):
+def stepF_1Step(dPar, x, lX_LR, lY_LR, lSStep, cOrdSm=0):
     assert (len(lX_LR) == len(lY_LR) and len(lX_LR) == len(lSStep) and
             len(lX_LR) >= 2)
     if (x < lX_LR[0]):
@@ -74,7 +73,7 @@ def stepF_1Step(dPar, x, lX_LR, lY_LR, lSStep, cOrdSm = 0):
     else:
         return dPar[lSStep[1]]
 
-def stepF_2Step(dPar, x, lX_LR1, lX_LR2, lY_LR1, lY_LR2, lSStep, cOrdSm = 0):
+def stepF_2Step(dPar, x, lX_LR1, lX_LR2, lY_LR1, lY_LR2, lSStep, cOrdSm=0):
     assert (len(lX_LR1) == len(lY_LR1) and len(lX_LR2) == len(lY_LR2) and
             len(lX_LR1) >= 2 and len(lX_LR2) >= 2 and len(lSStep) >= 3)
     if (x < lX_LR1[0]):
@@ -114,10 +113,10 @@ def doStepChange(x, dPar):
                 xR_T1 = xL_T2
             return stepF_2Step(dPar, x, [xL_T1, xR_T1], [xL_T2, xR_T2],
                                [yL_T1, yR_T1], [yL_T2, yR_T2],
-                               [sStepV01, sStepV12, sStepV_T], cOrdSm = smOrd)
+                               [sStepV01, sStepV12, sStepV_T], cOrdSm=smOrd)
         else:
             return stepF_1Step(dPar, x, [xL_T1, xR_T1], [yL_T1, yR_T1],
-                               [sStepV01, sStepV_T], cOrdSm = smOrd)
+                               [sStepV01, sStepV_T], cOrdSm=smOrd)
     else:
         return 0.0
 
@@ -141,7 +140,7 @@ def doMixedQChange(x, dPar):
     return cChg
 
 # --- Functions (O_80__Interaction) -------------------------------------------
-def doSiteChange(cO, sSpS, lSCpAs, doPyl = True):
+def doSiteChange(cO, sSpS, lSCpAs, doPyl=True):
     opDone = False
     assert sSpS in cO.dSpS
     cSpS = cO.dSpS[sSpS]
@@ -160,7 +159,7 @@ def doSiteChange(cO, sSpS, lSCpAs, doPyl = True):
     return opDone
 
 # --- Functions (O_90_Component) ----------------------------------------------
-def createLSCp(inpDt, lOAll, sPylDPy = GC.S_DO_PYL):
+def createLSCp(inpDt, lOAll, sPylDPy=GC.S_DO_PYL):
     lSCp = []
     for cO in lOAll:
         for cSpS in cO.dITp['dInfSpS']:
@@ -177,7 +176,7 @@ def createDCnc(inpFr):
         dCncIni[sSMo] = GF.drawFromDist(cTp, dPar)
     return dCncIni
 
-def iniDictOut(inpFr, dCnc, t = 0., tDlt = 0.):
+def iniDictOut(inpFr, dCnc, t=0., tDlt=0.):
     dO = {'dN': {}, 'dH': {}, 'h': 0., 'tDlt': tDlt, 'dCncIni': {},
           'dCncChgInt': {}, 'dRes': {GC.S_TIME: [t]}}
     for s, cCnc in dCnc.items():
@@ -189,7 +188,7 @@ def iniDictOut(inpFr, dCnc, t = 0., tDlt = 0.):
         dO['dN'][s] = k
     return dO
 
-def changeCncSMo(inpFr, dO, dCncSMo, t, cID = None):
+def changeCncSMo(inpFr, dO, dCncSMo, t, cID=None):
     for sSMo in dCncSMo:
         assert sSMo in inpFr.dParCnc
         cD, cncChgSMo, cncChgExt = inpFr.dParCnc[sSMo], 0., 0.
@@ -253,7 +252,7 @@ def reCalcReactHazards(dICp, inpFr, dO, dCncSMo):
     dO['h'] = sum(dO['dH'].values())
     # sort dH in ascending order for numerical stability
     dO['dH'] = {cK: cV/dO['h'] for cK, cV in
-                sorted(dO['dH'].items(), key = itemgetter(1))}
+                sorted(dO['dH'].items(), key=itemgetter(1))}
 
 def eventReactionSys(dO):
     # get the string consisting of the LHS and RHS of the reaction
@@ -272,7 +271,7 @@ def eventReactionSys(dO):
 def nextEvent(dO, T, cTS):
     if dO['h'] > 0:    # otherwise the while-loop ends, see the other case
         # draw the time to the next event from exponential(lambd = 1./h)
-        dO['tDlt'] = GF.drawFromDist('exponential', dPar = {'h': dO['h']})
+        dO['tDlt'] = GF.drawFromDist('exponential', dPar={'h': dO['h']})
         # adapt the event reactions to considered system
         eventReactionSys(dO)
     else:
@@ -307,33 +306,67 @@ def evolveGillespie(dIG, dICp, inpFr, dCncSMo):
         updateDictOut(dO, dCncSMo, t)
     return dO['dRes'], dO['dN']
 
-def getPFResEvo(dIG, dITp, sFRs, cRp = 0):
+def getPFResEvo(dITp, sPRs, sFRs, cRp=0):
     sD = dITp['sD_Obj']
     if cRp > 0:
         sD = os.path.join(sD, GC.S_REP + str(cRp))
-    pFRes = getPF(dIG['sPRes'], sD, sFRs, sFExt = GC.S_EXT_CSV)
+    pFRes = getPF([sPRs, sD], sFRs, sFExt=GC.S_EXT_CSV)
     if os.path.isfile(pFRes):
-        return GF.readCSV(pFRes, iCol = 0)
+        return GF.readCSV(pFRes, iCol=0)
     return None
 
-def getDPFPltEvo(dIG, dITp, tKey, cRp = 0, dMS = None):
+def getDPFPltEvo(dITp, tKey, cRp=0, dMS=None):
     dP, sD = {}, dITp['sD_Obj']
     if cRp > 0:
         sD = os.path.join(sD, GC.S_REP + str(cRp))
     if dMS is None:
         sF = GC.S_USC.join([str(cEl) for cEl in tKey if cEl is not None])
-        if cRp == 0:
-            pF = getPF(dIG['sPPlt'], sD, sF, sFExt = GC.S_EXT_PDF)
-        else:
-            pF = getPF(dIG['sPPlt'], sD, sF, sFExt = GC.S_EXT_PDF)
+        pF = getPF([dITp['sPPlt'], sD], sF, sFExt=GC.S_EXT_PDF)
         dP[pF] = dMS
     else:
         for sMS, dCp in dMS.items():
             sF = str(tKey[0]) + GC.S_USC + sMS
             if tKey[1] is not None:
                 sF +=  GC.S_USC + str(tKey[1])
-            pF = getPF(dIG['sPPlt'], sD, sF, sFExt = GC.S_EXT_PDF)
+            pF = getPF([dITp['sPPlt'], sD], sF, sFExt=GC.S_EXT_PDF)
             dP[pF] = (sMS, dCp)
     return dP
+
+# --- Functions (O_99__Simulation) --------------------------------------------
+def reduceData(dITp, cSys, cRp=0, sCTime=GC.S_TIME):
+    sP = os.path.join(dITp['sPRes'], cSys.dITp['sD_Obj'])
+    halfStep = dITp['tMax']/(2*dITp['nTSAllRep'])
+    lTRed = [k*halfStep for k in range(1, 2*dITp['nTSAllRep'], 2)]
+    assert sCTime in cSys.dfrResEvo.columns
+    lDfr = [cSys.dfrResEvo[(cSys.dfrResEvo[sCTime] >= lTRed[k - 1]) &
+                           (cSys.dfrResEvo[sCTime] < lTRed[k + 1])]
+            for k in range(1, len(lTRed) - 1)]
+    lDfr = ([cSys.dfrResEvo[cSys.dfrResEvo[sCTime] < lTRed[1]]] + lDfr +
+            [cSys.dfrResEvo[cSys.dfrResEvo[sCTime] >= lTRed[-2]]])
+    lDfr = [cDfr.reset_index(drop=True) for cDfr in lDfr]
+    lSCAv = [sC for sC in cSys.dfrResEvo.columns if sC != sCTime]
+    dL = {sCTime: lTRed}
+    dL.update({sC: [np.mean(cDfr[sC]) for cDfr in lDfr] for sC in lSCAv})
+    dfrRed = GF.iniPdDfr(dL)
+    sF = 'dfrRed' + GC.S_USC + GC.S_REP + str(cRp) + '.csv'
+    dfrRed.to_csv(dITp['sPRes'] + '/' + sF, sep=dITp['cSep'])
+    return dfrRed
+
+def calcRunMeanM2Dfr(dITp, cSys, dDfrI, cCt=0, lSCDisr=[GC.S_TIME]):
+    dfrResRed = reduceData(dITp, cSys, cRp=cCt)
+    lSCCalc = [sC for sC in cDfr.columns if sC not in lSCDisr]
+    # initialise if full results DataFrame is still empty
+    if len(dDfrI) == 0:
+        for sK in [GC.S_MEAN, GC.S_M2]:
+            dDfrI[sK] = GF.iniPdDfr(lSNmC=lSCCalc, lSNmR=cDfr.index)
+    # update the current value aggregate, and re-assign values to DataFrames
+    for sR in cDfr.index:
+        for sC in lSCCalc:
+            cMn, cM2 = dDfrI[GC.S_MEAN].at[sR, sC], dDfrI[GC.S_M2].at[sR, sC]
+            cMn, cM2 = GF.updateMeanM2(cMn, cM2, cCt, cDfr.at[sR, sC])
+            dDfrI[GC.S_MEAN].at[sR, sC], dDfrI[GC.S_M2].at[sR, sC] = cMn, cM2
+    for sK in [GC.S_MEAN, GC.S_M2]:
+        if GC.S_TIME not in dDfrI[sK].columns:
+            dDfrI[sK] = GF.iniPdDfr(cDfr[GC.S_TIME]).join(dDfrI[sK])
 
 ###############################################################################

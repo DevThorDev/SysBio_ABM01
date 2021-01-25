@@ -15,19 +15,21 @@ from Core.O_03__Metabolite import SMo_NO3_1m, SMo_H2PO4_1m
 
 # +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 class System(Base):
-    def __init__(self, inpDat, inpFr, lCpObj = [], iTp = 95):
+    def __init__(self, inpDat, inpFr, cRp=0, lCpObj=[], iTp=95):
         super().__init__(inpDat, iTp)
         self.idO = GC.ID_SYS
         self.descO = 'System'
         self.inFr = inpFr
         self.lCpO = lCpObj
         self.dCncSMo = TF.createDCnc(self.inFr)
+        self.sFRes = self.dITp['sF_Obj'] + GC.S_USC + GC.S_REP + str(cRp)
+        self.dParPlt = self.dITp[GC.S_D_PLT][GC.S_CP_CNC]
         self.updateObjDicts(inpDat)
         # print('Initiated "System" object.')
 
-    def updateObjDicts(self, inpDat, refresh = False):
-        self.addCpObj(inpDat, refresh = refresh)
-        self.getDictCpObj(refresh = refresh)
+    def updateObjDicts(self, inpDat, refresh=False):
+        self.addCpObj(inpDat, refresh=refresh)
+        self.getDictCpObj(refresh=refresh)
         self.getDictSMoObj(inpDat)
         if not hasattr(self, 'dResEvo'):
             self.dResEvo = None
@@ -40,9 +42,9 @@ class System(Base):
                         if cKSPD in [GC.S_DO_PYL, GC.S_DO_DPY]:
                             for sPDAgent in cD[cKSPD]:
                                 GF.addToDictDL(self.dICp, cKSPD, cKSpS,
-                                               sPDAgent, lUnique = True)
+                                               sPDAgent, lUnique=True)
 
-    def addCpObj(self, inpDat, refresh = False):
+    def addCpObj(self, inpDat, refresh=False):
         dNCpO, self.dICp = self.inFr.dNCpObj, {}
         if refresh:
             self.lCpO = []
@@ -54,7 +56,7 @@ class System(Base):
                 if iCp == 0:
                     self.complDICp(cCpO.lOSy)
 
-    def getDictCpObj(self, refresh = False):
+    def getDictCpObj(self, refresh=False):
         self.dCpO = {}
         if not refresh:
             self.dNCpO = {}
@@ -70,7 +72,7 @@ class System(Base):
         for sSMo, cSMoO in self.dSMo.items():
             cSMoO.setConc(self.dCncSMo[sSMo])
 
-    def printDICp(self, sPD = None):
+    def printDICp(self, sPD=None):
         if sPD is None:
             print(GC.S_DASH*8, 'Component info dictionary:', GC.S_DASH*8)
             pprint.pprint(self.dICp)
@@ -81,7 +83,7 @@ class System(Base):
                 pprint.pprint(self.dICp[sPD])
         print(GC.S_DASH*60)
 
-    def printDSCpSL(self, sCpSL = None):
+    def printDSCpSL(self, sCpSL=None):
         if sCpSL is None:
             print(GC.S_DASH*8, 'Component string dictionary:', GC.S_DASH*8)
             pprint.pprint(self.dSCpSL)
@@ -126,32 +128,32 @@ class System(Base):
         else:
             print(GC.S_DASH*8, 'Simulation has not even started!', GC.S_DASH*8)
 
-    def plotResEvo(self, cRp = 0, sFRes = None, overWr = True):
+    def plotResEvo(self, sPRes=None, cRp=0, overWr=True):
         dParPlt = self.dITp[GC.S_D_PLT][GC.S_CP_CNC]
-        if sFRes is not None:
-            self.dfrResEvo = TF.getPFResEvo(self.dIG, self.dITp, sFRs = sFRes,
-                                            cRp = cRp)
+        if self.dResEvo is None:
+            self.dfrResEvo = TF.getPFResEvo(self.dITp, sPRs=sPRes,
+                                            sFRs=self.sFRes, cRp=cRp)
         else:
             self.dfrResEvo = GF.iniPdDfr(self.dResEvo)
         for cK, cT in dParPlt['dlSY'].items():
             assert len(cK) == 2 and len(cT) == 3
-            dPPltF = TF.getDPFPltEvo(self.dIG, self.dITp, cK, cRp, dMS = cT[2])
+            dPPltF = TF.getDPFPltEvo(self.dITp, tKey=cK, cRp=cRp, dMS=cT[2])
             if self.dResEvo is not None and self.dfrResEvo is not None:
                 PF.plotEvo(dParPlt, self.dfrResEvo, dPPltF, self.inFr.dSCpSL,
-                           tDat = cT[:2], overWr = overWr)
+                           tDat=cT[:2], overWr=overWr)
 
-    def evolveOverTime(self, inpDat, cRp, doPlots = True):
+    def evolveOverTime(self, inpDat, cRp=0, doPlots=True):
         self.dResEvo, self.dNCpO = TF.evolveGillespie(self.dIG, self.dICp,
                                                       self.inFr, self.dCncSMo)
         self.dfrResEvo = GF.iniPdDfr(self.dResEvo)
-        self.updateObjDicts(inpDat, refresh = True)
+        self.updateObjDicts(inpDat, refresh=True)
         # self.printCncSMo()
         # self.printNCompObjSys()
         # self.printAllCompObjSys()
         dR, sD = self.dResEvo, self.dITp['sD_Obj']
         sF = self.dITp['sF_Obj'] + GC.S_USC + GC.S_REP + str(cRp)
-        self.pFResEvo = TF.saveAsPdDfr(self.dIG, dR, sD, sF, cRp = cRp,
-                                       overWr = True)
+        self.pFResEvo = TF.saveAsPdDfr(self.dIG, dR, [sD], sF, cRp=cRp,
+                                       overWr=True)
         if doPlots:
             self.plotResEvo(cRp=cRp)
 

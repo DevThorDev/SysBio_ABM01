@@ -9,7 +9,7 @@ from Core.O_00__Base import Base
 
 # +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 class Interaction(Base):
-    def __init__(self, inpDat, cOInt, lSCpAs, iTp = 80):
+    def __init__(self, inpDat, cOInt, lSCpAs, iTp=80):
         super().__init__(inpDat, iTp)
         self.idO = GC.ID_INT
         self.descO = 'Interaction'
@@ -25,8 +25,8 @@ class Interaction(Base):
 
 # +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 class Phosphorylation(Interaction):
-    def __init__(self, inpDat, cOInt, lSCpAs, sSpSite, iTp = 80):
-        super().__init__(inpDat, cOInt, lSCpAs, iTp = iTp)
+    def __init__(self, inpDat, cOInt, lSCpAs, sSpSite, iTp=80):
+        super().__init__(inpDat, cOInt, lSCpAs, iTp=iTp)
         self.idO = GC.ID_PYL
         self.descO = 'Phosphorylation'
         self.sSpS = sSpSite
@@ -34,12 +34,12 @@ class Phosphorylation(Interaction):
 
     def doPyl(self):
         # check if first interaction partner has site to be phosphorylated
-        return TF.doSiteChange(self.cOI, self.sSpS, self.lSCpA, doPyl = True)
+        return TF.doSiteChange(self.cOI, self.sSpS, self.lSCpA, doPyl=True)
 
 # +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 class Dephosphorylation(Interaction):
-    def __init__(self, inpDat, cOInt, lSCpAs, sSpSite, iTp = 80):
-        super().__init__(inpDat, cOInt, lSCpAs, iTp = iTp)
+    def __init__(self, inpDat, cOInt, lSCpAs, sSpSite, iTp=80):
+        super().__init__(inpDat, cOInt, lSCpAs, iTp=iTp)
         self.idO = GC.ID_DPY
         self.descO = 'Dephosphorylation'
         self.sSpS = sSpSite
@@ -47,6 +47,6 @@ class Dephosphorylation(Interaction):
 
     def doDePyl(self):
         # check if first interaction partner has site to be dephosphorylated
-        return TF.doSiteChange(self.cOI, self.sSpS, self.lSCpA, doPyl = False)
+        return TF.doSiteChange(self.cOI, self.sSpS, self.lSCpA, doPyl=False)
 
 ###############################################################################

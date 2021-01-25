@@ -22,21 +22,24 @@ def seedRNG(cMode):             # legacy function
         np.random.seed()
         print('Seeded RNG.')
 
-def createDir(pF):
-    if not os.path.isdir(pF):
-        os.mkdir(pF)
+def makeDirs(pDTarget):
+    if not os.path.isdir(pDTarget):
+        os.makedirs(pDTarget)
 
-def joinToPath(pF = '', sF = 'Dummy.txt'):
-    if len(pF) > 0:
-        createDir(pF)
-        return os.path.join(pF, sF)
+def joinToPath(lD4P=[], sF='Dummy.txt'):
+    if len(lD4P) > 0:
+        pD = ''
+        for cD in lD4P:
+            pD = os.path.join(pD, cD)
+        makeDirs(pD)
+        return os.path.join(pD, sF)
     else:
         return sF
 
-def splitStr(s, sSpl = GC.S_USC):
+def splitStr(s, sSpl=GC.S_USC):
     return s.split(sSpl)
 
-def partStr(s0, sSplO = GC.S_USC, sSplI = GC.S_PLUS):
+def partStr(s0, sSplO=GC.S_USC, sSplI=GC.S_PLUS):
     lSSplRet = [[s0]]
     if sSplO is not None:
         lSSplRet = s0.split(sSplO)
@@ -59,16 +62,16 @@ def lItToUniqueList(lIt):
         return list(seAll)
     return []
 
-def getLFromLIt(lIt, k = 0):
+def getLFromLIt(lIt, k=0):
     return [cIt[k] for cIt in lIt]
 
-def addToDictCt(cD, cK, cCt = 1):
+def addToDictCt(cD, cK, cCt=1):
     if cK in cD:
         cD[cK] += cCt
     else:
         cD[cK] = cCt
 
-def addToDictL(cD, cK, cE, lUnique = False):
+def addToDictL(cD, cK, cE, lUnique=False):
     if cK in cD:
         if not lUnique or cE not in cD[cK]:
             cD[cK].append(cE)
@@ -81,7 +84,7 @@ def addToDictD(cD, cKO, cKI, cEI):
     else:
         cD[cKO] = {cKI: cEI}
 
-def addToDictDL(cD, cKO, cKI, cEI, lUnique = False):
+def addToDictDL(cD, cKO, cKI, cEI, lUnique=False):
     if cKO in cD:
         if cKI in cD[cKO]:
             if not lUnique or cEI not in cD[cKO][cKI]:
@@ -96,7 +99,7 @@ def appendToDictL(cD, lE):
     for i, cK in enumerate(cD):
         cD[cK].append(lE[i])
 
-def implMinMax(x, lowB = 0, upB = 1):
+def implMinMax(x, lowB=0, upB=1):
     return min(max(x, lowB), upB)
 
 # Running mean and standard deviation
@@ -137,7 +140,7 @@ def calcPSigmoidal(x, dPar):
     prMin, prMax = dPar[GC.S_PAR_PMIN], dPar[GC.S_PAR_PMAX]
     return prMin + (prMax - prMin)*fCh
 
-def drawFromDist(sDist, dPar, nVal = None):
+def drawFromDist(sDist, dPar, nVal=None):
     if sDist == 'uniform':
         assert 'min' in dPar and 'max' in dPar
         return RNG().uniform(dPar['min'], dPar['max'], nVal)
@@ -357,7 +360,7 @@ def calcRctWeight(cDfr, sRctCl):
               cDfr.columns)
     return wRct
 
-def updateDITpDIPlt(dITpC, dITpU, lKSpc = [GC.S_D_PLT]):
+def updateDITpDIPlt(dITpC, dITpU, lKSpc=[GC.S_D_PLT]):
     for cKSpc in lKSpc:
         if cKSpc in dITpC and cKSpc in dITpU:
             dISpcC, dISpcU = dITpC[cKSpc], dITpU[cKSpc]
@@ -373,7 +376,7 @@ def updateDITpDIPlt(dITpC, dITpU, lKSpc = [GC.S_D_PLT]):
     dITpURed = {cK: cV for cK, cV in dITpU.items() if cK not in lKSpc}
     dITpC.update(dITpURed)
 
-def printElapsedTimeSim(stT, cT, sPre = GC.S_TIME):
+def printElapsedTimeSim(stT, cT, sPre=GC.S_TIME):
     # calculate and display elapsed time
     elT = round(cT - stT, GC.R04)
     print(sPre, 'elapsed:', elT, 'seconds, this is', round(elT/60, GC.R04),
@@ -392,10 +395,10 @@ def endSimu(startTime):
     print(GC.S_STAR*20 + ' DONE', time.ctime(time.time()), GC.S_STAR*20)
 
 # --- Functions (Pandas) ------------------------------------------------------
-def readCSV(pF, sepD = GC.SEP_STD, iCol = None, dDtype = None):
-    return pd.read_csv(pF, sep = sepD, index_col = iCol, dtype = dDtype)
+def readCSV(pF, sepD=GC.SEP_STD, iCol=None, dDtype=None):
+    return pd.read_csv(pF, sep=sepD, index_col=iCol, dtype=dDtype)
 
-def iniPdDfr(data = None, lSNmC = [], lSNmR = [], shape = (0, 0)):
+def iniPdDfr(data=None, lSNmC=[], lSNmR=[], shape=(0, 0)):
     assert len(shape) == 2
     nR, nC = shape
     if len(lSNmC) == 0:
@@ -406,21 +409,21 @@ def iniPdDfr(data = None, lSNmC = [], lSNmR = [], shape = (0, 0)):
                 return pd.DataFrame(data)
         else:
             if data is None:
-                return pd.DataFrame(np.zeros((len(lSNmR), nC)), index = lSNmR)
+                return pd.DataFrame(np.zeros((len(lSNmR), nC)), index=lSNmR)
             else:
-                return pd.DataFrame(data, index = lSNmR)
+                return pd.DataFrame(data, index=lSNmR)
     else:
         if len(lSNmR) == 0:
             if data is None:
                 return pd.DataFrame(np.zeros((nR, len(lSNmC))),
-                                    columns = lSNmC)
+                                    columns=lSNmC)
             else:
-                return pd.DataFrame(data, columns = lSNmC)
+                return pd.DataFrame(data, columns=lSNmC)
         else:   # ignore nR
             if data is None:
                 return pd.DataFrame(np.zeros((len(lSNmR), len(lSNmC))),
-                                    index = lSNmR, columns = lSNmC)
+                                    index=lSNmR, columns=lSNmC)
             else:
-                return pd.DataFrame(data, index = lSNmR, columns = lSNmC)
+                return pd.DataFrame(data, index=lSNmR, columns=lSNmC)
 
 ###############################################################################
