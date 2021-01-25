@@ -23,6 +23,7 @@ class System(Base):
         self.lCpO = lCpObj
         self.dCncSMo = TF.createDCnc(self.inFr)
         self.sFRes = self.dITp['sF_Obj'] + GC.S_USC + GC.S_REP + str(cRp)
+        self.sFRed = self.dITp['sFRed'] + GC.S_USC + GC.S_REP + str(cRp)
         self.dParPlt = self.dITp[GC.S_D_PLT][GC.S_CP_CNC]
         self.updateObjDicts(inpDat)
         # print('Initiated "System" object.')
@@ -142,8 +143,8 @@ class System(Base):
                 PF.plotEvo(dParPlt, self.dfrResEvo, dPPltF, self.inFr.dSCpSL,
                            tDat=cT[:2], overWr=overWr)
 
-    def evolveOverTime(self, inpDat, cRp=0, doPlots=True):
-        self.dResEvo, self.dNCpO = TF.evolveGillespie(self.dIG, self.dICp,
+    def evolveOverTime(self, inpDat, dITp, cRp=0, doPlots=True):
+        self.dResEvo, self.dNCpO = TF.evolveGillespie(dITp, self.dICp,
                                                       self.inFr, self.dCncSMo)
         self.dfrResEvo = GF.iniPdDfr(self.dResEvo)
         self.updateObjDicts(inpDat, refresh=True)
@@ -152,8 +153,9 @@ class System(Base):
         # self.printAllCompObjSys()
         dR, sD = self.dResEvo, self.dITp['sD_Obj']
         sF = self.dITp['sF_Obj'] + GC.S_USC + GC.S_REP + str(cRp)
-        self.pFResEvo = TF.saveAsPdDfr(self.dIG, dR, [sD], sF, cRp=cRp,
-                                       overWr=True)
+        self.pFResEvo = TF.saveAsPdDfr(dITp, dR, [sD], sF, overWr=True)
+        # self.pFResEvo = TF.saveAsPdDfr(dITp, dR, [sD], sF, cRp=cRp,
+        #                                overWr=True)
         if doPlots:
             self.plotResEvo(cRp=cRp)
 

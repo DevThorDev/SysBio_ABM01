@@ -14,6 +14,8 @@ strCL = GC.S_CL_SYSTEM
 sD_Obj = '95_Sys'
 sF_Obj = 'SysEvo'
 
+sFRed = 'DataFrameRed'
+
 # --- graphics parameters: component numbers and molecule conc. plot ----------
 sPlt_SSC = '01_SelCpConc'               # name of sel. comps and conc. plot
 sPlt_SCp = '02_SelCp'                   # name of sel. comps plot
@@ -87,6 +89,7 @@ dIO = {# --- general
        # --- path, directory and file names
        'sD_Obj': sD_Obj,
        'sF_Obj': sF_Obj,
+       'sFRed': sFRed,
        # --- graphics parameters: component numbers and molecule conc. plot
        GC.S_D_PLT: {GC.S_CP_CNC: {'sPlt_SSC': sPlt_SSC,
                                   'sPlt_SCp': sPlt_SCp,

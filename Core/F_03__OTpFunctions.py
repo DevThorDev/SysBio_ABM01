@@ -15,14 +15,15 @@ def getPF(lD4P, sF, sFExt=GC.S_EXT_CSV):
 
 def savePdDfr(dITp, pdDfr, lD, sF, overWr=True, sFExt=GC.S_EXT_CSV):
     sP = getPF([dITp['sPRes']] + lD, sF, sFExt=sFExt)
-    if not os.path.isfile(sP) and overWr:
+    if not os.path.isfile(sP) or overWr:
         pdDfr.to_csv(sP, sep=dITp['cSep'])
     return sP
 
-def saveAsPdDfr(dITp, dRes, lD, sF, cRp=0, overWr=True, sFExt=GC.S_EXT_CSV):
-    if cRp > 0:
-        sD = os.path.join(sD, GC.S_REP + str(cRp))
-    sP = getPF([dITp['sPRes'], sD], sF, sFExt=sFExt)
+# def saveAsPdDfr(dITp, dRes, lD, sF, cRp=0, overWr=True, sFExt=GC.S_EXT_CSV):
+def saveAsPdDfr(dITp, dRes, lD, sF, overWr=True, sFExt=GC.S_EXT_CSV):
+    # if cRp > 0:
+    #     sD = os.path.join(sD, GC.S_REP + str(cRp))
+    sP = getPF([dITp['sPRes']] + lD, sF, sFExt=sFExt)
     if not os.path.isfile(sP) or overWr:
         GF.iniPdDfr(dRes).to_csv(sP, sep=dITp['cSep'])
     return sP
@@ -287,14 +288,14 @@ def updateDictOut(dO, dCnc, t):
     for s, nO in dO['dN'].items():
         dO['dRes'][s].append(nO)
 
-def evolveGillespie(dIG, dICp, inpFr, dCncSMo):
+def evolveGillespie(dITp, dICp, inpFr, dCncSMo):
     # initialisation
-    t, T, tDelta, cTSt = dIG['tStart'], dIG['tMax'], 0, 0
+    t, T, tDelta, cTSt = dITp['tStart'], dITp['tMax'], 0, 0
     dO = iniDictOut(inpFr, dCncSMo, t, tDelta)
     reCalcReactHazards(dICp, inpFr, dO, dCncSMo)
-    while t < T and cTSt < dIG['maxTS']:
+    while t < T and cTSt < dITp['maxTS']:
         cTSt += 1
-        if cTSt >= dIG['minDispTS'] and cTSt%dIG['modDispTS'] == 0:
+        if cTSt >= dITp['minDispTS'] and cTSt%dITp['modDispTS'] == 0:
             print('Reached time step', cTSt, 'at time', round(t, GC.R04))
         # do next event and update time with tToNext
         t += nextEvent(dO, T, cTSt)
@@ -334,7 +335,6 @@ def getDPFPltEvo(dITp, tKey, cRp=0, dMS=None):
 
 # --- Functions (O_99__Simulation) --------------------------------------------
 def reduceData(dITp, cSys, cRp=0, sCTime=GC.S_TIME):
-    sP = os.path.join(dITp['sPRes'], cSys.dITp['sD_Obj'])
     halfStep = dITp['tMax']/(2*dITp['nTSAllRep'])
     lTRed = [k*halfStep for k in range(1, 2*dITp['nTSAllRep'], 2)]
     assert sCTime in cSys.dfrResEvo.columns
@@ -348,25 +348,24 @@ def reduceData(dITp, cSys, cRp=0, sCTime=GC.S_TIME):
     dL = {sCTime: lTRed}
     dL.update({sC: [np.mean(cDfr[sC]) for cDfr in lDfr] for sC in lSCAv})
     dfrRed = GF.iniPdDfr(dL)
-    sF = 'dfrRed' + GC.S_USC + GC.S_REP + str(cRp) + '.csv'
-    dfrRed.to_csv(dITp['sPRes'] + '/' + sF, sep=dITp['cSep'])
+    savePdDfr(dITp, dfrRed, [cSys.dITp['sD_Obj']], cSys.sFRed, overWr=True)
     return dfrRed
 
 def calcRunMeanM2Dfr(dITp, cSys, dDfrI, cCt=0, lSCDisr=[GC.S_TIME]):
-    dfrResRed = reduceData(dITp, cSys, cRp=cCt)
-    lSCCalc = [sC for sC in cDfr.columns if sC not in lSCDisr]
+    dfrRed = reduceData(dITp, cSys, cRp=cCt)
+    lSCCalc = [sC for sC in dfrRed.columns if sC not in lSCDisr]
     # initialise if full results DataFrame is still empty
     if len(dDfrI) == 0:
         for sK in [GC.S_MEAN, GC.S_M2]:
-            dDfrI[sK] = GF.iniPdDfr(lSNmC=lSCCalc, lSNmR=cDfr.index)
+            dDfrI[sK] = GF.iniPdDfr(lSNmC=lSCCalc, lSNmR=dfrRed.index)
     # update the current value aggregate, and re-assign values to DataFrames
-    for sR in cDfr.index:
+    for sR in dfrRed.index:
         for sC in lSCCalc:
             cMn, cM2 = dDfrI[GC.S_MEAN].at[sR, sC], dDfrI[GC.S_M2].at[sR, sC]
-            cMn, cM2 = GF.updateMeanM2(cMn, cM2, cCt, cDfr.at[sR, sC])
+            cMn, cM2 = GF.updateMeanM2(cMn, cM2, cCt, dfrRed.at[sR, sC])
             dDfrI[GC.S_MEAN].at[sR, sC], dDfrI[GC.S_M2].at[sR, sC] = cMn, cM2
     for sK in [GC.S_MEAN, GC.S_M2]:
         if GC.S_TIME not in dDfrI[sK].columns:
-            dDfrI[sK] = GF.iniPdDfr(cDfr[GC.S_TIME]).join(dDfrI[sK])
+            dDfrI[sK] = GF.iniPdDfr(dfrRed[GC.S_TIME]).join(dDfrI[sK])
 
 ###############################################################################

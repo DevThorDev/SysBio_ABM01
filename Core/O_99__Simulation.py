@@ -29,7 +29,7 @@ class Simulation(Base):
             print(GC.S_PLUS*8, 'Starting repetition', cRep, 'of', nRep)
             cSys = System(inpDat, self.inpFrames, cRp=cRep)
             if self.dITp['doEvoT']:
-                cSys.evolveOverTime(inpDat, cRp=cRep, doPlots=doPlt)
+                cSys.evolveOverTime(inpDat, self.dITp, cRp=cRep, doPlots=doPlt)
             if doPlt:
                 cSys.plotResEvo(sPRes=self.dITp['sPRes'], cRp=cRep,
                                 overWr=False)
