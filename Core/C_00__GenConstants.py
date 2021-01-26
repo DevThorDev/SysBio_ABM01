@@ -310,18 +310,9 @@ D_DESC = {S_L__: S_DESC_L__, S_S__: S_DESC_S__, S_K__: S_DESC_K__,
 
 # --- constants related to reactions ------------------------------------------
 S_RCT_11 = S_1 + S_1
-# S_RCT_11_K = S_RCT_11 + S_K
-# S_RCT_11_X = S_RCT_11 + S_X
-# S_RCT_11_Y = S_RCT_11 + S_Y
-# S_RCT_11_A = S_RCT_11 + S_A
-# S_RCT_11_B = S_RCT_11 + S_B
-# S_RCT_11_C = S_RCT_11 + S_C
-# S_RCT_11_D = S_RCT_11 + S_D
 S_RCT_12 = S_1 + S_2
 S_RCT_21 = S_2 + S_1
 S_RCT_22 = S_2 + S_2
-# L_S_RCT_ASES = [S_RCT_11_K, S_RCT_11_X, S_RCT_11_Y,
-#                 S_RCT_11_A, S_RCT_11_B, S_RCT_11_C, S_RCT_11_D]
 L_S_RCT_2ORD = [S_RCT_21, S_RCT_22]
 LEN_S_CP = 7
 I_S_CP_SEP1 = 3
@@ -341,6 +332,7 @@ S_M2 = 'M2'
 S_VARIANCE = 'Variance'
 S_STDDEV = 'StdDev'
 S_SEM = 'SEM'
+L_S_STATS_OUT = [S_MEAN, S_STDDEV, S_SEM]
 
 # --- constants related to plots ----------------------------------------------
 S_D_PLT = 'dPlt'

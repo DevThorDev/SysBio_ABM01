@@ -94,21 +94,21 @@ class System(Base):
                 print(sCpSL + ':', self.dRct[sCpSL])
 
     def printNCompObjSys(self):
-        print(GC.S_STAR*16, 'Counts of comp. objects contained in System:',
-              GC.S_STAR*18)
+        print(GC.S_PLUS*16, 'Counts of comp. objects contained in System:',
+              GC.S_PLUS*18)
         for sCp, ctCpO in self.dNCpO.items():
             print(sCp + ':', ctCpO)
         print('- Total:', sum(self.dNCpO.values()))
-        print(GC.S_STAR*80)
+        print(GC.S_PLUS*80)
 
     def printAllCompObjSys(self):
-        print(GC.S_STAR*16, 'Details of comp. objects contained in System:',
-              GC.S_STAR*17)
+        print(GC.S_PLUS*16, 'Details of comp. objects contained in System:',
+              GC.S_PLUS*17)
         for sCp, lCpO in self.dCpO.items():
             print('~'*20, 'Components with ID', sCp, '~'*20)
             for cCpO in lCpO:
                 cCpO.printComponentDetails()
-        print(GC.S_STAR*80)
+        print(GC.S_PLUS*80)
 
     def printSMo(self):
         print(GC.S_DASH*8, 'Small molecules in system:', GC.S_DASH*8)
@@ -129,34 +129,28 @@ class System(Base):
         else:
             print(GC.S_DASH*8, 'Simulation has not even started!', GC.S_DASH*8)
 
-    def plotResEvo(self, sPRes=None, cRp=0, overWr=True):
-        dParPlt = self.dITp[GC.S_D_PLT][GC.S_CP_CNC]
+    def plotResEvo(self, dITp, cRp=0, overWr=True):
         if self.dResEvo is None:
-            self.dfrResEvo = TF.getPFResEvo(self.dITp, sPRs=sPRes,
-                                            sFRs=self.sFRes, cRp=cRp)
+            self.dfrResEvo = TF.getPFResEvo(self.dITp, sPRs=dITp['sPRes'],
+                                            sFRs=self.sFRes)
         else:
             self.dfrResEvo = GF.iniPdDfr(self.dResEvo)
-        for cK, cT in dParPlt['dlSY'].items():
+        for cK, cT in self.dParPlt['dlSY'].items():
             assert len(cK) == 2 and len(cT) == 3
-            dPPltF = TF.getDPFPltEvo(self.dITp, tKey=cK, cRp=cRp, dMS=cT[2])
-            if self.dResEvo is not None and self.dfrResEvo is not None:
-                PF.plotEvo(dParPlt, self.dfrResEvo, dPPltF, self.inFr.dSCpSL,
-                           tDat=cT[:2], overWr=overWr)
+            dPPltF = TF.getDPFPltEvo(self.dITp, sPPlt=dITp['sPPlt'], tKey=cK,
+                                     cRp=cRp, dMS=cT[2])
+            if self.dfrResEvo is not None:
+                PF.plotEvo(self.dParPlt, self.dfrResEvo, dPPltF,
+                           self.inFr.dSCpSL, tDat=cT[:2], overWr=overWr)
 
     def evolveOverTime(self, inpDat, dITp, cRp=0, doPlots=True):
         self.dResEvo, self.dNCpO = TF.evolveGillespie(dITp, self.dICp,
                                                       self.inFr, self.dCncSMo)
         self.dfrResEvo = GF.iniPdDfr(self.dResEvo)
         self.updateObjDicts(inpDat, refresh=True)
-        # self.printCncSMo()
-        # self.printNCompObjSys()
-        # self.printAllCompObjSys()
         dR, sD = self.dResEvo, self.dITp['sD_Obj']
-        sF = self.dITp['sF_Obj'] + GC.S_USC + GC.S_REP + str(cRp)
-        self.pFResEvo = TF.saveAsPdDfr(dITp, dR, [sD], sF, overWr=True)
-        # self.pFResEvo = TF.saveAsPdDfr(dITp, dR, [sD], sF, cRp=cRp,
-        #                                overWr=True)
+        self.pFResEvo = TF.saveAsPdDfr(dITp, dR, [sD], self.sFRes, overWr=True)
         if doPlots:
-            self.plotResEvo(cRp=cRp)
+            self.plotResEvo(dITp, cRp=cRp)
 
 ###############################################################################

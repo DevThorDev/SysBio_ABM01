@@ -29,13 +29,13 @@ def saveAsPdDfr(dITp, dRes, lD, sF, overWr=True, sFExt=GC.S_EXT_CSV):
     return sP
 
 # --- Functions (O_00__Base) --------------------------------------------------
-def getDITp(dITp, iTp, lITpU):
+def getDITp(dIG, iTp, lITpU):
     dITp = {}
     if len(lITpU) > 0:
-        dITp = copy.deepcopy(dITp[lITpU[0]])     # content of lITpU[0] input
+        dITp = copy.deepcopy(dIG[lITpU[0]])     # content of lITpU[0] input
         for iTpU in lITpU[1:]:
-            GF.updateDITpDIPlt(dITp, dITp[iTpU]) # updated with iTpU input
-    GF.updateDITpDIPlt(dITp, dITp[iTp])          # updated with iTp input
+            GF.updateDITpDIPlt(dITp, dIG[iTpU]) # updated with iTpU input
+    GF.updateDITpDIPlt(dITp, dIG[iTp])          # updated with iTp input
     return dITp
 
 # --- Functions (O_03__Metabolite) --------------------------------------------
@@ -307,29 +307,33 @@ def evolveGillespie(dITp, dICp, inpFr, dCncSMo):
         updateDictOut(dO, dCncSMo, t)
     return dO['dRes'], dO['dN']
 
-def getPFResEvo(dITp, sPRs, sFRs, cRp=0):
+def getPFResEvo(dITp, sPRs, sFRs):
     sD = dITp['sD_Obj']
-    if cRp > 0:
-        sD = os.path.join(sD, GC.S_REP + str(cRp))
     pFRes = getPF([sPRs, sD], sFRs, sFExt=GC.S_EXT_CSV)
     if os.path.isfile(pFRes):
         return GF.readCSV(pFRes, iCol=0)
     return None
 
-def getDPFPltEvo(dITp, tKey, cRp=0, dMS=None):
+def getDPFPltEvo(dITp, sPPlt=None, tKey=GC.S_USC, cRp=0, dMS=None):
     dP, sD = {}, dITp['sD_Obj']
+    if sPPlt is None:
+        sPPlt = dITp['sPPlt']
     if cRp > 0:
         sD = os.path.join(sD, GC.S_REP + str(cRp))
     if dMS is None:
         sF = GC.S_USC.join([str(cEl) for cEl in tKey if cEl is not None])
-        pF = getPF([dITp['sPPlt'], sD], sF, sFExt=GC.S_EXT_PDF)
+        if cRp > 0:
+            sF += GC.S_USC*2 + GC.S_REP + str(cRp)
+        pF = getPF([sPPlt, sD], sF, sFExt=GC.S_EXT_PDF)
         dP[pF] = dMS
     else:
         for sMS, dCp in dMS.items():
             sF = str(tKey[0]) + GC.S_USC + sMS
             if tKey[1] is not None:
                 sF +=  GC.S_USC + str(tKey[1])
-            pF = getPF([dITp['sPPlt'], sD], sF, sFExt=GC.S_EXT_PDF)
+            if cRp > 0:
+                sF += GC.S_USC*2 + GC.S_REP + str(cRp)
+            pF = getPF([sPPlt, sD], sF, sFExt=GC.S_EXT_PDF)
             dP[pF] = (sMS, dCp)
     return dP
 
