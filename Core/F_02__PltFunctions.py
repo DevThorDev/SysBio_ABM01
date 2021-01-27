@@ -48,7 +48,7 @@ def decorateSavePlot(pF, pdDfr, sTtl=None, xLbl=None, yLbl=None, xLim=None,
         plt.ylim(yLim)
     plt.savefig(pF)
 
-# --- Functions (O_90_Component) ----------------------------------------------
+# --- Functions (O_90__Component) ---------------------------------------------
 def plotDCncEvo(dIPlt, dCncEvo, pFPlt, lIPlt, tpMark='x', szMark=5,
                ewMark=2, ecMark=(0.95, 0., 0.), fcMark=(0.9, 0.45, 0.),
                styLn='solid', wdthLn=1, colLn='b', sTtl='', xLbl='', yLbl='',
@@ -66,7 +66,7 @@ def plotDCncEvo(dIPlt, dCncEvo, pFPlt, lIPlt, tpMark='x', szMark=5,
                          dIPlt['yLbl'], pltAxXY=dIPlt['pltAxXY_Conc'])
         plt.close()
 
-# --- Functions (O_95_System) -------------------------------------------------
+# --- Functions (O_95__System) ------------------------------------------------
 def plotEvoFig(dIPlt, dfrR, pF, sHdCX, dSHdCY, sLblY):
     cFig = plt.figure()
     for sHdCY, lSY in dSHdCY.items():
@@ -80,16 +80,29 @@ def plotEvoFig(dIPlt, dfrR, pF, sHdCX, dSHdCY, sLblY):
                      yLbl=sLblY, nmCX=sHdCX, pltAxXY=dIPlt['pltAxXY'])
     plt.close()
 
-def plotEvo(dIPlt, dResEvo, dPF, dSCp, tDat, sHdCX=GC.S_TIME, overWr=True):
-    for pF, tKDCp in dPF.items():
-        if (not os.path.isfile(pF) or overWr) and len(tDat[0]) > 0:
-            lSHdCY, sLblY = tDat
-            dfrR = GF.iniPdDfr(dResEvo).loc[:, [sHdCX] + lSHdCY]
-            if tKDCp is None:
-                dSHdCY = {sHd: [sHd] for sHd in lSHdCY}
-            else:
-                dfrR, dSHdCY = SF.preProcMeanSum(dfrR, sHdCX, lSHdCY, tKDCp,
-                                                 dSCp=dSCp)
-            plotEvoFig(dIPlt, dfrR, pF, sHdCX, dSHdCY, sLblY)
+# --- Functions (O_95__System / O_99__Simulation) -----------------------------
+def plotEvo(dIPlt, dRes, dPF, lSCp, tDat, sHdCX=GC.S_TIME, overWr=True):
+    dfrRes, dfrSpr, isSgl = SF.getDfr4Plot(dIPlt, dRes)
+    if dfrRes is not None:
+        for pF, tKDCp in dPF.items():
+            if (not os.path.isfile(pF) or overWr) and len(tDat[0]) > 0:
+                lSHdCY, sLblY = tDat
+                dfrPlt = dfrRes.loc[:, [sHdCX] + lSHdCY]
+                if tKDCp is None:
+                    dSHdCY = {sHd: [sHd] for sHd in lSHdCY}
+                elif tKDCp is not None and isSgl:
+                    dDfrPlt, dSHdCY = SF.preProcMS_Sgl(dfrPlt, sHdCX, lSHdCY,
+                                                       tKDCp, lSCp=lSCp)
+                else:
+                    dDfrPlt, dSHdCY = SF.preProcMS_Sprd(dfrPlt, sHdCX, lSHdCY,
+                                                        tKDCp, lSCp=lSCp)
+                plotEvoFig(dIPlt, dDfrPlt[GC.S_CENT], pF, sHdCX, dSHdCY, sLblY)
+
+# --- Functions (O_99__Simulation) --------------------------------------------
+def plotSpreadRange(dIPlt, dDfrRes):
+    pass
+
+def plotRange2Dfr(dIPlt, dfrA, dfrB):
+    cFig = plt.figure()
 
 ###############################################################################

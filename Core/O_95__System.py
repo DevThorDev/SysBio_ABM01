@@ -6,8 +6,8 @@ import pprint
 
 import Core.C_00__GenConstants as GC
 import Core.F_00__GenFunctions as GF
+import Core.F_01__SpcFunctions as SF
 import Core.F_02__PltFunctions as PF
-import Core.F_03__OTpFunctions as TF
 
 from Core.O_00__Base import Base
 from Core.O_90__Component import Component
@@ -21,7 +21,7 @@ class System(Base):
         self.descO = 'System'
         self.inFr = inpFr
         self.lCpO = lCpObj
-        self.dCncSMo = TF.createDCnc(self.inFr)
+        self.dCncSMo = SF.createDCnc(self.inFr)
         self.sFRes = self.dITp['sF_Obj'] + GC.S_USC + GC.S_REP + str(cRp)
         self.sFRed = self.dITp['sFRed'] + GC.S_USC + GC.S_REP + str(cRp)
         self.dParPlt = self.dITp[GC.S_D_PLT][GC.S_CP_CNC]
@@ -131,25 +131,25 @@ class System(Base):
 
     def plotResEvo(self, dITp, cRp=0, overWr=True):
         if self.dResEvo is None:
-            self.dfrResEvo = TF.getPFResEvo(self.dITp, sPRs=dITp['sPRes'],
+            self.dfrResEvo = SF.getPFResEvo(self.dITp, sPRs=dITp['sPRes'],
                                             sFRs=self.sFRes)
         else:
             self.dfrResEvo = GF.iniPdDfr(self.dResEvo)
         for cK, cT in self.dParPlt['dlSY'].items():
             assert len(cK) == 2 and len(cT) == 3
-            dPPltF = TF.getDPFPltEvo(self.dITp, sPPlt=dITp['sPPlt'], tKey=cK,
+            dPPltF = SF.getDPFPltEvo(self.dITp, sPPlt=dITp['sPPlt'], tKey=cK,
                                      cRp=cRp, dMS=cT[2])
             if self.dfrResEvo is not None:
-                PF.plotEvo(self.dParPlt, self.dfrResEvo, dPPltF,
-                           self.inFr.dSCpSL, tDat=cT[:2], overWr=overWr)
+                PF.plotEvo(self.dParPlt, {GC.S_SGL: self.dfrResEvo}, dPPltF,
+                           list(self.inFr.dSCpSL), tDat=cT[:2], overWr=overWr)
 
     def evolveOverTime(self, inpDat, dITp, cRp=0, doPlots=True):
-        self.dResEvo, self.dNCpO = TF.evolveGillespie(dITp, self.dICp,
+        self.dResEvo, self.dNCpO = SF.evolveGillespie(dITp, self.dICp,
                                                       self.inFr, self.dCncSMo)
         self.dfrResEvo = GF.iniPdDfr(self.dResEvo)
         self.updateObjDicts(inpDat, refresh=True)
         dR, sD = self.dResEvo, self.dITp['sD_Obj']
-        self.pFResEvo = TF.saveAsPdDfr(dITp, dR, [sD], self.sFRes, overWr=True)
+        self.pFResEvo = SF.saveAsPdDfr(dITp, dR, [sD], self.sFRes, overWr=True)
         if doPlots:
             self.plotResEvo(dITp, cRp=cRp)
 

@@ -11,10 +11,9 @@ strCS = GC.ID_SYS
 strCL = GC.S_CL_SYSTEM
 
 # --- path, directory and file names ------------------------------------------
-sD_Obj = '95_Sys'
-sF_Obj = 'SysEvo'
-
-sFRed = 'DataFrameRed'
+sD_Obj = GC.S_DIR_SYS
+sF_Obj = GC.S_RES_SYS
+sFRed = GC.S_RED_SYS
 
 # --- graphics parameters: component numbers and molecule conc. plot ----------
 sPlt_SSC = '01_SelCpConc'               # name of sel. comps and conc. plot
@@ -28,8 +27,6 @@ yLbl_Cp = 'Component incidence'
 yLbl_Cnc = 'Molecule concentration (mM)'
 yLbl_Cnc_N = '$[NO_3^-]$ (mM)'          # y-label of NO3- concentration plot
 yLbl_Cnc_P = '$[H_2PO_4^-]$ (mM)'       # y-label of H2PO4- concentration plot
-# xLim = None                             # x limits of plot (None: autom.)
-# yLim = None                             # x limits of plot (None: autom.)
 tpMark_CpCnc = None                     # marker type of plot
 szMark_CpCnc = 1                        # marker size of plot
 ewMark_CpCnc = 1                        # marker edge width of plot

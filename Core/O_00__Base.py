@@ -5,7 +5,7 @@
 import pprint
 
 import Core.C_00__GenConstants as GC
-import Core.F_03__OTpFunctions as TF
+import Core.F_01__SpcFunctions as SF
 
 # +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 class Base:
@@ -14,7 +14,7 @@ class Base:
         self.descO = 'Base class'
         self.sPt01 = sPat01
         self.dIG = inpDat.dI
-        self.dITp = TF.getDITp(self.dIG, iTp, lITpU)
+        self.dITp = SF.getDITp(self.dIG, iTp, lITpU)
         self.cM = self.dIG['Mode']
         self.nSpS = 0                       # number of "special sites"
         self.sSpS = ''                      # string of "special site"

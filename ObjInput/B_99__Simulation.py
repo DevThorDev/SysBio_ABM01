@@ -15,7 +15,7 @@ strCL = GC.S_CL_SIMULATION
 cSep = GC.SEP_STD
 
 # --- flow control ------------------------------------------------------------
-doEvoT = True
+doEvoT = False
 doPlots = True
 nReps = 5                   # 10
 nTSAllRep = 200             # 500
@@ -27,10 +27,8 @@ modDispTS = 10000           # 10000
 assert tMax >= tStart and maxTS > 0
 
 # --- path, directory and file names ------------------------------------------
-sD_Obj = '99_Sim'
-sF_Obj = 'SimSysEvo'
-
-sFRes = 'SimulationResult'
+sD_Obj = GC.S_DIR_SIM
+sF_Obj = GC.S_RES_SIM
 
 sPInD = os.path.join('..', '..', '11_SysBio01_ABM01', '20_InputData')
 sPRes = os.path.join('..', '..', '11_SysBio01_ABM01', '40_ModelResults')
@@ -46,6 +44,8 @@ dSFInD = {GC.S_00: (GC.S_00 + GC.S_USC + 'Strings', 1),
           GC.S_07: (GC.S_07 + GC.S_USC + 'OtherInputValues', 1)}
 
 # --- graphics parameters: component numbers and molecule conc. plot ----------
+plotSpread = GC.S_STDDEV                # GC.S_SGL / GC.S_STDDEV / GC.S_SEM
+
 sPlt_SSC = '01_SelCpConc'               # name of sel. comps and conc. plot
 sPlt_SCp = '02_SelCp'                   # name of sel. comps plot
 sPlt_SCn = '03_SelConc'                 # name of sel. conc. plot
@@ -129,13 +129,13 @@ dIO = {# --- general
        # --- path, directory and file names
        'sD_Obj': sD_Obj,
        'sF_Obj': sF_Obj,
-       'sFRes': sFRes,
        'sPInD': sPInD,
        'sPRes': sPRes,
        'sPPlt': sPPlt,
        'dSFInD': dSFInD,
        # --- graphics parameters: component numbers and molecule conc. plot
-       GC.S_D_PLT: {GC.S_CP_CNC: {'sPlt_SSC': sPlt_SSC,
+       GC.S_D_PLT: {GC.S_CP_CNC: {'plotSpread': plotSpread,
+                                  'sPlt_SSC': sPlt_SSC,
                                   'sPlt_SCp': sPlt_SCp,
                                   'sPlt_SCn': sPlt_SCn,
                                   'title': title_CpCnc,

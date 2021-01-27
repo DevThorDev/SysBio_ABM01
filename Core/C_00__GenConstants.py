@@ -146,7 +146,13 @@ D_ID_TO_CPSX = {ID_LPR_NRT2P1: S_L__, ID_SPR_NAR2P1: S_S__,
                 ID_PAS_A: S_A__, ID_PAS_B: S_B__, ID_PAS_C: S_C__,
                 ID_PAS_D: S_D__}
 
+S_DIR_SYS = '95_Sys'
+S_DIR_SIM = '99_Sim'
+
+S_RES_SYS = 'SysEvo'
+S_RED_SYS = 'DataFrameRed'
 S_REP = 'Rep'
+S_RES_SIM = 'SimulationResult'
 
 S_CNC_INI = 'concIni'
 S_THR_HIGH_CNC = 'thrHighConc'
@@ -326,6 +332,7 @@ S_TIME = 'Time'
 S_CP = 'Comp'
 S_CNC_NO3_1M = 'Conc_NO3-'
 S_CNC_H2PO4_1M = 'Conc_H2PO4-'
+S_SGL = 'Single'
 S_MEAN = 'Mean'
 S_SUM = 'Sum'
 S_M2 = 'M2'
@@ -333,6 +340,8 @@ S_VARIANCE = 'Variance'
 S_STDDEV = 'StdDev'
 S_SEM = 'SEM'
 L_S_STATS_OUT = [S_MEAN, S_STDDEV, S_SEM]
+S_CENT = 'Central'
+S_SPREAD = 'Spread'
 
 # --- constants related to plots ----------------------------------------------
 S_D_PLT = 'dPlt'

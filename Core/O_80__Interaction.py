@@ -3,7 +3,7 @@
 # --- O_80__Interaction.py ----------------------------------------------------
 ###############################################################################
 import Core.C_00__GenConstants as GC
-import Core.F_03__OTpFunctions as TF
+import Core.F_01__SpcFunctions as SF
 
 from Core.O_00__Base import Base
 
@@ -34,7 +34,7 @@ class Phosphorylation(Interaction):
 
     def doPyl(self):
         # check if first interaction partner has site to be phosphorylated
-        return TF.doSiteChange(self.cOI, self.sSpS, self.lSCpA, doPyl=True)
+        return SF.doSiteChange(self.cOI, self.sSpS, self.lSCpA, doPyl=True)
 
 # +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 class Dephosphorylation(Interaction):
@@ -47,6 +47,6 @@ class Dephosphorylation(Interaction):
 
     def doDePyl(self):
         # check if first interaction partner has site to be dephosphorylated
-        return TF.doSiteChange(self.cOI, self.sSpS, self.lSCpA, doPyl=False)
+        return SF.doSiteChange(self.cOI, self.sSpS, self.lSCpA, doPyl=False)
 
 ###############################################################################
