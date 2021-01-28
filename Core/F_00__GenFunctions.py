@@ -36,6 +36,9 @@ def joinToPath(lD4P=[], sF='Dummy.txt'):
     else:
         return sF
 
+def getPF(lD4P, sF, sFExt=GC.S_EXT_CSV):
+    return joinToPath(lD4P, sF + '.' + sFExt)
+
 def splitStr(s, sSpl=GC.S_USC):
     return s.split(sSpl)
 
@@ -425,5 +428,12 @@ def iniPdDfr(data=None, lSNmC=[], lSNmR=[], shape=(0, 0)):
                                     index=lSNmR, columns=lSNmC)
             else:
                 return pd.DataFrame(data, index=lSNmR, columns=lSNmC)
+
+def printDictDfr(dDfr, lK=None):
+    print(GC.S_USC*8, 'Dictionary of DataFrames', GC.S_USC*8, '\n')
+    for cK, cDfr in dDfr.items():
+        if lK is None or cK in lK:
+            print(str(cK) + ':')
+            print(cDfr, '\n')
 
 ###############################################################################

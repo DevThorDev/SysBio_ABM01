@@ -149,8 +149,9 @@ D_ID_TO_CPSX = {ID_LPR_NRT2P1: S_L__, ID_SPR_NAR2P1: S_S__,
 S_DIR_SYS = '95_Sys'
 S_DIR_SIM = '99_Sim'
 
+S_DFR = 'DataFrame'
 S_RES_SYS = 'SysEvo'
-S_RED_SYS = 'DataFrameRed'
+S_RED_SYS = S_DFR + 'Red'
 S_REP = 'Rep'
 S_RES_SIM = 'SimulationResult'
 
@@ -333,13 +334,15 @@ S_CP = 'Comp'
 S_CNC_NO3_1M = 'Conc_NO3-'
 S_CNC_H2PO4_1M = 'Conc_H2PO4-'
 S_SGL = 'Single'
-S_MEAN = 'Mean'
 S_SUM = 'Sum'
+S_MEAN = 'Mean'
 S_M2 = 'M2'
 S_VARIANCE = 'Variance'
 S_STDDEV = 'StdDev'
 S_SEM = 'SEM'
+L_S_STATS_ALL = [S_MEAN, S_M2, S_VARIANCE, S_STDDEV, S_SEM]
 L_S_STATS_OUT = [S_MEAN, S_STDDEV, S_SEM]
+L_S_STATS_DER = [S_VARIANCE, S_STDDEV, S_SEM]
 S_CENT = 'Central'
 S_SPREAD = 'Spread'
 

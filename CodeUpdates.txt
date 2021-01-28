@@ -1,9 +1,7 @@
 --------------------------------------------------------------------------------
 Code updates remaining:
 --------------------------------------------------------------------------------
-* plots for single reps and mean
 * weighted mean instead of mean
-* move input data to 99_Simulation
 * Max' data for incidences of peptides
 * sigmoidal functions that define dependency of component reaction weights on small molecule concentrations should be more uniformly defined
 --------------------------------------------------------------------------------
@@ -39,5 +37,7 @@ Code updates done:
 * ini_Cp_LSI/LSJ/LST, ...LKI/LKJ/LKT --> only 2 functions instead of 6?
 * "step"-Function for external NO3- Conc.
 * sigmoidal/"step"-Function mixture for external NO3- Conc.
+* plots for single reps and mean
+* move input data to 99_Simulation
 
 --------------------------------------------------------------------------------

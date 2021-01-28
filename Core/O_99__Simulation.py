@@ -43,7 +43,7 @@ class Simulation(Base):
         for cK, cT in self.dParPlt['dlSY'].items():
             dPPltF = SF.getDPFPltEvo(self.dITp, tKey=cK, dMS=cT[2])
             PF.plotEvo(self.dParPlt, dDfrRV, dPPltF, list(self.inFr.dSCpSL),
-                       tDat=cT[:2], overWr=True)
+                       tDat=cT[:2], dITp=self.dITp, overWr=True)
 
     def calcRepStatistics(self, dDfrRV):
         SF.calcStatsDfr(dDfrRV, nRp=self.nRep)
