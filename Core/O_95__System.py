@@ -25,7 +25,6 @@ class System(Base):
         self.dCncSMo = SF.createDCnc(self.inFr)
         self.sFRes = self.dITp['sF_Obj'] + GC.S_USC + GC.S_REP + str(self.cRep)
         self.sFRed = self.dITp['sFRed'] + GC.S_USC + GC.S_REP + str(self.cRep)
-        # self.dParPlt = self.dITp[GC.S_D_PLT][GC.S_CP_CNC]
         self.updateObjDicts(inpDat)
         # print('Initiated "System" object.')
 

@@ -28,13 +28,13 @@ def saveAsPdDfr(dITp, dRes, lD, sF, overWr=True, sFExt=GC.S_EXT_CSV):
         GF.iniPdDfr(dRes).to_csv(sP, sep=dITp['cSep'])
     return sP
 
-def saveDictDfr(dITp, dDfr, lK=None, overWr=True, sFSt = GC.S_DAT, sFEnd = '',
-                sFExt=GC.S_EXT_CSV):
+def saveDictDfr(dITp, dDfr, lK=None, overWr=True, sFSt = GC.S_RES_SIM,
+                sFEnd = '', sFExt=GC.S_EXT_CSV):
     for cK, cDfr in dDfr.items():
         if lK is None or cK in lK:
-            sF = GC.S_USC.join([sFSt, sFEnd])[:64]
-            savePdDfr(dITp, cDfr, lD=[str(cK)], sF=sF, overWr=overWr,
-                      sFExt=sFExt)
+            sF = GC.S_USC.join([sFSt, str(cK), sFEnd])[:64]
+            savePdDfr(dITp, cDfr, lD=[dITp['sD_Obj'], str(cK)], sF=sF,
+                      overWr=overWr, sFExt=sFExt)
 
 # --- Functions (O_00__Base) --------------------------------------------------
 def getDITp(dIG, iTp, lITpU):
@@ -44,8 +44,6 @@ def getDITp(dIG, iTp, lITpU):
         for iTpU in lITpU[1:]:
             GF.updateDITp(dITp, dIG[iTpU])      # updated with iTpU input
     GF.updateDITp(dITp, dIG[iTp])               # updated with iTp input
-    #         GF.updateDITpDIPlt(dITp, dIG[iTpU]) # updated with iTpU input
-    # GF.updateDITpDIPlt(dITp, dIG[iTp])          # updated with iTp input
     return dITp
 
 # --- Functions (O_03__Metabolite) --------------------------------------------
@@ -464,12 +462,10 @@ def preProcFull(dITp, dIPlt, sLX, lSLY, tKDCp, pF, lSCp):
         updateDictDfr(dDfrT[GC.S_CENT], dDfrI, cCt=cRp)
     calcStatsDfr(dDfrI, nRp=nRp)
     GF.printDictDfr(dDfrI, lK=[GC.S_MEAN, GC.S_STDDEV, GC.S_SEM])
-    # assert dIPlt['plotSpread'] in dDfrI
+    assert dIPlt['plotSpread'] in dDfrI
     dDfrPlt[GC.S_CENT] = dDfrI[GC.S_MEAN]
     dDfrPlt[GC.S_SPREAD] = dDfrI[dIPlt['plotSpread']]
-    # l4FE = [s for lSub in list(tKDCp[1].values()) for s in lSub]
-    # saveDictDfr(dITp, dDfrPlt, sFEnd=tKDCp[0] + GC.S_USC + GC.S_USC.join(l4FE))
-    saveDictDfr(dITp, dDfrI, sFEnd=GF.getFNoExt(pF))
+    saveDictDfr(dITp, dDfrI, lK=GC.L_S_STATS_OUT, sFEnd=GF.getFNoExt(pF))
     return dDfrPlt, d4LgSim
 
 ###############################################################################

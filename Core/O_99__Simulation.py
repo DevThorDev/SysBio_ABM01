@@ -19,7 +19,6 @@ class Simulation(Base):
         self.inFr = InputFrames(self.dITp)
         self.nRep = self.dITp['nReps']
         self.sFRes = self.dITp['sF_Obj']
-        # self.dParPlt = self.dITp[GC.S_D_PLT][GC.S_CP_CNC]
         # print('Initiated "Simulation" object.')
 
     def plotResEvo(self, inpDat, dDfrRV):
@@ -29,9 +28,10 @@ class Simulation(Base):
     def calcRepStatistics(self, dDfrRV):
         SF.calcStatsDfr(dDfrRV, nRp=self.nRep)
         self.dDfrStats = dDfrRV
-        for sStat, dfrStat in self.dDfrStats.items():
-            SF.savePdDfr(self.dITp, dfrStat, [self.dITp['sD_Obj']],
-                         self.sFRes + GC.S_USC + str(sStat), overWr=True)
+        for sStat in GC.L_S_STATS_OUT:
+            sF = self.sFRes + GC.S_USC + str(sStat) + GC.S_USC + GC.S_NO_GR
+            SF.savePdDfr(self.dITp, self.dDfrStats[sStat],
+                         lD=[self.dITp['sD_Obj'], sStat], sF=sF, overWr=True)
 
     def runSimulation(self, inpDat):
         doPlt, dDfrRunV = self.dITp['doPlots'], {}

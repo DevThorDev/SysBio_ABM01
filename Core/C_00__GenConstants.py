@@ -152,7 +152,7 @@ S_DIR_SYS = '95_Sys'
 S_DIR_SIM = '99_Sim'
 
 S_DAT = 'Data'
-S_DFR = 'DataFrame'
+S_DFR = S_DAT + 'Frame'
 S_RES_SYS = 'SysEvo'
 S_RED_SYS = S_DFR + 'Red'
 S_REP = 'Rep'
@@ -344,6 +344,7 @@ S_SEM = 'SEM'
 L_S_STATS_ALL = [S_MEAN, S_M2, S_VARIANCE, S_STDDEV, S_SEM]
 L_S_STATS_OUT = [S_MEAN, S_STDDEV, S_SEM]
 L_S_STATS_DER = [S_VARIANCE, S_STDDEV, S_SEM]
+S_NO_GR = 'NoGrp'
 S_MEAN_GR = 'MeanGrp'
 S_SUM_GR = 'SumGrp'
 S_SGL = 'Single'
