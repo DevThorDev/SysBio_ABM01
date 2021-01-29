@@ -81,28 +81,28 @@ def plotEvoFig(dIPlt, dfrR, pF, sHdCX, dSHdCY, sLblY):
     plt.close()
 
 # --- Functions (O_95__System / O_99__Simulation) -----------------------------
-def plotEvo(dIPlt, dRes, dPF, lSCp, tDat, dITp=None, overWr=True,
-            sHdCX=GC.S_TIME):
-    dfrRes, dfrSpr, isSgl = SF.getDfr4Plot(dIPlt, dRes)
-    if dfrRes is not None:
-        for pF, tKDCp in dPF.items():
-            # if (((not os.path.isfile(pF) or overWr) and len(tDat[0]) > 0) and
-            #     (tKDCp is None or isSgl or tKDCp[0] == GC.S_SUM)):
-            if (not os.path.isfile(pF) or overWr) and len(tDat[0]) > 0:
-                lSHdCY, sLblY = tDat
-                dfrPlt = dfrRes.loc[:, [sHdCX] + lSHdCY]
-                dDfrPlt = {GC.S_CENT: dfrPlt}
-                if tKDCp is None:
-                    dSHdCY = {sHd: [sHd] for sHd in lSHdCY}
-                elif tKDCp is not None and isSgl:
-                    # single stochastic realisation
-                    dDfrPlt, dSHdCY = SF.collapseColumns(dfrPlt, sHdCX, lSHdCY,
-                                                         tKDCp, lSCp=lSCp)
-                else:
-                    # including spread (from multiple repeats)
-                    dDfrPlt, dSHdCY = SF.preProcFull(dITp, dIPlt, sHdCX,
-                                                     lSHdCY, tKDCp, lSCp=lSCp)
-                plotEvoFig(dIPlt, dDfrPlt[GC.S_CENT], pF, sHdCX, dSHdCY, sLblY)
+# def plotEvo(dIPlt, dRes, dPF, lSCp, tDat, dITp=None, overWr=True,
+#             sHdCX=GC.S_TIME):
+#     dfrRes, dfrSpr, isSgl = SF.getDfr4Plot(dIPlt, dRes)
+#     if dfrRes is not None:
+#         for pF, tKDCp in dPF.items():
+#             # if (((not os.path.isfile(pF) or overWr) and len(tDat[0]) > 0) and
+#             #     (tKDCp is None or isSgl or tKDCp[0] == GC.S_SUM)):
+#             if (not os.path.isfile(pF) or overWr) and len(tDat[0]) > 0:
+#                 lSHdCY, sLblY = tDat
+#                 dfrPlt = dfrRes.loc[:, [sHdCX] + lSHdCY]
+#                 dDfrPlt = {GC.S_CENT: dfrPlt}
+#                 if tKDCp is None:
+#                     dSHdCY = {sHd: [sHd] for sHd in lSHdCY}
+#                 elif tKDCp is not None and isSgl:
+#                     # single stochastic realisation
+#                     dDfrPlt, dSHdCY = SF.collapseColumns(dfrPlt, sHdCX, lSHdCY,
+#                                                          tKDCp, lSCp=lSCp)
+#                 else:
+#                     # including spread (from multiple repeats)
+#                     dDfrPlt, dSHdCY = SF.preProcFull(dITp, dIPlt, sHdCX,
+#                                                      lSHdCY, tKDCp, lSCp=lSCp)
+#                 plotEvoFig(dIPlt, dDfrPlt[GC.S_CENT], pF, sHdCX, dSHdCY, sLblY)
 
 # --- Functions (O_99__Simulation) --------------------------------------------
 def plotSpreadRange(dIPlt, dDfrRes):

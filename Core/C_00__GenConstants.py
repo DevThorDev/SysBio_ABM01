@@ -75,6 +75,7 @@ S_CL_NO3_1M = 'NO3-'
 S_CL_H2PO4_1M = 'H2PO4-'
 S_CL_INTERACTION = 'Interaction'
 S_CL_COMPONENT = 'SystemComponent'
+S_CL_PLTRSYSSIM = 'PlotterSysSim'
 S_CL_SYSTEM = 'System'
 S_CL_SIMULATION = 'Simulation'
 
@@ -124,6 +125,7 @@ ID_PYL = 'Pyl'
 ID_DPY = 'DPy'
 ID_CPB = 'CpBase'
 ID_CPN = 'Cp'
+ID_PSS = 'PltrSS'
 ID_SYS = 'Sys'
 ID_SIM = 'Sim'
 
@@ -149,11 +151,12 @@ D_ID_TO_CPSX = {ID_LPR_NRT2P1: S_L__, ID_SPR_NAR2P1: S_S__,
 S_DIR_SYS = '95_Sys'
 S_DIR_SIM = '99_Sim'
 
+S_DAT = 'Data'
 S_DFR = 'DataFrame'
 S_RES_SYS = 'SysEvo'
 S_RED_SYS = S_DFR + 'Red'
 S_REP = 'Rep'
-S_RES_SIM = 'SimulationResult'
+S_RES_SIM = 'SimRes'
 
 S_CNC_INI = 'concIni'
 S_THR_HIGH_CNC = 'thrHighConc'
@@ -333,8 +336,6 @@ S_TIME = 'Time'
 S_CP = 'Comp'
 S_CNC_NO3_1M = 'Conc_NO3-'
 S_CNC_H2PO4_1M = 'Conc_H2PO4-'
-S_SGL = 'Single'
-S_SUM = 'Sum'
 S_MEAN = 'Mean'
 S_M2 = 'M2'
 S_VARIANCE = 'Variance'
@@ -343,11 +344,14 @@ S_SEM = 'SEM'
 L_S_STATS_ALL = [S_MEAN, S_M2, S_VARIANCE, S_STDDEV, S_SEM]
 L_S_STATS_OUT = [S_MEAN, S_STDDEV, S_SEM]
 L_S_STATS_DER = [S_VARIANCE, S_STDDEV, S_SEM]
+S_MEAN_GR = 'MeanGrp'
+S_SUM_GR = 'SumGrp'
+S_SGL = 'Single'
 S_CENT = 'Central'
 S_SPREAD = 'Spread'
 
 # --- constants related to plots ----------------------------------------------
-S_D_PLT = 'dPlt'
+# S_D_PLT = 'dPlt'
 S_CP_CNC = 'A_CpConc'
 
 # --- other constants ---------------------------------------------------------

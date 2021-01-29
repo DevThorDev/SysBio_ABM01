@@ -7,11 +7,11 @@ import pprint
 import Core.C_00__GenConstants as GC
 import Core.F_00__GenFunctions as GF
 import Core.F_01__SpcFunctions as SF
-import Core.F_02__PltFunctions as PF
 
 from Core.O_00__Base import Base
 from Core.O_90__Component import Component
 from Core.O_03__Metabolite import SMo_NO3_1m, SMo_H2PO4_1m
+from Core.O_92__PlotterSysSim import PlotterSysSim
 
 # +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 class System(Base):
@@ -20,11 +20,12 @@ class System(Base):
         self.idO = GC.ID_SYS
         self.descO = 'System'
         self.inFr = inpFr
+        self.cRep = cRp
         self.lCpO = lCpObj
         self.dCncSMo = SF.createDCnc(self.inFr)
-        self.sFRes = self.dITp['sF_Obj'] + GC.S_USC + GC.S_REP + str(cRp)
-        self.sFRed = self.dITp['sFRed'] + GC.S_USC + GC.S_REP + str(cRp)
-        self.dParPlt = self.dITp[GC.S_D_PLT][GC.S_CP_CNC]
+        self.sFRes = self.dITp['sF_Obj'] + GC.S_USC + GC.S_REP + str(self.cRep)
+        self.sFRed = self.dITp['sFRed'] + GC.S_USC + GC.S_REP + str(self.cRep)
+        # self.dParPlt = self.dITp[GC.S_D_PLT][GC.S_CP_CNC]
         self.updateObjDicts(inpDat)
         # print('Initiated "System" object.')
 
@@ -129,21 +130,16 @@ class System(Base):
         else:
             print(GC.S_DASH*8, 'Simulation has not even started!', GC.S_DASH*8)
 
-    def plotResEvo(self, dITp, cRp=0, overWr=True):
+    def plotResEvo(self, inpDat, dITp, overWr=True):
         if self.dResEvo is None:
             self.dfrResEvo = SF.getPFResEvo(self.dITp, sPRs=dITp['sPRes'],
                                             sFRs=self.sFRes)
         else:
             self.dfrResEvo = GF.iniPdDfr(self.dResEvo)
-        for cK, cT in self.dParPlt['dlSY'].items():
-            assert len(cK) == 2 and len(cT) == 3
-            dPPltF = SF.getDPFPltEvo(self.dITp, sPPlt=dITp['sPPlt'], tKey=cK,
-                                     cRp=cRp, dMS=cT[2])
-            if self.dfrResEvo is not None:
-                PF.plotEvo(self.dParPlt, {GC.S_SGL: self.dfrResEvo}, dPPltF,
-                           list(self.inFr.dSCpSL), tDat=cT[:2], overWr=overWr)
+        Pltr = PlotterSysSim(inpDat, self.inFr, self.cRep)
+        Pltr.plotResEvoSgl(self.dfrResEvo, sDSub=self.dITp['sD_Obj'])
 
-    def evolveOverTime(self, inpDat, dITp, cRp=0, doPlots=True):
+    def evolveOverTime(self, inpDat, dITp, doPlots=True):
         self.dResEvo, self.dNCpO = SF.evolveGillespie(dITp, self.dICp,
                                                       self.inFr, self.dCncSMo)
         self.dfrResEvo = GF.iniPdDfr(self.dResEvo)
@@ -151,6 +147,6 @@ class System(Base):
         dR, sD = self.dResEvo, self.dITp['sD_Obj']
         self.pFResEvo = SF.saveAsPdDfr(dITp, dR, [sD], self.sFRes, overWr=True)
         if doPlots:
-            self.plotResEvo(dITp, cRp=cRp)
+            self.plotResEvo(inpDat, dITp)
 
 ###############################################################################

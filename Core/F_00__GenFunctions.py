@@ -39,6 +39,22 @@ def joinToPath(lD4P=[], sF='Dummy.txt'):
 def getPF(lD4P, sF, sFExt=GC.S_EXT_CSV):
     return joinToPath(lD4P, sF + '.' + sFExt)
 
+def pFExists(pF):
+    return os.path.isfile(pF)
+
+def getFNmOfP(pF):
+    sF = os.path.split(pF)[-1]
+    if len(sF.split('.')) < 2:
+        print('WARNING: Returning dir name instead of file name.')
+    return sF
+
+def changeFExt(pF, newX=GC.S_EXT_CSV):
+    lPF = pF.split('.')
+    return pF[:-len(lPF[-1])] + newX
+
+def getFNoExt(sF):
+    return getFNmOfP(sF).split('.')[0]
+
 def splitStr(s, sSpl=GC.S_USC):
     return s.split(sSpl)
 
@@ -363,7 +379,13 @@ def calcRctWeight(cDfr, sRctCl):
               cDfr.columns)
     return wRct
 
-def updateDITpDIPlt(dITpC, dITpU, lKSpc=[GC.S_D_PLT]):
+# function updating the dITp with that of a higher-priority class
+def updateDITp(dITpC, dITpU):
+    dITpC.update(dITpU)
+    # dITpC.update({cK: cV for cK, cV in dITpU.items()})
+
+# special function for updating both the general dITp and a sub-dITp ("dIPlt")
+def updateDITpDIPlt(dITpC, dITpU, lKSpc=[]):
     for cKSpc in lKSpc:
         if cKSpc in dITpC and cKSpc in dITpU:
             dISpcC, dISpcU = dITpC[cKSpc], dITpU[cKSpc]

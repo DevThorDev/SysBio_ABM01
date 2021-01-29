@@ -28,12 +28,13 @@ def saveAsPdDfr(dITp, dRes, lD, sF, overWr=True, sFExt=GC.S_EXT_CSV):
         GF.iniPdDfr(dRes).to_csv(sP, sep=dITp['cSep'])
     return sP
 
-def saveDictDfr(dITp, dDfr, lD=[], lK=None, overWr=True, sFSt = GC.S_DFR,
-                sFEnd = '', sFExt=GC.S_EXT_CSV):
-    for (i, (cK, cDfr)) in enumerate(dDfr.items()):
+def saveDictDfr(dITp, dDfr, lK=None, overWr=True, sFSt = GC.S_DAT, sFEnd = '',
+                sFExt=GC.S_EXT_CSV):
+    for cK, cDfr in dDfr.items():
         if lK is None or cK in lK:
-            sF = GC.S_USC.join([sFSt, str(i), str(cK), sFEnd])[:64]
-            savePdDfr(dITp, cDfr, lD, sF=sF, overWr=overWr, sFExt=sFExt)
+            sF = GC.S_USC.join([sFSt, sFEnd])[:64]
+            savePdDfr(dITp, cDfr, lD=[str(cK)], sF=sF, overWr=overWr,
+                      sFExt=sFExt)
 
 # --- Functions (O_00__Base) --------------------------------------------------
 def getDITp(dIG, iTp, lITpU):
@@ -41,8 +42,10 @@ def getDITp(dIG, iTp, lITpU):
     if len(lITpU) > 0:
         dITp = copy.deepcopy(dIG[lITpU[0]])     # content of lITpU[0] input
         for iTpU in lITpU[1:]:
-            GF.updateDITpDIPlt(dITp, dIG[iTpU]) # updated with iTpU input
-    GF.updateDITpDIPlt(dITp, dIG[iTp])          # updated with iTp input
+            GF.updateDITp(dITp, dIG[iTpU])      # updated with iTpU input
+    GF.updateDITp(dITp, dIG[iTp])               # updated with iTp input
+    #         GF.updateDITpDIPlt(dITp, dIG[iTpU]) # updated with iTpU input
+    # GF.updateDITpDIPlt(dITp, dIG[iTp])          # updated with iTp input
     return dITp
 
 # --- Functions (O_03__Metabolite) --------------------------------------------
@@ -332,45 +335,28 @@ def getPFResEvo(dITp, sPRs, sFRs):
         return GF.readCSV(pFRes, iCol=0)
     return None
 
-def getDPFPltEvo(dITp, sPPlt=None, tKey=GC.S_USC, cRp=0, dMS=None):
-    dP, sD = {}, dITp['sD_Obj']
-    if sPPlt is None:
-        sPPlt = dITp['sPPlt']
+def getDPFPltEvo(sPPlt, sDSub, tKey=GC.S_USC, cRp=0, dMS=None):
+    dP, sPSub = {}, sDSub
     if cRp > 0:
-        sD = os.path.join(sD, GC.S_REP + str(cRp))
+        sPSub = os.path.join(sPSub, GC.S_REP + str(cRp))
     if dMS is None:
-        sF = GC.S_USC.join([str(cEl) for cEl in tKey if cEl is not None])
+        sFPlt = GC.S_USC.join([str(cEl) for cEl in tKey if cEl is not None])
         if cRp > 0:
-            sF += GC.S_USC*2 + GC.S_REP + str(cRp)
-        pF = GF.getPF([sPPlt, sD], sF, sFExt=GC.S_EXT_PDF)
-        dP[pF] = dMS
+            sFPlt += GC.S_USC*2 + GC.S_REP + str(cRp)
+        pFPlt = GF.getPF([sPPlt, sPSub], sFPlt, sFExt=GC.S_EXT_PDF)
+        dP[pFPlt] = dMS
     else:
         for sMS, dCp in dMS.items():
-            sF = str(tKey[0]) + GC.S_USC + sMS
+            sFPlt = str(tKey[0]) + GC.S_USC + sMS
             if tKey[1] is not None:
-                sF +=  GC.S_USC + str(tKey[1])
+                sFPlt +=  GC.S_USC + str(tKey[1])
             if cRp > 0:
-                sF += GC.S_USC*2 + GC.S_REP + str(cRp)
-            pF = GF.getPF([sPPlt, sD], sF, sFExt=GC.S_EXT_PDF)
-            dP[pF] = (sMS, dCp)
+                sFPlt += GC.S_USC*2 + GC.S_REP + str(cRp)
+            pFPlt = GF.getPF([sPPlt, sPSub], sFPlt, sFExt=GC.S_EXT_PDF)
+            dP[pFPlt] = (sMS, dCp)
     return dP
 
 # --- Functions (O_95__System / O_99__Simulation) -----------------------------
-def getDfr4Plot(dIPlt, dRes):
-    dfrRes, dfrSpr, pltSpr, isSgl = None, None, GC.S_SGL, False
-    if 'plotSpread' in dIPlt:
-        pltSpr = dIPlt['plotSpread']
-    if GC.S_SGL in dRes:
-        dfrRes = dRes[GC.S_SGL]
-        isSgl = True
-    elif GC.S_MEAN in dRes:
-        dfrRes = dRes[GC.S_MEAN]
-        if GC.S_STDDEV in dRes and pltSpr == GC.S_STDDEV:
-            dfrSpr = dRes[GC.S_STDDEV]
-        elif GC.S_SEM in dRes and pltSpr == GC.S_SEM:
-            dfrSpr = dRes[GC.S_SEM]
-    return dfrRes, dfrSpr, isSgl
-
 def prepDict4Sel(d4Sel, d4Leg=None, lSLY=[], dCp={}):
     for sHdC in lSLY:
         for sLg, lCp in dCp.items():
@@ -453,38 +439,37 @@ def calcStatsDfr(dDfrI, nRp=0, lSCDisr=[GC.S_TIME]):
     addFirstColToDfrs(dDfrI, serC1=dDfrI[GC.S_MEAN][GC.S_TIME],
                       lK=GC.L_S_STATS_DER)
 
-def collapseColumns(pdDfr, sLX, lSLY, tKDCp, lSCp, doSum=False):
+def collapseColumns(pdDfr, sLX, lSLY, tKDCp, lSCp):
     d4Sel, d4Leg, mdDfr = {}, {}, GF.iniPdDfr()
     sOp, dCp = tKDCp
-    # if doSum:
-    #     sOp = GC.S_SUM
     prepDict4Sel(d4Sel, d4Leg=d4Leg, lSLY=lSLY, dCp=dCp)
     mdDfr.loc[:, sLX] = pdDfr.loc[:, sLX]
     for sK in d4Sel:
         if sK in lSCp:
-            if sOp == GC.S_MEAN:
+            if sOp == GC.S_MEAN_GR:
                 mdDfr.loc[:, sK] = pdDfr.loc[:, d4Sel[sK]].T.mean()
-            elif sOp == GC.S_SUM:
+            elif sOp == GC.S_SUM_GR:
                 mdDfr.loc[:, sK] = pdDfr.loc[:, d4Sel[sK]].T.sum()
         else:
             mdDfr.loc[:, sK] = pdDfr.loc[:, sK]
     return {GC.S_CENT: mdDfr}, d4Leg
 
-def preProcFull(dITp, dIPlt, sLX, lSLY, tKDCp, lSCp):
+def preProcFull(dITp, dIPlt, sLX, lSLY, tKDCp, pF, lSCp):
     dDfrPlt, dDfrI, d4LgSim, nRp = {}, {}, {}, dITp['nReps']
     for cRp in range(1, nRp + 1):
         sF = GC.S_RED_SYS + GC.S_USC + GC.S_REP + str(cRp)
         cDfr = loadPdDfr(dITp, [GC.S_DIR_SYS], sF)
-        dDfrT, d4Lg = collapseColumns(cDfr, sLX, lSLY, tKDCp, lSCp, doSum=True)
+        dDfrT, d4Lg = collapseColumns(cDfr, sLX, lSLY, tKDCp, lSCp)
         d4LgSim.update(d4Lg)
         updateDictDfr(dDfrT[GC.S_CENT], dDfrI, cCt=cRp)
     calcStatsDfr(dDfrI, nRp=nRp)
     GF.printDictDfr(dDfrI, lK=[GC.S_MEAN, GC.S_STDDEV, GC.S_SEM])
-    assert dIPlt['plotSpread'] in dDfrI
+    # assert dIPlt['plotSpread'] in dDfrI
     dDfrPlt[GC.S_CENT] = dDfrI[GC.S_MEAN]
     dDfrPlt[GC.S_SPREAD] = dDfrI[dIPlt['plotSpread']]
-    l4FE = [s for lSub in list(tKDCp[1].values()) for s in lSub]
-    saveDictDfr(dITp, dDfrPlt, sFEnd=tKDCp[0] + GC.S_USC + GC.S_USC.join(l4FE))
+    # l4FE = [s for lSub in list(tKDCp[1].values()) for s in lSub]
+    # saveDictDfr(dITp, dDfrPlt, sFEnd=tKDCp[0] + GC.S_USC + GC.S_USC.join(l4FE))
+    saveDictDfr(dITp, dDfrI, sFEnd=GF.getFNoExt(pF))
     return dDfrPlt, d4LgSim
 
 ###############################################################################
