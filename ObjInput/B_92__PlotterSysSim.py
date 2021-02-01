@@ -17,6 +17,7 @@ sPPlt = os.path.join('..', '..', '11_SysBio01_ABM01', '50_ModelPlots')
 
 # --- plot parameters: component numbers and molecule conc. plot --------------
 plotSpread = GC.S_STDDEV                # GC.S_SGL / GC.S_STDDEV / GC.S_SEM
+alphaSpread = 0.95                      # 0.9 / 0.95 / 0.99
 
 sPlt_SSC = '01_SelCpConc'               # name of sel. comps and conc. plot
 sPlt_SCp = '02_SelCp'                   # name of sel. comps plot
@@ -90,6 +91,7 @@ dIO = {# --- general
        'sPPlt': sPPlt,
        # --- plot parameters: component numbers and molecule conc. plot
        GC.S_CP_CNC: {'plotSpread': plotSpread,
+                     'alphaSpread': alphaSpread,
                      'sPlt_SSC': sPlt_SSC,
                      'sPlt_SCp': sPlt_SCp,
                      'sPlt_SCn': sPlt_SCn,

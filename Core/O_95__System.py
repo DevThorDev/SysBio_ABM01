@@ -131,8 +131,8 @@ class System(Base):
 
     def plotResEvo(self, inpDat, dITp, overWr=True):
         if self.dResEvo is None:
-            self.dfrResEvo = SF.getPFResEvo(self.dITp, sPRs=dITp['sPRes'],
-                                            sFRs=self.sFRes)
+            self.dfrResEvo = SF.readDfrResEvo(self.dITp, sPRs=dITp['sPRes'],
+                                              sFRs=self.sFRes)
         else:
             self.dfrResEvo = GF.iniPdDfr(self.dResEvo)
         Pltr = PlotterSysSim(inpDat, self.inFr, self.cRep)

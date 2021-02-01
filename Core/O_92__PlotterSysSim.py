@@ -44,8 +44,8 @@ class PlotterSysSim(Base):
                 if (GF.pFExists(pF) or overWr) and len(tDat[0]) > 0:
                     dDfrPlt, dSHdCY = self.getDDfrPlot(dITp, tDat, tKDCp, pF,
                                                        sHdCX=sHdCX)
-                    PF.plotEvoFig(self.dIPlt, dDfrPlt[GC.S_CENT], pF, sHdCX,
-                                  dSHdCY, sLblY=tDat[1])
+                    PF.plotEvoCent(self.dIPlt, dDfrPlt[GC.S_CENT], pF, sHdCX,
+                                   dSHdCY, sLblY=tDat[1])
 
     def plotResEvoSgl(self, dfrR, sDSub='.', overWr=True):
         self.dfrRes, self.dDfrRes, self.pltSgl = dfrR, {GC.S_SGL: dfrR}, True

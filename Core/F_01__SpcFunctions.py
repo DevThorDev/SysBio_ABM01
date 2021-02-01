@@ -326,33 +326,12 @@ def evolveGillespie(dITp, dICp, inpFr, dCncSMo):
         updateDictOut(dO, dCncSMo, t)
     return dO['dRes'], dO['dN']
 
-def getPFResEvo(dITp, sPRs, sFRs):
+def readDfrResEvo(dITp, sPRs, sFRs):
     sD = dITp['sD_Obj']
     pFRes = GF.getPF([sPRs, sD], sFRs, sFExt=GC.S_EXT_CSV)
     if os.path.isfile(pFRes):
         return GF.readCSV(pFRes, iCol=0)
     return None
-
-def getDPFPltEvo(sPPlt, sDSub, tKey=GC.S_USC, cRp=0, dMS=None):
-    dP, sPSub = {}, sDSub
-    if cRp > 0:
-        sPSub = os.path.join(sPSub, GC.S_REP + str(cRp))
-    if dMS is None:
-        sFPlt = GC.S_USC.join([str(cEl) for cEl in tKey if cEl is not None])
-        if cRp > 0:
-            sFPlt += GC.S_USC*2 + GC.S_REP + str(cRp)
-        pFPlt = GF.getPF([sPPlt, sPSub], sFPlt, sFExt=GC.S_EXT_PDF)
-        dP[pFPlt] = dMS
-    else:
-        for sMS, dCp in dMS.items():
-            sFPlt = str(tKey[0]) + GC.S_USC + sMS
-            if tKey[1] is not None:
-                sFPlt +=  GC.S_USC + str(tKey[1])
-            if cRp > 0:
-                sFPlt += GC.S_USC*2 + GC.S_REP + str(cRp)
-            pFPlt = GF.getPF([sPPlt, sPSub], sFPlt, sFExt=GC.S_EXT_PDF)
-            dP[pFPlt] = (sMS, dCp)
-    return dP
 
 # --- Functions (O_95__System / O_99__Simulation) -----------------------------
 def prepDict4Sel(d4Sel, d4Leg=None, lSLY=[], dCp={}):
@@ -374,6 +353,42 @@ def prepDict4Sel(d4Sel, d4Leg=None, lSLY=[], dCp={}):
                     GF.addToDictL(d4Sel, sHdC, sHdC, lUnique=True)
                     if d4Leg is not None:
                         GF.addToDictL(d4Leg, sHdC, sHdC, lUnique=True)
+
+def collapseColumns(pdDfr, sLX, lSLY, tKDCp, lSCp):
+    d4Sel, d4Leg, mdDfr = {}, {}, GF.iniPdDfr()
+    sOp, dCp = tKDCp
+    prepDict4Sel(d4Sel, d4Leg=d4Leg, lSLY=lSLY, dCp=dCp)
+    mdDfr.loc[:, sLX] = pdDfr.loc[:, sLX]
+    for sK in d4Sel:
+        if sK in lSCp:
+            if sOp == GC.S_MEAN_GR:
+                mdDfr.loc[:, sK] = pdDfr.loc[:, d4Sel[sK]].T.mean()
+            elif sOp == GC.S_SUM_GR:
+                mdDfr.loc[:, sK] = pdDfr.loc[:, d4Sel[sK]].T.sum()
+        else:
+            mdDfr.loc[:, sK] = pdDfr.loc[:, sK]
+    return {GC.S_CENT: mdDfr}, d4Leg
+
+def getDPFPltEvo(sPPlt, sDSub, tKey=GC.S_USC, cRp=0, dMS=None):
+    dP, sPSub = {}, sDSub
+    if cRp > 0:
+        sPSub = os.path.join(sPSub, GC.S_REP + str(cRp))
+    if dMS is None:
+        sFPlt = GC.S_USC.join([str(cEl) for cEl in tKey if cEl is not None])
+        if cRp > 0:
+            sFPlt += GC.S_USC*2 + GC.S_REP + str(cRp)
+        pFPlt = GF.getPF([sPPlt, sPSub], sFPlt, sFExt=GC.S_EXT_PDF)
+        dP[pFPlt] = dMS
+    else:
+        for sMS, dCp in dMS.items():
+            sFPlt = str(tKey[0]) + GC.S_USC + sMS
+            if tKey[1] is not None:
+                sFPlt +=  GC.S_USC + str(tKey[1])
+            if cRp > 0:
+                sFPlt += GC.S_USC*2 + GC.S_REP + str(cRp)
+            pFPlt = GF.getPF([sPPlt, sPSub], sFPlt, sFExt=GC.S_EXT_PDF)
+            dP[pFPlt] = (sMS, dCp)
+    return dP
 
 # --- Functions (O_99__Simulation) --------------------------------------------
 def collapseTimes(dITp, cSys, cRp=0, sCTime=GC.S_TIME):
@@ -436,21 +451,6 @@ def calcStatsDfr(dDfrI, nRp=0, lSCDisr=[GC.S_TIME]):
                 dDfrI[sK].at[sR, sC] = [cMn, cVarS, cStdDevS, cSEM][i]
     addFirstColToDfrs(dDfrI, serC1=dDfrI[GC.S_MEAN][GC.S_TIME],
                       lK=GC.L_S_STATS_DER)
-
-def collapseColumns(pdDfr, sLX, lSLY, tKDCp, lSCp):
-    d4Sel, d4Leg, mdDfr = {}, {}, GF.iniPdDfr()
-    sOp, dCp = tKDCp
-    prepDict4Sel(d4Sel, d4Leg=d4Leg, lSLY=lSLY, dCp=dCp)
-    mdDfr.loc[:, sLX] = pdDfr.loc[:, sLX]
-    for sK in d4Sel:
-        if sK in lSCp:
-            if sOp == GC.S_MEAN_GR:
-                mdDfr.loc[:, sK] = pdDfr.loc[:, d4Sel[sK]].T.mean()
-            elif sOp == GC.S_SUM_GR:
-                mdDfr.loc[:, sK] = pdDfr.loc[:, d4Sel[sK]].T.sum()
-        else:
-            mdDfr.loc[:, sK] = pdDfr.loc[:, sK]
-    return {GC.S_CENT: mdDfr}, d4Leg
 
 def preProcFull(dITp, dIPlt, sLX, lSLY, tKDCp, pF, lSCp):
     dDfrPlt, dDfrI, d4LgSim, nRp = {}, {}, {}, dITp['nReps']

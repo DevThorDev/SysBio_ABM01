@@ -6,6 +6,7 @@ import os, copy, time
 
 import numpy as np
 from numpy.random import default_rng as RNG
+import scipy.stats as st
 import pandas as pd
 
 import Core.C_00__GenConstants as GC
@@ -153,6 +154,15 @@ def finalRunMeanSD(existingAggregate):
         (mean, variance, sampleVariance) = (mean, M2/count, M2/(count - 1))
         return (mean, variance, sampleVariance)
 
+# calculate the confidence interval of the mean using the SEM
+def getCI(cData=None, cDF=1, cMn=0., cSEM=1., cAlpha=0.95):
+    if cData is None:
+        return st.t.interval(alpha=cAlpha, df=cDF, loc=cMn, scale=cSEM)
+    else:
+        return st.t.interval(alpha=cAlpha, df=len(cData)-1, loc=np.mean(cData),
+                             scale=st.sem(cData)) 
+
+# calculate a point of a general sigmoidal function
 def calcPSigmoidal(x, dPar):
     B, C, D = dPar[GC.S_PAR_B], dPar[GC.S_PAR_C], dPar[GC.S_PAR_D]
     fCh = (B*(B + C)/C*(1/(B + C*np.exp(-D*x)) - 1/(B + C)))

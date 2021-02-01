@@ -5,9 +5,9 @@
 import os
 import matplotlib.pyplot as plt
 
-import Core.C_00__GenConstants as GC
+# import Core.C_00__GenConstants as GC
 import Core.F_00__GenFunctions as GF
-import Core.F_01__SpcFunctions as SF
+# import Core.F_01__SpcFunctions as SF
 
 # --- Functions (general) -----------------------------------------------------
 def pltXYAxis(cDfr, nmCX=None, nmCY=None, pltAxXY=(True, True)):
@@ -66,8 +66,8 @@ def plotDCncEvo(dIPlt, dCncEvo, pFPlt, lIPlt, tpMark='x', szMark=5,
                          dIPlt['yLbl'], pltAxXY=dIPlt['pltAxXY_Conc'])
         plt.close()
 
-# --- Functions (O_95__System) ------------------------------------------------
-def plotEvoFig(dIPlt, dfrR, pF, sHdCX, dSHdCY, sLblY):
+# --- Functions (O_95__System / O_99__Simulation) -----------------------------
+def plotEvoCent(dIPlt, dfrR, pF, sHdCX, dSHdCY, sLblY):
     cFig = plt.figure()
     for sHdCY, lSY in dSHdCY.items():
         plt.plot(dfrR.loc[:, sHdCX], dfrR.loc[:, sHdCY],
@@ -80,35 +80,18 @@ def plotEvoFig(dIPlt, dfrR, pF, sHdCX, dSHdCY, sLblY):
                      yLbl=sLblY, nmCX=sHdCX, pltAxXY=dIPlt['pltAxXY'])
     plt.close()
 
-# --- Functions (O_95__System / O_99__Simulation) -----------------------------
-# def plotEvo(dIPlt, dRes, dPF, lSCp, tDat, dITp=None, overWr=True,
-#             sHdCX=GC.S_TIME):
-#     dfrRes, dfrSpr, isSgl = SF.getDfr4Plot(dIPlt, dRes)
-#     if dfrRes is not None:
-#         for pF, tKDCp in dPF.items():
-#             # if (((not os.path.isfile(pF) or overWr) and len(tDat[0]) > 0) and
-#             #     (tKDCp is None or isSgl or tKDCp[0] == GC.S_SUM)):
-#             if (not os.path.isfile(pF) or overWr) and len(tDat[0]) > 0:
-#                 lSHdCY, sLblY = tDat
-#                 dfrPlt = dfrRes.loc[:, [sHdCX] + lSHdCY]
-#                 dDfrPlt = {GC.S_CENT: dfrPlt}
-#                 if tKDCp is None:
-#                     dSHdCY = {sHd: [sHd] for sHd in lSHdCY}
-#                 elif tKDCp is not None and isSgl:
-#                     # single stochastic realisation
-#                     dDfrPlt, dSHdCY = SF.collapseColumns(dfrPlt, sHdCX, lSHdCY,
-#                                                          tKDCp, lSCp=lSCp)
-#                 else:
-#                     # including spread (from multiple repeats)
-#                     dDfrPlt, dSHdCY = SF.preProcFull(dITp, dIPlt, sHdCX,
-#                                                      lSHdCY, tKDCp, lSCp=lSCp)
-#                 plotEvoFig(dIPlt, dDfrPlt[GC.S_CENT], pF, sHdCX, dSHdCY, sLblY)
-
 # --- Functions (O_99__Simulation) --------------------------------------------
-def plotSpreadRange(dIPlt, dDfrRes):
-    pass
-
-def plotRange2Dfr(dIPlt, dfrA, dfrB):
+def plotEvoSpread(dIPlt, dDfrRes):
     cFig = plt.figure()
+    for sHdCY, lSY in dSHdCY.items():
+        plt.plot(dfrR.loc[:, sHdCX], dfrR.loc[:, sHdCY],
+                 marker=dIPlt['tpMark'], ms=dIPlt['szMark'],
+                 mew=dIPlt['ewMark'], mec=dIPlt['ecMark'], mfc=dIPlt['fcMark'],
+                 ls=dIPlt['styLn'], lw=dIPlt['wdthLn'], color=dIPlt['colLn'],
+                 label=lSY[0])
+    plt.legend(loc='best')
+    decorateSavePlot(pF, dfrR, sTtl=dIPlt['title'], xLbl=dIPlt['xLbl'],
+                     yLbl=sLblY, nmCX=sHdCX, pltAxXY=dIPlt['pltAxXY'])
+    plt.close()
 
 ###############################################################################
