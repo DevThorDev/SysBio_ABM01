@@ -318,6 +318,17 @@ D_DESC = {S_L__: S_DESC_L__, S_S__: S_DESC_S__, S_K__: S_DESC_K__,
           S_LSI: S_DESC_LSI, S_LSJ: S_DESC_LSJ, S_LST: S_DESC_LST,
           S_LKI: S_DESC_LKI, S_LKJ: S_DESC_LKJ, S_LKT: S_DESC_LKT}
 
+L_S_CP_SHORT_ALL = ['L--00--', 'L--01--', 'L--10--', 'L--11--',
+                    'S------',
+                    'K----00', 'K----01', 'K----10', 'K----11',
+                    'X------', 'Y------',
+                    'A------', 'B------', 'C------', 'D------',
+                    'LST00--', 'LSI01--', 'LST10--', 'LSJ11--',
+                    'LKT0000', 'LKJ0001', 'LKT0010', 'LKT0011',
+                    'LKT0100', 'LKT0101', 'LKT0110', 'LKT0111',
+                    'LKT1000', 'LKI1001', 'LKT1010', 'LKT1011',
+                    'LKT1100', 'LKT1101', 'LKT1110', 'LKT1111']
+
 # --- constants related to reactions ------------------------------------------
 S_RCT_11 = S_1 + S_1
 S_RCT_12 = S_1 + S_2
@@ -352,8 +363,11 @@ S_CENT = 'Central'
 S_SPREAD = 'Spread'
 
 # --- constants related to plots ----------------------------------------------
-# S_D_PLT = 'dPlt'
-S_CP_CNC = 'A_CpConc'
+S_CP_CNC = 'PlotType1_CpConc'
+S_PLT_GRP_A = 'A__9_Main_Groups'
+S_PLT_GRP_B = 'B__Complexes'
+S_PLT_GRP_C = 'C__I_vs_J_vs_T'
+S_PLT_GRP_D = 'D__LS-_vs_LK-'
 
 # --- other constants ---------------------------------------------------------
 M_DETER = 'Deterministic'

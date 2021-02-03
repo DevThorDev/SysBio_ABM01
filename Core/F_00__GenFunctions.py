@@ -154,13 +154,39 @@ def finalRunMeanSD(existingAggregate):
         (mean, variance, sampleVariance) = (mean, M2/count, M2/(count - 1))
         return (mean, variance, sampleVariance)
 
-# calculate the confidence interval of the mean using the SEM
-def getCI(cData=None, cDF=1, cMn=0., cSEM=1., cAlpha=0.95):
-    if cData is None:
-        return st.t.interval(alpha=cAlpha, df=cDF, loc=cMn, scale=cSEM)
+# clip a value so that it is between xMin and xMax
+def clipVal(x, xMin=None, xMax=None):
+    if xMin is not None:
+        if xMax is not None:
+            return min(max(x, xMin), xMax)
+        else:
+            return max(x, xMin)
     else:
-        return st.t.interval(alpha=cAlpha, df=len(cData)-1, loc=np.mean(cData),
-                             scale=st.sem(cData)) 
+        if xMax is not None:
+            return min(x, xMax)
+        else:
+            return x
+
+# calculate the confidence interval of the mean using the SEM
+def getCI(cData=None, cDF=1, cMn=0., cSEM=1., cAlpha=0.95, mnV=None, mxV=None):
+    cAlpha = clipVal(cAlpha, xMin=0, xMax=1)
+    if cData is None:
+        cCI = st.t.interval(alpha=cAlpha, df=cDF, loc=cMn, scale=cSEM)
+    else:
+        cCI = st.t.interval(alpha=cAlpha, df=len(cData)-1,
+                           loc=np.mean(cData), scale=st.sem(cData))
+    return tuple(clipVal(cBd, xMin=mnV, xMax=mxV) for cBd in cCI)
+
+# calculate the confidence interval of the mean using the SEM (for an array)
+def getArrCI(cDF=1, arrC=np.zeros((1, 1)), arrS=np.ones((1, 1)), cAlpha=0.95,
+             mnV=None, mxV=None):
+    assert arrC.ndim == 1 and arrS.ndim == 1
+    assert arrC.shape[0] == arrS.shape[0]
+    arrLB, arrUB = np.zeros(arrC.shape[0]), np.zeros(arrC.shape[0])
+    for i, x in enumerate(arrC):
+        arrLB[i], arrUB[i] = getCI(cDF=cDF, cMn=x, cSEM=arrS[i], cAlpha=cAlpha,
+                                   mnV=mnV, mxV=mxV)
+    return (arrLB, arrUB)
 
 # calculate a point of a general sigmoidal function
 def calcPSigmoidal(x, dPar):

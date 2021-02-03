@@ -28,7 +28,7 @@ def saveAsPdDfr(dITp, dRes, lD, sF, overWr=True, sFExt=GC.S_EXT_CSV):
         GF.iniPdDfr(dRes).to_csv(sP, sep=dITp['cSep'])
     return sP
 
-def saveDictDfr(dITp, dDfr, lK=None, overWr=True, sFSt = GC.S_RES_SIM,
+def saveDictDfr(dITp, dDfr, lK=None, overWr=False, sFSt = GC.S_RES_SIM,
                 sFEnd = '', sFExt=GC.S_EXT_CSV):
     for cK, cDfr in dDfr.items():
         if lK is None or cK in lK:
@@ -334,9 +334,9 @@ def readDfrResEvo(dITp, sPRs, sFRs):
     return None
 
 # --- Functions (O_95__System / O_99__Simulation) -----------------------------
-def prepDict4Sel(d4Sel, d4Leg=None, lSLY=[], dCp={}):
+def prepDict4Sel(dPltG, d4Sel, d4Leg=None, lSLY=[]):
     for sHdC in lSLY:
-        for sLg, lCp in dCp.items():
+        for sLg, lCp in dPltG['dCHdLeg'].items():
             if (len(sHdC) == GC.LEN_S_CP and
                 set(sHdC[GC.I_S_CP_SEP1:]) <= GC.SET_0_1_DASH):
                 # this column header IS a component string
@@ -354,40 +354,38 @@ def prepDict4Sel(d4Sel, d4Leg=None, lSLY=[], dCp={}):
                     if d4Leg is not None:
                         GF.addToDictL(d4Leg, sHdC, sHdC, lUnique=True)
 
-def collapseColumns(pdDfr, sLX, lSLY, tKDCp, lSCp):
+def collapseColumns(dPltG, pdDfr, sLX, lSLY, sOp):
     d4Sel, d4Leg, mdDfr = {}, {}, GF.iniPdDfr()
-    sOp, dCp = tKDCp
-    prepDict4Sel(d4Sel, d4Leg=d4Leg, lSLY=lSLY, dCp=dCp)
+    prepDict4Sel(dPltG, d4Sel, d4Leg=d4Leg, lSLY=lSLY)
     mdDfr.loc[:, sLX] = pdDfr.loc[:, sLX]
     for sK in d4Sel:
-        if sK in lSCp:
-            if sOp == GC.S_MEAN_GR:
-                mdDfr.loc[:, sK] = pdDfr.loc[:, d4Sel[sK]].T.mean()
-            elif sOp == GC.S_SUM_GR:
-                mdDfr.loc[:, sK] = pdDfr.loc[:, d4Sel[sK]].T.sum()
+        if sOp == GC.S_MEAN_GR:
+            mdDfr.loc[:, sK] = pdDfr.loc[:, d4Sel[sK]].T.mean()
+        elif sOp == GC.S_SUM_GR:
+            mdDfr.loc[:, sK] = pdDfr.loc[:, d4Sel[sK]].T.sum()
         else:
             mdDfr.loc[:, sK] = pdDfr.loc[:, sK]
     return {GC.S_CENT: mdDfr}, d4Leg
 
-def getDPFPltEvo(sPPlt, sDSub, tKey=GC.S_USC, cRp=0, dMS=None):
-    dP, sPSub = {}, sDSub
+def addToDPath(dPltG, dP, sPPlt, sPSub, sFPlt='', cRp=0, sOp=None):
+    if sOp is not None:
+        sFPlt += GC.S_USC + sOp
+    if dPltG['sPltNm'] is not None:
+        sFPlt += GC.S_USC + dPltG['sPltNm']
+    if cRp > 0:
+        sFPlt += GC.S_USC*2 + GC.S_REP + str(cRp)
+    pFPlt = GF.getPF([sPPlt, sPSub], sFPlt, sFExt=GC.S_EXT_PDF)
+    dP[pFPlt] = (sOp, dPltG)
+
+def getDPFPltEvo(dPltG, sPPlt, sDSub, cRp=0):
+    dP, sPSub, sFPlt = {}, sDSub, dPltG['sPltTp']
     if cRp > 0:
         sPSub = os.path.join(sPSub, GC.S_REP + str(cRp))
-    if dMS is None:
-        sFPlt = GC.S_USC.join([str(cEl) for cEl in tKey if cEl is not None])
-        if cRp > 0:
-            sFPlt += GC.S_USC*2 + GC.S_REP + str(cRp)
-        pFPlt = GF.getPF([sPPlt, sPSub], sFPlt, sFExt=GC.S_EXT_PDF)
-        dP[pFPlt] = dMS
+    if dPltG['lSOp'] is None:
+        addToDPath(dPltG, dP, sPPlt, sPSub, sFPlt=sFPlt, cRp=cRp)
     else:
-        for sMS, dCp in dMS.items():
-            sFPlt = str(tKey[0]) + GC.S_USC + sMS
-            if tKey[1] is not None:
-                sFPlt +=  GC.S_USC + str(tKey[1])
-            if cRp > 0:
-                sFPlt += GC.S_USC*2 + GC.S_REP + str(cRp)
-            pFPlt = GF.getPF([sPPlt, sPSub], sFPlt, sFExt=GC.S_EXT_PDF)
-            dP[pFPlt] = (sMS, dCp)
+        for sOp in dPltG['lSOp']:
+            addToDPath(dPltG, dP, sPPlt, sPSub, sFPlt=sFPlt, cRp=cRp, sOp=sOp)
     return dP
 
 # --- Functions (O_99__Simulation) --------------------------------------------
@@ -452,20 +450,27 @@ def calcStatsDfr(dDfrI, nRp=0, lSCDisr=[GC.S_TIME]):
     addFirstColToDfrs(dDfrI, serC1=dDfrI[GC.S_MEAN][GC.S_TIME],
                       lK=GC.L_S_STATS_DER)
 
-def preProcFull(dITp, dIPlt, sLX, lSLY, tKDCp, pF, lSCp):
+def preProcFull(dITp, dPltG, sLX, lSLY, pltSpr, pF, sOp):
     dDfrPlt, dDfrI, d4LgSim, nRp = {}, {}, {}, dITp['nReps']
     for cRp in range(1, nRp + 1):
         sF = GC.S_RED_SYS + GC.S_USC + GC.S_REP + str(cRp)
         cDfr = loadPdDfr(dITp, [GC.S_DIR_SYS], sF)
-        dDfrT, d4Lg = collapseColumns(cDfr, sLX, lSLY, tKDCp, lSCp)
+        dDfrT, d4Lg = collapseColumns(dPltG, cDfr, sLX, lSLY, sOp)
         d4LgSim.update(d4Lg)
         updateDictDfr(dDfrT[GC.S_CENT], dDfrI, cCt=cRp)
     calcStatsDfr(dDfrI, nRp=nRp)
     GF.printDictDfr(dDfrI, lK=[GC.S_MEAN, GC.S_STDDEV, GC.S_SEM])
-    assert dIPlt['plotSpread'] in dDfrI
-    dDfrPlt[GC.S_CENT] = dDfrI[GC.S_MEAN]
-    dDfrPlt[GC.S_SPREAD] = dDfrI[dIPlt['plotSpread']]
+    assert pltSpr in dDfrI
+    dDfrPlt[GC.S_CENT], dDfrPlt[GC.S_SPREAD] = dDfrI[GC.S_MEAN], dDfrI[pltSpr]
     saveDictDfr(dITp, dDfrI, lK=GC.L_S_STATS_OUT, sFEnd=GF.getFNoExt(pF))
     return dDfrPlt, d4LgSim
+
+def checkConsistency2Dfr(dDfr, lK):
+    assert len(lK) == 2
+    for cK in lK:
+        assert cK in dDfr
+    dfr1, dfr2 = dDfr[lK[0]], dDfr[lK[1]]
+    assert list(dfr1.index) == list(dfr2.index)
+    assert list(dfr1.columns) == list(dfr2.columns)
 
 ###############################################################################
