@@ -62,31 +62,13 @@ def decorateSavePlot(pF, pdDfr, sTtl=None, xLbl=None, yLbl=None, xLim=None,
         pltXYAxis(pdDfr, nmCX, nmCY, pltAxXY=pltAxXY)
     decorateSaveIt(pF, sTtl=sTtl, xLbl=xLbl, yLbl=yLbl, xLim=xLim, yLim=yLim)
 
-# --- Functions (O_90__Component) ---------------------------------------------
-# def plotDCncEvo(dIPlt, dCncEvo, pFPlt, lIPlt, tpMark='x', szMark=5,
-#                 ewMark=2, ecMark=(0.95, 0., 0.), fcMark=(0.9, 0.45, 0.),
-#                 styLn='solid', wdthLn=1, colLn='b', sTtl='', xLbl='', yLbl='',
-#                 overWr=True):
-#     if not os.path.isfile(pFPlt) or overWr:
-#         assert len(lIPlt) >= 2
-#         cFig = plt.figure()
-#         pdDfr = GF.iniPdDfr(dCncEvo)
-#         cX, cY = pdDfr.iloc[:, lIPlt[0]], pdDfr.iloc[:, lIPlt[1:]]
-#         plt.plot(cX, cY, marker=dIPlt['tpMark'], ms=dIPlt['szMark'],
-#                  mew=dIPlt['ewMark'], mec=dIPlt['ecMark'],
-#                  mfc=dIPlt['fcMark'], ls=dIPlt['styLn'],
-#                  lw=dIPlt['wdthLn'], color=dIPlt['colLn'])
-#         decorateSavePlot(pFPlt, cY, dIPlt['title'], dIPlt['xLbl'],
-#                          dIPlt['yLbl'], pltAxXY=dIPlt['pltAxXY_Conc'])
-#         plt.close()
-
 # --- Functions (O_95__System / O_99__Simulation) -----------------------------
 def plotCentres(dIPlt, dPltG, cDfr, sHdCX, sHdCY, lSY):
     cCol = dPltG['dCol'][sHdCY]
-    plt.plot(cDfr.loc[:, sHdCX], cDfr.loc[:, sHdCY],
-             marker=dIPlt['tpMark'], ms=dIPlt['szMark'],
-             mew=dIPlt['ewMark'], mec=dIPlt['ecMark'], mfc=dIPlt['fcMark'],
-             ls=dIPlt['styLn'], lw=dIPlt['wdthLn'], color=cCol, label=lSY[0])
+    plt.plot(cDfr.loc[:, sHdCX], cDfr.loc[:, sHdCY], marker=dIPlt['tpMark'],
+             ms=dIPlt['szMark'], mew=dIPlt['ewMark'], mec=dIPlt['ecMark'],
+             mfc=dIPlt['fcMark'], ls=dPltG['styLnCt'], lw=dPltG['wdthLnCt'],
+             color=cCol, label=lSY[0])
 
 def plotEvoSglR(dIPlt, dPltG, dfrR, pF, sHdCX, dSHdCY, sLblY):
     cFig = plt.figure()
@@ -104,8 +86,8 @@ def plotCIs(dIPlt, dPltG, dfrC, dfrS, sHdCX, sHdCY, nRp, mxY=0):
                         mnV=0)
     mxY = max([mxY] + list(tArrB[1]))
     cCol = dPltG['dCol'][sHdCY] + (dPltG['alpCol'],)
-    plt.vlines(dfrS.loc[:, sHdCX], tArrB[0], tArrB[1], ls=dIPlt['styLn'],
-               lw=dIPlt['wdthLn'], color=cCol)
+    plt.vlines(dfrS.loc[:, sHdCX], tArrB[0], tArrB[1], ls=dPltG['styLnCI'],
+               lw=dPltG['wdthLnCI'], color=cCol)
     return mxY
 
 def plotEvoMultR(dITp, dIPlt, dPltG, dDfrR, pF, sHdCX, dSHdCY, sLblY):

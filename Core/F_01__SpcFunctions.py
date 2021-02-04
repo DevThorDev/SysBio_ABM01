@@ -450,6 +450,18 @@ def calcStatsDfr(dDfrI, nRp=0, lSCDisr=[GC.S_TIME]):
     addFirstColToDfrs(dDfrI, serC1=dDfrI[GC.S_MEAN][GC.S_TIME],
                       lK=GC.L_S_STATS_DER)
 
+def preProcNoGrp(dITp, pltSpr, pF):
+    dDfrPlt, dDfrI, nRp = {}, {}, dITp['nReps']
+    for cRp in range(1, nRp + 1):
+        sF = GC.S_RED_SYS + GC.S_USC + GC.S_REP + str(cRp)
+        updateDictDfr(loadPdDfr(dITp, [GC.S_DIR_SYS], sF), dDfrI, cCt=cRp)
+    calcStatsDfr(dDfrI, nRp=nRp)
+    GF.printDictDfr(dDfrI, lK=[GC.S_MEAN, GC.S_STDDEV, GC.S_SEM])
+    assert pltSpr in dDfrI
+    dDfrPlt[GC.S_CENT], dDfrPlt[GC.S_SPREAD] = dDfrI[GC.S_MEAN], dDfrI[pltSpr]
+    saveDictDfr(dITp, dDfrI, lK=GC.L_S_STATS_OUT, sFEnd=GF.getFNoExt(pF))
+    return dDfrPlt
+
 def preProcFull(dITp, dPltG, sLX, lSLY, pltSpr, pF, sOp):
     dDfrPlt, dDfrI, d4LgSim, nRp = {}, {}, {}, dITp['nReps']
     for cRp in range(1, nRp + 1):

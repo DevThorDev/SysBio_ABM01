@@ -15,7 +15,7 @@ import Core.C_00__GenConstants as GC
 def startSimu():
     startTime = time.time()
     print(GC.S_PLUS*50 + ' START', time.ctime(startTime), GC.S_PLUS*30)
-    print('Systems Biology Framework')
+    print('Agent-based model of the NRT2.1/NAR2.1/HPCAL1-system')
     return startTime
 
 def seedRNG(cMode):             # legacy function
@@ -418,7 +418,6 @@ def calcRctWeight(cDfr, sRctCl):
 # function updating the dITp with that of a higher-priority class
 def updateDITp(dITpC, dITpU):
     dITpC.update(dITpU)
-    # dITpC.update({cK: cV for cK, cV in dITpU.items()})
 
 # special function for updating both the general dITp and a sub-dITp ("dIPlt")
 def updateDITpDIPlt(dITpC, dITpU, lKSpc=[]):

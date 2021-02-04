@@ -13,10 +13,6 @@ strCL = GC.S_CL_H2PO4_1M
 # --- dictionary of parameters for special sites ------------------------------
 dInfSpS = {}
 
-# # --- graphics parameters molecule concentrations plot ------------------------
-# sPlt_Conc = 'Conc'                  # name of plot and key of input dict
-# yLbl_Conc = '$[H_2PO_4^-]$ (mM)'    # y-label of plot
-
 # --- create input dictionary -------------------------------------------------
 dIO = {# --- general
        'strOType': strOType,
@@ -25,7 +21,5 @@ dIO = {# --- general
        'strCL': strCL,
        # --- dictionary of parameters for special sites
        'dInfSpS': dInfSpS}
-       # # --- graphics parameters molecule concentrations plot
-       # GC.S_D_PLT: {sPlt_Conc: {'yLbl': yLbl_Conc}}}
 
 ###############################################################################

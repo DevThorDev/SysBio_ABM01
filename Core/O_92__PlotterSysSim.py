@@ -23,11 +23,16 @@ class PlotterSysSim(Base):
         # print('Initiated "PlotterSysSim" object.')
 
     def getDDfrPlot(self, dITp, dPltG, sOp, pF, sHdCX=GC.S_TIME):
-        lSHdCY = dPltG['lSCpCnc']
+        lSHdCY, pltSpr = dPltG['lSCpCnc'], self.dIPlt['plotSpread']
         if dPltG['dCHdLeg'] is None:
+            # no collapsing of columns necessary (no groups)
             dDfrPlt = {GC.S_CENT: self.dfrRes.loc[:, [sHdCX] + lSHdCY]}
             dSHdCY = {sHd: [sHd] for sHd in lSHdCY}
+            if not self.pltSgl:
+                # including spread (from multiple repeats)
+                dDfrPlt = SF.preProcNoGrp(dITp, pltSpr, pF)
         else:
+            # collapsing of columns necessary (component groups)
             dfrPlt = self.dfrRes.loc[:, [sHdCX] + lSHdCY]
             dDfrPlt = {GC.S_CENT: dfrPlt}
             if self.pltSgl:
@@ -36,7 +41,6 @@ class PlotterSysSim(Base):
                                                      lSHdCY, sOp=sOp)
             else:
                 # including spread (from multiple repeats)
-                pltSpr = self.dIPlt['plotSpread']
                 dDfrPlt, dSHdCY = SF.preProcFull(dITp, dPltG, sHdCX, lSHdCY,
                                                  pltSpr, pF, sOp=sOp)
         return dDfrPlt, dSHdCY

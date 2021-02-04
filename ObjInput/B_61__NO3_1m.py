@@ -13,10 +13,6 @@ strCL = GC.S_CL_NO3_1M
 # --- dictionary of parameters for special sites ------------------------------
 dInfSpS = {}
 
-# # --- graphics parameters molecule concentrations plot ------------------------
-# sPlt_Conc = 'Conc'                  # name of plot and key of input dict
-# yLbl_Conc = '$[NO_3^-]$ (mM)'       # y-label of plot
-
 # --- create input dictionary -------------------------------------------------
 dIO = {# --- general
        'strOType': strOType,
@@ -25,7 +21,5 @@ dIO = {# --- general
        'strCL': strCL,
        # --- dictionary of parameters for special sites
        'dInfSpS': dInfSpS}
-       # # --- graphics parameters molecule concentrations plot
-       # GC.S_D_PLT: {sPlt_Conc: {'yLbl': yLbl_Conc}}}
 
 ###############################################################################
