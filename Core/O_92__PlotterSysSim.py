@@ -22,7 +22,7 @@ class PlotterSysSim(Base):
         self.dIPlt = self.dITp[GC.S_CP_CNC]
         # print('Initiated "PlotterSysSim" object.')
 
-    def getDDfrPlot(self, dITp, dPltG, sOp, pF, sHdCX=GC.S_TIME):
+    def getI4Plot(self, dITp, dPltG, sOp, pF, sHdCX=GC.S_TIME):
         lSHdCY, pltSpr = dPltG['lSCpCnc'], self.dIPlt['plotSpread']
         if dPltG['dCHdLeg'] is None:
             # no collapsing of columns necessary (no groups)
@@ -30,7 +30,8 @@ class PlotterSysSim(Base):
             dSHdCY = {sHd: [sHd] for sHd in lSHdCY}
             if not self.pltSgl:
                 # including spread (from multiple repeats)
-                dDfrPlt = SF.preProcNoGrp(dITp, pltSpr, pF)
+                dDfrPlt, _ = SF.preProcData(dITp, dPltG, pF, pltSpr,
+                                            doGroups=False)
         else:
             # collapsing of columns necessary (component groups)
             dfrPlt = self.dfrRes.loc[:, [sHdCX] + lSHdCY]
@@ -41,14 +42,14 @@ class PlotterSysSim(Base):
                                                      lSHdCY, sOp=sOp)
             else:
                 # including spread (from multiple repeats)
-                dDfrPlt, dSHdCY = SF.preProcFull(dITp, dPltG, sHdCX, lSHdCY,
-                                                 pltSpr, pF, sOp=sOp)
+                dDfrPlt, dSHdCY = SF.preProcData(dITp, dPltG, pF, pltSpr,
+                                                 sHdCX, lSHdCY, sOp=sOp)
         return dDfrPlt, dSHdCY
 
     def plotEvoGen(self, dPPF, dITp=None, overWr=True, sHdCX=GC.S_TIME):
         for (pF, (sOp, dPltG)) in dPPF.items():
             if overWr or not GF.pFExists(pF):
-                dDfrPlt, dSHdCY = self.getDDfrPlot(dITp, dPltG, sOp, pF, sHdCX)
+                dDfrPlt, dSHdCY = self.getI4Plot(dITp, dPltG, sOp, pF, sHdCX)
                 if self.pltSgl:
                     PF.plotEvoSglR(self.dIPlt, dPltG, dDfrPlt[GC.S_CENT], pF,
                                    sHdCX, dSHdCY, sLblY=dPltG['yLbl'])
