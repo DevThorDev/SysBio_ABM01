@@ -3,6 +3,7 @@
 # --- O_99__Simulation.py -----------------------------------------------------
 ###############################################################################
 import Core.C_00__GenConstants as GC
+import Core.F_00__GenFunctions as GF
 import Core.F_01__SpcFunctions as SF
 
 from Core.I_02__InpFrames import InputFrames
@@ -25,27 +26,27 @@ class Simulation(Base):
         Pltr = PlotterSysSim(inpDat, self.inFr)
         Pltr.plotResEvoAvg(self.dITp, dDfrRV)
 
-    def calcRepStatistics(self, dDfrRV):
-        SF.calcStatsDfr(dDfrRV, nRp=self.nRep)
+    def calcRepStatistics(self, dDfrRV, dfrCt):
+        SF.calcStatsDfr(dDfrRV, dfrCt=dfrCt)
         self.dDfrStats = dDfrRV
         for sStat in GC.L_S_STATS_OUT:
             sF = self.sFRes + GC.S_USC + str(sStat) + GC.S_USC + GC.S_NO_GR
             SF.savePdDfr(self.dITp, self.dDfrStats[sStat],
-                         lD=[self.dITp['sD_Obj'], sStat], sF=sF, overWr=True)
+                         lD=[self.dITp['sD_Obj'], sStat], sF=sF)
 
     def runSimulation(self, inpDat):
-        doPlt, dDfrRunV = self.dITp['doPlots'], {}
+        doPlt, dDfrRunV, dfrCnt = self.dITp['doPlots'], {}, GF.iniPdDfr(dTp=int)
         for cRep in range(1, self.nRep + 1):
             print(GC.S_PLUS*8, 'Starting repetition', cRep, 'of', self.nRep)
             cSys = System(inpDat, self.inFr, cRp=cRep)
             if self.dITp['doEvoT']:
                 cSys.evolveOverTime(inpDat, self.dITp, doPlots=doPlt)
             if not self.dITp['doEvoT'] and doPlt:
-                cSys.plotResEvo(inpDat, self.dITp, overWr=True)
-            SF.calcRunMeanM2Dfr(self.dITp, cSys, dDfrRunV, cCt=cSys.cRep)
+                cSys.plotResEvo(inpDat, self.dITp)
+            SF.calcRunMeanM2Dfr(self.dITp, cSys, dDfrRunV, dfrCt=dfrCnt)
             cSys.printFinalSimuTime()
             print(GC.S_PLUS*8, 'Finished repetition', cRep, 'of', self.nRep)
-        self.calcRepStatistics(dDfrRunV)
+        self.calcRepStatistics(dDfrRunV, dfrCt=dfrCnt)
         self.plotResEvo(inpDat, dDfrRunV)
 
     def printDfrStats(self, lSStatsOut = GC.L_S_STATS_OUT):

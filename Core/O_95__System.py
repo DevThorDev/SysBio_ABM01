@@ -132,7 +132,7 @@ class System(Base):
     def plotResEvo(self, inpDat, dITp, overWr=True):
         if self.dResEvo is None:
             self.dfrResEvo = SF.readDfrResEvo(self.dITp, sPRs=dITp['sPRes'],
-                                              sFRs=self.sFRes)
+                                              sFRs=self.sFRes, iCol=0)
         else:
             self.dfrResEvo = GF.iniPdDfr(self.dResEvo)
         Pltr = PlotterSysSim(inpDat, self.inFr, self.cRep)
@@ -144,7 +144,7 @@ class System(Base):
         self.dfrResEvo = GF.iniPdDfr(self.dResEvo)
         self.updateObjDicts(inpDat, refresh=True)
         dR, sD = self.dResEvo, self.dITp['sD_Obj']
-        self.pFResEvo = SF.saveAsPdDfr(dITp, dR, [sD], self.sFRes, overWr=True)
+        self.pFResEvo = SF.saveAsPdDfr(dITp, dR, [sD], self.sFRes)
         if doPlots:
             self.plotResEvo(inpDat, dITp)
 

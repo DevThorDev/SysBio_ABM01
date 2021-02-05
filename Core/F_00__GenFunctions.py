@@ -138,17 +138,24 @@ def updateAggr(existingAggregate, newValue):
     return (count, mean, M2)
 
 def updateMeanM2(cMean, cM2, cCnt, newValue):
-    if not np.isnan(newValue):
-        delta = newValue - cMean
-        cMean += delta/cCnt
-        delta2 = newValue - cMean
-        cM2 += delta*delta2
-    return cMean, cM2
+    if np.isfinite(newValue):
+        cCnt += 1
+        if np.isfinite(cMean):
+            delta = newValue - cMean
+            cMean += delta/cCnt
+            delta2 = newValue - cMean
+        else:
+            cMean = newValue
+        if np.isfinite(cM2):
+            cM2 += delta*delta2
+        else:
+            cM2 = 0
+    return cMean, cM2, cCnt
 
 # Retrieve the mean, variance and sample variance from an aggregate
 def finalRunMeanSD(existingAggregate):
     (count, mean, M2) = existingAggregate
-    if count < 2:
+    if (not (np.isfinite(count) and np.isfinite(mean))) or (count < 2):
         return (mean, np.nan, np.nan)
     else:
         (mean, variance, sampleVariance) = (mean, M2/count, M2/(count - 1))
@@ -454,37 +461,57 @@ def endSimu(startTime):
     printElapsedTimeSim(startTime, time.time(), 'Total time')
     print(GC.S_STAR*20 + ' DONE', time.ctime(time.time()), GC.S_STAR*20)
 
+# --- Functions (NumPy) -------------------------------------------------------
+def iniNpArr0(tShape=(0, 0)):
+    return np.zeros(tShape)
+
+def iniNpArr1(tShape=(0, 0)):
+    return np.ones(tShape)
+
 # --- Functions (Pandas) ------------------------------------------------------
 def readCSV(pF, sepD=GC.SEP_STD, iCol=None, dDtype=None):
     return pd.read_csv(pF, sep=sepD, index_col=iCol, dtype=dDtype)
 
-def iniPdDfr(data=None, lSNmC=[], lSNmR=[], shape=(0, 0)):
+def saveAsCSV(pdDfr, pF, sepD=GC.SEP_STD, sFExt=GC.S_EXT_CSV):
+    pdDfr.to_csv(pF + '.' + sFExt, sep=sepD)
+
+def iniPdDfr(data=None, lSNmC=[], lSNmR=[], shape=(0, 0), v=0, dTp=float):
     assert len(shape) == 2
     nR, nC = shape
     if len(lSNmC) == 0:
         if len(lSNmR) == 0:
             if data is None:
-                return pd.DataFrame(np.zeros(shape))
+                return pd.DataFrame(np.full(shape, v), dtype=dTp)
             else:
-                return pd.DataFrame(data)
+                return pd.DataFrame(data, dtype=dTp)
         else:
             if data is None:
-                return pd.DataFrame(np.zeros((len(lSNmR), nC)), index=lSNmR)
+                return pd.DataFrame(np.full((len(lSNmR), nC), v), index=lSNmR,
+                                    dtype=dTp)
             else:
-                return pd.DataFrame(data, index=lSNmR)
+                return pd.DataFrame(data, index=lSNmR, dtype=dTp)
     else:
         if len(lSNmR) == 0:
             if data is None:
-                return pd.DataFrame(np.zeros((nR, len(lSNmC))),
-                                    columns=lSNmC)
+                return pd.DataFrame(np.full((nR, len(lSNmC)), v),
+                                    columns=lSNmC, dtype=dTp)
             else:
-                return pd.DataFrame(data, columns=lSNmC)
+                return pd.DataFrame(data, columns=lSNmC, dtype=dTp)
         else:   # ignore nR
             if data is None:
-                return pd.DataFrame(np.zeros((len(lSNmR), len(lSNmC))),
-                                    index=lSNmR, columns=lSNmC)
+                arrDat = np.full((len(lSNmR), len(lSNmC)), v)
+                return pd.DataFrame(arrDat, index=lSNmR, columns=lSNmC,
+                                    dtype=dTp)
             else:
-                return pd.DataFrame(data, index=lSNmR, columns=lSNmC)
+                return pd.DataFrame(data, index=lSNmR, columns=lSNmC,
+                                    dtype=dTp)
+
+def getElIfValid(pdDfr, sR, sC, xAlt=0):
+    xRet = xAlt
+    if sR in pdDfr.index and sC in pdDfr.columns:
+        if np.isfinite(pdDfr.at[sR, sC]):
+            xRet = pdDfr.at[sR, sC]
+    return xRet
 
 def printDictDfr(dDfr, lK=None):
     print(GC.S_USC*8, 'Dictionary of DataFrames', GC.S_USC*8, '\n')

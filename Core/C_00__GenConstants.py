@@ -355,19 +355,19 @@ S_SEM = 'SEM'
 L_S_STATS_ALL = [S_MEAN, S_M2, S_VARIANCE, S_STDDEV, S_SEM]
 L_S_STATS_OUT = [S_MEAN, S_STDDEV, S_SEM]
 L_S_STATS_DER = [S_VARIANCE, S_STDDEV, S_SEM]
-S_NO_GR = 'NoGrp'
-S_MEAN_GR = 'MeanGrp'
-S_SUM_GR = 'SumGrp'
+S_NO_GR = 'NoGroup'
+S_MEAN_GR = 'MeanGroup'
+S_SUM_GR = 'SumGroup'
 S_SGL = 'Single'
 S_CENT = 'Central'
 S_SPREAD = 'Spread'
 
 # --- constants related to plots ----------------------------------------------
 S_CP_CNC = 'PlotType1_CpConc'
-S_PLT_GRP_A = 'A__9_Main_Groups'
-S_PLT_GRP_B = 'B__Complexes'
-S_PLT_GRP_C = 'C__I_vs_J_vs_T'
-S_PLT_GRP_D = 'D__LS-_vs_LK-'
+S_PLT_GR_A = 'A__9_Main_Groups'
+S_PLT_GR_B = 'B__Complexes'
+S_PLT_GR_C = 'C__I_vs_J_vs_T'
+S_PLT_GR_D = 'D__LS-_vs_LK-'
 
 # --- other constants ---------------------------------------------------------
 M_DETER = 'Deterministic'

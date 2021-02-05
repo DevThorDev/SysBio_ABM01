@@ -41,13 +41,13 @@ pltAxXY_CpCnc = (True, True)            # plot x- and/or y-axis
 
 # --- definitions for component, component group and concentration plots ------
 # group A - 9 main component groups ...........................................
-sPltNm_A = GC.S_PLT_GRP_A
+sPltNm_A = GC.S_PLT_GR_A
 sPltTp_A = sPlt_SCp
 lSCpCnc_A = GC.L_S_CP_SHORT_ALL
 lSOp_A = [GC.S_MEAN_GR, GC.S_SUM_GR]
-dCHdLeg_A = {'L--': ['L--'], 'S--': ['S--'], 'K--': ['K--'],
-             'LSI': ['LSI'], 'LSJ': ['LSJ'], 'LST': ['LST'],
-             'LKI': ['LKI'], 'LKJ': ['LKJ'], 'LKT': ['LKT']}
+dCHdGr_A = {'L--': ['L--'], 'S--': ['S--'], 'K--': ['K--'],
+            'LSI': ['LSI'], 'LSJ': ['LSJ'], 'LST': ['LST'],
+            'LKI': ['LKI'], 'LKJ': ['LKJ'], 'LKT': ['LKT']}
 yLbl_A = yLbl_Cp
 styLnCt_A = 'solid'
 styLnCI_A = 'solid'
@@ -68,7 +68,7 @@ dPltG_A = {'sPltNm': sPltNm_A,
            'sPltTp': sPltTp_A,
            'lSCpCnc': lSCpCnc_A,
            'lSOp': lSOp_A,
-           'dCHdLeg': dCHdLeg_A,
+           'dCHdGr': dCHdGr_A,
            'yLbl': yLbl_A,
            'styLnCt': styLnCt_A,
            'styLnCI': styLnCI_A,
@@ -78,12 +78,12 @@ dPltG_A = {'sPltNm': sPltNm_A,
            'alpCol': alpCol_A}
 
 # group B - all complexes .....................................................
-sPltNm_B = GC.S_PLT_GRP_B
+sPltNm_B = GC.S_PLT_GR_B
 sPltTp_B = sPlt_SCp
 lSCpCnc_B = GC.L_S_CP_SHORT_ALL
 lSOp_B = [GC.S_MEAN_GR, GC.S_SUM_GR]
-dCHdLeg_B = {'LSI': ['LSI'], 'LSJ': ['LSJ'], 'LST': ['LST'],
-             'LKI': ['LKI'], 'LKJ': ['LKJ'], 'LKT': ['LKT']}
+dCHdGr_B = {'LSI': ['LSI'], 'LSJ': ['LSJ'], 'LST': ['LST'],
+            'LKI': ['LKI'], 'LKJ': ['LKJ'], 'LKT': ['LKT']}
 yLbl_B = yLbl_Cp
 styLnCt_B = 'solid'
 styLnCI_B = 'solid'
@@ -101,7 +101,7 @@ dPltG_B = {'sPltNm': sPltNm_B,
            'sPltTp': sPltTp_B,
            'lSCpCnc': lSCpCnc_B,
            'lSOp': lSOp_B,
-           'dCHdLeg': dCHdLeg_B,
+           'dCHdGr': dCHdGr_B,
            'yLbl': yLbl_B,
            'styLnCt': styLnCt_B,
            'styLnCI': styLnCI_B,
@@ -111,13 +111,13 @@ dPltG_B = {'sPltNm': sPltNm_B,
            'alpCol': alpCol_B}
 
 # group C - "I" complexes vs. "J" complexes vs. "T" complexes .................
-sPltNm_C = GC.S_PLT_GRP_C
+sPltNm_C = GC.S_PLT_GR_C
 sPltTp_C = sPlt_SCp
 lSCpCnc_C = GC.L_S_CP_SHORT_ALL
 lSOp_C = [GC.S_MEAN_GR, GC.S_SUM_GR]
-dCHdLeg_C =  {'LSI': ['LSI', 'LKI'],
-              'LSJ': ['LSJ', 'LKJ'],
-              'LST': ['LST', 'LKT']}
+dCHdGr_C =  {'LSI': ['LSI', 'LKI'],
+             'LSJ': ['LSJ', 'LKJ'],
+             'LST': ['LST', 'LKT']}
 yLbl_C = yLbl_Cp
 styLnCt_C = 'solid'
 styLnCI_C = 'solid'
@@ -132,7 +132,7 @@ dPltG_C = {'sPltNm': sPltNm_C,
            'sPltTp': sPltTp_C,
            'lSCpCnc': lSCpCnc_C,
            'lSOp': lSOp_C,
-           'dCHdLeg': dCHdLeg_C,
+           'dCHdGr': dCHdGr_C,
            'yLbl': yLbl_C,
            'styLnCt': styLnCt_C,
            'styLnCI': styLnCI_C,
@@ -142,11 +142,11 @@ dPltG_C = {'sPltNm': sPltNm_C,
            'alpCol': alpCol_C}
 
 # group D - "LS" complexes vs. "LK" complexes .................................
-sPltNm_D = GC.S_PLT_GRP_D
+sPltNm_D = GC.S_PLT_GR_D
 sPltTp_D = sPlt_SCp
 lSCpCnc_D = GC.L_S_CP_SHORT_ALL
 lSOp_D = [GC.S_MEAN_GR, GC.S_SUM_GR]
-dCHdLeg_D = {'LSI': ['LSI', 'LSJ', 'LST'], 'LKI': ['LKI', 'LKJ', 'LKT']}
+dCHdGr_D = {'LSI': ['LSI', 'LSJ', 'LST'], 'LKI': ['LKI', 'LKJ', 'LKT']}
 yLbl_D = yLbl_Cp
 styLnCt_D = 'solid'
 styLnCI_D = 'solid'
@@ -160,7 +160,7 @@ dPltG_D = {'sPltNm': sPltNm_D,
            'sPltTp': sPltTp_D,
            'lSCpCnc': lSCpCnc_D,
            'lSOp': lSOp_D,
-           'dCHdLeg': dCHdLeg_D,
+           'dCHdGr': dCHdGr_D,
            'yLbl': yLbl_D,
            'styLnCt': styLnCt_D,
            'styLnCI': styLnCI_D,
@@ -174,7 +174,7 @@ sPltNm_1 = '1__L--_S--_K--'
 sPltTp_1 = sPlt_SCp
 lSCpCnc_1 = GC.L_S_CP_SHORT_ALL[:9]
 lSOp_1 = None
-dCHdLeg_1 = None
+dCHdGr_1 = None
 yLbl_1 = yLbl_Cp
 styLnCt_1 = 'solid'
 styLnCI_1 = 'solid'
@@ -191,7 +191,7 @@ dPltG_1 = {'sPltNm': sPltNm_1,
            'sPltTp': sPltTp_1,
            'lSCpCnc': lSCpCnc_1,
            'lSOp': lSOp_1,
-           'dCHdLeg': dCHdLeg_1,
+           'dCHdGr': dCHdGr_1,
            'yLbl': yLbl_1,
            'styLnCt': styLnCt_1,
            'styLnCI': styLnCI_1,
@@ -205,7 +205,7 @@ sPltNm_CncNP = '0__NO3-_H2PO4-'
 sPltTp_CncNP = sPlt_SCnc
 lSCpCnc_CncNP = [GC.ID_NO3_1M, GC.ID_H2PO4_1M]
 lSOp_CncNP = None
-dCHdLeg_CncNP = None
+dCHdGr_CncNP = None
 yLbl_CncNP = yLbl_Cnc
 styLnCt_CncNP = 'solid'
 styLnCI_CncNP = 'solid'
@@ -219,7 +219,7 @@ dPltG_CncNP = {'sPltNm': sPltNm_CncNP,
                'sPltTp': sPltTp_CncNP,
                'lSCpCnc': lSCpCnc_CncNP,
                'lSOp': lSOp_CncNP,
-               'dCHdLeg': dCHdLeg_CncNP,
+               'dCHdGr': dCHdGr_CncNP,
                'yLbl': yLbl_CncNP,
                'styLnCt': styLnCt_CncNP,
                'styLnCI': styLnCI_CncNP,

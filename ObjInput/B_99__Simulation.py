@@ -17,8 +17,8 @@ cSep = GC.SEP_STD
 # --- flow control ------------------------------------------------------------
 doEvoT = True
 doPlots = True
-nReps = 5                   # 3 / 5 / 10
-nTSAllRep = 500             # 500 / 200
+nReps = 3                   # 3 / 5 / 10
+nTSAllRep = 200             # 500 / 200 / 100
 tStart = 0                  # 0
 tMax = 10.                  # 10.
 maxTS = 10000000            # 10000000

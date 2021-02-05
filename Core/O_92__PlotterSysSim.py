@@ -24,7 +24,7 @@ class PlotterSysSim(Base):
 
     def getI4Plot(self, dITp, dPltG, sOp, pF, sHdCX=GC.S_TIME):
         lSHdCY, pltSpr = dPltG['lSCpCnc'], self.dIPlt['plotSpread']
-        if dPltG['dCHdLeg'] is None:
+        if dPltG['dCHdGr'] is None:
             # no collapsing of columns necessary (no groups)
             dDfrPlt = {GC.S_CENT: self.dfrRes.loc[:, [sHdCX] + lSHdCY]}
             dSHdCY = {sHd: [sHd] for sHd in lSHdCY}

@@ -10,10 +10,10 @@ import Core.C_00__GenConstants as GC
 import Core.F_00__GenFunctions as GF
 
 # --- Functions (general) -----------------------------------------------------
-def loadPdDfr(dITp, lD, sF, sFExt=GC.S_EXT_CSV):
+def loadPdDfr(dITp, lD, sF, iCol=None, sFExt=GC.S_EXT_CSV):
     sP = GF.getPF([dITp['sPRes']] + lD, sF, sFExt=sFExt)
     if os.path.isfile(sP):
-        return GF.readCSV(sP, sepD=dITp['cSep'])
+        return GF.readCSV(sP, sepD=dITp['cSep'], iCol=iCol)
     return GF.iniPdDfr()
 
 def savePdDfr(dITp, pdDfr, lD, sF, overWr=True, sFExt=GC.S_EXT_CSV):
@@ -28,11 +28,11 @@ def saveAsPdDfr(dITp, dRes, lD, sF, overWr=True, sFExt=GC.S_EXT_CSV):
         GF.iniPdDfr(dRes).to_csv(sP, sep=dITp['cSep'])
     return sP
 
-def saveDictDfr(dITp, dDfr, lK=None, overWr=False, sFSt = GC.S_RES_SIM,
-                sFEnd = '', sFExt=GC.S_EXT_CSV):
+def saveDictDfr(dITp, dDfr, lK=None, overWr=True, sFEnd = '',
+                sFExt=GC.S_EXT_CSV):
     for cK, cDfr in dDfr.items():
         if lK is None or cK in lK:
-            sF = GC.S_USC.join([sFSt, str(cK), sFEnd])[:64]
+            sF = GC.S_USC.join([dITp['sF_Obj'], str(cK), sFEnd])[:64]
             savePdDfr(dITp, cDfr, lD=[dITp['sD_Obj'], str(cK)], sF=sF,
                       overWr=overWr, sFExt=sFExt)
 
@@ -326,17 +326,17 @@ def evolveGillespie(dITp, dICp, inpFr, dCncSMo):
         updateDictOut(dO, dCncSMo, t)
     return dO['dRes'], dO['dN']
 
-def readDfrResEvo(dITp, sPRs, sFRs):
+def readDfrResEvo(dITp, sPRs, sFRs, iCol=None):
     sD = dITp['sD_Obj']
     pFRes = GF.getPF([sPRs, sD], sFRs, sFExt=GC.S_EXT_CSV)
     if os.path.isfile(pFRes):
-        return GF.readCSV(pFRes, iCol=0)
+        return GF.readCSV(pFRes, iCol=iCol)
     return None
 
 # --- Functions (O_95__System / O_99__Simulation) -----------------------------
 def prepDict4Sel(dPltG, d4Sel, lSLY=[]):
     d4Leg = {}
-    for sLg, lCp in dPltG['dCHdLeg'].items():
+    for sLg, lCp in dPltG['dCHdGr'].items():
         for sHdC in lSLY:
             if (len(sHdC) == GC.LEN_S_CP and
                 set(sHdC[GC.I_S_CP_SEP1:]) <= GC.SET_0_1_DASH):
@@ -354,8 +354,8 @@ def prepDict4Sel(dPltG, d4Sel, lSLY=[]):
                     GF.addToDictL(d4Sel, sHdC, sHdC, lUnique=True)
                     if d4Leg is not None:
                         GF.addToDictL(d4Leg, sHdC, sHdC, lUnique=True)
-    # reorder d4Leg to match the order specified in dCHdLeg
-    return {sLg: d4Leg[sLg] for sLg in dPltG['dCHdLeg']}
+    # reorder d4Leg to match the order specified in dCHdGr
+    return {sLg: d4Leg[sLg] for sLg in dPltG['dCHdGr']}
 
 def collapseColumns(dPltG, pdDfr, sLX, lSLY, sOp):
     d4Sel, mdDfr = {}, GF.iniPdDfr()
@@ -392,7 +392,7 @@ def getDPFPltEvo(dPltG, sPPlt, sDSub, cRp=0):
     return dP
 
 # --- Functions (O_99__Simulation) --------------------------------------------
-def collapseTimes(dITp, cSys, cRp=0, sCTime=GC.S_TIME):
+def collapseTimes(dITp, cSys, sCTime=GC.S_TIME):
     halfStep = dITp['tMax']/(2*dITp['nTSAllRep'])
     lTRed = [k*halfStep for k in range(1, 2*dITp['nTSAllRep'], 2)]
     assert sCTime in cSys.dfrResEvo.columns
@@ -406,7 +406,7 @@ def collapseTimes(dITp, cSys, cRp=0, sCTime=GC.S_TIME):
     dL = {sCTime: lTRed}
     dL.update({sC: [np.mean(cDfr[sC]) for cDfr in lDfr] for sC in lSCAv})
     dfrRed = GF.iniPdDfr(dL)
-    savePdDfr(dITp, dfrRed, [cSys.dITp['sD_Obj']], cSys.sFRed, overWr=True)
+    savePdDfr(dITp, dfrRed, [cSys.dITp['sD_Obj']], cSys.sFRed)
     return dfrRed
 
 def addFirstColToDfrs(dDfr, serC1, lK=None, sKC1=GC.S_TIME):
@@ -415,61 +415,89 @@ def addFirstColToDfrs(dDfr, serC1, lK=None, sKC1=GC.S_TIME):
             if sKC1 not in cDfr.columns:
                 dDfr[cK] = GF.iniPdDfr(serC1).join(cDfr)
 
-def updateDictDfr(cDfr, dDfrI, cCt=0, lSCDisr=[GC.S_TIME]):
+def updateElement(dDfrI, dfrCt, sR, sC, x):
+    cMn, cM2, cCt = dDfrI[GC.S_MEAN].at[sR, sC], dDfrI[GC.S_M2].at[sR, sC], 0
+    cCt = GF.getElIfValid(dfrCt, sR, sC, xAlt=cCt)
+    # if sR < 3 and sC == 'L--':
+    #     print('(', sR, ';', sC, ') / (BEFORE):\t', cMn, '(cMn) |',
+    #           cM2, '(M2) |', cCt, '(cCt) |', cDfr.at[sR, sC], '(x) |')
+    cMn, cM2, cCt = GF.updateMeanM2(cMn, cM2, cCt, x)
+    # if sR < 3 and sC == 'L--':
+    #     print('(', sR, ';', sC, ') / (AFTER):\t', cMn, '(cMn) |',
+    #           cM2, '(M2) |', cCt, '(cCt) |', cDfr.at[sR, sC], '(x) |')
+    dDfrI[GC.S_MEAN].at[sR, sC], dDfrI[GC.S_M2].at[sR, sC] = cMn, cM2
+    dfrCt.at[sR, sC] = cCt
+
+def updateDictDfr(cDfr, dDfrI, dfrCt, lSCDisr=[GC.S_TIME]):
     lSCCalc = [sC for sC in cDfr.columns if sC not in lSCDisr]
     # initialise if full results DataFrame is still empty
     if len(dDfrI) == 0:
         for sK in GC.L_S_STATS_ALL:
-            dDfrI[sK] = GF.iniPdDfr(lSNmC=lSCCalc, lSNmR=cDfr.index)
+            dDfrI[sK] = GF.iniPdDfr(lSNmC=lSCCalc, lSNmR=cDfr.index, v=np.nan)
     # update the current value aggregate, and re-assign values to DataFrames
     for sR in cDfr.index:
         for sC in lSCCalc:
-            cMn, cM2 = dDfrI[GC.S_MEAN].at[sR, sC], dDfrI[GC.S_M2].at[sR, sC]
-            cMn, cM2 = GF.updateMeanM2(cMn, cM2, cCt, cDfr.at[sR, sC])
-            dDfrI[GC.S_MEAN].at[sR, sC], dDfrI[GC.S_M2].at[sR, sC] = cMn, cM2
+            updateElement(dDfrI, dfrCt, sR, sC, cDfr.at[sR, sC])
     # add the time column
     addFirstColToDfrs(dDfrI, serC1=cDfr[GC.S_TIME])
 
-def calcRunMeanM2Dfr(dITp, cSys, dDfrI, cCt=0, lSCDisr=[GC.S_TIME]):
+def calcRunMeanM2Dfr(dITp, cSys, dDfrI, dfrCt, lSCDisr=[GC.S_TIME]):
     # reduce the data to the given number of lines
-    dfrRed = collapseTimes(dITp, cSys, cRp=cCt)
+    dfrRed = collapseTimes(dITp, cSys)
     # update the DataFrames dictionary
-    updateDictDfr(dfrRed, dDfrI, cCt=cCt, lSCDisr=lSCDisr)
+    return updateDictDfr(dfrRed, dDfrI, dfrCt=dfrCt, lSCDisr=lSCDisr)
 
-def calcStatsDfr(dDfrI, nRp=0, lSCDisr=[GC.S_TIME]):
+def calcStatsSingleSet(dDfrI, sR, sC, cCt=0):
+    cMn, cM2 = dDfrI[GC.S_MEAN].at[sR, sC], dDfrI[GC.S_M2].at[sR, sC]
+    cMn, cVar, cVarS = GF.finalRunMeanSD((cCt, cMn, cM2))
+    cStdDevS, cSEM = np.nan, np.nan
+    if np.isfinite(cVarS) and cVarS >= 0:
+        cStdDevS = np.sqrt(cVarS)
+    if np.isfinite(cStdDevS) and cCt > 0:
+        cSEM = cStdDevS/np.sqrt(cCt)
+    for i, sK in enumerate([GC.S_MEAN] + GC.L_S_STATS_DER):
+        dDfrI[sK].at[sR, sC] = [cMn, cVarS, cStdDevS, cSEM][i]
+
+def calcStatsDfr(dDfrI, dfrCt, lSCDisr=[GC.S_TIME]):
     lSR = dDfrI[GC.S_MEAN].index
     lSC = [sC for sC in dDfrI[GC.S_MEAN].columns if sC not in lSCDisr]
     for sK in GC.L_S_STATS_DER:
-        dDfrI[sK] = GF.iniPdDfr(lSNmC=lSC, lSNmR=lSR)
+        dDfrI[sK] = GF.iniPdDfr(lSNmC=lSC, lSNmR=lSR, v=np.nan)
     for sR in lSR:
         for sC in lSC:
-            cAg = (nRp, dDfrI[GC.S_MEAN].at[sR, sC], dDfrI[GC.S_M2].at[sR, sC])
-            cMn, cVar, cVarS = GF.finalRunMeanSD(cAg)
-            cStdDevS, cSEM = np.sqrt(cVarS), 0
-            if nRp > 0:
-                cSEM = cStdDevS/np.sqrt(nRp)
-            for i, sK in enumerate([GC.S_MEAN] + GC.L_S_STATS_DER):
-                dDfrI[sK].at[sR, sC] = [cMn, cVarS, cStdDevS, cSEM][i]
+            calcStatsSingleSet(dDfrI, sR, sC, cCt=dfrCt.at[sR, sC])
     addFirstColToDfrs(dDfrI, serC1=dDfrI[GC.S_MEAN][GC.S_TIME],
                       lK=GC.L_S_STATS_DER)
+    GF.saveAsCSV(dfrCt, pF=GF.joinToPath(['..', '..', '11_SysBio01_ABM01',
+                                          '40_ModelResults'], 'dfrCt'))
 
 def preProcData(dITp, dPltG, pF, pltSpr=True, sLX=None, lSLY=None, sOp=None,
                 doGroups=True):
-    dDfrPlt, dDfrI, d4LgSim, nRp, sT = {}, {}, {}, dITp['nReps'], GC.S_TIME
-    for cRp in range(1, nRp + 1):
+    dDfrPlt, dDfrI, d4LgSim, dfrCt = {}, {}, {}, GF.iniPdDfr(dTp=int)
+    # dDfrPlt, dDfrI, d4LgSim, nRp, sT = {}, {}, {}, dITp['nReps'], GC.S_TIME
+    for cRp in range(1, dITp['nReps'] + 1):
         sF = GC.S_RED_SYS + GC.S_USC + GC.S_REP + str(cRp)
-        cDfr = loadPdDfr(dITp, [GC.S_DIR_SYS], sF)
+        cDfr = loadPdDfr(dITp, [GC.S_DIR_SYS], sF, iCol=0)
+        print('TEMP - loaded cDfr:\n', cDfr)
         if doGroups:
             dDfrT, d4Lg = collapseColumns(dPltG, cDfr, sLX, lSLY, sOp)
             cDfr = dDfrT[GC.S_CENT]
             d4LgSim.update(d4Lg)
-        lSelC =  [sT] + [s for s in dPltG['lSCpCnc'] if s in cDfr.columns]
-        updateDictDfr(cDfr.loc[:, lSelC], dDfrI, cCt=cRp)
-    calcStatsDfr(dDfrI, nRp=nRp)
-    GF.printDictDfr(dDfrI, lK=[GC.S_MEAN, GC.S_STDDEV, GC.S_SEM])
+        # lSelC =  [sT] + [s for s in dPltG['lSCpCnc'] if s in cDfr.columns]
+        # updateDictDfr(cDfr.loc[:, lSelC], dDfrI, cCt=cRp)
+        print('TEMP - modified cDfr:\n', cDfr)
+        updateDictDfr(cDfr, dDfrI, dfrCt=dfrCt)
+        print('TEMP - final cDfr:\n', dDfrI[GC.S_MEAN])
+        print('TEMP - final dfrCt:\n', dfrCt)
+        # if cRp > 0:
+        #     assert False
+    calcStatsDfr(dDfrI, dfrCt=dfrCt)
+    print('TEMP - final dfrCt:\n', dfrCt)
+    if dPltG['dCHdGr'] is not None:    # save data if groups were specified
+        GF.printDictDfr(dDfrI, lK=[GC.S_MEAN, GC.S_STDDEV, GC.S_SEM])
+        saveDictDfr(dITp, dDfrI, lK=GC.L_S_STATS_OUT, sFEnd=GF.getFNoExt(pF))
     assert pltSpr in dDfrI
     dDfrPlt[GC.S_CENT], dDfrPlt[GC.S_SPREAD] = dDfrI[GC.S_MEAN], dDfrI[pltSpr]
-    saveDictDfr(dITp, dDfrI, lK=GC.L_S_STATS_OUT, sFEnd=GF.getFNoExt(pF))
     return dDfrPlt, d4LgSim
 
 def checkConsistency2Dfr(dDfr, lK):
