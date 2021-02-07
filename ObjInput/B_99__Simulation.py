@@ -15,12 +15,12 @@ strCL = GC.S_CL_SIMULATION
 cSep = GC.SEP_STD
 
 # --- flow control ------------------------------------------------------------
-doEvoT = True
+doEvoT = False
 doPlots = True
 nReps = 3                   # 3 / 5 / 10
-nTSAllRep = 200             # 500 / 200 / 100
+nTSAllRep = 500             # 500 / 200 / 100
 tStart = 0                  # 0
-tMax = 10.                  # 10.
+tMax = 0.1                  # 10.
 maxTS = 10000000            # 10000000
 minDispTS = 0               # 0
 modDispTS = 10000           # 10000

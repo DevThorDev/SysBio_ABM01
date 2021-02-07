@@ -365,7 +365,7 @@ def collapseColumns(dPltG, pdDfr, sLX, lSLY, sOp):
         if sOp == GC.S_MEAN_GR:
             mdDfr.loc[:, sK] = pdDfr.loc[:, d4Sel[sK]].T.mean()
         elif sOp == GC.S_SUM_GR:
-            mdDfr.loc[:, sK] = pdDfr.loc[:, d4Sel[sK]].T.sum()
+            mdDfr.loc[:, sK] = pdDfr.loc[:, d4Sel[sK]].T.sum(min_count=1)
         else:
             mdDfr.loc[:, sK] = pdDfr.loc[:, sK]
     return {GC.S_CENT: mdDfr}, d4Leg
@@ -434,12 +434,24 @@ def updateDictDfr(cDfr, dDfrI, dfrCt, lSCDisr=[GC.S_TIME]):
     if len(dDfrI) == 0:
         for sK in GC.L_S_STATS_ALL:
             dDfrI[sK] = GF.iniPdDfr(lSNmC=lSCCalc, lSNmR=cDfr.index, v=np.nan)
+        # # TEMP - save as Dfr (step 0)
+        # pFDfr = GF.joinToPath(['..', '..', '11_SysBio01_ABM01',
+        #                        '40_ModelResults'], 'dfrMn_Step0')
+        # GF.saveAsCSV(dDfrI[GC.S_MEAN], pF=pFDfr)
     # update the current value aggregate, and re-assign values to DataFrames
     for sR in cDfr.index:
         for sC in lSCCalc:
             updateElement(dDfrI, dfrCt, sR, sC, cDfr.at[sR, sC])
+    # # TEMP - save as Dfr (step 1)
+    # pFDfr = GF.joinToPath(['..', '..', '11_SysBio01_ABM01', '40_ModelResults'],
+    #                       'dfrMn_Step1')
+    # GF.saveAsCSV(dDfrI[GC.S_MEAN], pF=pFDfr)
     # add the time column
     addFirstColToDfrs(dDfrI, serC1=cDfr[GC.S_TIME])
+    # # TEMP - save as Dfr (step 2)
+    # pFDfr = GF.joinToPath(['..', '..', '11_SysBio01_ABM01', '40_ModelResults'],
+    #                       'dfrMn_Step2')
+    # GF.saveAsCSV(dDfrI[GC.S_MEAN], pF=pFDfr)
 
 def calcRunMeanM2Dfr(dITp, cSys, dDfrI, dfrCt, lSCDisr=[GC.S_TIME]):
     # reduce the data to the given number of lines
@@ -468,8 +480,13 @@ def calcStatsDfr(dDfrI, dfrCt, lSCDisr=[GC.S_TIME]):
             calcStatsSingleSet(dDfrI, sR, sC, cCt=dfrCt.at[sR, sC])
     addFirstColToDfrs(dDfrI, serC1=dDfrI[GC.S_MEAN][GC.S_TIME],
                       lK=GC.L_S_STATS_DER)
+    # TEMP - save dfrCt
     GF.saveAsCSV(dfrCt, pF=GF.joinToPath(['..', '..', '11_SysBio01_ABM01',
                                           '40_ModelResults'], 'dfrCt'))
+    # TEMP - save dfrMn (step 3)
+    pFDfr = GF.joinToPath(['..', '..', '11_SysBio01_ABM01', '40_ModelResults'],
+                          'dfrMn_Step3')
+    GF.saveAsCSV(dDfrI[GC.S_MEAN], pF=pFDfr)
 
 def preProcData(dITp, dPltG, pF, pltSpr=True, sLX=None, lSLY=None, sOp=None,
                 doGroups=True):
@@ -478,21 +495,28 @@ def preProcData(dITp, dPltG, pF, pltSpr=True, sLX=None, lSLY=None, sOp=None,
     for cRp in range(1, dITp['nReps'] + 1):
         sF = GC.S_RED_SYS + GC.S_USC + GC.S_REP + str(cRp)
         cDfr = loadPdDfr(dITp, [GC.S_DIR_SYS], sF, iCol=0)
-        print('TEMP - loaded cDfr:\n', cDfr)
         if doGroups:
+            # TEMP - save as Dfr (step 01)
+            pFDfr = GF.joinToPath(['..', '..', '11_SysBio01_ABM01',
+                                   '40_ModelResults'],
+                                  'cDfr_Step01_' + dPltG['sPltNm'] + '_' + str(cRp))
+            GF.saveAsCSV(cDfr, pF=pFDfr)
             dDfrT, d4Lg = collapseColumns(dPltG, cDfr, sLX, lSLY, sOp)
             cDfr = dDfrT[GC.S_CENT]
+            # TEMP - save as Dfr (step 02)
+            pFDfr = GF.joinToPath(['..', '..', '11_SysBio01_ABM01',
+                                   '40_ModelResults'],
+                                  'cDfr_Step02_' + dPltG['sPltNm'] + '_' + str(cRp))
+            GF.saveAsCSV(cDfr, pF=pFDfr)
             d4LgSim.update(d4Lg)
         # lSelC =  [sT] + [s for s in dPltG['lSCpCnc'] if s in cDfr.columns]
         # updateDictDfr(cDfr.loc[:, lSelC], dDfrI, cCt=cRp)
-        print('TEMP - modified cDfr:\n', cDfr)
         updateDictDfr(cDfr, dDfrI, dfrCt=dfrCt)
-        print('TEMP - final cDfr:\n', dDfrI[GC.S_MEAN])
-        print('TEMP - final dfrCt:\n', dfrCt)
-        # if cRp > 0:
-        #     assert False
     calcStatsDfr(dDfrI, dfrCt=dfrCt)
-    print('TEMP - final dfrCt:\n', dfrCt)
+    # TEMP - save as Dfr (step 05)
+    pFDfr = GF.joinToPath(['..', '..', '11_SysBio01_ABM01', '40_ModelResults'],
+                          'dfrMn_Step05_' + dPltG['sPltNm'])
+    GF.saveAsCSV(dDfrI[GC.S_MEAN], pF=pFDfr)
     if dPltG['dCHdGr'] is not None:    # save data if groups were specified
         GF.printDictDfr(dDfrI, lK=[GC.S_MEAN, GC.S_STDDEV, GC.S_SEM])
         saveDictDfr(dITp, dDfrI, lK=GC.L_S_STATS_OUT, sFEnd=GF.getFNoExt(pF))
