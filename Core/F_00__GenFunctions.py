@@ -175,24 +175,36 @@ def clipVal(x, xMin=None, xMax=None):
             return x
 
 # calculate the confidence interval of the mean using the SEM
-def getCI(cData=None, cDF=1, cMn=0., cSEM=1., cAlpha=0.95, mnV=None, mxV=None):
-    cAlpha = clipVal(cAlpha, xMin=0, xMax=1)
+def getCI(cData=None, cDF=1, cMn=0., cSEM=1., cAlph=0.95, mnV=None, mxV=None):
+    cAlph = clipVal(cAlph, xMin=0, xMax=1)
     if cData is None:
-        cCI = st.t.interval(alpha=cAlpha, df=cDF, loc=cMn, scale=cSEM)
+        if cSEM <= 0:
+            tCI = (np.nan, np.nan)
+        else:
+            tCI = st.t.interval(alpha=cAlph, df=cDF, loc=cMn, scale=cSEM)
     else:
-        cCI = st.t.interval(alpha=cAlpha, df=len(cData)-1,
+        tCI = st.t.interval(alpha=cAlph, df=len(cData)-1,
                            loc=np.mean(cData), scale=st.sem(cData))
-    return tuple(clipVal(cBd, xMin=mnV, xMax=mxV) for cBd in cCI)
+    if np.isfinite(tCI[0]):
+        if np.isfinite(tCI[1]):
+            return tuple(clipVal(cBd, xMin=mnV, xMax=mxV) for cBd in tCI)
+        else:
+            return (clipVal(tCI[0], xMin=mnV), tCI[1])
+    else:
+        if np.isfinite(tCI[1]):
+            return (tCI[0], clipVal(tCI[1], xMax=mxV))
+        else:
+            return tCI
 
 # calculate the confidence interval of the mean using the SEM (for an array)
-def getArrCI(cDF=1, arrC=np.zeros((1, 1)), arrS=np.ones((1, 1)), cAlpha=0.95,
-             mnV=None, mxV=None):
-    assert arrC.ndim == 1 and arrS.ndim == 1
-    assert arrC.shape[0] == arrS.shape[0]
+def getArrCI(arrC=np.zeros((1, 1)), arrS=np.ones((1, 1)),
+             arrCt=np.ones((1, 1), dtype=int), cAlph=0.95, mnV=None, mxV=None):
+    assert arrC.ndim == 1 and arrS.ndim == 1 and arrCt.ndim == 1
+    assert arrC.shape[0] == arrS.shape[0] and arrC.shape[0] == arrCt.shape[0]
     arrLB, arrUB = np.zeros(arrC.shape[0]), np.zeros(arrC.shape[0])
     for i, x in enumerate(arrC):
-        arrLB[i], arrUB[i] = getCI(cDF=cDF, cMn=x, cSEM=arrS[i], cAlpha=cAlpha,
-                                   mnV=mnV, mxV=mxV)
+        arrLB[i], arrUB[i] = getCI(cDF=arrCt[i], cMn=x, cSEM=arrS[i],
+                                   cAlph=cAlph, mnV=mnV, mxV=mxV)
     return (arrLB, arrUB)
 
 # calculate a point of a general sigmoidal function
@@ -468,6 +480,22 @@ def iniNpArr0(tShape=(0, 0)):
 def iniNpArr1(tShape=(0, 0)):
     return np.ones(tShape)
 
+def iniNpArrV(tShape=(0, 0), v=0, dTp=float):
+    return np.full(tShape, v, dtype=dTp)
+
+def boolFinVal(cArr):
+    return np.isfinite(cArr)
+
+def arrFinVal(cArrRet, cArrTest):
+    assert len(cArrRet) == len(cArrTest)
+    return cArrRet[np.isfinite(cArrTest)]
+
+def getBoolAND2C(cnd1, cnd2):
+    return np.logical_and(cnd1, cnd2)
+
+def getBoolAND3C(cnd1, cnd2, cnd3):
+    return np.logical_and(cnd1, cnd2, cnd3)
+
 # --- Functions (Pandas) ------------------------------------------------------
 def readCSV(pF, sepD=GC.SEP_STD, iCol=None, dDtype=None):
     return pd.read_csv(pF, sep=sepD, index_col=iCol, dtype=dDtype)
@@ -481,25 +509,25 @@ def iniPdDfr(data=None, lSNmC=[], lSNmR=[], shape=(0, 0), v=0, dTp=float):
     if len(lSNmC) == 0:
         if len(lSNmR) == 0:
             if data is None:
-                return pd.DataFrame(np.full(shape, v), dtype=dTp)
+                return pd.DataFrame(iniNpArrV(shape, v, dTp=dTp), dtype=dTp)
             else:
                 return pd.DataFrame(data, dtype=dTp)
         else:
             if data is None:
-                return pd.DataFrame(np.full((len(lSNmR), nC), v), index=lSNmR,
-                                    dtype=dTp)
+                return pd.DataFrame(iniNpArrV((len(lSNmR), nC), v, dTp=dTp),
+                                    index=lSNmR, dtype=dTp)
             else:
                 return pd.DataFrame(data, index=lSNmR, dtype=dTp)
     else:
         if len(lSNmR) == 0:
             if data is None:
-                return pd.DataFrame(np.full((nR, len(lSNmC)), v),
+                return pd.DataFrame(iniNpArrV((nR, len(lSNmC)), v, dTp=dTp),
                                     columns=lSNmC, dtype=dTp)
             else:
                 return pd.DataFrame(data, columns=lSNmC, dtype=dTp)
         else:   # ignore nR
             if data is None:
-                arrDat = np.full((len(lSNmR), len(lSNmC)), v)
+                arrDat = iniNpArrV((len(lSNmR), len(lSNmC)), v, dTp=dTp)
                 return pd.DataFrame(arrDat, index=lSNmR, columns=lSNmC,
                                     dtype=dTp)
             else:

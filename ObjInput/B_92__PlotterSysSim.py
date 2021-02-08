@@ -211,8 +211,8 @@ styLnCt_CncNP = 'solid'
 styLnCI_CncNP = 'solid'
 wdthLnCt_CncNP = 1
 wdthLnCI_CncNP = 0.5
-dCol_CncNP =  {GC.ID_NO3_1M: (0.3, 0.3, 0.3),
-               GC.ID_H2PO4_1M: (0.55, 0.55, 0.55)}
+dCol_CncNP =  {GC.ID_NO3_1M: (0.1, 0.6, 0.1),
+               GC.ID_H2PO4_1M: (0.4, 0.1, 0.5)}
 alpCol_CncNP = 0.33
 
 dPltG_CncNP = {'sPltNm': sPltNm_CncNP,

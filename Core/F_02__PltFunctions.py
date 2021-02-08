@@ -10,6 +10,7 @@ import Core.F_01__SpcFunctions as SF
 
 # --- Functions (general) -----------------------------------------------------
 def pltXYAxisS(maxX, maxY, pltAxXY=(True, True), cLwd=0.75, cCol='k'):
+    assert len(pltAxXY) >= 2
     if pltAxXY[0] and maxX is not None:
         plt.plot([0, maxX], [0, 0], lw=cLwd, color=cCol)
     if pltAxXY[1] and maxY is not None:
@@ -21,6 +22,7 @@ def pltXYAxis(cDfr, nmCX=None, nmCY=None, pltAxXY=(True, True)):
         minDfr, maxDfr = min(0, cDfr.min()), cDfr.max()
     elif cDfr.ndim > 1:
         minDfr, maxDfr = min(0, cDfr.stack().min()), cDfr.stack().max()
+    assert len(pltAxXY) >= 2
     if pltAxXY[0]:
         if nmCX is not None:
             minX, maxX = min(0, min(cDfr.loc[:, nmCX])), max(cDfr.loc[:, nmCX])
@@ -51,24 +53,24 @@ def decorateSaveIt(pF, sTtl=None, xLbl=None, yLbl=None, xLim=None, yLim=None):
 
 def decorateSavePlotS(pF, maxX=None, maxY=None, sTtl=None, xLbl=None,
                       yLbl=None, xLim=None, yLim=None, pltAxXY=(False, False)):
-    assert len(pltAxXY) >= 2
     pltXYAxisS(maxX=maxX, maxY=maxY, pltAxXY=pltAxXY)
     decorateSaveIt(pF, sTtl=sTtl, xLbl=xLbl, yLbl=yLbl, xLim=xLim, yLim=yLim)
 
 def decorateSavePlot(pF, pdDfr, sTtl=None, xLbl=None, yLbl=None, xLim=None,
                      yLim=None, nmCX=None, nmCY=None, pltAxXY=(False, False)):
-    assert len(pltAxXY) >= 2
     if pdDfr.size > 0:
         pltXYAxis(pdDfr, nmCX, nmCY, pltAxXY=pltAxXY)
     decorateSaveIt(pF, sTtl=sTtl, xLbl=xLbl, yLbl=yLbl, xLim=xLim, yLim=yLim)
 
 # --- Functions (O_95__System / O_99__Simulation) -----------------------------
 def plotCentres(dIPlt, dPltG, cDfr, sHdCX, sHdCY, lSY):
+    serX, serY = cDfr.loc[:, sHdCX], cDfr.loc[:, sHdCY]
+    serX, serY = GF.arrFinVal(serX, serY), GF.arrFinVal(serY, serY)
     cCol = dPltG['dCol'][sHdCY]
-    plt.plot(cDfr.loc[:, sHdCX], cDfr.loc[:, sHdCY], marker=dIPlt['tpMark'],
-             ms=dIPlt['szMark'], mew=dIPlt['ewMark'], mec=dIPlt['ecMark'],
-             mfc=dIPlt['fcMark'], ls=dPltG['styLnCt'], lw=dPltG['wdthLnCt'],
-             color=cCol, label=lSY[0])
+    plt.plot(serX, serY, marker=dIPlt['tpMark'], ms=dIPlt['szMark'],
+             mew=dIPlt['ewMark'], mec=dIPlt['ecMark'], mfc=dIPlt['fcMark'],
+             ls=dPltG['styLnCt'], lw=dPltG['wdthLnCt'], color=cCol,
+             label=lSY[0])
 
 def plotEvoSglR(dIPlt, dPltG, dfrR, pF, sHdCX, dSHdCY, sLblY):
     cFig = plt.figure()
@@ -80,24 +82,28 @@ def plotEvoSglR(dIPlt, dPltG, dfrR, pF, sHdCX, dSHdCY, sLblY):
     plt.close()
 
 # --- Functions (O_99__Simulation) --------------------------------------------
-def plotCIs(dIPlt, dPltG, dfrC, dfrS, sHdCX, sHdCY, nRp, mxY=0):
-    tArrB = GF.getArrCI(cDF=nRp - 1, arrC=dfrC.loc[:, sHdCY],
-                        arrS=dfrS.loc[:, sHdCY], cAlpha=dIPlt['alphaSpread'],
-                        mnV=0)
-    mxY = max([mxY] + list(tArrB[1]))
+def plotCIs(dIPlt, dPltG, dfrC, dfrS, dfrCt, sHdCX, sHdCY, mxY=0):
+    serC, serS = dfrC.loc[:, sHdCY], dfrS.loc[:, sHdCY]
+    print('TEMP - dfrCt =\n', dfrCt)
+    tArrB = GF.getArrCI(arrC=serC, arrS=serS, arrCt=dfrCt.loc[:, sHdCY],
+                        cAlpha=dIPlt['alphaSpread'], mnV=0)
+    # filter out CIs of range 0 and non-finite values
+    arrBRng = GF.getBoolAND3C(tArrB[0] != tArrB[1], GF.boolFinVal(tArrB[0]),
+                              GF.boolFinVal(tArrB[1]))
+    arrYMn, arrYMx = tArrB[0][arrBRng], tArrB[1][arrBRng]
     cCol = dPltG['dCol'][sHdCY] + (dPltG['alpCol'],)
-    plt.vlines(dfrS.loc[:, sHdCX], tArrB[0], tArrB[1], ls=dPltG['styLnCI'],
-               lw=dPltG['wdthLnCI'], color=cCol)
-    return mxY
+    plt.vlines(dfrS.loc[:, sHdCX][arrBRng], arrYMn, arrYMx,
+               ls=dPltG['styLnCI'], lw=dPltG['wdthLnCI'], color=cCol)
+    return max([mxY] + list(serC) + list(tArrB[1]))
 
-def plotEvoMultR(dITp, dIPlt, dPltG, dDfrR, pF, sHdCX, dSHdCY, sLblY):
+def plotEvoMultR(dITp, dIPlt, dPltG, dDfrR, dfrCt, pF, sHdCX, dSHdCY, sLblY):
     SF.checkConsistency2Dfr(dDfrR, lK=[GC.S_CENT, GC.S_SPREAD])
     dfrCen, dfrSpr, maxY = dDfrR[GC.S_CENT], dDfrR[GC.S_SPREAD], 0
     assert sHdCX in dfrCen.columns and sHdCX in dfrSpr.columns
     cFig = plt.figure()
     for sHdCY, lSY in dSHdCY.items():
-        maxY = plotCIs(dIPlt, dPltG, dfrCen, dfrSpr, sHdCX=sHdCX, sHdCY=sHdCY,
-                       nRp=dITp['nReps'], mxY=maxY)
+        maxY = plotCIs(dIPlt, dPltG, dfrCen, dfrSpr, dfrCt=dfrCt, sHdCX=sHdCX,
+                       sHdCY=sHdCY, mxY=maxY)
         plotCentres(dIPlt, dPltG, dfrCen, sHdCX, sHdCY, lSY)
     plt.legend(loc='best')
     decorateSavePlotS(pF, maxX=dITp['tMax'], maxY=maxY, sTtl=dIPlt['title'],

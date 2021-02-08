@@ -30,8 +30,7 @@ class PlotterSysSim(Base):
             dSHdCY = {sHd: [sHd] for sHd in lSHdCY}
             if not self.pltSgl:
                 # including spread (from multiple repeats)
-                dDfrPlt, _ = SF.preProcData(dITp, dPltG, pF, pltSpr,
-                                            doGroups=False)
+                dDfrPlt, _ = SF.preProcData(dITp, dPltG, pF, pltSpr)
         else:
             # collapsing of columns necessary (component groups)
             dfrPlt = self.dfrRes.loc[:, [sHdCX] + lSHdCY]
@@ -46,7 +45,8 @@ class PlotterSysSim(Base):
                                                  sHdCX, lSHdCY, sOp=sOp)
         return dDfrPlt, dSHdCY
 
-    def plotEvoGen(self, dPPF, dITp=None, overWr=True, sHdCX=GC.S_TIME):
+    def plotEvoGen(self, dPPF, dfrCt=None, dITp=None, overWr=True,
+                   sHdCX=GC.S_TIME):
         for (pF, (sOp, dPltG)) in dPPF.items():
             if overWr or not GF.pFExists(pF):
                 dDfrPlt, dSHdCY = self.getI4Plot(dITp, dPltG, sOp, pF, sHdCX)
@@ -54,8 +54,8 @@ class PlotterSysSim(Base):
                     PF.plotEvoSglR(self.dIPlt, dPltG, dDfrPlt[GC.S_CENT], pF,
                                    sHdCX, dSHdCY, sLblY=dPltG['yLbl'])
                 else:
-                    PF.plotEvoMultR(dITp, self.dIPlt, dPltG, dDfrPlt, pF,
-                                    sHdCX, dSHdCY, sLblY=dPltG['yLbl'])
+                    PF.plotEvoMultR(dITp, self.dIPlt, dPltG, dDfrPlt, dfrCt,
+                                    pF, sHdCX, dSHdCY, sLblY=dPltG['yLbl'])
 
     def plotResEvoSgl(self, dfrR, sDSub='.', overWr=True):
         self.dfrRes, self.dDfrRes, self.pltSgl = dfrR, {GC.S_SGL: dfrR}, True
@@ -65,12 +65,12 @@ class PlotterSysSim(Base):
                                          cRp=self.cRep)
                 self.plotEvoGen(dPPltF, overWr=overWr)
 
-    def plotResEvoAvg(self, dITp, dDfrRV, overWr=True):
+    def plotResEvoAvg(self, dITp, dDfrRV, dfrCt, overWr=True):
         self.dfrRes, self.dDfrRes = dDfrRV[GC.S_MEAN], dDfrRV
         self.pltSgl, sDSub = False, dITp['sD_Obj']
         if self.dfrRes is not None and self.dDfrRes is not None:
             for dPltG in self.dIPlt['dPltG'].values():
                 dPPltF = SF.getDPFPltEvo(dPltG, self.dITp['sPPlt'], sDSub)
-                self.plotEvoGen(dPPltF, dITp=dITp, overWr=overWr)
+                self.plotEvoGen(dPPltF, dfrCt=dfrCt, dITp=dITp, overWr=overWr)
 
 ###############################################################################
