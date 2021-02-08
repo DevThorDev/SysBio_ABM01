@@ -45,7 +45,7 @@ class PlotterSysSim(Base):
                                                  sHdCX, lSHdCY, sOp=sOp)
         return dDfrPlt, dSHdCY
 
-    def plotEvoGen(self, dPPF, dfrCt=None, dITp=None, overWr=True,
+    def plotEvoGen(self, dPPF, serCt=None, dITp=None, overWr=True,
                    sHdCX=GC.S_TIME):
         for (pF, (sOp, dPltG)) in dPPF.items():
             if overWr or not GF.pFExists(pF):
@@ -54,7 +54,7 @@ class PlotterSysSim(Base):
                     PF.plotEvoSglR(self.dIPlt, dPltG, dDfrPlt[GC.S_CENT], pF,
                                    sHdCX, dSHdCY, sLblY=dPltG['yLbl'])
                 else:
-                    PF.plotEvoMultR(dITp, self.dIPlt, dPltG, dDfrPlt, dfrCt,
+                    PF.plotEvoMultR(dITp, self.dIPlt, dPltG, dDfrPlt, serCt,
                                     pF, sHdCX, dSHdCY, sLblY=dPltG['yLbl'])
 
     def plotResEvoSgl(self, dfrR, sDSub='.', overWr=True):
@@ -65,12 +65,12 @@ class PlotterSysSim(Base):
                                          cRp=self.cRep)
                 self.plotEvoGen(dPPltF, overWr=overWr)
 
-    def plotResEvoAvg(self, dITp, dDfrRV, dfrCt, overWr=True):
+    def plotResEvoAvg(self, dITp, dDfrRV, serCt, overWr=True):
         self.dfrRes, self.dDfrRes = dDfrRV[GC.S_MEAN], dDfrRV
         self.pltSgl, sDSub = False, dITp['sD_Obj']
         if self.dfrRes is not None and self.dDfrRes is not None:
             for dPltG in self.dIPlt['dPltG'].values():
                 dPPltF = SF.getDPFPltEvo(dPltG, self.dITp['sPPlt'], sDSub)
-                self.plotEvoGen(dPPltF, dfrCt=dfrCt, dITp=dITp, overWr=overWr)
+                self.plotEvoGen(dPPltF, serCt=serCt, dITp=dITp, overWr=overWr)
 
 ###############################################################################

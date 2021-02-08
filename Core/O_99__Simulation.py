@@ -24,10 +24,10 @@ class Simulation(Base):
 
     def plotResEvo(self, inpDat, dDfrRV):
         Pltr = PlotterSysSim(inpDat, self.inFr)
-        Pltr.plotResEvoAvg(self.dITp, dDfrRV, dfrCt=self.dfrCt)
+        Pltr.plotResEvoAvg(self.dITp, dDfrRV, serCt=self.serCt)
 
     def calcRepStatistics(self, dDfrRV):
-        SF.calcStatsDfr(dDfrRV, dfrCt=self.dfrCt)
+        SF.calcStatsDfr(dDfrRV, serCt=self.serCt)
         self.dDfrStats = dDfrRV
         for sStat in GC.L_S_STATS_OUT:
             sF = self.sFRes + GC.S_USC + str(sStat) + GC.S_USC + GC.S_NO_GR
@@ -35,7 +35,7 @@ class Simulation(Base):
                          lD=[self.dITp['sD_Obj'], sStat], sF=sF)
 
     def runSimulation(self, inpDat):
-        doPlt, dDfrRunV, self.dfrCt = self.dITp['doPlots'], {}, GF.iniPdDfr()
+        doPlt, dDfrRunV, self.serCt = self.dITp['doPlots'], {}, GF.iniPdSer()
         for cRep in range(1, self.nRep + 1):
             print(GC.S_PLUS*8, 'Starting repetition', cRep, 'of', self.nRep)
             cSys = System(inpDat, self.inFr, cRp=cRep)
@@ -43,7 +43,7 @@ class Simulation(Base):
                 cSys.evolveOverTime(inpDat, self.dITp, doPlots=doPlt)
             if not self.dITp['doEvoT'] and doPlt:
                 cSys.plotResEvo(inpDat, self.dITp)
-            SF.calcRunMeanM2Dfr(self.dITp, cSys, dDfrRunV, dfrCt=self.dfrCt)
+            SF.calcRunMeanM2Dfr(self.dITp, cSys, dDfrRunV, serCt=self.serCt)
             cSys.printFinalSimuTime()
             print(GC.S_PLUS*8, 'Finished repetition', cRep, 'of', self.nRep)
         self.calcRepStatistics(dDfrRunV)

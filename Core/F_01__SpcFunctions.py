@@ -415,14 +415,14 @@ def addFirstColToDfrs(dDfr, serC1, lK=None, sKC1=GC.S_TIME):
             if sKC1 not in cDfr.columns:
                 dDfr[cK] = GF.iniPdDfr(serC1).join(cDfr)
 
-def updateElement(dDfrI, dfrCt, sR, sC, x):
+def updateElement(dDfrI, serCt, sR, sC, x):
     cMn, cM2, cCt = dDfrI[GC.S_MEAN].at[sR, sC], dDfrI[GC.S_M2].at[sR, sC], 0
-    cCt = GF.getElIfValid(dfrCt, sR, sC, xAlt=cCt)
+    cCt = GF.getElIfValid(serCt, sR, sC, xAlt=cCt)
     cMn, cM2, cCt = GF.updateMeanM2(cMn, cM2, cCt, x)
     dDfrI[GC.S_MEAN].at[sR, sC], dDfrI[GC.S_M2].at[sR, sC] = cMn, cM2
-    dfrCt.at[sR, sC] = cCt
+    serCt.at[sR, sC] = cCt
 
-def updateDictDfr(cDfr, dDfrI, dfrCt, lSCDisr=[GC.S_TIME]):
+def updateDictDfr(cDfr, dDfrI, serCt, lSCDisr=[GC.S_TIME]):
     lSCCalc = [sC for sC in cDfr.columns if sC not in lSCDisr]
     # initialise if full results DataFrame is still empty
     if len(dDfrI) == 0:
@@ -431,15 +431,15 @@ def updateDictDfr(cDfr, dDfrI, dfrCt, lSCDisr=[GC.S_TIME]):
     # update the current value aggregate, and re-assign values to DataFrames
     for sR in cDfr.index:
         for sC in lSCCalc:
-            updateElement(dDfrI, dfrCt, sR, sC, cDfr.at[sR, sC])
+            updateElement(dDfrI, serCt, sR, sC, cDfr.at[sR, sC])
     # add the time column
     addFirstColToDfrs(dDfrI, serC1=cDfr[GC.S_TIME])
 
-def calcRunMeanM2Dfr(dITp, cSys, dDfrI, dfrCt, lSCDisr=[GC.S_TIME]):
+def calcRunMeanM2Dfr(dITp, cSys, dDfrI, serCt, lSCDisr=[GC.S_TIME]):
     # reduce the data to the given number of lines
     dfrRed = collapseTimes(dITp, cSys)
     # update the DataFrames dictionary
-    return updateDictDfr(dfrRed, dDfrI, dfrCt=dfrCt, lSCDisr=lSCDisr)
+    return updateDictDfr(dfrRed, dDfrI, serCt=serCt, lSCDisr=lSCDisr)
 
 def calcStatsSingleSet(dDfrI, sR, sC, cCt=0):
     cMn, cM2 = dDfrI[GC.S_MEAN].at[sR, sC], dDfrI[GC.S_M2].at[sR, sC]
@@ -452,19 +452,19 @@ def calcStatsSingleSet(dDfrI, sR, sC, cCt=0):
     for i, sK in enumerate([GC.S_MEAN] + GC.L_S_STATS_DER):
         dDfrI[sK].at[sR, sC] = [cMn, cVarS, cStdDevS, cSEM][i]
 
-def calcStatsDfr(dDfrI, dfrCt, lSCDisr=[GC.S_TIME]):
+def calcStatsDfr(dDfrI, serCt, lSCDisr=[GC.S_TIME]):
     lSR = dDfrI[GC.S_MEAN].index
     lSC = [sC for sC in dDfrI[GC.S_MEAN].columns if sC not in lSCDisr]
     for sK in GC.L_S_STATS_DER:
         dDfrI[sK] = GF.iniPdDfr(lSNmC=lSC, lSNmR=lSR, v=np.nan)
     for sR in lSR:
         for sC in lSC:
-            calcStatsSingleSet(dDfrI, sR, sC, cCt=dfrCt.at[sR, sC])
+            calcStatsSingleSet(dDfrI, sR, sC, cCt=serCt.at[sR, sC])
     addFirstColToDfrs(dDfrI, serC1=dDfrI[GC.S_MEAN][GC.S_TIME],
                       lK=GC.L_S_STATS_DER)
 
 def preProcData(dITp, dPltG, pF, pltSpr=True, sLX=None, lSLY=None, sOp=None):
-    dDfrPlt, dDfrI, d4LgSim, dfrCt = {}, {}, {}, GF.iniPdDfr(dTp=int)
+    dDfrPlt, dDfrI, d4LgSim, serCt = {}, {}, {}, GF.iniPdSer(dTp=int)
     for cRp in range(1, dITp['nReps'] + 1):
         sF = GC.S_RED_SYS + GC.S_USC + GC.S_REP + str(cRp)
         cDfr = loadPdDfr(dITp, [GC.S_DIR_SYS], sF, iCol=0)
@@ -474,8 +474,8 @@ def preProcData(dITp, dPltG, pF, pltSpr=True, sLX=None, lSLY=None, sOp=None):
             d4LgSim.update(d4Lg)
         else:                           # reduce if no groups were specified
             cDfr = cDfr.loc[:, [GC.S_TIME] + dPltG['lSCpCnc']]
-        updateDictDfr(cDfr, dDfrI, dfrCt=dfrCt)
-    calcStatsDfr(dDfrI, dfrCt=dfrCt)
+        updateDictDfr(cDfr, dDfrI, serCt=serCt)
+    calcStatsDfr(dDfrI, serCt=serCt)
     if dPltG['dCHdGr'] is not None:     # save data if groups were specified
         # GF.printDictDfr(dDfrI, lK=GC.L_S_STATS_OUT)
         saveDictDfr(dITp, dDfrI, lK=GC.L_S_STATS_OUT, sFEnd=GF.getFNoExt(pF))

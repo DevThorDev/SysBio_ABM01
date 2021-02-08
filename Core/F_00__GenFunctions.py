@@ -503,6 +503,18 @@ def readCSV(pF, sepD=GC.SEP_STD, iCol=None, dDtype=None):
 def saveAsCSV(pdDfr, pF, sepD=GC.SEP_STD, sFExt=GC.S_EXT_CSV):
     pdDfr.to_csv(pF + '.' + sFExt, sep=sepD)
 
+def iniPdSer(data=None, lSNmI=None, nEl=0, v=0, dTp=float):
+    if lSNmI is None:
+        if data is None:
+            return pd.Series(iniNpArrV((nEl,), v, dTp=dTp), dtype=dTp)
+        else:
+            return pd.Series(data, dtype=dTp)
+    else:
+        if data is None:
+            return pd.Series(iniNpArrV((len(lSNmI),), v, dTp=dTp), dtype=dTp)
+        else:
+            return pd.Series(data, index=lSNmI, dtype=dTp)
+
 def iniPdDfr(data=None, lSNmC=[], lSNmR=[], shape=(0, 0), v=0, dTp=float):
     assert len(shape) == 2
     nR, nC = shape
