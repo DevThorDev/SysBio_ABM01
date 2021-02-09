@@ -157,6 +157,7 @@ S_RES_SYS = 'SysEvo'
 S_RED_SYS = S_DFR + 'Red'
 S_REP = 'Rep'
 S_RES_SIM = 'SimRes'
+S_NUM_REP = 'NumRep'
 
 S_CNC_INI = 'concIni'
 S_THR_HIGH_CNC = 'thrHighConc'
@@ -374,5 +375,6 @@ M_DETER = 'Deterministic'
 M_STOCH = 'Stochastic'
 
 R04 = 4
+R08 = 8
 
 ###############################################################################

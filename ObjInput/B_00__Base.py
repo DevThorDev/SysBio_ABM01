@@ -10,11 +10,14 @@ strNSpec = 'BaseClass'
 strCS = GC.ID_BAS
 strCL = GC.S_CL_BASE
 
+cSep = GC.SEP_STD
+
 # --- create input dictionary -------------------------------------------------
 dIO = {# --- general
        'strOType': strOType,
        'strNSpec': strNSpec,
        'strCS': strCS,
-       'strCL': strCL}
+       'strCL': strCL,
+       'cSep': cSep}
 
 ###############################################################################

@@ -82,11 +82,10 @@ def plotEvoSglR(dIPlt, dPltG, dfrR, pF, sHdCX, dSHdCY, sLblY):
     plt.close()
 
 # --- Functions (O_99__Simulation) --------------------------------------------
-def plotCIs(dIPlt, dPltG, dfrC, dfrS, serCt, sHdCX, sHdCY, mxY=0):
+def plotCIs(dIPlt, dPltG, dfrC, dfrS, serRp, sHdCX, sHdCY, mxY=0):
     serC, serS = dfrC.loc[:, sHdCY], dfrS.loc[:, sHdCY]
-    print('TEMP - serCt =\n', serCt)
-    tArrB = GF.getArrCI(arrC=serC, arrS=serS, arrCt=serCt.loc[:, sHdCY],
-                        cAlpha=dIPlt['alphaSpread'], mnV=0)
+    tArrB = GF.getArrCI(serC=serC, serS=serS, serRp=serRp,
+                        cAlph=dIPlt['alphaSpread'], mnV=0)
     # filter out CIs of range 0 and non-finite values
     arrBRng = GF.getBoolAND3C(tArrB[0] != tArrB[1], GF.boolFinVal(tArrB[0]),
                               GF.boolFinVal(tArrB[1]))
@@ -96,13 +95,13 @@ def plotCIs(dIPlt, dPltG, dfrC, dfrS, serCt, sHdCX, sHdCY, mxY=0):
                ls=dPltG['styLnCI'], lw=dPltG['wdthLnCI'], color=cCol)
     return max([mxY] + list(serC) + list(tArrB[1]))
 
-def plotEvoMultR(dITp, dIPlt, dPltG, dDfrR, serCt, pF, sHdCX, dSHdCY, sLblY):
+def plotEvoMltR(dITp, dIPlt, dPltG, dDfrR, serRp, pF, sHdCX, dSHdCY, sLblY):
     SF.checkConsistency2Dfr(dDfrR, lK=[GC.S_CENT, GC.S_SPREAD])
     dfrCen, dfrSpr, maxY = dDfrR[GC.S_CENT], dDfrR[GC.S_SPREAD], 0
     assert sHdCX in dfrCen.columns and sHdCX in dfrSpr.columns
     cFig = plt.figure()
     for sHdCY, lSY in dSHdCY.items():
-        maxY = plotCIs(dIPlt, dPltG, dfrCen, dfrSpr, serCt=serCt, sHdCX=sHdCX,
+        maxY = plotCIs(dIPlt, dPltG, dfrCen, dfrSpr, serRp=serRp, sHdCX=sHdCX,
                        sHdCY=sHdCY, mxY=maxY)
         plotCentres(dIPlt, dPltG, dfrCen, sHdCX, sHdCY, lSY)
     plt.legend(loc='best')

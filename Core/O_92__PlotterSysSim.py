@@ -20,42 +20,43 @@ class PlotterSysSim(Base):
         self.cRep = cRp
         self.dfrRes, self.dDfrRes, self.pltSgl = None, None, False
         self.dIPlt = self.dITp[GC.S_CP_CNC]
+        self.sHdCX = GC.S_TIME
         # print('Initiated "PlotterSysSim" object.')
 
-    def getI4Plot(self, dITp, dPltG, sOp, pF, sHdCX=GC.S_TIME):
+    def getI4Plot(self, dITp, dPltG, sOp, pF, serRp):
         lSHdCY, pltSpr = dPltG['lSCpCnc'], self.dIPlt['plotSpread']
         if dPltG['dCHdGr'] is None:
             # no collapsing of columns necessary (no groups)
-            dDfrPlt = {GC.S_CENT: self.dfrRes.loc[:, [sHdCX] + lSHdCY]}
+            dDfrPlt = {GC.S_CENT: self.dfrRes.loc[:, [self.sHdCX] + lSHdCY]}
             dSHdCY = {sHd: [sHd] for sHd in lSHdCY}
             if not self.pltSgl:
                 # including spread (from multiple repeats)
-                dDfrPlt, _ = SF.preProcData(dITp, dPltG, pF, pltSpr)
+                dDfrPlt, _ = SF.procData(dITp, dPltG, pF, pltSpr, serRp=serRp)
         else:
             # collapsing of columns necessary (component groups)
-            dfrPlt = self.dfrRes.loc[:, [sHdCX] + lSHdCY]
+            dfrPlt = self.dfrRes.loc[:, [self.sHdCX] + lSHdCY]
             dDfrPlt = {GC.S_CENT: dfrPlt}
             if self.pltSgl:
                 # single stochastic realisation
-                dDfrPlt, dSHdCY = SF.collapseColumns(dPltG, dfrPlt, sHdCX,
+                dDfrPlt, dSHdCY = SF.collapseColumns(dPltG, dfrPlt, self.sHdCX,
                                                      lSHdCY, sOp=sOp)
             else:
                 # including spread (from multiple repeats)
-                dDfrPlt, dSHdCY = SF.preProcData(dITp, dPltG, pF, pltSpr,
-                                                 sHdCX, lSHdCY, sOp=sOp)
+                dDfrPlt, dSHdCY = SF.procData(dITp, dPltG, pF, pltSpr,
+                                              self.sHdCX, lSHdCY, sOp=sOp,
+                                              serRp=serRp)
         return dDfrPlt, dSHdCY
 
-    def plotEvoGen(self, dPPF, serCt=None, dITp=None, overWr=True,
-                   sHdCX=GC.S_TIME):
-        for (pF, (sOp, dPltG)) in dPPF.items():
+    def plotEvoGen(self, dPPltF, serRp=None, dITp=None, overWr=True):
+        for (pF, (sOp, dPltG)) in dPPltF.items():
             if overWr or not GF.pFExists(pF):
-                dDfrPlt, dSHdCY = self.getI4Plot(dITp, dPltG, sOp, pF, sHdCX)
+                dDfrPlt, dSHdCY = self.getI4Plot(dITp, dPltG, sOp, pF, serRp)
                 if self.pltSgl:
                     PF.plotEvoSglR(self.dIPlt, dPltG, dDfrPlt[GC.S_CENT], pF,
-                                   sHdCX, dSHdCY, sLblY=dPltG['yLbl'])
+                                   self.sHdCX, dSHdCY, sLblY=dPltG['yLbl'])
                 else:
-                    PF.plotEvoMultR(dITp, self.dIPlt, dPltG, dDfrPlt, serCt,
-                                    pF, sHdCX, dSHdCY, sLblY=dPltG['yLbl'])
+                    PF.plotEvoMltR(dITp, self.dIPlt, dPltG, dDfrPlt, serRp, pF,
+                                   self.sHdCX, dSHdCY, sLblY=dPltG['yLbl'])
 
     def plotResEvoSgl(self, dfrR, sDSub='.', overWr=True):
         self.dfrRes, self.dDfrRes, self.pltSgl = dfrR, {GC.S_SGL: dfrR}, True
@@ -65,12 +66,12 @@ class PlotterSysSim(Base):
                                          cRp=self.cRep)
                 self.plotEvoGen(dPPltF, overWr=overWr)
 
-    def plotResEvoAvg(self, dITp, dDfrRV, serCt, overWr=True):
+    def plotResEvoAvg(self, dITp, dDfrRV, serRp, overWr=True):
         self.dfrRes, self.dDfrRes = dDfrRV[GC.S_MEAN], dDfrRV
         self.pltSgl, sDSub = False, dITp['sD_Obj']
         if self.dfrRes is not None and self.dDfrRes is not None:
             for dPltG in self.dIPlt['dPltG'].values():
                 dPPltF = SF.getDPFPltEvo(dPltG, self.dITp['sPPlt'], sDSub)
-                self.plotEvoGen(dPPltF, serCt=serCt, dITp=dITp, overWr=overWr)
+                self.plotEvoGen(dPPltF, serRp=serRp, dITp=dITp, overWr=overWr)
 
 ###############################################################################

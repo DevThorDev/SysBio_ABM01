@@ -14,9 +14,16 @@ import Core.C_00__GenConstants as GC
 # --- Functions (Python core) -------------------------------------------------
 def startSimu():
     startTime = time.time()
-    print(GC.S_PLUS*50 + ' START', time.ctime(startTime), GC.S_PLUS*30)
+    print(GC.S_PLUS*20 + ' START', time.ctime(startTime), GC.S_PLUS*20)
     print('Agent-based model of the NRT2.1/NAR2.1/HPCAL1-system')
     return startTime
+
+def startRepLoop():
+    print(GC.S_PLUS*20, 'Starting repetition loop...', GC.S_PLUS*20)
+    return time.time()
+
+def getTime():
+    return time.time()
 
 def seedRNG(cMode):             # legacy function
     if cMode == GC.M_STOCH:
@@ -137,20 +144,16 @@ def updateAggr(existingAggregate, newValue):
         M2 += delta*delta2
     return (count, mean, M2)
 
-def updateMeanM2(cMean, cM2, cCnt, newValue):
-    if np.isfinite(newValue):
-        cCnt += 1
-        if np.isfinite(cMean):
-            delta = newValue - cMean
-            cMean += delta/cCnt
-            delta2 = newValue - cMean
-        else:
-            cMean = newValue
+def updateMeanM2(cMean, cM2, newValue, cCnt):
+    if np.isfinite(cMean):
+        delta = newValue - cMean
+        cMean += delta/cCnt
+        delta2 = newValue - cMean
         if np.isfinite(cM2):
             cM2 += delta*delta2
-        else:
-            cM2 = 0
-    return cMean, cM2, cCnt
+    else:
+        cMean, cM2 = newValue, 0
+    return cMean, cM2
 
 # Retrieve the mean, variance and sample variance from an aggregate
 def finalRunMeanSD(existingAggregate):
@@ -175,16 +178,16 @@ def clipVal(x, xMin=None, xMax=None):
             return x
 
 # calculate the confidence interval of the mean using the SEM
-def getCI(cData=None, cDF=1, cMn=0., cSEM=1., cAlph=0.95, mnV=None, mxV=None):
+def getCI(cData=None, nRp=1, cMn=0., cSEM=1., cAlph=0.95, mnV=None, mxV=None):
     cAlph = clipVal(cAlph, xMin=0, xMax=1)
     if cData is None:
         if cSEM <= 0:
             tCI = (np.nan, np.nan)
         else:
-            tCI = st.t.interval(alpha=cAlph, df=cDF, loc=cMn, scale=cSEM)
+            tCI = st.t.interval(alpha=cAlph, df=nRp-1, loc=cMn, scale=cSEM)
     else:
-        tCI = st.t.interval(alpha=cAlph, df=len(cData)-1,
-                           loc=np.mean(cData), scale=st.sem(cData))
+        tCI = st.t.interval(alpha=cAlph, df=len(cData)-1, loc=np.mean(cData),
+                            scale=st.sem(cData))
     if np.isfinite(tCI[0]):
         if np.isfinite(tCI[1]):
             return tuple(clipVal(cBd, xMin=mnV, xMax=mxV) for cBd in tCI)
@@ -197,13 +200,12 @@ def getCI(cData=None, cDF=1, cMn=0., cSEM=1., cAlph=0.95, mnV=None, mxV=None):
             return tCI
 
 # calculate the confidence interval of the mean using the SEM (for an array)
-def getArrCI(arrC=np.zeros((1, 1)), arrS=np.ones((1, 1)),
-             arrCt=np.ones((1, 1), dtype=int), cAlph=0.95, mnV=None, mxV=None):
-    assert arrC.ndim == 1 and arrS.ndim == 1 and arrCt.ndim == 1
-    assert arrC.shape[0] == arrS.shape[0] and arrC.shape[0] == arrCt.shape[0]
-    arrLB, arrUB = np.zeros(arrC.shape[0]), np.zeros(arrC.shape[0])
-    for i, x in enumerate(arrC):
-        arrLB[i], arrUB[i] = getCI(cDF=arrCt[i], cMn=x, cSEM=arrS[i],
+def getArrCI(serC, serS, serRp, cAlph=0.95, mnV=None, mxV=None):
+    assert serC.ndim == 1 and serS.ndim == 1 and serRp.ndim == 1
+    assert serC.size == serS.size and serC.size == serRp.size
+    arrLB, arrUB = np.zeros(serC.size), np.zeros(serC.size)
+    for i, x in enumerate(serC):
+        arrLB[i], arrUB[i] = getCI(nRp=serRp.at[i], cMn=x, cSEM=serS.at[i],
                                    cAlph=cAlph, mnV=mnV, mxV=mxV)
     return (arrLB, arrUB)
 
@@ -459,7 +461,7 @@ def printElapsedTimeSim(stT, cT, sPre=GC.S_TIME):
     # calculate and display elapsed time
     elT = round(cT - stT, GC.R04)
     print(sPre, 'elapsed:', elT, 'seconds, this is', round(elT/60, GC.R04),
-          'minutes or', round(elT/3600, GC.R04), 'hours or',
+          'minutes\nor', round(elT/3600, GC.R04), 'hours or',
           round(elT/(3600*24), GC.R04), 'days.')
 
 def showElapsedTime(startTime):
@@ -470,7 +472,7 @@ def showElapsedTime(startTime):
 
 def endSimu(startTime):
     print(GC.S_DASH*80)
-    printElapsedTimeSim(startTime, time.time(), 'Total time')
+    printElapsedTimeSim(startTime, time.time(), 'Total real time')
     print(GC.S_STAR*20 + ' DONE', time.ctime(time.time()), GC.S_STAR*20)
 
 # --- Functions (NumPy) -------------------------------------------------------
@@ -503,17 +505,35 @@ def readCSV(pF, sepD=GC.SEP_STD, iCol=None, dDtype=None):
 def saveAsCSV(pdDfr, pF, sepD=GC.SEP_STD, sFExt=GC.S_EXT_CSV):
     pdDfr.to_csv(pF + '.' + sFExt, sep=sepD)
 
-def iniPdSer(data=None, lSNmI=None, nEl=0, v=0, dTp=float):
-    if lSNmI is None:
+def saveConcatDfr(lSerDfr, pF, sepD=GC.SEP_STD):
+    pd.concat(lSerDfr, axis=1).to_csv(pF, sep=sepD)
+
+def iniPdSer(data=None, lSI=None, nEl=0, v=0, sNm=None, dTp=float):
+    if lSI is None:
         if data is None:
-            return pd.Series(iniNpArrV((nEl,), v, dTp=dTp), dtype=dTp)
+            if sNm is None:
+                return pd.Series(iniNpArrV((nEl,), v, dTp=dTp), dtype=dTp)
+            else:
+                return pd.Series(iniNpArrV((nEl,), v, dTp=dTp), name=sNm,
+                                 dtype=dTp)
         else:
-            return pd.Series(data, dtype=dTp)
+            if sNm is None:
+                return pd.Series(data, dtype=dTp)
+            else:
+                return pd.Series(data, name=sNm, dtype=dTp)
     else:
         if data is None:
-            return pd.Series(iniNpArrV((len(lSNmI),), v, dTp=dTp), dtype=dTp)
+            if sNm is None:
+                return pd.Series(iniNpArrV((len(lSI),), v, dTp=dTp), index=lSI,
+                                 dtype=dTp)
+            else:
+                return pd.Series(iniNpArrV((len(lSI),), v, dTp=dTp), index=lSI,
+                                 name=sNm, dtype=dTp)
         else:
-            return pd.Series(data, index=lSNmI, dtype=dTp)
+            if sNm is None:
+                return pd.Series(data, index=lSI, dtype=dTp)
+            else:
+                return pd.Series(data, index=lSI, name=sNm, dtype=dTp)
 
 def iniPdDfr(data=None, lSNmC=[], lSNmR=[], shape=(0, 0), v=0, dTp=float):
     assert len(shape) == 2
@@ -546,12 +566,28 @@ def iniPdDfr(data=None, lSNmC=[], lSNmR=[], shape=(0, 0), v=0, dTp=float):
                 return pd.DataFrame(data, index=lSNmR, columns=lSNmC,
                                     dtype=dTp)
 
-def getElIfValid(pdDfr, sR, sC, xAlt=0):
+def getElOfSerIfValid(pdSer, cI, xAlt=0):
+    xRet = xAlt
+    if cI in pdSer.index:
+        if np.isfinite(pdSer.at[cI]):
+            xRet = pdSer.at[cI]
+    return xRet
+
+def getElOfDfrIfValid(pdDfr, sR, sC, xAlt=0):
     xRet = xAlt
     if sR in pdDfr.index and sC in pdDfr.columns:
         if np.isfinite(pdDfr.at[sR, sC]):
             xRet = pdDfr.at[sR, sC]
     return xRet
+
+def checkValid(pdSer, cI, x=0, xAlt=0):
+    xRet, isValid = xAlt, False
+    if np.isfinite(x):
+        isValid = True
+        if cI in pdSer.index:
+            pdSer.at[cI] += 1
+            xRet = pdSer.at[cI]
+    return xRet, isValid
 
 def printDictDfr(dDfr, lK=None):
     print(GC.S_USC*8, 'Dictionary of DataFrames', GC.S_USC*8, '\n')

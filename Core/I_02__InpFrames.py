@@ -13,7 +13,7 @@ class InputFrames:
         self.dDfrIn = {}
         for sK, (sFInD, iC) in dITp['dSFInD'].items():
             sP = GF.joinToPath([dITp['sPInD']], sFInD + '.' + GC.S_EXT_CSV)
-            self.dDfrIn[sK] = GF.readCSV(sP, iCol=iC)
+            self.dDfrIn[sK] = GF.readCSV(sP, sepD=dITp['cSep'], iCol=iC)
         self.getDSCpSL()
         self.getDSCpTp()
         self.getIniSysCpObj()

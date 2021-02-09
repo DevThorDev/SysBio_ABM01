@@ -12,15 +12,14 @@ strNSpec = 'Simulation including all repetitions'
 strCS = GC.ID_SIM
 strCL = GC.S_CL_SIMULATION
 
-cSep = GC.SEP_STD
-
 # --- flow control ------------------------------------------------------------
-doEvoT = False
+doEvoT = True
 doPlots = True
+printStats = False
 nReps = 3                   # 3 / 5 / 10
-nTSAllRep = 500             # 500 / 200 / 100
+nTSRed = 500                # 500 / 200 / 100
 tStart = 0                  # 0
-tMax = 0.1                  # 10.
+tMax = 0.2                  # 10.
 maxTS = 10000000            # 10000000
 minDispTS = 0               # 0
 modDispTS = 10000           # 10000
@@ -29,6 +28,7 @@ assert tMax >= tStart and maxTS > 0
 # --- path, directory and file names ------------------------------------------
 sD_Obj = GC.S_DIR_SIM
 sF_Obj = GC.S_RES_SIM
+sF_NRp = GC.S_NUM_REP
 
 sPInD = os.path.join('..', '..', '11_SysBio01_ABM01', '20_InputData')
 sPRes = os.path.join('..', '..', '11_SysBio01_ABM01', '40_ModelResults')
@@ -48,12 +48,12 @@ dIO = {# --- general
        'strNSpec': strNSpec,
        'strCS': strCS,
        'strCL': strCL,
-       'cSep': cSep,
        # --- flow control
        'doEvoT': doEvoT,
        'doPlots': doPlots,
+       'printStats': printStats,
        'nReps': nReps,
-       'nTSAllRep': nTSAllRep,
+       'nTSRed': nTSRed,
        'tStart': tStart,
        'tMax': tMax,
        'maxTS': maxTS,
@@ -62,6 +62,7 @@ dIO = {# --- general
        # --- path, directory and file names
        'sD_Obj': sD_Obj,
        'sF_Obj': sF_Obj,
+       'sF_NRp': sF_NRp,
        'sPInD': sPInD,
        'sPRes': sPRes,
        # 'sPPlt': sPPlt,

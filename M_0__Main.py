@@ -12,7 +12,7 @@ from Core.O_99__Simulation import Simulation
 # ### MAIN ####################################################################
 startTime = GF.startSimu()
 # -----------------------------------------------------------------------------
-print('='*80, '\n', GC.S_DASH*33, 'M_0__Main.py', GC.S_DASH*33, '\n')
+print('='*80 + '\n' + GC.S_DASH*33, 'M_0__Main.py', GC.S_DASH*33 + '\n')
 inDG = InputData(dictInpG)
 inDG.addObjTps(GC.S_D_OBJINP)
 print('Added object types.')

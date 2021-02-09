@@ -19,23 +19,29 @@ class Simulation(Base):
         self.descO = 'Simulation'
         self.inFr = InputFrames(self.dITp)
         self.nRep = self.dITp['nReps']
+        self.hT = self.dITp['tMax']/(2*self.dITp['nTSRed'])
+        self.lTRed = [k*self.hT for k in range(1, 2*self.dITp['nTSRed'], 2)]
+        self.serRp = GF.iniPdSer(nEl=len(self.lTRed), v=0, sNm=GC.S_NUM_REP,
+                                 dTp=int)
         self.sFRes = self.dITp['sF_Obj']
         # print('Initiated "Simulation" object.')
 
-    def plotResEvo(self, inpDat, dDfrRV):
+    def plotResEvo(self, inpDat):
         Pltr = PlotterSysSim(inpDat, self.inFr)
-        Pltr.plotResEvoAvg(self.dITp, dDfrRV, serCt=self.serCt)
+        Pltr.plotResEvoAvg(self.dITp, self.dDfrStats, serRp=self.serRp)
 
-    def calcRepStatistics(self, dDfrRV):
-        SF.calcStatsDfr(dDfrRV, serCt=self.serCt)
-        self.dDfrStats = dDfrRV
+    def calcRepStatistics(self):
+        SF.calcStatsDfr(self.dDfrStats, serRp=self.serRp)
+        SF.saveSerRep(self.dITp, self.dDfrStats[GC.S_MEAN], self.serRp,
+                      lD=[self.dITp['sD_Obj']])
         for sStat in GC.L_S_STATS_OUT:
             sF = self.sFRes + GC.S_USC + str(sStat) + GC.S_USC + GC.S_NO_GR
             SF.savePdDfr(self.dITp, self.dDfrStats[sStat],
                          lD=[self.dITp['sD_Obj'], sStat], sF=sF)
 
     def runSimulation(self, inpDat):
-        doPlt, dDfrRunV, self.serCt = self.dITp['doPlots'], {}, GF.iniPdSer()
+        stTL = GF.startRepLoop()
+        doPlt, self.dDfrStats = self.dITp['doPlots'], {}
         for cRep in range(1, self.nRep + 1):
             print(GC.S_PLUS*8, 'Starting repetition', cRep, 'of', self.nRep)
             cSys = System(inpDat, self.inFr, cRp=cRep)
@@ -43,18 +49,19 @@ class Simulation(Base):
                 cSys.evolveOverTime(inpDat, self.dITp, doPlots=doPlt)
             if not self.dITp['doEvoT'] and doPlt:
                 cSys.plotResEvo(inpDat, self.dITp)
-            SF.calcRunMeanM2Dfr(self.dITp, cSys, dDfrRunV, serCt=self.serCt)
-            cSys.printFinalSimuTime()
-            print(GC.S_PLUS*8, 'Finished repetition', cRep, 'of', self.nRep)
-        self.calcRepStatistics(dDfrRunV)
-        self.plotResEvo(inpDat, dDfrRunV)
+            SF.calcRunMeanM2Dfr(self.dITp, cSys, self.dDfrStats,
+                                lTRd=self.lTRed, serRp=self.serRp)
+            cSys.printRepDone(cRep, self.nRep, stTL)
+        self.calcRepStatistics()
+        self.plotResEvo(inpDat)
 
     def printDfrStats(self, lSStatsOut = GC.L_S_STATS_OUT):
-        print(GC.S_PLUS*8, 'Simulation results:', GC.S_PLUS*8)
-        for sStat in lSStatsOut:
-            assert sStat in self.dDfrStats
-            print(GC.S_DASH*8, sStat, GC.S_DASH*8)
-            print(self.dDfrStats[sStat])
-        print(GC.S_PLUS*80)
+        if self.dITp['printStats']:
+            print(GC.S_PLUS*8, 'Simulation results:', GC.S_PLUS*8)
+            for sStat in lSStatsOut:
+                assert sStat in self.dDfrStats
+                print(GC.S_DASH*8, sStat, GC.S_DASH*8)
+                print(self.dDfrStats[sStat])
+            print(GC.S_PLUS*80)
 
 ###############################################################################

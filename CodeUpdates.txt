@@ -1,8 +1,6 @@
 --------------------------------------------------------------------------------
 Code updates remaining:
 --------------------------------------------------------------------------------
-* nRep --> dfrCt
-* integer values in dfrCt
 * weighted mean instead of mean
 * Max' data for incidences of peptides
 * sigmoidal functions that define dependency of component reaction weights on small molecule concentrations should be more uniformly defined
@@ -42,5 +40,7 @@ Code updates done:
 * plots for single reps and mean
 * move input data to 99_Simulation
 * SciPy runtime warning
+* nRep --> serRp
+* integer values in serRp
 
 --------------------------------------------------------------------------------

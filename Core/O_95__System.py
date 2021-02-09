@@ -121,13 +121,16 @@ class System(Base):
         for s, cCnc in self.dCncSMo.items():
             print(s + ':\t' + str(round(cCnc, GC.R04)))
 
-    def printFinalSimuTime(self):
+    def printRepDone(self, cRp, nRp, stT):
         if self.dResEvo is not None and len(self.dResEvo[GC.S_TIME]) > 0:
             print(GC.S_DASH*8, 'Simulation time elapsed after',
                   len(self.dResEvo[GC.S_TIME]), 'time steps:',
                   round(self.dResEvo[GC.S_TIME][-1], GC.R04), GC.S_DASH*8)
         else:
             print(GC.S_DASH*8, 'Simulation has not even started!', GC.S_DASH*8)
+        print(GC.S_PLUS*8, 'Finished repetition', cRp, 'of', nRp,
+              '| Real time elapsed:', round(GF.getTime() - stT, GC.R08),
+              'seconds.', GC.S_PLUS*8)
 
     def plotResEvo(self, inpDat, dITp, overWr=True):
         if self.dResEvo is None:
