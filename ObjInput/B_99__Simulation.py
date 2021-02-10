@@ -13,7 +13,7 @@ strCS = GC.ID_SIM
 strCL = GC.S_CL_SIMULATION
 
 # --- flow control ------------------------------------------------------------
-doEvoT = True
+calcStats = True
 doPlots = True
 printStats = False
 nReps = 3                   # 3 / 5 / 10
@@ -26,9 +26,9 @@ modDispTS = 10000           # 10000
 assert tMax >= tStart and maxTS > 0
 
 # --- path, directory and file names ------------------------------------------
-sD_Obj = GC.S_DIR_SIM
-sF_Obj = GC.S_RES_SIM
-sF_NRp = GC.S_NUM_REP
+sDObj = GC.S_DIR_SIM
+sFObj = GC.S_RES_SIM
+sFNRp = GC.S_NUM_REP
 
 sPInD = os.path.join('..', '..', '11_SysBio01_ABM01', '20_InputData')
 sPRes = os.path.join('..', '..', '11_SysBio01_ABM01', '40_ModelResults')
@@ -49,7 +49,7 @@ dIO = {# --- general
        'strCS': strCS,
        'strCL': strCL,
        # --- flow control
-       'doEvoT': doEvoT,
+       'calcStats': calcStats,
        'doPlots': doPlots,
        'printStats': printStats,
        'nReps': nReps,
@@ -60,9 +60,9 @@ dIO = {# --- general
        'minDispTS': minDispTS,
        'modDispTS': modDispTS,
        # --- path, directory and file names
-       'sD_Obj': sD_Obj,
-       'sF_Obj': sF_Obj,
-       'sF_NRp': sF_NRp,
+       'sDObj': sDObj,
+       'sFObj': sFObj,
+       'sFNRp': sFNRp,
        'sPInD': sPInD,
        'sPRes': sPRes,
        # 'sPPlt': sPPlt,

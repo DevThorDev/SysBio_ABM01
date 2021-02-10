@@ -10,9 +10,13 @@ strNSpec = 'System with all components and small molecules'
 strCS = GC.ID_SYS
 strCL = GC.S_CL_SYSTEM
 
+# --- flow control ------------------------------------------------------------
+doEvoT = True
+doPlots = True
+
 # --- path, directory and file names ------------------------------------------
-sD_Obj = GC.S_DIR_SYS
-sF_Obj = GC.S_RES_SYS
+sDObj = GC.S_DIR_SYS
+sFObj = GC.S_RES_SYS
 sFRed = GC.S_RED_SYS
 
 # --- create input dictionary -------------------------------------------------
@@ -21,9 +25,12 @@ dIO = {# --- general
        'strNSpec': strNSpec,
        'strCS': strCS,
        'strCL': strCL,
+       # --- flow control
+       'doEvoT': doEvoT,
+       'doPlots': doPlots,
        # --- path, directory and file names
-       'sD_Obj': sD_Obj,
-       'sF_Obj': sF_Obj,
+       'sDObj': sDObj,
+       'sFObj': sFObj,
        'sFRed': sFRed}
 
 ###############################################################################

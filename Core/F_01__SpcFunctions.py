@@ -29,7 +29,7 @@ def saveAsPdDfr(dITp, dRes, lD, sF, overWr=True, sFExt=GC.S_EXT_CSV):
     return sP
 
 def saveSerRep(dITp, cDfr, serRp, lD, sFA='', overWr=True, sFExt=GC.S_EXT_CSV):
-    sP = GF.getPF([dITp['sPRes']] + lD, sF=dITp['sF_NRp'] + sFA, sFExt=sFExt)
+    sP = GF.getPF([dITp['sPRes']] + lD, sF=dITp['sFNRp'] + sFA, sFExt=sFExt)
     if not os.path.isfile(sP) or overWr:
         lSer = [cDfr.loc[:, GC.S_TIME].round(GC.R08), serRp]
         GF.saveConcatDfr(lSer, pF=sP, sepD=dITp['cSep'])
@@ -38,8 +38,8 @@ def saveDictDfr(dITp, dDfr, lK=None, overWr=True, sFEnd = '',
                 sFExt=GC.S_EXT_CSV):
     for cK, cDfr in dDfr.items():
         if lK is None or cK in lK:
-            sF = GC.S_USC.join([dITp['sF_Obj'], str(cK), sFEnd])[:64]
-            savePdDfr(dITp, cDfr, lD=[dITp['sD_Obj'], str(cK)], sF=sF,
+            sF = GC.S_USC.join([dITp['sFObj'], str(cK), sFEnd])[:64]
+            savePdDfr(dITp, cDfr, lD=[dITp['sDObj'], str(cK)], sF=sF,
                       overWr=overWr, sFExt=sFExt)
 
 # --- Functions (O_00__Base) --------------------------------------------------
@@ -333,8 +333,7 @@ def evolveGillespie(dITp, dICp, inpFr, dCncSMo):
     return dO['dRes'], dO['dN']
 
 def readDfrResEvo(dITp, sPRs, sFRs, iCol=None):
-    sD = dITp['sD_Obj']
-    pFRes = GF.getPF([sPRs, sD], sFRs, sFExt=GC.S_EXT_CSV)
+    pFRes = GF.getPF([sPRs, dITp['sDObj']], sFRs, sFExt=GC.S_EXT_CSV)
     if os.path.isfile(pFRes):
         return GF.readCSV(pFRes, sepD=dITp['cSep'], iCol=iCol)
     return None
@@ -399,18 +398,22 @@ def getDPFPltEvo(dPltG, sPPlt, sDSub, cRp=0):
 
 # --- Functions (O_99__Simulation) --------------------------------------------
 def collapseTimes(dITp, cSys, lTRd, sCTime=GC.S_TIME):
-    assert sCTime in cSys.dfrResEvo.columns
-    lDfr = [cSys.dfrResEvo[(cSys.dfrResEvo[sCTime] >= lTRd[k - 1]) &
-                           (cSys.dfrResEvo[sCTime] < lTRd[k + 1])]
-            for k in range(1, len(lTRd) - 1)]
-    lDfr = ([cSys.dfrResEvo[cSys.dfrResEvo[sCTime] < lTRd[1]]] + lDfr +
-            [cSys.dfrResEvo[cSys.dfrResEvo[sCTime] >= lTRd[-2]]])
-    lDfr = [cDfr.reset_index(drop=True) for cDfr in lDfr]
-    lSCAv = [sC for sC in cSys.dfrResEvo.columns if sC != sCTime]
-    dL = {sCTime: lTRd}
-    dL.update({sC: [np.mean(cDfr[sC]) for cDfr in lDfr] for sC in lSCAv})
-    dfrRd = GF.iniPdDfr(dL)
-    savePdDfr(dITp, dfrRd, [cSys.dITp['sD_Obj']], cSys.sFRed)
+    lD = [cSys.dITp['sDObj']]
+    if not os.path.isfile(GF.getPF([dITp['sPRes']] + lD, cSys.sFRed)):
+        assert sCTime in cSys.dfrResEvo.columns
+        lDfr = [cSys.dfrResEvo[(cSys.dfrResEvo[sCTime] >= lTRd[k - 1]) &
+                               (cSys.dfrResEvo[sCTime] < lTRd[k + 1])]
+                for k in range(1, len(lTRd) - 1)]
+        lDfr = ([cSys.dfrResEvo[cSys.dfrResEvo[sCTime] < lTRd[1]]] + lDfr +
+                [cSys.dfrResEvo[cSys.dfrResEvo[sCTime] >= lTRd[-2]]])
+        lDfr = [cDfr.reset_index(drop=True) for cDfr in lDfr]
+        lSCAv = [sC for sC in cSys.dfrResEvo.columns if sC != sCTime]
+        dL = {sCTime: lTRd}
+        dL.update({sC: [np.mean(cDfr[sC]) for cDfr in lDfr] for sC in lSCAv})
+        dfrRd = GF.iniPdDfr(dL)
+        savePdDfr(dITp, dfrRd, lD, cSys.sFRed)
+    else:
+        dfrRd = loadPdDfr(dITp, lD, cSys.sFRed, iCol=0)
     return dfrRd
 
 def addFirstColToDfrs(dDfr, serC1, lK=None, sKC1=GC.S_TIME):
@@ -442,11 +445,11 @@ def updateDictDfr(cDfr, dDfrI, serRp, modRp=False, lSCDisr=[GC.S_TIME]):
     # add the time column
     addFirstColToDfrs(dDfrI, serC1=cDfr[GC.S_TIME])
 
-def calcRunMeanM2Dfr(dITp, cSys, dDfrI, lTRd, serRp, lSCDisr=[GC.S_TIME]):
+def calcRunStatsDfr(dITp, cSys, dDfrI, lTRd, serRp, lSCDisr=[GC.S_TIME]):
     # reduce the data to the given number of lines
-    dfrRed = collapseTimes(dITp, cSys, lTRd=lTRd)
+    dfrRd = collapseTimes(dITp, cSys, lTRd=lTRd)
     # update the DataFrames dictionary
-    updateDictDfr(dfrRed, dDfrI, serRp=serRp, modRp=True, lSCDisr=lSCDisr)
+    updateDictDfr(dfrRd, dDfrI, serRp=serRp, modRp=True, lSCDisr=lSCDisr)
 
 def calcStatsSingleSet(dDfrI, sR, sC, cCt=0):
     cMn, cM2 = dDfrI[GC.S_MEAN].at[sR, sC], dDfrI[GC.S_M2].at[sR, sC]
@@ -474,7 +477,8 @@ def procData(dITp, dPltG, pF, pltSpr=True, sLX=None, lSLY=None, sOp=None,
              serRp=None):
     dDfrPlt, dDfrI, d4LgSim = {}, {}, {}
     for cRp in range(1, dITp['nReps'] + 1):
-        sF = GC.S_RED_SYS + GC.S_USC + GC.S_REP + str(cRp)
+        cSys = System(inpDat, self.inFr, cRp=cRep)
+        sF = dITp[''] + GC.S_USC + GC.S_REP + str(cRp)
         cDfr = loadPdDfr(dITp, [GC.S_DIR_SYS], sF, iCol=0)
         if dPltG['dCHdGr'] is not None: # collapse if groups were specified
             dDfrT, d4Lg = collapseColumns(dPltG, cDfr, sLX, lSLY, sOp)

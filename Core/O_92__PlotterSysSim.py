@@ -18,23 +18,77 @@ class PlotterSysSim(Base):
         self.inFr = inpFr
         self.lSCpSL = list(self.inFr.dSCpSL)
         self.cRep = cRp
-        self.dfrRes, self.dDfrRes, self.pltSgl = None, None, False
+        self.dDfrCent, self.dDDfrPlt, self.pltSgl = None, None, False
         self.dIPlt = self.dITp[GC.S_CP_CNC]
-        self.sHdCX = GC.S_TIME
+        self.sHdCX, self.lSHdCY, self.dSHdCY = GC.S_TIME, None, None
         # print('Initiated "PlotterSysSim" object.')
+
+    def procNoGroups(self, dPltG, dDfrRd, serRp, pF, sOp):
+        # no collapsing of columns necessary (no groups)
+        pltSpr = self.dIPlt['plotSpread']
+        dfrPlt = self.dDfrCent[pF].loc[:, [self.sHdCX] + self.lSHdCY]
+        self.dDDfrPlt[pF] = {GC.S_CENT: dfrPlt}
+        self.dSHdCY = {sHd: [sHd] for sHd in self.lSHdCY}
+        if not self.pltSgl:
+            # including spread (from multiple repeats)
+            for cDfr in dDfrRd:
+                cDfr = cDfr.loc[:, [GC.S_TIME] + self.lSHdCY]
+                SF.updateDictDfr(cDfr, self.dDDfrPlt[pF], serRp=serRp)
+            # self.dDDfrPlt[pF], _ = SF.procData(dITp, dPltG, pF, pltSpr, serRp=serRp)
+
+    def procWGroups(self, dPltG, dDfrRd, serRp, pF, sOp):
+        pltSpr = self.dIPlt['plotSpread']
+        # collapsing of columns necessary (component groups)
+        dfrPlt = self.dDfrCent[pF].loc[:, [self.sHdCX] + self.lSHdCY]
+        self.dDDfrPlt[pF] = {GC.S_CENT: dfrPlt}
+        if self.pltSgl:
+            # single stochastic realisation
+            t = SF.collapseColumns(dPltG, dfrPlt, self.sHdCX, self.lSHdCY, sOp)
+            self.dDDfrPlt[pF], self.dSHdCY = t
+        else:
+            # including spread (from multiple repeats)
+            for cDfr in dDfrRd:
+                dDfrT, d4Lg = SF.collapseColumns(dPltG, cDfr, sLX, lSLY, sOp)
+                cDfr = dDfrT[GC.S_CENT]
+                d4LgSim.update(d4Lg)
+                SF.updateDictDfr(cDfr, self.dDDfrPlt[pF], serRp=serRp)
+
+            # self.dDDfrPlt[pF], dSHdCY = SF.procData(dITp, dPltG, pF, pltSpr, self.sHdCX,
+            #                               lSHdCY, sOp=sOp, serRp=serRp)
+
+    def plotSimRes(self, dITp, dDfrStSim, dDfrRd, serRp=None, overWr=True):
+        # self.pltSgl, sDSub = False, dITp['sDObj']
+        for dPltG in self.dIPlt['dPltG'].values():
+            self.dDDfrPlt, self.lSHdCY = {}, dPltG['lSCpCnc']
+            dPPltF = SF.getDPFPltEvo(dPltG, self.dITp['sPPlt'], dITp['sDObj'])
+            for (pF, (sOp, _)) in dPPltF.items():
+                if overWr or not GF.pFExists(pF):
+                    self.dSHdCY = {}
+                    if dPltG['dCHdGr'] is None:
+                        self.procNoGroups(dPltG, dDfrRd, serRp, pF, sOp=sOp)
+                    else:
+                        self.procWGroups(dPltG, dDfrRd, serRp, pF, sOp=sOp)
+
+    # def genDDfrPlt(self):
+    #     assert pltSpr in self.dDDfrPlt[pF]
+    #     dDfrPlt = {GC.S_CENT: self.dDDfrPlt[pF][GC.S_MEAN],
+    #                GC.S_SPREAD: self.dDDfrPlt[pF][self.dIPlt['plotSpread']]}
+    #     return dDfrPlt, d4LgSim
+    #                 return dDfrPlt, dSHdCY
+
 
     def getI4Plot(self, dITp, dPltG, sOp, pF, serRp):
         lSHdCY, pltSpr = dPltG['lSCpCnc'], self.dIPlt['plotSpread']
         if dPltG['dCHdGr'] is None:
             # no collapsing of columns necessary (no groups)
-            dDfrPlt = {GC.S_CENT: self.dfrRes.loc[:, [self.sHdCX] + lSHdCY]}
+            dDfrPlt = {GC.S_CENT: self.dfrCent.loc[:, [self.sHdCX] + lSHdCY]}
             dSHdCY = {sHd: [sHd] for sHd in lSHdCY}
             if not self.pltSgl:
                 # including spread (from multiple repeats)
                 dDfrPlt, _ = SF.procData(dITp, dPltG, pF, pltSpr, serRp=serRp)
         else:
             # collapsing of columns necessary (component groups)
-            dfrPlt = self.dfrRes.loc[:, [self.sHdCX] + lSHdCY]
+            dfrPlt = self.dfrCent.loc[:, [self.sHdCX] + lSHdCY]
             dDfrPlt = {GC.S_CENT: dfrPlt}
             if self.pltSgl:
                 # single stochastic realisation
@@ -58,20 +112,12 @@ class PlotterSysSim(Base):
                     PF.plotEvoMltR(dITp, self.dIPlt, dPltG, dDfrPlt, serRp, pF,
                                    self.sHdCX, dSHdCY, sLblY=dPltG['yLbl'])
 
-    def plotResEvoSgl(self, dfrR, sDSub='.', overWr=True):
-        self.dfrRes, self.dDfrRes, self.pltSgl = dfrR, {GC.S_SGL: dfrR}, True
-        if self.dfrRes is not None:
+    def plotSysRes(self, dfrR, sDSub='.', overWr=True):
+        self.dfrCent, self.pltSgl = dfrR, True
+        if self.dfrCent is not None:
             for dPltG in self.dIPlt['dPltG'].values():
                 dPPltF = SF.getDPFPltEvo(dPltG, self.dITp['sPPlt'], sDSub,
                                          cRp=self.cRep)
                 self.plotEvoGen(dPPltF, overWr=overWr)
-
-    def plotResEvoAvg(self, dITp, dDfrRV, serRp, overWr=True):
-        self.dfrRes, self.dDfrRes = dDfrRV[GC.S_MEAN], dDfrRV
-        self.pltSgl, sDSub = False, dITp['sD_Obj']
-        if self.dfrRes is not None and self.dDfrRes is not None:
-            for dPltG in self.dIPlt['dPltG'].values():
-                dPPltF = SF.getDPFPltEvo(dPltG, self.dITp['sPPlt'], sDSub)
-                self.plotEvoGen(dPPltF, serRp=serRp, dITp=dITp, overWr=overWr)
 
 ###############################################################################

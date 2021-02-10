@@ -19,41 +19,74 @@ class Simulation(Base):
         self.descO = 'Simulation'
         self.inFr = InputFrames(self.dITp)
         self.nRep = self.dITp['nReps']
+        self.dDfrStats = None
         self.hT = self.dITp['tMax']/(2*self.dITp['nTSRed'])
         self.lTRed = [k*self.hT for k in range(1, 2*self.dITp['nTSRed'], 2)]
         self.serRp = GF.iniPdSer(nEl=len(self.lTRed), v=0, sNm=GC.S_NUM_REP,
                                  dTp=int)
-        self.sFRes = self.dITp['sF_Obj']
+        self.sFRes = self.dITp['sFObj']
         # print('Initiated "Simulation" object.')
 
-    def plotResEvo(self, inpDat):
+    def getDDfrRed(self, inpDat):
+        dDfrRed = {}
+        # dDfrPlt, dDfrI, d4LgSim = {}, {}, {}
+        for cRp in range(1, self.dITp['nReps'] + 1):
+            cSys, sD = System(inpDat, self.inFr, cRp=cRp), self.dITp['sDObj']
+            dDfrRed[cRp] = SF.loadPdDfr(self.dITp, [sD], cSys.sFRed, iCol=0)
+            # TEMP - plotting part (BEGIN)
+            if dPltG['dCHdGr'] is not None: # collapse if groups were specif.
+                dDfrT, d4Lg = collapseColumns(dPltG, cDfr, sLX, lSLY, sOp)
+                cDfr = dDfrT[GC.S_CENT]
+                d4LgSim.update(d4Lg)
+            else:                           # reduce if no groups were specif.
+                cDfr = cDfr.loc[:, [GC.S_TIME] + dPltG['lSCpCnc']]
+            SF.updateDictDfr(cDfr, self.dDfrStats, serRp=serRp)
+            # TEMP - plotting part (END)
+        return dDfrRed
+
+    def getProcData4Plt(self, pFDat, saveDDfr=False):
+        SF.calcStatsDfr(self.dDfrStats, serRp=self.serRp)
+        # if dPltG['dCHdGr'] is not None:     # save data if groups were specified
+        if saveDDfr:     # save data if groups were specified
+            SF.saveDictDfr(self.dITp, self.dDfrStats, lK=GC.L_S_STATS_OUT,
+                           sFEnd=GF.getFNoExt(pFDat))
+
+    def plotSimRes(self, inpDat):
+        dDfrRed = {}
+        for cRp in range(1, self.dITp['nReps'] + 1):
+            cSys, sD = System(inpDat, self.inFr, cRp=cRp), self.dITp['sDObj']
+            dDfrRed[cRp] = SF.loadPdDfr(self.dITp, [sD], cSys.sFRed, iCol=0)
         Pltr = PlotterSysSim(inpDat, self.inFr)
-        Pltr.plotResEvoAvg(self.dITp, self.dDfrStats, serRp=self.serRp)
+        Pltr.plotSimRes(self.dITp, self.dDfrStats, dDfrRed, serRp=self.serRp)
 
     def calcRepStatistics(self):
         SF.calcStatsDfr(self.dDfrStats, serRp=self.serRp)
         SF.saveSerRep(self.dITp, self.dDfrStats[GC.S_MEAN], self.serRp,
-                      lD=[self.dITp['sD_Obj']])
+                      lD=[self.dITp['sDObj']])
         for sStat in GC.L_S_STATS_OUT:
             sF = self.sFRes + GC.S_USC + str(sStat) + GC.S_USC + GC.S_NO_GR
             SF.savePdDfr(self.dITp, self.dDfrStats[sStat],
-                         lD=[self.dITp['sD_Obj'], sStat], sF=sF)
+                         lD=[self.dITp['sDObj'], sStat], sF=sF)
 
-    def runSimulation(self, inpDat):
-        stTL = GF.startRepLoop()
-        doPlt, self.dDfrStats = self.dITp['doPlots'], {}
+    def doReps(self, inpDat):
+        stTL, self.dDfrStats = GF.startRepLoop(), {}
         for cRep in range(1, self.nRep + 1):
             print(GC.S_PLUS*8, 'Starting repetition', cRep, 'of', self.nRep)
             cSys = System(inpDat, self.inFr, cRp=cRep)
-            if self.dITp['doEvoT']:
-                cSys.evolveOverTime(inpDat, self.dITp, doPlots=doPlt)
-            if not self.dITp['doEvoT'] and doPlt:
+            if cSys.dITp['doEvoT']:
+                cSys.evolveOverTime(inpDat, self.dITp)
+            if not cSys.dITp['doEvoT'] and cSys.dITp['doPlots']:
                 cSys.plotResEvo(inpDat, self.dITp)
-            SF.calcRunMeanM2Dfr(self.dITp, cSys, self.dDfrStats,
-                                lTRd=self.lTRed, serRp=self.serRp)
+            SF.calcRunStatsDfr(self.dITp, cSys, self.dDfrStats,
+                               lTRd=self.lTRed, serRp=self.serRp)
             cSys.printRepDone(cRep, self.nRep, stTL)
-        self.calcRepStatistics()
-        self.plotResEvo(inpDat)
+
+    def runSimulation(self, inpDat):
+        self.doReps(inpDat)
+        if self.dITp['calcStats'] or self.dITp['doPlots']:
+            self.calcRepStatistics()
+            if self.dITp['doPlots']:
+                self.plotSimRes(inpDat)
 
     def printDfrStats(self, lSStatsOut = GC.L_S_STATS_OUT):
         if self.dITp['printStats']:

@@ -23,7 +23,7 @@ class System(Base):
         self.cRep = cRp
         self.lCpO = lCpObj
         self.dCncSMo = SF.createDCnc(self.inFr)
-        self.sFRes = self.dITp['sF_Obj'] + GC.S_USC + GC.S_REP + str(self.cRep)
+        self.sFRes = self.dITp['sFObj'] + GC.S_USC + GC.S_REP + str(self.cRep)
         self.sFRed = self.dITp['sFRed'] + GC.S_USC + GC.S_REP + str(self.cRep)
         self.updateObjDicts(inpDat)
         # print('Initiated "System" object.')
@@ -34,6 +34,8 @@ class System(Base):
         self.getDictSMoObj(inpDat)
         if not hasattr(self, 'dResEvo'):
             self.dResEvo = None
+        if not hasattr(self, 'dfrResEvo'):
+            self.dfrResEvo = None
 
     def complDICp(self, lOSy):
         for cOSy in lOSy:
@@ -139,16 +141,16 @@ class System(Base):
         else:
             self.dfrResEvo = GF.iniPdDfr(self.dResEvo)
         Pltr = PlotterSysSim(inpDat, self.inFr, self.cRep)
-        Pltr.plotResEvoSgl(self.dfrResEvo, sDSub=self.dITp['sD_Obj'])
+        Pltr.plotSysRes(self.dfrResEvo, sDSub=self.dITp['sDObj'])
 
-    def evolveOverTime(self, inpDat, dITp, doPlots=True):
+    def evolveOverTime(self, inpDat, dITp):
         self.dResEvo, self.dNCpO = SF.evolveGillespie(dITp, self.dICp,
                                                       self.inFr, self.dCncSMo)
         self.dfrResEvo = GF.iniPdDfr(self.dResEvo)
         self.updateObjDicts(inpDat, refresh=True)
-        dR, sD = self.dResEvo, self.dITp['sD_Obj']
+        dR, sD = self.dResEvo, self.dITp['sDObj']
         self.pFResEvo = SF.saveAsPdDfr(dITp, dR, [sD], self.sFRes)
-        if doPlots:
+        if self.dITp['doPlots']:
             self.plotResEvo(inpDat, dITp)
 
 ###############################################################################
