@@ -76,6 +76,7 @@ S_CL_H2PO4_1M = 'H2PO4-'
 S_CL_INTERACTION = 'Interaction'
 S_CL_COMPONENT = 'SystemComponent'
 S_CL_PLTRSYSSIM = 'PlotterSysSim'
+S_CL_PLTRDAT = 'PlotterData'
 S_CL_SYSTEM = 'System'
 S_CL_SIMULATION = 'Simulation'
 
@@ -126,6 +127,7 @@ ID_DPY = 'DPy'
 ID_CPB = 'CpBase'
 ID_CPN = 'Cp'
 ID_PSS = 'PltrSS'
+ID_PDT = 'PltrDt'
 ID_SYS = 'Sys'
 ID_SIM = 'Sim'
 
@@ -364,11 +366,23 @@ S_CENT = 'Central'
 S_SPREAD = 'Spread'
 
 # --- constants related to plots ----------------------------------------------
-S_CP_CNC = 'PlotType1_CpConc'
+S_PLT_CL_CP_CNC = 'PlotClCpConc'
+S_PLT_TP_SEL_CP_CNC = '01_SelCpConc'
+S_PLT_TP_SEL_CP = '02_SelCp'
+S_PLT_TP_SEL_CNC = '03_SelConc'
 S_PLT_GR_A = 'A__9_Main_Groups'
 S_PLT_GR_B = 'B__Complexes'
 S_PLT_GR_C = 'C__I_vs_J_vs_T'
 S_PLT_GR_D = 'D__LS-_vs_LK-'
+S_PLT_NM_CP_SET01 = '1__L--_S--_K--'
+S_PLT_NM_CNC_N_P = '0__NO3-_H2PO4-'
+
+S_X_LBL = S_TIME
+S_Y_LBL_CP_CNC = 'Component incidence and molecule concentration (mM)'
+S_Y_LBL_CP = 'Component incidence'
+S_Y_LBL_CNC = 'Component incidence and molecule concentration (mM)'
+S_Y_LBL_CNC_N = '$[NO_3^-]$ (mM)'
+S_Y_LBL_CNC_P = '$[H_2PO_4^-]$ (mM)'
 
 # --- other constants ---------------------------------------------------------
 M_DETER = 'Deterministic'

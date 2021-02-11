@@ -38,7 +38,7 @@ class InputData:
             if len(nmF) >= len(nmPre) + self.dI['nDigObj'] + len(pyX):
                 if nmF.startswith(nmPre) and nmF.endswith(pyX):
                     nmMod, iTp = nmDObjInp + '.' + nmF[:(-len(pyX) - 1)], 0
-                    sBID = nmF[len(nmPre):len(nmPre) + self.dI['nDigObj']]
+                    sBID = nmF[len(nmPre):(len(nmPre) + self.dI['nDigObj'])]
                     try:
                         iTp = int(sBID)
                         cMod = import_module(nmMod)

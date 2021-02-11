@@ -20,8 +20,8 @@ Code updates done:
 * remove dParP of dInfSpS of dITp, and adapt complLSpec
 * create dPar for InpFrames['02'] data
 * eliminate ddVOvwr
-* remove dCncEvo, dCnc from O_90__Component
-* remove lSMo from O_90__Component (incl. dOCp/dOComp)
+* remove dCncEvo, dCnc from O_75__Component
+* remove lSMo from O_75__Component (incl. dOCp/dOComp)
 * changes in conc. SMo: write back to SMo objects (sMo.cCnc) - Metabolite - small molecule - setConc
 * additional LKT01__+S------_LSI01--+K----__ reactions
 * additional state J for weak interaction (site S21 in "wrong" phosphorylation state)
@@ -31,7 +31,7 @@ Code updates done:
 	- S839: {Pyl: Y, DPy: A}
 	- S870: {Pyl: K, DPy: B}
 * Component: remove self.dOCp
-* eliminate DS_SPS (Constants) from O_90__Component/adaptPSites
+* eliminate DS_SPS (Constants) from O_75__Component/adaptPSites
 * eliminate DS_SITES_PYL
 * use dICp in updateDictH
 * ini_Cp_LSI/LSJ/LST, ...LKI/LKJ/LKT --> only 2 functions instead of 6?

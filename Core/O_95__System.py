@@ -9,9 +9,9 @@ import Core.F_00__GenFunctions as GF
 import Core.F_01__SpcFunctions as SF
 
 from Core.O_00__Base import Base
-from Core.O_90__Component import Component
 from Core.O_03__Metabolite import SMo_NO3_1m, SMo_H2PO4_1m
-from Core.O_92__PlotterSysSim import PlotterSysSim
+from Core.O_75__Component import Component
+from Core.O_80__PlotterSysSim import PlotterSysSim
 
 # +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 class System(Base):
@@ -20,11 +20,11 @@ class System(Base):
         self.idO = GC.ID_SYS
         self.descO = 'System'
         self.inFr = inpFr
-        self.cRep = cRp
+        self.cRp = cRp
         self.lCpO = lCpObj
         self.dCncSMo = SF.createDCnc(self.inFr)
-        self.sFRes = self.dITp['sFObj'] + GC.S_USC + GC.S_REP + str(self.cRep)
-        self.sFRed = self.dITp['sFRed'] + GC.S_USC + GC.S_REP + str(self.cRep)
+        self.sFRes = self.dITp['sFObj'] + GC.S_USC + GC.S_REP + str(self.cRp)
+        self.sFRed = self.dITp['sFRed'] + GC.S_USC + GC.S_REP + str(self.cRp)
         self.updateObjDicts(inpDat)
         # print('Initiated "System" object.')
 
@@ -140,7 +140,7 @@ class System(Base):
                                               sFRs=self.sFRes, iCol=0)
         else:
             self.dfrResEvo = GF.iniPdDfr(self.dResEvo)
-        Pltr = PlotterSysSim(inpDat, self.inFr, self.cRep)
+        Pltr = PlotterSysSim(inpDat, self.inFr, self.cRp)
         Pltr.plotSysRes(self.dfrResEvo, sDSub=self.dITp['sDObj'])
 
     def evolveOverTime(self, inpDat, dITp):

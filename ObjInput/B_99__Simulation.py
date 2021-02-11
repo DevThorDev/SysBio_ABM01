@@ -14,7 +14,7 @@ strCL = GC.S_CL_SIMULATION
 
 # --- flow control ------------------------------------------------------------
 calcStats = True
-doPlots = True
+doPlots = False
 printStats = False
 nReps = 3                   # 3 / 5 / 10
 nTSRed = 500                # 500 / 200 / 100
@@ -24,6 +24,9 @@ maxTS = 10000000            # 10000000
 minDispTS = 0               # 0
 modDispTS = 10000           # 10000
 assert tMax >= tStart and maxTS > 0
+
+# --- list of index strings of plot data used for plots -----------------------
+lIPltDat = [GC.S_01, GC.S_02, GC.S_03, GC.S_04, GC.S_05, GC.S_06]
 
 # --- path, directory and file names ------------------------------------------
 sDObj = GC.S_DIR_SIM
@@ -59,6 +62,8 @@ dIO = {# --- general
        'maxTS': maxTS,
        'minDispTS': minDispTS,
        'modDispTS': modDispTS,
+       # --- list of index strings of plot data used for plots
+       'lIPltDat': lIPltDat,
        # --- path, directory and file names
        'sDObj': sDObj,
        'sFObj': sFObj,

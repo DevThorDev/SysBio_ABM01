@@ -482,8 +482,8 @@ def iniNpArr0(tShape=(0, 0)):
 def iniNpArr1(tShape=(0, 0)):
     return np.ones(tShape)
 
-def iniNpArrV(tShape=(0, 0), v=0, dTp=float):
-    return np.full(tShape, v, dtype=dTp)
+def iniNpArrV(tShape=(0, 0), v=0, tpDt=float):
+    return np.full(tShape, v, dtype=tpDt)
 
 def boolFinVal(cArr):
     return np.isfinite(cArr)
@@ -508,63 +508,63 @@ def saveAsCSV(pdDfr, pF, sepD=GC.SEP_STD, sFExt=GC.S_EXT_CSV):
 def saveConcatDfr(lSerDfr, pF, sepD=GC.SEP_STD):
     pd.concat(lSerDfr, axis=1).to_csv(pF, sep=sepD)
 
-def iniPdSer(data=None, lSI=None, nEl=0, v=0, sNm=None, dTp=float):
+def iniPdSer(data=None, lSI=None, nEl=0, v=0, sNm=None, tpDt=float):
     if lSI is None:
         if data is None:
             if sNm is None:
-                return pd.Series(iniNpArrV((nEl,), v, dTp=dTp), dtype=dTp)
+                return pd.Series(iniNpArrV((nEl,), v, tpDt=tpDt), dtype=tpDt)
             else:
-                return pd.Series(iniNpArrV((nEl,), v, dTp=dTp), name=sNm,
-                                 dtype=dTp)
+                return pd.Series(iniNpArrV((nEl,), v, tpDt=tpDt), name=sNm,
+                                 dtype=tpDt)
         else:
             if sNm is None:
-                return pd.Series(data, dtype=dTp)
+                return pd.Series(data, dtype=tpDt)
             else:
-                return pd.Series(data, name=sNm, dtype=dTp)
+                return pd.Series(data, name=sNm, dtype=tpDt)
     else:
         if data is None:
             if sNm is None:
-                return pd.Series(iniNpArrV((len(lSI),), v, dTp=dTp), index=lSI,
-                                 dtype=dTp)
+                return pd.Series(iniNpArrV((len(lSI),), v, tpDt=tpDt),
+                                 index=lSI, dtype=tpDt)
             else:
-                return pd.Series(iniNpArrV((len(lSI),), v, dTp=dTp), index=lSI,
-                                 name=sNm, dtype=dTp)
+                return pd.Series(iniNpArrV((len(lSI),), v, tpDt=tpDt),
+                                 index=lSI, name=sNm, dtype=tpDt)
         else:
             if sNm is None:
-                return pd.Series(data, index=lSI, dtype=dTp)
+                return pd.Series(data, index=lSI, dtype=tpDt)
             else:
-                return pd.Series(data, index=lSI, name=sNm, dtype=dTp)
+                return pd.Series(data, index=lSI, name=sNm, dtype=tpDt)
 
-def iniPdDfr(data=None, lSNmC=[], lSNmR=[], shape=(0, 0), v=0, dTp=float):
+def iniPdDfr(data=None, lSNmC=[], lSNmR=[], shape=(0, 0), v=0, tpDt=float):
     assert len(shape) == 2
     nR, nC = shape
     if len(lSNmC) == 0:
         if len(lSNmR) == 0:
             if data is None:
-                return pd.DataFrame(iniNpArrV(shape, v, dTp=dTp), dtype=dTp)
+                return pd.DataFrame(iniNpArrV(shape, v, tpDt=tpDt), dtype=tpDt)
             else:
-                return pd.DataFrame(data, dtype=dTp)
+                return pd.DataFrame(data, dtype=tpDt)
         else:
             if data is None:
-                return pd.DataFrame(iniNpArrV((len(lSNmR), nC), v, dTp=dTp),
-                                    index=lSNmR, dtype=dTp)
+                return pd.DataFrame(iniNpArrV((len(lSNmR), nC), v, tpDt=tpDt),
+                                    index=lSNmR, dtype=tpDt)
             else:
-                return pd.DataFrame(data, index=lSNmR, dtype=dTp)
+                return pd.DataFrame(data, index=lSNmR, dtype=tpDt)
     else:
         if len(lSNmR) == 0:
             if data is None:
-                return pd.DataFrame(iniNpArrV((nR, len(lSNmC)), v, dTp=dTp),
-                                    columns=lSNmC, dtype=dTp)
+                return pd.DataFrame(iniNpArrV((nR, len(lSNmC)), v, tpDt=tpDt),
+                                    columns=lSNmC, dtype=tpDt)
             else:
-                return pd.DataFrame(data, columns=lSNmC, dtype=dTp)
+                return pd.DataFrame(data, columns=lSNmC, dtype=tpDt)
         else:   # ignore nR
             if data is None:
-                arrDat = iniNpArrV((len(lSNmR), len(lSNmC)), v, dTp=dTp)
+                arrDat = iniNpArrV((len(lSNmR), len(lSNmC)), v, tpDt=tpDt)
                 return pd.DataFrame(arrDat, index=lSNmR, columns=lSNmC,
-                                    dtype=dTp)
+                                    dtype=tpDt)
             else:
                 return pd.DataFrame(data, index=lSNmR, columns=lSNmC,
-                                    dtype=dTp)
+                                    dtype=tpDt)
 
 def getElOfSerIfValid(pdSer, cI, xAlt=0):
     xRet = xAlt

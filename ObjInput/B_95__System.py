@@ -12,7 +12,7 @@ strCL = GC.S_CL_SYSTEM
 
 # --- flow control ------------------------------------------------------------
 doEvoT = True
-doPlots = True
+doPlots = False
 
 # --- path, directory and file names ------------------------------------------
 sDObj = GC.S_DIR_SYS
