@@ -63,13 +63,14 @@ def decorateSavePlot(pF, pdDfr, sTtl=None, xLbl=None, yLbl=None, xLim=None,
     decorateSaveIt(pF, sTtl=sTtl, xLbl=xLbl, yLbl=yLbl, xLim=xLim, yLim=yLim)
 
 # --- Functions (O_95__System / O_99__Simulation) -----------------------------
-def plotCentres(dIPlt, dPltG, cDfr, sHdCX, sHdCY, lSY):
-    serX, serY = cDfr.loc[:, sHdCX], cDfr.loc[:, sHdCY]
+def plotCentres(cPltr, cDfr, sHdCY, lSY):
+    # print('TEMP (plotCentres): lSY =', lSY)
+    serX, serY = cDfr.loc[:, cPltr.sHdCX], cDfr.loc[:, sHdCY]
     serX, serY = GF.arrFinVal(serX, serY), GF.arrFinVal(serY, serY)
-    cCol = dPltG['dCol'][sHdCY]
+    cCol, dIPlt, pltDt = cPltr.pltDtI.dCol[sHdCY], cPltr.dIPlt, cPltr.pltDtI
     plt.plot(serX, serY, marker=dIPlt['tpMark'], ms=dIPlt['szMark'],
              mew=dIPlt['ewMark'], mec=dIPlt['ecMark'], mfc=dIPlt['fcMark'],
-             ls=dPltG['styLnCt'], lw=dPltG['wdthLnCt'], color=cCol,
+             ls=pltDt.styLnCt, lw=pltDt.wdthLnCt, color=cCol,
              label=lSY[0])
 
 def plotEvoSglR(dIPlt, dPltG, dfrR, pF, sHdCX, dSHdCY, sLblY):
@@ -82,31 +83,31 @@ def plotEvoSglR(dIPlt, dPltG, dfrR, pF, sHdCX, dSHdCY, sLblY):
     plt.close()
 
 # --- Functions (O_99__Simulation) --------------------------------------------
-def plotCIs(dIPlt, dPltG, dfrC, dfrS, serRp, sHdCX, sHdCY, mxY=0):
+def plotCIs(cPltr, dfrC, dfrS, serRp, sHdCY, mxY=0):
     serC, serS = dfrC.loc[:, sHdCY], dfrS.loc[:, sHdCY]
-    tArrB = GF.getArrCI(serC=serC, serS=serS, serRp=serRp,
-                        cAlph=dIPlt['alphaSpread'], mnV=0)
+    tArrB = GF.getArrCI(serC=serC, serS=serS, serRp=serRp, cAlph=cPltr.alpSpr,
+                        mnV=0)
     # filter out CIs of range 0 and non-finite values
     arrBRng = GF.getBoolAND3C(tArrB[0] != tArrB[1], GF.boolFinVal(tArrB[0]),
                               GF.boolFinVal(tArrB[1]))
     arrYMn, arrYMx = tArrB[0][arrBRng], tArrB[1][arrBRng]
-    cCol = dPltG['dCol'][sHdCY] + (dPltG['alpCol'],)
-    plt.vlines(dfrS.loc[:, sHdCX][arrBRng], arrYMn, arrYMx,
-               ls=dPltG['styLnCI'], lw=dPltG['wdthLnCI'], color=cCol)
+    cCol = cPltr.pltDtI.dCol[sHdCY] + (cPltr.pltDtI.alpCol,)
+    plt.vlines(dfrS.loc[:, cPltr.sHdCX][arrBRng], arrYMn, arrYMx,
+               ls=cPltr.pltDtI.styLnCI, lw=cPltr.pltDtI.wdthLnCI, color=cCol)
     return max([mxY] + list(serC) + list(tArrB[1]))
 
-def plotEvoMltR(dITp, dIPlt, dPltG, dDfrR, serRp, pF, sHdCX, dSHdCY, sLblY):
-    SF.checkConsistency2Dfr(dDfrR, lK=[GC.S_CENT, GC.S_SPREAD])
-    dfrCen, dfrSpr, maxY = dDfrR[GC.S_CENT], dDfrR[GC.S_SPREAD], 0
-    assert sHdCX in dfrCen.columns and sHdCX in dfrSpr.columns
+def plotEvoMltR(dITp, cPltr, serRp):
+    SF.checkConsistencyDictDfrPlt(cPltr.dDfrPlt, lK=[GC.S_CENT, GC.S_SPREAD])
+    dfrCen, dfrSpr, maxY = cPltr.dfrCent, cPltr.dfrSpread, 0
+    assert (cPltr.sHdCX in dfrCen.columns and cPltr.sHdCX in dfrSpr.columns)
     cFig = plt.figure()
-    for sHdCY, lSY in dSHdCY.items():
-        maxY = plotCIs(dIPlt, dPltG, dfrCen, dfrSpr, serRp=serRp, sHdCX=sHdCX,
-                       sHdCY=sHdCY, mxY=maxY)
-        plotCentres(dIPlt, dPltG, dfrCen, sHdCX, sHdCY, lSY)
+    for sHdCY, lSY in cPltr.dSHdCY.items():
+        maxY = plotCIs(cPltr, dfrCen, dfrSpr, serRp, sHdCY, mxY=maxY)
+        plotCentres(cPltr, dfrCen, sHdCY, lSY)
     plt.legend(loc='best')
-    decorateSavePlotS(pF, maxX=dITp['tMax'], maxY=maxY, sTtl=dIPlt['title'],
-                      xLbl=dIPlt['xLbl'], yLbl=sLblY, pltAxXY=dIPlt['pltAxXY'])
+    decorateSavePlotS(cPltr.pPltF, maxX=dITp['tMax'], maxY=maxY,
+                      sTtl=cPltr.dIPlt['title'], xLbl=cPltr.dIPlt['xLbl'],
+                      yLbl=cPltr.pltDtI.yLbl, pltAxXY=cPltr.dIPlt['pltAxXY'])
     plt.close()
 
 ###############################################################################

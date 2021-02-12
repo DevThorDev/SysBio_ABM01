@@ -379,7 +379,8 @@ def collapseColumns(pltDt, pdDfr, sLX, lSLY, sOp):
             mdDfr.loc[:, sK] = pdDfr.loc[:, d4Sel[sK]].T.sum(min_count=1)
         else:
             mdDfr.loc[:, sK] = pdDfr.loc[:, sK]
-    return {GC.S_CENT: mdDfr}, d4Leg
+    # return {GC.S_CENT: mdDfr}, d4Leg
+    return mdDfr, d4Leg
 
 # def addToDPath(pltDt, dP, sPPlt, sPSub, sFPlt='', cRp=0, sOp=None):
 #     if sOp is not None:
@@ -449,7 +450,7 @@ def addFirstColToDfrs(dDfr, serC1, lK=None, sKC1=GC.S_TIME):
 def updateDictDfr(cDfr, dDfrSt, serRp, modRp=False, lSCDisr=[GC.S_TIME]):
     lSCCalc = [sC for sC in cDfr.columns if sC not in lSCDisr]
     # initialise if full results DataFrame is still empty
-    if len(dDfrSt) == 0:
+    if dDfrSt is None or len(dDfrSt) == 0:
         for sK in GC.L_S_STATS_ALL:
             dDfrSt[sK] = GF.iniPdDfr(lSNmC=lSCCalc, lSNmR=cDfr.index, v=np.nan)
     # update the current value aggregate, and re-assign values to DataFrames
@@ -490,28 +491,28 @@ def calcDfrFinStats(dDfrSt, serRp, lSCDisr=[GC.S_TIME]):
     addFirstColToDfrs(dDfrSt, serC1=dDfrSt[GC.S_MEAN][GC.S_TIME],
                       lK=GC.L_S_STATS_DER)
 
-def procData(dITp, pltDt, pF, pltSpr=True, sLX=None, lSLY=None, sOp=None,
-             serRp=None):
-    dDfrPlt, dDfrSt, d4LgSim = {}, {}, {}
-    for cRp in range(1, dITp['nReps'] + 1):
-        cSys = System(inpDat, self.inFr, cRp=cRp)
-        sF = dITp[''] + GC.S_USC + GC.S_REP + str(cRp)
-        cDfr = loadPdDfr(dITp, [GC.S_DIR_SYS], sF, iCol=0)
-        if pltDt.dCHdGr is not None: # collapse if groups were specified
-            dDfrT, d4Lg = collapseColumns(pltDt, cDfr, sLX, lSLY, sOp)
-            cDfr = dDfrT[GC.S_CENT]
-            d4LgSim.update(d4Lg)
-        else:                           # reduce if no groups were specified
-            cDfr = cDfr.loc[:, [GC.S_TIME] + dPltG['lSCpCnc']]
-        updateDictDfr(cDfr, dDfrSt, serRp=serRp)
-    calcDfrFinStats(dDfrSt, serRp=serRp)
-    if dPltG['dCHdGr'] is not None:     # save data if groups were specified
-        saveDictDfr(dITp, dDfrSt, lK=GC.L_S_STATS_OUT, sFEnd=GF.getFNoExt(pF))
-    assert pltSpr in dDfrSt
-    dDfrPlt[GC.S_CENT], dDfrPlt[GC.S_SPREAD] = dDfrSt[GC.S_MEAN], dDfrSt[pltSpr]
-    return dDfrPlt, d4LgSim
+# def procData(dITp, pltDt, pF, pltSpr=True, sLX=None, lSLY=None, sOp=None,
+#              serRp=None):
+#     dDfrPlt, dDfrSt, d4LgSim = {}, {}, {}
+#     for cRp in range(1, dITp['nReps'] + 1):
+#         cSys = System(inpDat, self.inFr, cRp=cRp)
+#         sF = dITp[''] + GC.S_USC + GC.S_REP + str(cRp)
+#         cDfr = loadPdDfr(dITp, [GC.S_DIR_SYS], sF, iCol=0)
+#         if pltDt.dCHdGr is not None: # collapse if groups were specified
+#             dDfrT, d4Lg = collapseColumns(pltDt, cDfr, sLX, lSLY, sOp)
+#             cDfr = dDfrT[GC.S_CENT]
+#             d4LgSim.update(d4Lg)
+#         else:                           # reduce if no groups were specified
+#             cDfr = cDfr.loc[:, [GC.S_TIME] + dPltG['lSCpCnc']]
+#         updateDictDfr(cDfr, dDfrSt, serRp=serRp)
+#     calcDfrFinStats(dDfrSt, serRp=serRp)
+#     if dPltG['dCHdGr'] is not None:     # save data if groups were specified
+#         saveDictDfr(dITp, dDfrSt, lK=GC.L_S_STATS_OUT, sFEnd=GF.getFNoExt(pF))
+#     assert pltSpr in dDfrSt
+#     dDfrPlt[GC.S_CENT], dDfrPlt[GC.S_SPREAD] = dDfrSt[GC.S_MEAN], dDfrSt[pltSpr]
+#     return dDfrPlt, d4LgSim
 
-def checkConsistency2Dfr(dDfr, lK):
+def checkConsistencyDictDfrPlt(dDfr, lK):
     assert len(lK) == 2
     for cK in lK:
         assert cK in dDfr

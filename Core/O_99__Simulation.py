@@ -5,6 +5,7 @@
 import Core.C_00__GenConstants as GC
 import Core.F_00__GenFunctions as GF
 import Core.F_01__SpcFunctions as SF
+import Core.F_02__PltFunctions as PF
 
 from Core.I_02__InpFrames import InputFrames
 from Core.O_00__Base import Base
@@ -20,7 +21,7 @@ class Simulation(Base):
         self.descO = 'Simulation'
         self.inFr = InputFrames(self.dITp)
         self.nRp = self.dITp['nReps']
-        self.dDfrStats, self.dDfrRed = None, None
+        self.dDfrStats, self.dDfrRed = {}, {}
         self.hT = self.dITp['tMax']/(2*self.dITp['nTSRed'])
         self.lTRed = [k*self.hT for k in range(1, 2*self.dITp['nTSRed'], 2)]
         self.serRp = GF.iniPdSer(nEl=len(self.lTRed), v=0, sNm=GC.S_NUM_REP,
@@ -53,7 +54,7 @@ class Simulation(Base):
     #                        sFEnd=GF.getFNoExt(pFDat))
 
     def doReps(self, inpDat):
-        stTL, self.dDfrStats = GF.startRepLoop(), {}
+        stTL = GF.startRepLoop()
         for cRp in range(1, self.nRp + 1):
             print(GC.S_PLUS*8, 'Starting repetition', cRp, 'of', self.nRp)
             cSys = System(inpDat, self.inFr, cRp=cRp)
@@ -102,16 +103,39 @@ class Simulation(Base):
     #                 Pltr.plotSimRes(self.dITp, self.dDfrStats, dfrRed,
     #                                 serRp=self.serRp)
 
+    def calcGroupStats(self, inpDat, PltD, dDfrStats, dSHdCY, sOp):
+        for cRp in range(1, self.nRp + 1):
+            Pltr = PlotterSysSim(inpDat, self.inFr, PltD, sOp, cRp=cRp)
+            t = SF.collapseColumns(PltD, self.dDfrRed[cRp], Pltr.sHdCX,
+                                   Pltr.lSHdCY, sOp)
+            dfrRed, dSY = t
+            SF.updateDictDfr(dfrRed, dDfrStats, serRp=self.serRp)
+            dSHdCY.update(dSY)
+        SF.calcDfrFinStats(dDfrStats, serRp=self.serRp)
+
+    def setPlotter(self, inpDat, PltD, dDfrStats, dSHdCY, sOp):
+        Pltr = PlotterSysSim(inpDat, self.inFr, PltD, sOp)
+        Pltr.dfrCent = dDfrStats[GC.S_MEAN]
+        Pltr.dfrSpread = dDfrStats[Pltr.pltSpr]
+        Pltr.dDfrPlt = {GC.S_CENT: Pltr.dfrCent, GC.S_SPREAD: Pltr.dfrSpread}
+        Pltr.dSHdCY = dSHdCY
+        Pltr.pPltF = SF.getPPltF(PltD, Pltr.sPPlt, self.dITp['sDObj'], sOp=sOp)
+        return Pltr
+
+    def plotGroups(self, inpDat, PltD):
+        for sOp in PltD.lSOp:
+            dDfrStats, dSHdCY = {}, {}
+            self.calcGroupStats(inpDat, PltD, dDfrStats, dSHdCY, sOp)
+            Pltr = self.setPlotter(inpDat, PltD, dDfrStats, dSHdCY, sOp)
+            SF.saveDictDfr(self.dITp, Pltr.dDfrPlt, lK=GC.L_S_STATS_OUT,
+                           sFEnd=GF.getFNoExt(Pltr.pPltF))
+            PF.plotEvoMltR(self.dITp, Pltr, self.serRp)
+
     def plotSimRes(self, inpDat):
         for sI in self.dITp['lIPltDat']:
             PltD = PlotterData(inpDat, iTp=int(sI)+self.dIG['o_B_PltDt'])
-            for cRp in range(1, self.nRp + 1):
-                for sOp in PltD.lSOp:
-                    Pltr = PlotterSysSim(inpDat, self.inFr, PltD, sOp, cRp=cRp)
-                    t = SF.collapseColumns(PltD, self.dDfrRed[cRp], Pltr.sHdCX,
-                                           Pltr.lSHdCY, sOp)
-                    Pltr.dDfrPlt, Pltr.dSHdCY = t
-                    Pltr.plotSimRes(self.dITp, serRp=self.serRp)
+            if PltD.lSOp is not None and PltD.dCHdGr is not None:   # groups
+                self.plotGroups(inpDat, PltD)
 
     def runSimulation(self, inpDat):
         self.doReps(inpDat)
