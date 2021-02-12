@@ -138,7 +138,7 @@ class PlotterSysSim(Base):
             else:                               # groups were defined
                 # self.procWGroups(dfrRd, serRp)
                 dfrPltC = self.dfrCent.loc[:, [self.sHdCX] + self.lSHdCY]
-                self.dDfrPlt = {GC.S_CENT: dfrPlt}
+                self.dDfrPlt = {GC.S_CENT: dfrPltC}
 
     # # def genDDfrPlt(self):
     # #     assert self.pltSpr in self.dDfrPlt

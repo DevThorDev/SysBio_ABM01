@@ -20,7 +20,7 @@ class Simulation(Base):
         self.descO = 'Simulation'
         self.inFr = InputFrames(self.dITp)
         self.nRp = self.dITp['nReps']
-        self.dDfrStats = None
+        self.dDfrStats, self.dDfrRed = None, None
         self.hT = self.dITp['tMax']/(2*self.dITp['nTSRed'])
         self.lTRed = [k*self.hT for k in range(1, 2*self.dITp['nTSRed'], 2)]
         self.serRp = GF.iniPdSer(nEl=len(self.lTRed), v=0, sNm=GC.S_NUM_REP,
@@ -64,8 +64,8 @@ class Simulation(Base):
                 cSys.dfrResEvo = SF.loadPdDfr(self.dITp, lD=lD, sF=sFR, iCol=0)
             if not cSys.dITp['doEvoT'] and cSys.dITp['doPlots']:
                 cSys.plotResEvo(inpDat, self.dITp)
-            SF.calcDfrRunStats(self.dITp, cSys, self.dDfrStats,
-                               lTRd=self.lTRed, serRp=self.serRp)
+            SF.calcDfrRunStats(self.dITp, cSys, self.dDfrStats, self.dDfrRed,
+                               lTRd=self.lTRed, serRp=self.serRp, cRp=cRp)
             cSys.printRepDone(cRp, self.nRp, stTL)
 
     def saveDictDfrStatsNoGrp(self):
@@ -76,12 +76,13 @@ class Simulation(Base):
                          overWr=self.dITp['overWrCSV'])
 
     def calcRepStatistics(self, inpDat):
-        # re-calc mean and M2 of self.dDfrStats if this dict. is None
-        if self.dDfrStats is None:
+        # re-calc mean and M2 of self.dDfrStats if this dictionary is None
+        if self.dDfrStats is None or self.dDfrRed is None:
             for cRp in range(1, self.nRp + 1):
                 cSys = System(inpDat, self.inFr, cRp=cRp)
                 SF.calcDfrRunStats(self.dITp, cSys, self.dDfrStats,
-                                   lTRd=self.lTRed, serRp=self.serRp)
+                                   self.dDfrRed, lTRd=self.lTRed,
+                                   serRp=self.serRp, cRp=cRp)
         # calc final statistics and store them in self.dDfrStats
         SF.calcDfrFinStats(self.dDfrStats, serRp=self.serRp)
         SF.saveSerRep(self.dITp, self.dDfrStats[GC.S_MEAN], self.serRp,
@@ -89,17 +90,28 @@ class Simulation(Base):
         # save the final statistics (for all components, without grouping)
         self.saveDictDfrStatsNoGrp()
 
+    # def plotSimRes(self, inpDat):
+    #     for cRp in range(1, self.nRp + 1):
+    #         # cSys = System(inpDat, self.inFr, cRp=cRp)
+    #         # dfrRed = SF.loadPdDfr(self.dITp, [cSys.dITp['sDObj']], cSys.sFRed,
+    #         #                       iCol=0)
+    #         for sI in self.dITp['lIPltDat']:
+    #             PltD = PlotterData(inpDat, iTp=int(sI)+self.dIG['o_B_PltDt'])
+    #             for sOp in PltD.lSOp:
+    #                 Pltr = PlotterSysSim(inpDat, self.inFr, PltD, sOp, cRp=cRp)
+    #                 Pltr.plotSimRes(self.dITp, self.dDfrStats, dfrRed,
+    #                                 serRp=self.serRp)
+
     def plotSimRes(self, inpDat):
-        for cRp in range(1, self.nRp + 1):
-            cSys = System(inpDat, self.inFr, cRp=cRp)
-            dfrRed = SF.loadPdDfr(self.dITp, [cSys.dITp['sDObj']], cSys.sFRed,
-                                  iCol=0)
-            for sI in self.dITp['lIPltDat']:
-                PltD = PlotterData(inpDat, iTp=int(sI)+self.dIG['o_B_PltDt'])
+        for sI in self.dITp['lIPltDat']:
+            PltD = PlotterData(inpDat, iTp=int(sI)+self.dIG['o_B_PltDt'])
+            for cRp in range(1, self.nRp + 1):
                 for sOp in PltD.lSOp:
                     Pltr = PlotterSysSim(inpDat, self.inFr, PltD, sOp, cRp=cRp)
-                    Pltr.plotSimRes(self.dITp, self.dDfrStats, dfrRed,
-                                    serRp=self.serRp)
+                    t = SF.collapseColumns(PltD, self.dDfrRed[cRp], Pltr.sHdCX,
+                                           Pltr.lSHdCY, sOp)
+                    Pltr.dDfrPlt, Pltr.dSHdCY = t
+                    Pltr.plotSimRes(self.dITp, serRp=self.serRp)
 
     def runSimulation(self, inpDat):
         self.doReps(inpDat)
