@@ -14,8 +14,9 @@ strCL = GC.S_CL_SIMULATION
 
 # --- flow control ------------------------------------------------------------
 calcStats = True
-doPlots = False
+doPlots = True
 printStats = False
+overWrCSV = False
 nReps = 3                   # 3 / 5 / 10
 nTSRed = 500                # 500 / 200 / 100
 tStart = 0                  # 0
@@ -55,6 +56,7 @@ dIO = {# --- general
        'calcStats': calcStats,
        'doPlots': doPlots,
        'printStats': printStats,
+       'overWrCSV': overWrCSV,
        'nReps': nReps,
        'nTSRed': nTSRed,
        'tStart': tStart,

@@ -3,8 +3,8 @@
 # --- O_80__PlotterSysSim.py --------------------------------------------------
 ###############################################################################
 import Core.C_00__GenConstants as GC
-# import Core.F_00__GenFunctions as GF
-# import Core.F_01__SpcFunctions as SF
+import Core.F_00__GenFunctions as GF
+import Core.F_01__SpcFunctions as SF
 # import Core.F_02__PltFunctions as PF
 
 from Core.O_00__Base import Base
@@ -76,69 +76,87 @@ class PlotterSysSim(Base):
         self.printDictDfr(sAttr='dDfrPlt', sTxt='Dict. of DataFrames 4 plot:')
         print('-'*80)
 
-    def procNoGroups(self, dPltG, dDfrRd, serRp, pF, sOp):
-        # no collapsing of columns necessary (no groups)
-        pltSpr = self.dIPlt['plotSpread']
-        dfrPlt = self.dDfrCent[pF].loc[:, [self.sHdCX] + self.lSHdCY]
-        self.dDDfrPlt[pF] = {GC.S_CENT: dfrPlt}
-        self.dSHdCY = {sHd: [sHd] for sHd in self.lSHdCY}
-        if not self.pltSgl:
-            # including spread (from multiple repeats)
-            for cDfr in dDfrRd:
-                cDfr = cDfr.loc[:, [GC.S_TIME] + self.lSHdCY]
-                SF.updateDictDfr(cDfr, self.dDDfrPlt[pF], serRp=serRp)
-            # self.dDDfrPlt[pF], _ = SF.procData(dITp, dPltG, pF, pltSpr, serRp=serRp)
+    # def procNoGroups(self, serRp):
+    #     # no collapsing of columns necessary (no groups)
+    #     dfrPlt = self.dfrCent.loc[:, [self.sHdCX] + self.lSHdCY]
+    #     self.dDfrPlt = {GC.S_CENT: dfrPlt}
+    #     self.dSHdCY = {sHd: [sHd] for sHd in self.lSHdCY}
+    #     if not self.pltSgl:
+    #         # including spread (from multiple repeats)
+    #         for cDfr in dDfrRd:
+    #             cDfr = cDfr.loc[:, [GC.S_TIME] + self.lSHdCY]
+    #             SF.updateDictDfr(cDfr, self.dDfrPlt, serRp=serRp)
+    #         # self.dDfrPlt, _ = SF.procData(dITp, dPltG, pF, self.pltSpr, serRp=serRp)
 
-    def procWGroups(self, dPltG, dDfrRd, serRp, pF, sOp):
-        pltSpr = self.dIPlt['plotSpread']
+    def procWGroups(self, serRp):
         # collapsing of columns necessary (component groups)
-        dfrPlt = self.dDfrCent[pF].loc[:, [self.sHdCX] + self.lSHdCY]
-        self.dDDfrPlt[pF] = {GC.S_CENT: dfrPlt}
+        dfrPlt = self.dfrCent.loc[:, [self.sHdCX] + self.lSHdCY]
+        self.dDfrPlt = {GC.S_CENT: dfrPlt}
         if self.pltSgl:
             # single stochastic realisation
             t = SF.collapseColumns(dPltG, dfrPlt, self.sHdCX, self.lSHdCY, sOp)
-            self.dDDfrPlt[pF], self.dSHdCY = t
+            self.dDfrPlt, self.dSHdCY = t
         else:
             # including spread (from multiple repeats)
             for cDfr in dDfrRd:
                 dDfrT, d4Lg = SF.collapseColumns(dPltG, cDfr, sLX, lSLY, sOp)
                 cDfr = dDfrT[GC.S_CENT]
                 d4LgSim.update(d4Lg)
-                SF.updateDictDfr(cDfr, self.dDDfrPlt[pF], serRp=serRp)
+                SF.updateDictDfr(cDfr, self.dDfrPlt, serRp=serRp)
 
-            # self.dDDfrPlt[pF], dSHdCY = SF.procData(dITp, dPltG, pF, pltSpr, self.sHdCX,
+            # self.dDfrPlt, dSHdCY = SF.procData(dITp, dPltG, pF, self.pltSpr, self.sHdCX,
             #                               lSHdCY, sOp=sOp, serRp=serRp)
 
-    def plotSimRes(self, dITp, dDfrStats, dfrRd, serRp=None, overWr=True):
-        # self.pltSgl, sDSub = False, dITp['sDObj']
-        for dPltG in self.dIPlt['dPltG'].values():
-            self.dDDfrPlt, self.lSHdCY = {}, dPltG['lSCpCnc']
-            dPPltF = SF.getDPFPltEvo(dPltG, self.dITp['sPPlt'], dITp['sDObj'])
-            for (pF, (sOp, _)) in dPPltF.items():
-                if overWr or not GF.pFExists(pF):
-                    self.dSHdCY = {}
-                    if dPltG['dCHdGr'] is None:
-                        self.procNoGroups(dPltG, dDfrRd, serRp, pF, sOp=sOp)
-                    else:
-                        self.procWGroups(dPltG, dDfrRd, serRp, pF, sOp=sOp)
+    def plotSimRes(self, dITp, dDfrSt, dfrRd, serRp=None, overWr=True):
+        sDSub, self.dDfrPlt = dITp['sDObj'], {}
+        self.lSHdCY = self.pltDtI.lSCpCnc
+        self.pPltF = SF.getPPltF(self.pltDtI, self.sPPlt, sDSub, sOp=self.cOp)
+        self.dfrCent, self.dfrSpread = dDfrSt[GC.S_MEAN], dDfrSt[self.pltSpr]
+        print('-'*8, 'TEMP - dDfrSt:\n')
+        for cK, cDfr in dDfrSt.items():
+            print('-'*4, cK, '-'*4)
+            print(cDfr)
+        print('-'*8, 'TEMP - dfrRd:\n')
+        print(dfrRd)
+        print('-'*8, 'TEMP - serRp:\n')
+        print(serRp)
+        print('-'*8, 'TEMP - lSHdCY:\n')
+        print(self.lSHdCY)
+        print('-'*8, 'TEMP - pPltF:\n')
+        print(self.pPltF)
+        print('-'*8, 'TEMP - sOp:\n')
+        print(self.cOp)
+        print('-'*8, 'TEMP - END', '-'*8)
+        assert False
+        if overWr or not GF.pFExists(self.pPltF):
+            if self.pltDtI.dCHdGr is None:      # no groups defined
+                # self.procNoGroups(dfrRd, serRp)
+                dfrPltC = self.dfrCent.loc[:, [self.sHdCX] + self.lSHdCY]
+                dfrPltS = self.dfrSpread.loc[:, [self.sHdCX] + self.lSHdCY]
+                self.dDfrPlt = {GC.S_CENT: dfrPltC, self.pltSpr: dfrPltS}
+                self.dSHdCY = {sHd: [sHd] for sHd in self.lSHdCY}
+            else:                               # groups were defined
+                # self.procWGroups(dfrRd, serRp)
+                dfrPltC = self.dfrCent.loc[:, [self.sHdCX] + self.lSHdCY]
+                self.dDfrPlt = {GC.S_CENT: dfrPlt}
 
     # # def genDDfrPlt(self):
-    # #     assert pltSpr in self.dDDfrPlt[pF]
-    # #     dDfrPlt = {GC.S_CENT: self.dDDfrPlt[pF][GC.S_MEAN],
-    # #                GC.S_SPREAD: self.dDDfrPlt[pF][self.dIPlt['plotSpread']]}
+    # #     assert self.pltSpr in self.dDfrPlt
+    # #     dDfrPlt = {GC.S_CENT: self.dDfrPlt[GC.S_MEAN],
+    # #                GC.S_SPREAD: self.dDfrPlt[self.dIPlt['plotSpread']]}
     # #     return dDfrPlt, d4LgSim
     # #                 return dDfrPlt, dSHdCY
 
 
     # def getI4Plot(self, dITp, dPltG, sOp, pF, serRp):
-    #     lSHdCY, pltSpr = dPltG['lSCpCnc'], self.dIPlt['plotSpread']
+    #     lSHdCY = dPltG['lSCpCnc']
     #     if dPltG['dCHdGr'] is None:
     #         # no collapsing of columns necessary (no groups)
     #         dDfrPlt = {GC.S_CENT: self.dfrCent.loc[:, [self.sHdCX] + lSHdCY]}
     #         dSHdCY = {sHd: [sHd] for sHd in lSHdCY}
     #         if not self.pltSgl:
     #             # including spread (from multiple repeats)
-    #             dDfrPlt, _ = SF.procData(dITp, dPltG, pF, pltSpr, serRp=serRp)
+    #             dDfrPlt, _ = SF.procData(dITp, dPltG, pF, self.pltSpr, serRp=serRp)
     #     else:
     #         # collapsing of columns necessary (component groups)
     #         dfrPlt = self.dfrCent.loc[:, [self.sHdCX] + lSHdCY]
@@ -149,7 +167,7 @@ class PlotterSysSim(Base):
     #                                                  lSHdCY, sOp=sOp)
     #         else:
     #             # including spread (from multiple repeats)
-    #             dDfrPlt, dSHdCY = SF.procData(dITp, dPltG, pF, pltSpr,
+    #             dDfrPlt, dSHdCY = SF.procData(dITp, dPltG, pF, self.pltSpr,
     #                                           self.sHdCX, lSHdCY, sOp=sOp,
     #                                           serRp=serRp)
     #     return dDfrPlt, dSHdCY

@@ -135,11 +135,14 @@ class System(Base):
               'seconds.', GC.S_PLUS*8)
 
     def plotResEvo(self, inpDat, dITp, overWr=True):
-        if self.dResEvo is None:
-            self.dfrResEvo = SF.readDfrResEvo(self.dITp, sPRs=dITp['sPRes'],
-                                              sFRs=self.sFRes, iCol=0)
-        else:
+        # if self.dResEvo is None:
+        #     self.dfrResEvo = SF.readDfrResEvo(self.dITp, sPRs=dITp['sPRes'],
+        #                                       sFRs=self.sFRes, iCol=0)
+        # else:
+        #     self.dfrResEvo = GF.iniPdDfr(self.dResEvo)
+        if self.dResEvo is not None:
             self.dfrResEvo = GF.iniPdDfr(self.dResEvo)
+        assert self.dfrResEvo is not None
         Pltr = PlotterSysSim(inpDat, self.inFr, self.cRp)
         Pltr.plotSysRes(self.dfrResEvo, sDSub=self.dITp['sDObj'])
 
@@ -148,8 +151,8 @@ class System(Base):
                                                       self.inFr, self.dCncSMo)
         self.dfrResEvo = GF.iniPdDfr(self.dResEvo)
         self.updateObjDicts(inpDat, refresh=True)
-        dR, sD = self.dResEvo, self.dITp['sDObj']
-        self.pFResEvo = SF.saveAsPdDfr(dITp, dR, [sD], self.sFRes)
+        dR, sD, oW = self.dResEvo, self.dITp['sDObj'], dITp['overWrCSV']
+        self.pFResEvo = SF.saveAsPdDfr(dITp, dR, [sD], self.sFRes, overWr=oW)
         if self.dITp['doPlots']:
             self.plotResEvo(inpDat, dITp)
 

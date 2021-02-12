@@ -10,8 +10,9 @@ import Core.C_00__GenConstants as GC
 import Core.F_00__GenFunctions as GF
 
 # --- Functions (general) -----------------------------------------------------
-def loadPdDfr(dITp, lD, sF, iCol=None, sFExt=GC.S_EXT_CSV):
-    sP = GF.getPF([dITp['sPRes']] + lD, sF, sFExt=sFExt)
+def loadPdDfr(dITp, lD=[], sF=None, sP=None, iCol=None, sFExt=GC.S_EXT_CSV):
+    if sP is None:
+        sP = GF.getPF([dITp['sPRes']] + lD, sF, sFExt=sFExt)
     if os.path.isfile(sP):
         return GF.readCSV(sP, sepD=dITp['cSep'], iCol=iCol)
     return GF.iniPdDfr()
@@ -28,9 +29,9 @@ def saveAsPdDfr(dITp, dRes, lD, sF, overWr=True, sFExt=GC.S_EXT_CSV):
         GF.iniPdDfr(dRes).to_csv(sP, sep=dITp['cSep'])
     return sP
 
-def saveSerRep(dITp, cDfr, serRp, lD, sFA='', overWr=True, sFExt=GC.S_EXT_CSV):
+def saveSerRep(dITp, cDfr, serRp, lD, sFA='', sFExt=GC.S_EXT_CSV):
     sP = GF.getPF([dITp['sPRes']] + lD, sF=dITp['sFNRp'] + sFA, sFExt=sFExt)
-    if not os.path.isfile(sP) or overWr:
+    if not os.path.isfile(sP) or dITp['overWrCSV']:
         lSer = [cDfr.loc[:, GC.S_TIME].round(GC.R08), serRp]
         GF.saveConcatDfr(lSer, pF=sP, sepD=dITp['cSep'])
 
@@ -332,11 +333,11 @@ def evolveGillespie(dITp, dICp, inpFr, dCncSMo):
         updateDictOut(dO, dCncSMo, t)
     return dO['dRes'], dO['dN']
 
-def readDfrResEvo(dITp, sPRs, sFRs, iCol=None):
-    pFRes = GF.getPF([sPRs, dITp['sDObj']], sFRs, sFExt=GC.S_EXT_CSV)
-    if os.path.isfile(pFRes):
-        return GF.readCSV(pFRes, sepD=dITp['cSep'], iCol=iCol)
-    return None
+# def readDfrResEvo(dITp, sPRs, sFRs, iCol=None):
+#     pFRes = GF.getPF([sPRs, dITp['sDObj']], sFRs, sFExt=GC.S_EXT_CSV)
+#     if os.path.isfile(pFRes):
+#         return GF.readCSV(pFRes, sepD=dITp['cSep'], iCol=iCol)
+#     return None
 
 # --- Functions (O_95__System / O_99__Simulation) -----------------------------
 def prepDict4Sel(dPltG, d4Sel, lSLY=[]):
@@ -375,26 +376,33 @@ def collapseColumns(dPltG, pdDfr, sLX, lSLY, sOp):
             mdDfr.loc[:, sK] = pdDfr.loc[:, sK]
     return {GC.S_CENT: mdDfr}, d4Leg
 
-def addToDPath(dPltG, dP, sPPlt, sPSub, sFPlt='', cRp=0, sOp=None):
+# def addToDPath(pltDt, dP, sPPlt, sPSub, sFPlt='', cRp=0, sOp=None):
+#     if sOp is not None:
+#         sFPlt += GC.S_USC + sOp
+#     if pltDt.sPltNm is not None:
+#         sFPlt += GC.S_USC + pltDt.sPltNm
+#     if cRp > 0:
+#         sFPlt += GC.S_USC*2 + GC.S_REP + str(cRp)
+#     pFPlt = GF.getPF([sPPlt, sPSub], sFPlt, sFExt=GC.S_EXT_PDF)
+#     dP[pFPlt] = (sOp, pltDt)
+
+# def getDPFPltEvo(pltDt, sPPlt, sDSub, cRp=0, sOp=None):
+#     dP, sPSub, sFPlt = {}, sDSub, pltDt.sPltTp
+#     if cRp > 0:
+#         sPSub = os.path.join(sPSub, GC.S_REP + str(cRp))
+#     addToDPath(pltDt, dP, sPPlt, sPSub, sFPlt=sFPlt, cRp=cRp, sOp=sOp)
+#     return dP
+
+def getPPltF(pltDt, sPPlt, sDSub, cRp=0, sOp=None):
+    sPSub, sFPlt = sDSub, pltDt.sPltTp
     if sOp is not None:
         sFPlt += GC.S_USC + sOp
-    if dPltG['sPltNm'] is not None:
-        sFPlt += GC.S_USC + dPltG['sPltNm']
+    if pltDt.sPltNm is not None:
+        sFPlt += GC.S_USC + pltDt.sPltNm
     if cRp > 0:
         sFPlt += GC.S_USC*2 + GC.S_REP + str(cRp)
-    pFPlt = GF.getPF([sPPlt, sPSub], sFPlt, sFExt=GC.S_EXT_PDF)
-    dP[pFPlt] = (sOp, dPltG)
-
-def getDPFPltEvo(dPltG, sPPlt, sDSub, cRp=0):
-    dP, sPSub, sFPlt = {}, sDSub, dPltG['sPltTp']
-    if cRp > 0:
         sPSub = os.path.join(sPSub, GC.S_REP + str(cRp))
-    if dPltG['lSOp'] is None:
-        addToDPath(dPltG, dP, sPPlt, sPSub, sFPlt=sFPlt, cRp=cRp)
-    else:
-        for sOp in dPltG['lSOp']:
-            addToDPath(dPltG, dP, sPPlt, sPSub, sFPlt=sFPlt, cRp=cRp, sOp=sOp)
-    return dP
+    return GF.getPF([sPPlt, sPSub], sFPlt, sFExt=GC.S_EXT_PDF)
 
 # --- Functions (O_99__Simulation) --------------------------------------------
 def collapseTimes(dITp, cSys, lTRd, overWr=False, sCTime=GC.S_TIME):
@@ -450,7 +458,7 @@ def updateDictDfr(cDfr, dDfrI, serRp, modRp=False, lSCDisr=[GC.S_TIME]):
 
 def calcDfrRunStats(dITp, cSys, dDfrI, lTRd, serRp, lSCDisr=[GC.S_TIME]):
     # reduce the data to the given number of lines
-    dfrRd = collapseTimes(dITp, cSys, lTRd=lTRd, overWr=False)
+    dfrRd = collapseTimes(dITp, cSys, lTRd=lTRd, overWr=dITp['overWrCSV'])
     # update the DataFrames dictionary
     updateDictDfr(dfrRd, dDfrI, serRp=serRp, modRp=True, lSCDisr=lSCDisr)
 

@@ -52,22 +52,28 @@ class Simulation(Base):
     #         SF.saveDictDfr(self.dITp, self.dDfrStats, lK=GC.L_S_STATS_OUT,
     #                        sFEnd=GF.getFNoExt(pFDat))
 
-    def plotSimRes(self, inpDat):
+    def doReps(self, inpDat):
+        stTL, self.dDfrStats = GF.startRepLoop(), {}
         for cRp in range(1, self.nRp + 1):
-            cSys, sD = System(inpDat, self.inFr, cRp=cRp), self.dITp['sDObj']
-            dfrRed = SF.loadPdDfr(self.dITp, [sD], cSys.sFRed, iCol=0)
-            for sI in self.dITp['lIPltDat']:
-                PltD = PlotterData(inpDat, iTp=int(sI)+self.dIG['o_B_PltDt'])
-                for sOp in PltD.lSOp:
-                    Pltr = PlotterSysSim(inpDat, self.inFr, PltD, sOp, cRp=cRp)
-                    Pltr.plotSimRes(self.dITp, self.dDfrStats, dfrRed,
-                                    serRp=self.serRp)
+            print(GC.S_PLUS*8, 'Starting repetition', cRp, 'of', self.nRp)
+            cSys = System(inpDat, self.inFr, cRp=cRp)
+            if cSys.dITp['doEvoT']:
+                cSys.evolveOverTime(inpDat, self.dITp)
+            else:
+                lD, sFR = [cSys.dITp['sDObj']], cSys.sFRes
+                cSys.dfrResEvo = SF.loadPdDfr(self.dITp, lD=lD, sF=sFR, iCol=0)
+            if not cSys.dITp['doEvoT'] and cSys.dITp['doPlots']:
+                cSys.plotResEvo(inpDat, self.dITp)
+            SF.calcDfrRunStats(self.dITp, cSys, self.dDfrStats,
+                               lTRd=self.lTRed, serRp=self.serRp)
+            cSys.printRepDone(cRp, self.nRp, stTL)
 
     def saveDictDfrStatsNoGrp(self):
         for sStat in GC.L_S_STATS_OUT:
             sF = self.sFRes + GC.S_USC + str(sStat) + GC.S_USC + GC.S_NO_GR
             SF.savePdDfr(self.dITp, self.dDfrStats[sStat],
-                         lD=[self.dITp['sDObj'], sStat], sF=sF)
+                         lD=[self.dITp['sDObj'], sStat], sF=sF,
+                         overWr=self.dITp['overWrCSV'])
 
     def calcRepStatistics(self, inpDat):
         # re-calc mean and M2 of self.dDfrStats if this dict. is None
@@ -83,18 +89,17 @@ class Simulation(Base):
         # save the final statistics (for all components, without grouping)
         self.saveDictDfrStatsNoGrp()
 
-    def doReps(self, inpDat):
-        stTL, self.dDfrStats = GF.startRepLoop(), {}
+    def plotSimRes(self, inpDat):
         for cRp in range(1, self.nRp + 1):
-            print(GC.S_PLUS*8, 'Starting repetition', cRp, 'of', self.nRp)
             cSys = System(inpDat, self.inFr, cRp=cRp)
-            if cSys.dITp['doEvoT']:
-                cSys.evolveOverTime(inpDat, self.dITp)
-            if not cSys.dITp['doEvoT'] and cSys.dITp['doPlots']:
-                cSys.plotResEvo(inpDat, self.dITp)
-            SF.calcDfrRunStats(self.dITp, cSys, self.dDfrStats,
-                               lTRd=self.lTRed, serRp=self.serRp)
-            cSys.printRepDone(cRp, self.nRp, stTL)
+            dfrRed = SF.loadPdDfr(self.dITp, [cSys.dITp['sDObj']], cSys.sFRed,
+                                  iCol=0)
+            for sI in self.dITp['lIPltDat']:
+                PltD = PlotterData(inpDat, iTp=int(sI)+self.dIG['o_B_PltDt'])
+                for sOp in PltD.lSOp:
+                    Pltr = PlotterSysSim(inpDat, self.inFr, PltD, sOp, cRp=cRp)
+                    Pltr.plotSimRes(self.dITp, self.dDfrStats, dfrRed,
+                                    serRp=self.serRp)
 
     def runSimulation(self, inpDat):
         self.doReps(inpDat)
