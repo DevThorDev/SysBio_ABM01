@@ -4,7 +4,7 @@
 ###############################################################################
 import Core.C_00__GenConstants as GC
 # import Core.F_00__GenFunctions as GF
-# import Core.F_01__SpcFunctions as SF
+import Core.F_01__SpcFunctions as SF
 # import Core.F_02__PltFunctions as PF
 
 from Core.O_00__Base import Base
@@ -75,6 +75,13 @@ class PlotterSysSim(Base):
         self.printObj(sAttr='dfrSpread', sTxt='DataFrame of spread:')
         self.printDictDfr(sAttr='dDfrPlt', sTxt='Dict. of DataFrames to plot:')
         print('-'*80)
+
+    def setPropPlotter(self, inpDat, PltD, dDfrStats, dSHdCY, sDSim, sOp):
+        self.dfrCent = dDfrStats[GC.S_MEAN]
+        self.dfrSpread = dDfrStats[self.pltSpr]
+        self.dDfrPlt = {GC.S_CENT: self.dfrCent, GC.S_SPREAD: self.dfrSpread}
+        self.dSHdCY = dSHdCY
+        self.pPltF = SF.getPPltF(PltD, self.sPPlt, sDSub=sDSim, sOp=sOp)
 
     # def procNoGroups(self, serRp):
     #     # no collapsing of columns necessary (no groups)

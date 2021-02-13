@@ -46,13 +46,6 @@ class Simulation(Base):
     #         # TEMP - plotting part (END)
     #     return dDfrRed
 
-    # def getProcData4Plt(self, pFDat, saveDDfr=False):
-    #     SF.calcDfrFinStats(self.dDfrStats, serRp=self.serRp)
-    #     # if dPltG['dCHdGr'] is not None:     # save data if groups were specified
-    #     if saveDDfr:     # save data if groups were specified
-    #         SF.saveDictDfr(self.dITp, self.dDfrStats, lK=GC.L_S_STATS_OUT,
-    #                        sFEnd=GF.getFNoExt(pFDat))
-
     def doReps(self, inpDat):
         stTL = GF.startRepLoop()
         for cRp in range(1, self.nRp + 1):
@@ -77,7 +70,7 @@ class Simulation(Base):
                          overWr=self.dITp['overWrCSV'])
 
     def calcRepStatistics(self, inpDat):
-        # re-calc mean and M2 of self.dDfrStats if this dictionary is None
+        # re-calc mean and M2 of self.dDfrStats if any dictionary is None
         if self.dDfrStats is None or self.dDfrRed is None:
             for cRp in range(1, self.nRp + 1):
                 cSys = System(inpDat, self.inFr, cRp=cRp)
@@ -91,18 +84,6 @@ class Simulation(Base):
         # save the final statistics (for all components, without grouping)
         self.saveDictDfrStatsNoGrp()
 
-    # def plotSimRes(self, inpDat):
-    #     for cRp in range(1, self.nRp + 1):
-    #         # cSys = System(inpDat, self.inFr, cRp=cRp)
-    #         # dfrRed = SF.loadPdDfr(self.dITp, [cSys.dITp['sDObj']], cSys.sFRed,
-    #         #                       iCol=0)
-    #         for sI in self.dITp['lIPltDat']:
-    #             PltD = PlotterData(inpDat, iTp=int(sI)+self.dIG['o_B_PltDt'])
-    #             for sOp in PltD.lSOp:
-    #                 Pltr = PlotterSysSim(inpDat, self.inFr, PltD, sOp, cRp=cRp)
-    #                 Pltr.plotSimRes(self.dITp, self.dDfrStats, dfrRed,
-    #                                 serRp=self.serRp)
-
     def calcGroupStats(self, inpDat, PltD, dDfrStats, dSHdCY, sOp):
         for cRp in range(1, self.nRp + 1):
             Pltr = PlotterSysSim(inpDat, self.inFr, PltD, sOp, cRp=cRp)
@@ -113,20 +94,13 @@ class Simulation(Base):
             dSHdCY.update(dSY)
         SF.calcDfrFinStats(dDfrStats, serRp=self.serRp)
 
-    def setPlotter(self, inpDat, PltD, dDfrStats, dSHdCY, sOp):
-        Pltr = PlotterSysSim(inpDat, self.inFr, PltD, sOp)
-        Pltr.dfrCent = dDfrStats[GC.S_MEAN]
-        Pltr.dfrSpread = dDfrStats[Pltr.pltSpr]
-        Pltr.dDfrPlt = {GC.S_CENT: Pltr.dfrCent, GC.S_SPREAD: Pltr.dfrSpread}
-        Pltr.dSHdCY = dSHdCY
-        Pltr.pPltF = SF.getPPltF(PltD, Pltr.sPPlt, self.dITp['sDObj'], sOp=sOp)
-        return Pltr
-
     def plotGroups(self, inpDat, PltD):
         for sOp in PltD.lSOp:
             dDfrStats, dSHdCY = {}, {}
             self.calcGroupStats(inpDat, PltD, dDfrStats, dSHdCY, sOp)
-            Pltr = self.setPlotter(inpDat, PltD, dDfrStats, dSHdCY, sOp)
+            Pltr = PlotterSysSim(inpDat, self.inFr, PltD, sOp)
+            Pltr.setPropPlotter(inpDat, PltD, dDfrStats, dSHdCY=dSHdCY,
+                                sDSim=self.dITp['sDObj'], sOp=sOp)
             SF.saveDictDfr(self.dITp, Pltr.dDfrPlt, lK=GC.L_S_STATS_OUT,
                            sFEnd=GF.getFNoExt(Pltr.pPltF))
             PF.plotEvoMltR(self.dITp, Pltr, self.serRp)
@@ -144,7 +118,7 @@ class Simulation(Base):
             if self.dITp['doPlots']:
                 self.plotSimRes(inpDat)
 
-    def printDfrStats(self, lSStatsOut = GC.L_S_STATS_OUT):
+    def printDfrStats(self, lSStatsOut=GC.L_S_STATS_OUT):
         if self.dITp['printStats']:
             print(GC.S_PLUS*8, 'Simulation results:', GC.S_PLUS*8)
             for sStat in lSStatsOut:
