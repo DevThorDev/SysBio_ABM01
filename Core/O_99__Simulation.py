@@ -5,7 +5,6 @@
 import Core.C_00__GenConstants as GC
 import Core.F_00__GenFunctions as GF
 import Core.F_01__SpcFunctions as SF
-import Core.F_02__PltFunctions as PF
 
 from Core.I_02__InpFrames import InputFrames
 from Core.O_00__Base import Base
@@ -96,14 +95,13 @@ class Simulation(Base):
 
     def plotGroups(self, inpDat, PltD):
         for sOp in PltD.lSOp:
-            dDfrStats, dSHdCY = {}, {}
+            dDfrStats, dSHdCY, sDObj = {}, {}, self.dITp['sDObj']
             self.calcGroupStats(inpDat, PltD, dDfrStats, dSHdCY, sOp)
             Pltr = PlotterSysSim(inpDat, self.inFr, PltD, sOp)
-            Pltr.setPropPlotter(inpDat, PltD, dDfrStats, dSHdCY=dSHdCY,
-                                sDSim=self.dITp['sDObj'], sOp=sOp)
+            Pltr.setPropAndPlot(PltD, dDfrStats, dSHdCY, self.serRp,
+                                sDSim=sDObj, tMax=self.dITp['tMax'], sOp=sOp)
             SF.saveDictDfr(self.dITp, Pltr.dDfrPlt, lK=GC.L_S_STATS_OUT,
                            sFEnd=GF.getFNoExt(Pltr.pPltF))
-            PF.plotEvoMltR(self.dITp, Pltr, self.serRp)
 
     def plotSimRes(self, inpDat):
         for sI in self.dITp['lIPltDat']:

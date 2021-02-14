@@ -96,7 +96,7 @@ def plotCIs(cPltr, dfrC, dfrS, serRp, sHdCY, mxY=0):
                ls=cPltr.pltDtI.styLnCI, lw=cPltr.pltDtI.wdthLnCI, color=cCol)
     return max([mxY] + list(serC) + list(tArrB[1]))
 
-def plotEvoMltR(dITp, cPltr, serRp):
+def plotEvoMltR(cPltr, serRp, tMax):
     SF.checkConsistencyDictDfrPlt(cPltr.dDfrPlt, lK=[GC.S_CENT, GC.S_SPREAD])
     dfrCen, dfrSpr, maxY = cPltr.dfrCent, cPltr.dfrSpread, 0
     assert (cPltr.sHdCX in dfrCen.columns and cPltr.sHdCX in dfrSpr.columns)
@@ -105,7 +105,7 @@ def plotEvoMltR(dITp, cPltr, serRp):
         maxY = plotCIs(cPltr, dfrCen, dfrSpr, serRp, sHdCY, mxY=maxY)
         plotCentres(cPltr, dfrCen, sHdCY, lSY)
     plt.legend(loc='best')
-    decorateSavePlotS(cPltr.pPltF, maxX=dITp['tMax'], maxY=maxY,
+    decorateSavePlotS(cPltr.pPltF, maxX=tMax, maxY=maxY,
                       sTtl=cPltr.dIPlt['title'], xLbl=cPltr.dIPlt['xLbl'],
                       yLbl=cPltr.pltDtI.yLbl, pltAxXY=cPltr.dIPlt['pltAxXY'])
     plt.close()
