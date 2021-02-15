@@ -333,12 +333,6 @@ def evolveGillespie(dITp, dICp, inpFr, dCncSMo):
         updateDictOut(dO, dCncSMo, t)
     return dO['dRes'], dO['dN']
 
-# def readDfrResEvo(dITp, sPRs, sFRs, iCol=None):
-#     pFRes = GF.getPF([sPRs, dITp['sDObj']], sFRs, sFExt=GC.S_EXT_CSV)
-#     if os.path.isfile(pFRes):
-#         return GF.readCSV(pFRes, sepD=dITp['cSep'], iCol=iCol)
-#     return None
-
 # --- Functions (O_95__System / O_99__Simulation) -----------------------------
 def prepDictIsCpStr(d4Sel, d4Leg, lCp, sLg, sHdC):
     for sCp in lCp:
@@ -382,24 +376,7 @@ def collapseColumns(pltDt, pdDfr, sLX, lSLY, sOp):
     # return {GC.S_CENT: mdDfr}, d4Leg
     return mdDfr, d4Leg
 
-# def addToDPath(pltDt, dP, sPPlt, sPSub, sFPlt='', cRp=0, sOp=None):
-#     if sOp is not None:
-#         sFPlt += GC.S_USC + sOp
-#     if pltDt.sPltNm is not None:
-#         sFPlt += GC.S_USC + pltDt.sPltNm
-#     if cRp > 0:
-#         sFPlt += GC.S_USC*2 + GC.S_REP + str(cRp)
-#     pFPlt = GF.getPF([sPPlt, sPSub], sFPlt, sFExt=GC.S_EXT_PDF)
-#     dP[pFPlt] = (sOp, pltDt)
-
-# def getDPFPltEvo(pltDt, sPPlt, sDSub, cRp=0, sOp=None):
-#     dP, sPSub, sFPlt = {}, sDSub, pltDt.sPltTp
-#     if cRp > 0:
-#         sPSub = os.path.join(sPSub, GC.S_REP + str(cRp))
-#     addToDPath(pltDt, dP, sPPlt, sPSub, sFPlt=sFPlt, cRp=cRp, sOp=sOp)
-#     return dP
-
-def getPPltF(pltDt, sPPlt, sDSub, cRp=0, sOp=None):
+def getPPltF(pltDt, sPPlt, sDSub, sOp=None, cRp=0):
     sPSub, sFPlt = sDSub, pltDt.sPltTp
     if sOp is not None:
         sFPlt += GC.S_USC + sOp
@@ -424,7 +401,7 @@ def collapseTimes(dITp, cSys, lTRd, overWr=True, sCTime=GC.S_TIME):
         dL = {sCTime: lTRd}
         dL.update({sC: [np.mean(cDfr[sC]) for cDfr in lDfr] for sC in lSCAv})
         dfrRd = GF.iniPdDfr(dL)
-        savePdDfr(dITp, dfrRd, lD, cSys.sFRed)
+        savePdDfr(dITp, dfrRd, lD, cSys.sFRed, overWr=overWr)
     else:
         dfrRd = loadPdDfr(dITp, lD, cSys.sFRed, iCol=0)
     return dfrRd
@@ -491,33 +468,13 @@ def calcDfrFinStats(dDfrSt, serRp, lSCDisr=[GC.S_TIME]):
     addFirstColToDfrs(dDfrSt, serC1=dDfrSt[GC.S_MEAN][GC.S_TIME],
                       lK=GC.L_S_STATS_DER)
 
-# def procData(dITp, pltDt, pF, pltSpr=True, sLX=None, lSLY=None, sOp=None,
-#              serRp=None):
-#     dDfrPlt, dDfrSt, d4LgSim = {}, {}, {}
-#     for cRp in range(1, dITp['nReps'] + 1):
-#         cSys = System(inpDat, self.inFr, cRp=cRp)
-#         sF = dITp[''] + GC.S_USC + GC.S_REP + str(cRp)
-#         cDfr = loadPdDfr(dITp, [GC.S_DIR_SYS], sF, iCol=0)
-#         if pltDt.dCHdGr is not None: # collapse if groups were specified
-#             dDfrT, d4Lg = collapseColumns(pltDt, cDfr, sLX, lSLY, sOp)
-#             cDfr = dDfrT[GC.S_CENT]
-#             d4LgSim.update(d4Lg)
-#         else:                           # reduce if no groups were specified
-#             cDfr = cDfr.loc[:, [GC.S_TIME] + dPltG['lSCpCnc']]
-#         updateDictDfr(cDfr, dDfrSt, serRp=serRp)
-#     calcDfrFinStats(dDfrSt, serRp=serRp)
-#     if dPltG['dCHdGr'] is not None:     # save data if groups were specified
-#         saveDictDfr(dITp, dDfrSt, lK=GC.L_S_STATS_OUT, sFEnd=GF.getFNoExt(pF))
-#     assert pltSpr in dDfrSt
-#     dDfrPlt[GC.S_CENT], dDfrPlt[GC.S_SPREAD] = dDfrSt[GC.S_MEAN], dDfrSt[pltSpr]
-#     return dDfrPlt, d4LgSim
-
 def checkConsistencyDictDfrPlt(dDfr, lK):
-    assert len(lK) == 2
+    assert len(lK) in [1, 2]
     for cK in lK:
         assert cK in dDfr
-    dfr1, dfr2 = dDfr[lK[0]], dDfr[lK[1]]
-    assert list(dfr1.index) == list(dfr2.index)
-    assert list(dfr1.columns) == list(dfr2.columns)
+    if len(lK) == 2:
+        dfr1, dfr2 = dDfr[lK[0]], dDfr[lK[1]]
+        assert list(dfr1.index) == list(dfr2.index)
+        assert list(dfr1.columns) == list(dfr2.columns)
 
 ###############################################################################

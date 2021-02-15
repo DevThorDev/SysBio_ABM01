@@ -17,10 +17,11 @@ calcStats = True
 doPlots = True
 printStats = False
 overWrCSV = True
+overWrPDF = True
 nReps = 3                   # 3 / 5 / 10
 nTSRed = 500                # 500 / 200 / 100
 tStart = 0                  # 0
-tMax = 0.2                  # 10.
+tMax = 10.                  # 10.
 maxTS = 10000000            # 10000000
 minDispTS = 0               # 0
 modDispTS = 10000           # 10000
@@ -57,6 +58,7 @@ dIO = {# --- general
        'doPlots': doPlots,
        'printStats': printStats,
        'overWrCSV': overWrCSV,
+       'overWrPDF': overWrPDF,
        'nReps': nReps,
        'nTSRed': nTSRed,
        'tStart': tStart,

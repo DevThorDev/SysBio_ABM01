@@ -16,7 +16,7 @@ sPltNm = GC.S_PLT_NM_CNC_N_P            # name of plot (needs to be unique)
 sPltCl = GC.S_PLT_CL_CP_CNC             # class of the plot (e.g. comp.-conc.)
 sPltTp = GC.S_PLT_TP_SEL_CNC            # type of the plot (e.g. comp., conc.)
 lSCpCnc = GC.L_ID_SMO_SYS               # list of IDs of small mol. considered
-lSOp = None                             # list of operation strings (mean, sum)
+lSOp = [None]                           # list of operation strings (mean, sum)
 # dict. of assignment of components into groups; key: representing column hdr.
 dCHdGr = None
 yLbl = GC.S_Y_LBL_CNC                   # y-label (concentrations)

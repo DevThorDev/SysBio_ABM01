@@ -16,7 +16,8 @@ def pltXYAxisS(maxX, maxY, pltAxXY=(True, True), cLwd=0.75, cCol='k'):
     if pltAxXY[1] and maxY is not None:
         plt.plot([0, 0], [0, maxY], lw=cLwd, color=cCol)
 
-def pltXYAxis(cDfr, nmCX=None, nmCY=None, pltAxXY=(True, True)):
+def pltXYAxisD(cDfr, nmCX=None, nmCY=None, pltAxXY=(True, True), cLwd=0.75,
+               cCol='k'):
     minDfr, maxDfr = 0, 1
     if cDfr.ndim == 1:
         minDfr, maxDfr = min(0, cDfr.min()), cDfr.max()
@@ -26,15 +27,15 @@ def pltXYAxis(cDfr, nmCX=None, nmCY=None, pltAxXY=(True, True)):
     if pltAxXY[0]:
         if nmCX is not None:
             minX, maxX = min(0, min(cDfr.loc[:, nmCX])), max(cDfr.loc[:, nmCX])
-            plt.plot([minX, maxX], [0, 0], lw=0.75, color='k')
+            plt.plot([minX, maxX], [0, 0], lw=cLwd, color=cCol)
         else:
-            plt.plot([0, cDfr.shape[0] - 1], [0, 0], lw=0.75, color='k')
+            plt.plot([0, cDfr.shape[0] - 1], [0, 0], lw=cLwd, color=cCol)
     if pltAxXY[1]:
         if nmCY is not None:
             minY, maxY = min(0, min(cDfr.loc[:, nmCY])), max(cDfr.loc[:, nmCY])
-            plt.plot([0, 0], [minY, maxY], lw=0.75, color='k')
+            plt.plot([0, 0], [minY, maxY], lw=cLwd, color=cCol)
         else:
-            plt.plot([0, 0], [minDfr, maxDfr], lw=0.75, color='k')
+            plt.plot([0, 0], [minDfr, maxDfr], lw=cLwd, color=cCol)
 
 def decorateSaveIt(pF, sTtl=None, xLbl=None, yLbl=None, xLim=None, yLim=None):
     if sTtl is not None:
@@ -56,15 +57,14 @@ def decorateSavePlotS(pF, maxX=None, maxY=None, sTtl=None, xLbl=None,
     pltXYAxisS(maxX=maxX, maxY=maxY, pltAxXY=pltAxXY)
     decorateSaveIt(pF, sTtl=sTtl, xLbl=xLbl, yLbl=yLbl, xLim=xLim, yLim=yLim)
 
-def decorateSavePlot(pF, pdDfr, sTtl=None, xLbl=None, yLbl=None, xLim=None,
-                     yLim=None, nmCX=None, nmCY=None, pltAxXY=(False, False)):
+def decorateSavePlotD(pF, pdDfr, sTtl=None, xLbl=None, yLbl=None, xLim=None,
+                      yLim=None, nmCX=None, nmCY=None, pltAxXY=(False, False)):
     if pdDfr.size > 0:
-        pltXYAxis(pdDfr, nmCX, nmCY, pltAxXY=pltAxXY)
+        pltXYAxisD(pdDfr, nmCX, nmCY, pltAxXY=pltAxXY)
     decorateSaveIt(pF, sTtl=sTtl, xLbl=xLbl, yLbl=yLbl, xLim=xLim, yLim=yLim)
 
 # --- Functions (O_95__System / O_99__Simulation) -----------------------------
 def plotCentres(cPltr, cDfr, sHdCY, lSY):
-    # print('TEMP (plotCentres): lSY =', lSY)
     serX, serY = cDfr.loc[:, cPltr.sHdCX], cDfr.loc[:, sHdCY]
     serX, serY = GF.arrFinVal(serX, serY), GF.arrFinVal(serY, serY)
     cCol, dIPlt, pltDt = cPltr.pltDtI.dCol[sHdCY], cPltr.dIPlt, cPltr.pltDtI
@@ -73,13 +73,16 @@ def plotCentres(cPltr, cDfr, sHdCY, lSY):
              ls=pltDt.styLnCt, lw=pltDt.wdthLnCt, color=cCol,
              label=lSY[0])
 
-def plotEvoSglR(dIPlt, dPltG, dfrR, pF, sHdCX, dSHdCY, sLblY):
+def plotEvoSglR(cPltr):
+    SF.checkConsistencyDictDfrPlt(cPltr.dDfrPlt, lK=[GC.S_SGL])
+    assert cPltr.sHdCX in cPltr.dfrCent.columns
     cFig = plt.figure()
-    for sHdCY, lSY in dSHdCY.items():
-        plotCentres(dIPlt, dPltG, dfrR, sHdCX, sHdCY, lSY)
+    for sHdCY, lSY in cPltr.dSHdCY.items():
+        plotCentres(cPltr, cPltr.dfrCent, sHdCY, lSY)
     plt.legend(loc='best')
-    decorateSavePlot(pF, dfrR, sTtl=dIPlt['title'], xLbl=dIPlt['xLbl'],
-                     yLbl=sLblY, nmCX=sHdCX, pltAxXY=dIPlt['pltAxXY'])
+    decorateSavePlotD(cPltr.pPltF, cPltr.dfrCent, sTtl=cPltr.dIPlt['title'],
+                      xLbl=cPltr.dIPlt['xLbl'], yLbl=cPltr.pltDtI.yLbl,
+                      nmCX=cPltr.sHdCX, pltAxXY=cPltr.dIPlt['pltAxXY'])
     plt.close()
 
 # --- Functions (O_99__Simulation) --------------------------------------------

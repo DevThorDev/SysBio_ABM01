@@ -12,6 +12,7 @@ from Core.O_00__Base import Base
 from Core.O_03__Metabolite import SMo_NO3_1m, SMo_H2PO4_1m
 from Core.O_75__Component import Component
 from Core.O_80__PlotterSysSim import PlotterSysSim
+from Core.O_90__PlotterData import PlotterData
 
 # +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 class System(Base):
@@ -134,26 +135,36 @@ class System(Base):
               '| Real time elapsed:', round(GF.getTime() - stT, GC.R08),
               'seconds.', GC.S_PLUS*8)
 
-    def plotResEvo(self, inpDat, dITp, overWr=True):
-        # if self.dResEvo is None:
-        #     self.dfrResEvo = SF.readDfrResEvo(self.dITp, sPRs=dITp['sPRes'],
-        #                                       sFRs=self.sFRes, iCol=0)
-        # else:
-        #     self.dfrResEvo = GF.iniPdDfr(self.dResEvo)
+    def prepAndPlotData(self, inpDat, PltD, cRp=0, overWr=True):
+        for sOp in PltD.lSOp:
+            Pltr = PlotterSysSim(inpDat, self.inFr, PltD, cOp=sOp, cRp=cRp)
+            if sOp is None:     # no groups - PltD.lSOp = [None]
+                dfrRes = self.dfrResEvo
+                dSHdCY = {sHd: [sHd] for sHd in Pltr.lSHdCY}
+            else:               # groups - PltD.lSOp = [S_MEAN_GR, S_SUM_GR]
+                t = SF.collapseColumns(PltD, self.dfrResEvo, Pltr.sHdCX,
+                                       Pltr.lSHdCY, sOp)
+                dfrRes, dSHdCY = t
+            Pltr.setPropPlotSys(PltD, dfrRes, dSHdCY, sD=self.dITp['sDObj'],
+                                sOp=sOp, cRp=cRp, overWr=overWr)
+
+    def plotSysResults(self, inpDat, dITp, cRp=0):
         if self.dResEvo is not None:
             self.dfrResEvo = GF.iniPdDfr(self.dResEvo)
         assert self.dfrResEvo is not None
-        Pltr = PlotterSysSim(inpDat, self.inFr, self.cRp)
-        Pltr.plotSysRes(self.dfrResEvo, sDSub=self.dITp['sDObj'])
+        for sI in dITp['lIPltDat']:
+            PltD = PlotterData(inpDat, iTp=int(sI)+self.dIG['o_B_PltDt'])
+            self.prepAndPlotData(inpDat, PltD, cRp=cRp,
+                                 overWr=dITp['overWrPDF'])
 
-    def evolveOverTime(self, inpDat, dITp):
+    def evolveOverTime(self, inpDat, dITp, cRp=0):
         self.dResEvo, self.dNCpO = SF.evolveGillespie(dITp, self.dICp,
                                                       self.inFr, self.dCncSMo)
         self.dfrResEvo = GF.iniPdDfr(self.dResEvo)
         self.updateObjDicts(inpDat, refresh=True)
-        dR, sD, oW = self.dResEvo, self.dITp['sDObj'], dITp['overWrCSV']
-        self.pFResEvo = SF.saveAsPdDfr(dITp, dR, [sD], self.sFRes, overWr=oW)
+        dR, sD, oWC = self.dResEvo, self.dITp['sDObj'], dITp['overWrCSV']
+        self.pFResEvo = SF.saveAsPdDfr(dITp, dR, [sD], self.sFRes, overWr=oWC)
         if self.dITp['doPlots']:
-            self.plotResEvo(inpDat, dITp)
+            self.plotSysResults(inpDat, dITp, cRp=cRp)
 
 ###############################################################################

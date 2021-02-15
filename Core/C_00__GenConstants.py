@@ -358,12 +358,13 @@ S_SEM = 'SEM'
 L_S_STATS_ALL = [S_MEAN, S_M2, S_VARIANCE, S_STDDEV, S_SEM]
 L_S_STATS_OUT = [S_MEAN, S_STDDEV, S_SEM]
 L_S_STATS_DER = [S_VARIANCE, S_STDDEV, S_SEM]
-S_NO_GR = 'NoGroup'
-S_MEAN_GR = 'MeanGroup'
-S_SUM_GR = 'SumGroup'
 S_SGL = 'Single'
 S_CENT = 'Central'
 S_SPREAD = 'Spread'
+L_S_STATS_PLOT = [S_CENT, S_SPREAD]
+S_NO_GR = 'NoGroup'
+S_MEAN_GR = 'MeanGroup'
+S_SUM_GR = 'SumGroup'
 
 # --- constants related to plots ----------------------------------------------
 S_PLT_CL_CP_CNC = 'PlotClCpConc'

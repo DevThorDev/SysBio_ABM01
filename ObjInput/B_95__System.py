@@ -11,8 +11,8 @@ strCS = GC.ID_SYS
 strCL = GC.S_CL_SYSTEM
 
 # --- flow control ------------------------------------------------------------
-doEvoT = False
-doPlots = False
+doEvoT = True
+doPlots = True
 
 # --- path, directory and file names ------------------------------------------
 sDObj = GC.S_DIR_SYS
