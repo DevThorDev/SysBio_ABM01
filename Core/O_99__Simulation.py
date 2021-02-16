@@ -41,7 +41,8 @@ class Simulation(Base):
             if not cSys.dITp['doEvoT'] and cSys.dITp['doPlots']:
                 cSys.plotSysResults(inpDat, self.dITp, cRp=cRp)
             SF.calcDfrRunStats(self.dITp, cSys, self.dDfrStats, self.dDfrRed,
-                               lTRd=self.lTRed, serRp=self.serRp, cRp=cRp)
+                               hT=self.hT, lTRd=self.lTRed, serRp=self.serRp,
+                               cRp=cRp)
             cSys.printRepDone(cRp, self.nRp, stTL)
 
     def calcRepStatistics(self, inpDat):
@@ -50,7 +51,7 @@ class Simulation(Base):
             for cRp in range(1, self.nRp + 1):
                 cSys = System(inpDat, self.inFr, cRp=cRp)
                 SF.calcDfrRunStats(self.dITp, cSys, self.dDfrStats,
-                                   self.dDfrRed, lTRd=self.lTRed,
+                                   self.dDfrRed, hT=self.hT, lTRd=self.lTRed,
                                    serRp=self.serRp, cRp=cRp)
         # calc final statistics and store them in self.dDfrStats
         SF.calcDfrFinStats(self.dDfrStats, serRp=self.serRp)
@@ -59,7 +60,7 @@ class Simulation(Base):
         # save the final statistics (for all components, without grouping)
         SF.saveDictDfr(self.dITp, self.dDfrStats, lK=GC.L_S_STATS_OUT,
                        sFEnd=GC.S_NO_GR, overWr=self.dITp['overWrCSV'])
-    
+
     def getDfrStatsAndLeg(self, inpDat, PltD, dDfrStats, dSHdCY, sOp=None):
         for cRp in range(1, self.nRp + 1):
             Pltr = PlotterSysSim(inpDat, self.inFr, PltD, cOp=sOp, cRp=cRp)

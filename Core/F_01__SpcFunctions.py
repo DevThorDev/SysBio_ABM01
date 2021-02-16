@@ -388,20 +388,40 @@ def getPPltF(pltDt, sPPlt, sDSub, sOp=None, cRp=0):
     return GF.getPF([sPPlt, sPSub], sFPlt, sFExt=GC.S_EXT_PDF)
 
 # --- Functions (O_99__Simulation) --------------------------------------------
-def collapseTimes(dITp, cSys, lTRd, overWr=True, sCTime=GC.S_TIME):
+def getDfrRdWt(lDfr, hT, lTRd, lSC=[], sCTime=GC.S_TIME):
+    dRd, dCAv = {sCTime: lTRd}, {sC: [] for sC in lSC}
+    for sC in lSC:
+        for i, cDfr in enumerate(lDfr):
+            arrWts = GF.getWeights(cDfr[sCTime], cCent=lTRd[i], halfRng=2*hT)
+            if len(arrWts) > 0:
+                dCAv[sC].append(np.average(cDfr[sC], weights=arrWts))
+            else:
+                dCAv[sC].append(np.nan)
+    dRd.update(dCAv)
+    return(GF.iniPdDfr(dRd))
+
+def getDfrRdNoWt(lDfr, lTRd, lSC=[], sCTime=GC.S_TIME):
+    dRd = {sCTime: lTRd}
+    dRd.update({sC: [np.mean(cDfr[sC]) for cDfr in lDfr] for sC in lSC})
+    return(GF.iniPdDfr(dRd))
+
+def collapseTimes(dITp, cSys, hT, lTRd, sCTime=GC.S_TIME):
+    assert len(lTRd) >= 2
     lD, dfrRE = [cSys.dITp['sDObj']], cSys.dfrResEvo
     serT, pFRed = dfrRE[sCTime], GF.getPF([dITp['sPRes']] + lD, cSys.sFRed)
-    if not os.path.isfile(pFRed) or overWr:
+    if not os.path.isfile(pFRed) or dITp['overWrCSV']:
         assert sCTime in dfrRE.columns
         lDfr = [dfrRE[(serT >= lTRd[k - 1]) & (serT < lTRd[k + 1])]
                 for k in range(1, len(lTRd) - 1)]
         lDfr = ([dfrRE[serT < lTRd[1]]] + lDfr + [dfrRE[serT >= lTRd[-2]]])
         lDfr = [cDfr.reset_index(drop=True) for cDfr in lDfr]
+        # list of column header strings where averages should be calculated
         lSCAv = [sC for sC in dfrRE.columns if sC != sCTime]
-        dL = {sCTime: lTRd}
-        dL.update({sC: [np.mean(cDfr[sC]) for cDfr in lDfr] for sC in lSCAv})
-        dfrRd = GF.iniPdDfr(dL)
-        savePdDfr(dITp, dfrRd, lD, cSys.sFRed, overWr=overWr)
+        if dITp['useWtMeans']:
+            dfrRd = getDfrRdWt(lDfr, hT, lTRd, lSC=lSCAv, sCTime=sCTime)
+        else:
+            dfrRd = getDfrRdNoWt(lDfr, lTRd, lSC=lSCAv, sCTime=sCTime)
+        savePdDfr(dITp, dfrRd, lD, cSys.sFRed, overWr=dITp['overWrCSV'])
     else:
         dfrRd = loadPdDfr(dITp, lD, cSys.sFRed, iCol=0)
     return dfrRd
@@ -439,9 +459,9 @@ def updateDictDfr(cDfr, dDfrSt, serRp, modRp=False, lSCDisr=[GC.S_TIME]):
     # add the time column
     addFirstColToDfrs(dDfrSt, serC1=cDfr[GC.S_TIME])
 
-def calcDfrRunStats(dITp, cSys, dDfrSt, dDfrRd, lTRd, serRp, cRp=0):
+def calcDfrRunStats(dITp, cSys, dDfrSt, dDfrRd, hT, lTRd, serRp, cRp=0):
     # reduce the data to the given number of lines
-    dfrRd = collapseTimes(dITp, cSys, lTRd=lTRd, overWr=dITp['overWrCSV'])
+    dfrRd = collapseTimes(dITp, cSys, hT=hT, lTRd=lTRd)
     dDfrRd[cRp] = dfrRd
     # update the DataFrames dictionary
     updateDictDfr(dfrRd, dDfrSt, serRp=serRp, modRp=True)

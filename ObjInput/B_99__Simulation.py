@@ -16,16 +16,17 @@ strCL = GC.S_CL_SIMULATION
 calcStats = True
 doPlots = True
 printStats = False
+useWtMeans = False
 overWrCSV = True
 overWrPDF = True
 nReps = 3                   # 3 / 5 / 10
-nTSRed = 500                # 500 / 200 / 100
+nTSRed = 200                # 500 / 200 / 100
 tStart = 0                  # 0
-tMax = 10.                  # 10.
+tMax = 1.                  # 10.
 maxTS = 10000000            # 10000000
 minDispTS = 0               # 0
 modDispTS = 10000           # 10000
-assert tMax >= tStart and maxTS > 0
+assert nTSRed >= 2 and tMax >= tStart and maxTS > 0
 
 # --- list of index strings of plot data used for plots -----------------------
 lIPltDat = [GC.S_01, GC.S_02, GC.S_03, GC.S_04, GC.S_05, GC.S_06]
@@ -57,6 +58,7 @@ dIO = {# --- general
        'calcStats': calcStats,
        'doPlots': doPlots,
        'printStats': printStats,
+       'useWtMeans': useWtMeans,
        'overWrCSV': overWrCSV,
        'overWrPDF': overWrPDF,
        'nReps': nReps,

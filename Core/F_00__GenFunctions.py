@@ -129,8 +129,15 @@ def appendToDictL(cD, lE):
 def implMinMax(x, lowB=0, upB=1):
     return min(max(x, lowB), upB)
 
+# get a list of weights corresponding to the distance of the values to a centre
+def getWeights(cSer, cCent, halfRng=0.5, maxWt=1.):
+    if len(cSer) == 0:
+        return np.array([])
+    halfRng = max(halfRng, abs(cCent - min(cSer)), abs(cCent - max(cSer)))
+    return np.array(maxWt*(1 - abs(cCent - cSer)/halfRng))
+
 # Running mean and standard deviation
-# For a new value newValue, compute the new count, new mean, the new M2.
+# For a new value newValue, compute the new count, new mean, new M2
 # mean accumulates the mean of the entire dataset
 # M2 aggregates the squared distance from the mean
 # count aggregates the number of samples seen so far
