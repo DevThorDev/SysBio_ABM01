@@ -27,7 +27,7 @@ wdthLnCt = 1
 wdthLnCI = 0.5
 dCol = {'LSI': (0.9, 0.1, 0.),
         'LKI': (0.8, 0.8, 0.05)}
-alpCol = 0.33
+alpCol = 0.25
 
 # --- create input dictionary -------------------------------------------------
 dIO = {# --- general

@@ -33,7 +33,7 @@ dCol = {GC.L_S_CP_SHORT_ALL[0]: (0.2, 0.2, 1.),    # 'L--00--'
         GC.L_S_CP_SHORT_ALL[6]: (0.85, 0.85, 0.),  # 'K----01'
         GC.L_S_CP_SHORT_ALL[7]: (0.7, 0.7, 0.),    # 'K----10'
         GC.L_S_CP_SHORT_ALL[8]: (0.5, 0.5, 0.)}    # 'K----11'
-alpCol = 0.33
+alpCol = 0.25
 
 # --- create input dictionary -------------------------------------------------
 dIO = {# --- general

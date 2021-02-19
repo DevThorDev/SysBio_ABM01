@@ -378,10 +378,10 @@ S_PLT_GR_D = 'D__LS-_vs_LK-'
 S_PLT_NM_CP_SET01 = '1__L--_S--_K--'
 S_PLT_NM_CNC_N_P = '0__NO3-_H2PO4-'
 
-S_X_LBL = S_TIME
+S_X_LBL = S_TIME + ' (min)'
 S_Y_LBL_CP_CNC = 'Component incidence and molecule concentration (mM)'
 S_Y_LBL_CP = 'Component incidence'
-S_Y_LBL_CNC = 'Component incidence and molecule concentration (mM)'
+S_Y_LBL_CNC = 'Molecule concentration (mM)'
 S_Y_LBL_CNC_N = '$[NO_3^-]$ (mM)'
 S_Y_LBL_CNC_P = '$[H_2PO_4^-]$ (mM)'
 

@@ -264,7 +264,7 @@ def updateDictH(dICp, inpFr, dO, dCncSMo):
         dParPSig = inpFr.dCpDepOnSMoCnc[sSMoN][sRctClass]
         p = GF.calcPSigmoidal(dCncSMo[sSMoN], dParPSig)
         # recalculate dH, which contains the h_i (i = 1,... len(dH))
-        dO['dH'][sRct] = wtRct*p
+        dO['dH'][sRct] = wtRct*inpFr.dOthInpV['rctScale']*p
         for sCpLHS in GF.partStr(sRct)[0]:
             dO['dH'][sRct] *= dO['dN'][sCpLHS]
         if b:   # check if reaction is (de)phosphorylation
@@ -373,7 +373,6 @@ def collapseColumns(pltDt, pdDfr, sLX, lSLY, sOp):
             mdDfr.loc[:, sK] = pdDfr.loc[:, d4Sel[sK]].T.sum(min_count=1)
         else:
             mdDfr.loc[:, sK] = pdDfr.loc[:, sK]
-    # return {GC.S_CENT: mdDfr}, d4Leg
     return mdDfr, d4Leg
 
 def getPPltF(pltDt, sPPlt, sDSub, sOp=None, cRp=0):

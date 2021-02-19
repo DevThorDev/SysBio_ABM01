@@ -26,7 +26,7 @@ wdthLnCt = 2
 wdthLnCI = 0.5
 dCol = {GC.ID_NO3_1M: (0.1, 0.6, 0.1),
         GC.ID_H2PO4_1M: (0.4, 0.1, 0.5)}
-alpCol = 0.33
+alpCol = 0.25
 
 # --- create input dictionary -------------------------------------------------
 dIO = {# --- general
