@@ -36,7 +36,7 @@ class PlotterData(Base):
 
     def printData(self):
         # print the class attribute data contained in the object input files
-        print('*', self.sPltNm, '(name of plot, must be unique - used as key)')
+        print('*', self.sPltNm, '(name of plot or None)')
         print('*', self.sPltCl, '(class of the plot, e.g. comp.-conc.)')
         print('*', self.sPltTp, '(type of the plot, e.g. comp., conc.)')
         print('*', self.lSCpCnc, '(list of short comp. names considered)')

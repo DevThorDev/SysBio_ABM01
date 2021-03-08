@@ -92,7 +92,7 @@ class PlotterSysSim(Base):
         self.dfrSpread = dDfrStats[self.pltSpr]
         self.dDfrPlt = {GC.S_CENT: self.dfrCent, GC.S_SPREAD: self.dfrSpread}
         self.dSHdCY = dSHdCY
-        self.ovWr=overWr
+        self.ovWr = overWr
         self.pPltF = SF.getPPltF(PltD, self.sPPlt, sDSub=sD, sOp=sOp, cRp=cRp)
         if not GF.pFExists(self.pPltF) or self.ovWr:
             PF.plotEvoMltR(self, serRp, tMax=tMax)
