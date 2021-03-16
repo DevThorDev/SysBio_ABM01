@@ -115,8 +115,19 @@ class InputFrames:
                 if wtRct < 0 and sK1 in self.dDfrIn:
                     wtRct = GF.calcRctWeight(self.dDfrIn[sK1], sRctClass)
                 self.dTpRct[sRct] = sRctType, sRctClass, lSRctAddI
-                GF.addToDictL(self.dClRct, sRctClass.split(GC.S_USC)[0],
-                              sRctClass, lUnique=True)
+                sRctGroup = sRctClass.split(GC.S_USC)[0]
+                sRctGroup1Ord = sRctGroup + GC.S_USC + GC.S_RCT_1ORD
+                sRctGroup2Ord = sRctGroup + GC.S_USC + GC.S_RCT_2ORD
+                GF.addToDictL(self.dClRct, sRctGroup, sRctClass, lUnique=True)
+                if sRctClass in GC.L_S_PYL_1ORD + GC.L_S_DPY_1ORD:
+                    # 1st-order (de)phosphorylations
+                    GF.addToDictL(self.dClRct, sRctGroup1Ord, sRctClass,
+                                  lUnique=True)
+                else:
+                    if sRctGroup in [GC.ID_PYL, GC.ID_DPY]:
+                        # 2nd-order (de)phosphorylations
+                        GF.addToDictL(self.dClRct, sRctGroup2Ord, sRctClass,
+                                      lUnique=True)
                 self.dRct[sRct] = wtRct
         else:
             print('ERROR: Key', sK2, 'not in DataFrames dictionary!')
@@ -221,25 +232,25 @@ class InputFrames:
             if sSMo in self.dParCnc:
                 print(sSMo + ':', self.dParCnc[sSMo])
 
-    def printDTpRct(self, sRct=None):
-        if sRct is None:
+    def printDTpRct(self, sTpRct=None):
+        if sTpRct is None:
             print(GC.S_DASH*8, 'Reaction type dictionary:', GC.S_DASH*8)
             for sK in self.dTpRct:
                 print(sK + ':', self.dTpRct[sK])
             print(GC.S_DASH*60)
         else:
-            if sRct in self.dTpRct:
-                print(sRct + ':', self.dTpRct[sRct])
+            if sTpRct in self.dTpRct:
+                print(sTpRct + ':', self.dTpRct[sTpRct])
 
-    def printDClRct(self, sRct=None):
-        if sRct is None:
+    def printDClRct(self, sClRct=None):
+        if sClRct is None:
             print(GC.S_DASH*8, 'Reaction class dictionary:', GC.S_DASH*8)
             for sK in self.dClRct:
                 print(sK + ':', self.dClRct[sK])
             print(GC.S_DASH*60)
         else:
-            if sRct in self.dClRct:
-                print(sRct + ':', self.dClRct[sRct])
+            if sClRct in self.dClRct:
+                print(sClRct + ':', self.dClRct[sClRct])
 
     def printDRct(self, sRct=None):
         if sRct is None:

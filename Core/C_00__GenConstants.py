@@ -337,12 +337,23 @@ S_RCT_11 = S_1 + S_1
 S_RCT_12 = S_1 + S_2
 S_RCT_21 = S_2 + S_1
 S_RCT_22 = S_2 + S_2
-L_S_RCT_2ORD = [S_RCT_21, S_RCT_22]
+S_RCT_1ORD = '1stOrder'
+S_RCT_2ORD = '2ndOrder'
+D_S_RCT_ORD = {S_RCT_1ORD: [S_RCT_11, S_RCT_12],
+               S_RCT_2ORD: [S_RCT_21, S_RCT_22]}
+
+S_PYL_1ORD = ID_PYL + S_USC + S_RCT_1ORD
+S_DPY_1ORD = ID_DPY + S_USC + S_RCT_1ORD
+S_PYL_2ORD = ID_PYL + S_USC + S_RCT_2ORD
+S_DPY_2ORD = ID_DPY + S_USC + S_RCT_2ORD
+L_S_PYL_1ORD = [S_DO_PYL + S_USC + S_SPS_K_S870]    # autophosphorylation of K
+L_S_DPY_1ORD = []
+
 LEN_S_CP = 7
 I_S_CP_SEP1 = 3
 I_S_CP_SEP2 = 5
 
-P_DUMMY = 0.5
+P_HALF = 0.5
 
 # --- constants related to model output ---------------------------------------
 S_TS = 'TimeStep'

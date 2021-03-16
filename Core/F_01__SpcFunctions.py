@@ -251,15 +251,15 @@ def incorpEnzyme(dICp, dO, lSPyl, lSDPy, sRct, sRctCl, sSpS):
     dO['dH'][sRct] *= x
 
 def updateDictH(dICp, inpFr, dO, dCncSMo):
-    sSMoN, p = GC.ID_NO3_1M, GC.P_DUMMY
+    sSMoN, p = GC.ID_NO3_1M, GC.P_HALF
     lSPyl, lSDPy = inpFr.dClRct[GC.S_DO_PYL], inpFr.dClRct[GC.S_DO_DPY]
+    lSPyl2O, lSDPy2O = inpFr.dClRct[GC.S_PYL_2ORD], inpFr.dClRct[GC.S_DPY_2ORD]
     # update the reaction rate constants according to the current [NO3-]
     for sRct, wtRct in inpFr.dRct.items():
         # NO3- dependency of incidences of each component
         sRctType, sRctClass, _ = inpFr.dTpRct[sRct]
         assert (len(GF.splitStr(sRctClass)) >= 2 and sRctClass in
                 inpFr.dCpDepOnSMoCnc[sSMoN])
-        b = sRctClass in lSPyl + lSDPy
         sSpS = GF.splitStr(sRctClass)[1]
         dParPSig = inpFr.dCpDepOnSMoCnc[sSMoN][sRctClass]
         p = GF.calcPSigmoidal(dCncSMo[sSMoN], dParPSig)
@@ -267,9 +267,12 @@ def updateDictH(dICp, inpFr, dO, dCncSMo):
         dO['dH'][sRct] = wtRct*inpFr.dOthInpV['rctScale']*p
         for sCpLHS in GF.partStr(sRct)[0]:
             dO['dH'][sRct] *= dO['dN'][sCpLHS]
-        if b:   # check if reaction is (de)phosphorylation
+        if sRctClass in lSPyl2O + lSDPy2O:
+            # incorporate the enzyme if 2nd-order (de)phosphorylation
             incorpEnzyme(dICp, dO, lSPyl, lSDPy, sRct, sRctClass, sSpS)
-        if (sRctType in GC.L_S_RCT_2ORD or b):
+        if ((sRctType in GC.D_S_RCT_ORD[GC.S_RCT_2ORD]) or
+            (sRctClass in lSPyl2O + lSDPy2O)):
+            # all 2nd-order reactions must be divided by the reaction volume
             dO['dH'][sRct] /= inpFr.dOthInpV['VolC']
     # (?) update the reaction rate constants according to the current [H2PO4-]
 
