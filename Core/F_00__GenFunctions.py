@@ -433,14 +433,25 @@ def analyseSRct(sRct):
               'implemented. Number of reactants is', len(lSSplRct[0]),
               'while number of products is', len(lSSplRct[1]), '.')
 
-def calcRctWeight(cDfr, sRctCl):
+def calcRctWeight(cDfr, tSRctI):
+    sRctTp, sRctCl, lSRctAI = tSRctI
     wRct = 1.
+    # get weight for reaction class
     if sRctCl in cDfr.index and GC.S_VAL in cDfr.columns:
         wRct = cDfr.at[sRctCl, GC.S_VAL]
     else:
         print('ERROR: Position (' + sRctCl + ', ' + GC.S_VAL + ') does not',
               'exist in DataFrame!\nIndex =', cDfr.index, '\Columns =',
               cDfr.columns)
+    # get weight for group change if reaction type == GC.S_RCT_11
+    if sRctTp == GC.S_RCT_11:
+        assert len(lSRctAI) >= 1
+        if lSRctAI[0] in cDfr.index and GC.S_VAL in cDfr.columns:
+            wRct *= cDfr.at[lSRctAI[0], GC.S_VAL]
+        else:
+            print('ERROR: Position (' + lSRctAI[0] + ', ' + GC.S_VAL +
+                  ') does not exist in DataFrame!\nIndex =', cDfr.index,
+                  '\Columns =', cDfr.columns)
     return wRct
 
 # function updating the dITp with that of a higher-priority class

@@ -109,12 +109,12 @@ class InputFrames:
             cDfr = self.dDfrIn[sK2]
             assert GC.S_RCTSTR in cDfr.columns and GC.S_WT in cDfr.columns
             for sI in cDfr.index:
-                sRct = cDfr.at[sI, GC.S_RCTSTR]
-                wtRct = cDfr.at[sI, GC.S_WT]
-                sRctType, sRctClass, lSRctAddI = GF.analyseSRct(sRct)
+                sRct, wtRct = cDfr.at[sI, GC.S_RCTSTR], cDfr.at[sI, GC.S_WT]
+                self.dTpRct[sRct] = GF.analyseSRct(sRct)
+                sRctClass = self.dTpRct[sRct][1]
                 if wtRct < 0 and sK1 in self.dDfrIn:
-                    wtRct = GF.calcRctWeight(self.dDfrIn[sK1], sRctClass)
-                self.dTpRct[sRct] = sRctType, sRctClass, lSRctAddI
+                    wtRct = GF.calcRctWeight(self.dDfrIn[sK1],
+                                             self.dTpRct[sRct])
                 sRctGroup = sRctClass.split(GC.S_USC)[0]
                 sRctGroup1Ord = sRctGroup + GC.S_USC + GC.S_RCT_1ORD
                 sRctGroup2Ord = sRctGroup + GC.S_USC + GC.S_RCT_2ORD

@@ -241,7 +241,7 @@ def changeCncSMo(inpFr, dO, dCncSMo, t, cID=None):
         dCncSMo[sSMo] = GF.implMinMax(dCncSMo[sSMo], cncMn, cncMx)
 
 def incorpEnzyme(dICp, dO, lSPyl, lSDPy, sRct, sRctCl, sSpS):
-    x, sPylDPy = 0., GC.S_DO_PYL
+    x, sPylDPy = 0, GC.S_DO_PYL
     if sRctCl in lSPyl:
         sPylDPy = GC.S_DO_PYL
     elif sRctCl in lSDPy:
